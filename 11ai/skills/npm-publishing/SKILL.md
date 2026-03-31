@@ -1,0 +1,63 @@
+---
+name: npm-publishing
+description: Prepare and publish npm packages, especially scoped public packages that need package.json fixes, publish scripts, dry-run checks, .env-managed NPM_TOKEN handling, or org-scoped publish troubleshooting. Use when Codex needs to make a repo publish-ready, verify what npm will ship, or diagnose publish failures such as access, 2FA, token, or package-content issues.
+---
+
+# Npm Publishing
+
+## Overview
+
+Use this skill to make a repo publish-ready and to publish it safely with a short, repeatable workflow.
+
+Prefer the smallest set of changes that gets the package publishable. Keep package contents explicit, verify the tarball before publish, and treat auth and org permissions as separate from package configuration.
+
+## Workflow
+
+1. Inspect the package root.
+   Read `package.json`, check the intended entry point, and inspect the folders that should ship.
+
+2. Align package metadata with the intended publish target.
+   Ensure the scoped package name is correct.
+   Set `"private": false` when the package must publish.
+   Add `"publishConfig": { "access": "public" }` for public scoped packages.
+   Set `main` or `exports` to a real entry file.
+   Add a `files` array when the package should publish only selected paths.
+
+3. Protect secrets and local publish config.
+   Ignore `.env` files in `.gitignore`.
+   Prefer reading `NPM_TOKEN` from a local `.env` file instead of hardcoding credentials in `package.json`.
+
+4. Add or update repo-local publish commands.
+   If the repo needs a reusable publish flow, add a small script rather than a long inline one-liner in `package.json`.
+   Keep the script at a stable path such as `./scripts/publish-public-w-local-token.sh`.
+   Use the helper at [scripts/publish-with-local-token.sh](./scripts/publish-with-local-token.sh) as the starting point when the repo does not already have its own version.
+
+5. Verify publish contents before release.
+   Run `npm pack --dry-run` or the repo's equivalent script.
+   Confirm the tarball includes the intended files and excludes local secrets or unrelated workspace files.
+
+6. Publish.
+   For scoped public packages, use `npm publish --access public`.
+   If the repo uses a local token helper, ensure `.env` contains `NPM_TOKEN=...` first.
+
+7. Troubleshoot failures by category.
+   For package-content issues, revisit `main`, `exports`, and `files`.
+   For 403 errors, separate "wrong credentials" from "org requires 2FA or bypass-enabled token."
+   For local permission or shell issues, inspect the execution environment before changing npm config.
+
+## Quick Checks
+
+- Entry file exists at the path named by `main` or `exports`
+- `files` includes the paths that should ship
+- `publishConfig.access` is `"public"` for public scoped packages
+- `.env` is ignored by git
+- `npm pack --dry-run` output looks correct
+- Active npm account or token has permission to publish under the target scope
+
+## References
+
+Read [references/publish-checklist.md](./references/publish-checklist.md) for a concise pre-publish checklist and common failure modes.
+
+## Scripts
+
+Use [scripts/publish-with-local-token.sh](./scripts/publish-with-local-token.sh) as a reusable template when a repo needs to publish with `NPM_TOKEN` stored in a root `.env`.

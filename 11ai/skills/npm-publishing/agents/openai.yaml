@@ -1,0 +1,4 @@
+interface:
+  display_name: "NPM Publishing"
+  short_description: "Publish scoped npm packages with token auth"
+  default_prompt: "Use $npm-publishing to prepare and publish a scoped npm package."
