@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "private": false,
   "description": "AI skills and workflows",
-  "main": "index.js",
+  "main": "11ai/index.js",
+  "files": [
+    "11ai",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "pack-dry": "npm pack --dry-run",
@@ -17,7 +22,7 @@
   "author": "@rj11io",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rj11io/11ai.git"
+    "url": "git+https://github.com/rj11io/11ai.git"
   },
   "publishConfig": {
     "access": "public"
