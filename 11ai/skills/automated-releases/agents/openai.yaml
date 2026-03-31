@@ -1,0 +1,4 @@
+interface:
+  display_name: "Automated Releases"
+  short_description: "Set up semantic-release with changelogs"
+  default_prompt: "Use $automated-releases to set up semantic-release with automated changelogs and GitHub releases."
