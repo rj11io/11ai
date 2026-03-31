@@ -1,6 +1,6 @@
 {
   "name": "@rj11io/11ai",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": false,
   "description": "AI skills and workflows",
   "main": "11ai/index.js",
@@ -11,7 +11,8 @@
   ],
   "scripts": {
     "pack-dry": "npm pack --dry-run",
-    "publish-public-local": "node ./scripts/publish-public-w-local-token.cjs"
+    "publish-public-local": "node ./scripts/publish-public-w-local-token.cjs",
+    "release": "semantic-release"
   },
   "keywords": [
     "ai",
@@ -25,6 +26,21 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      "@semantic-release/github"
+    ]
+  },
+  "devDependencies": {
+    "@semantic-release/github": "^11.0.6",
+    "semantic-release": "^24.2.7"
   },
   "license": "Apache-2.0"
 }

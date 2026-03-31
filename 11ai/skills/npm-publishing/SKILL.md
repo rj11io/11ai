@@ -37,14 +37,20 @@ Prefer the smallest set of changes that gets the package publishable. Keep packa
    Run `npm pack --dry-run` or the repo's equivalent script.
    Confirm the tarball includes the intended files and excludes local secrets or unrelated workspace files.
 
-6. Publish.
+6. Choose the publish mode.
+   For one-off local publishing, use a repo-local helper that reads `NPM_TOKEN` from `.env`.
+   For automated publishing from GitHub, prefer `semantic-release` on pushes to `main`.
+
+7. Publish.
    For scoped public packages, use `npm publish --access public`.
    If the repo uses a local token helper, ensure `.env` contains `NPM_TOKEN=...` first.
+   If the repo uses `semantic-release`, ensure the workflow has `GITHUB_TOKEN` and an `NPM_TOKEN` secret available.
 
-7. Troubleshoot failures by category.
+8. Troubleshoot failures by category.
    For package-content issues, revisit `main`, `exports`, and `files`.
    For 403 errors, separate "wrong credentials" from "org requires 2FA or bypass-enabled token."
    For local permission or shell issues, inspect the execution environment before changing npm config.
+   For automated releases that do not trigger, inspect branch filters, workflow permissions, and commit message format.
 
 ## Quick Checks
 
@@ -58,6 +64,7 @@ Prefer the smallest set of changes that gets the package publishable. Keep packa
 ## References
 
 Read [references/publish-checklist.md](./references/publish-checklist.md) for a concise pre-publish checklist and common failure modes.
+Read [references/semantic-release.md](./references/semantic-release.md) when the repo should publish automatically from GitHub Actions.
 
 ## Scripts
 
