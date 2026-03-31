@@ -53,6 +53,7 @@ Prefer the smallest set of changes that gets the package publishable. Keep packa
    For 403 errors, separate "wrong credentials" from "org requires 2FA or bypass-enabled token."
    For local permission or shell issues, inspect the execution environment before changing npm config.
    For automated releases that do not trigger, inspect branch filters, workflow permissions, and commit message format.
+   For `semantic-release` trying to publish `1.0.0` for an already-published package, bootstrap the repo with the existing published version tag before rerunning release automation.
 
 ## Quick Checks
 

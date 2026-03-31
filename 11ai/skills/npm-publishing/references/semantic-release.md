@@ -88,6 +88,24 @@ Pin `lodash-es` to `4.17.21` with npm `overrides` when using this setup. A broke
 
 Without recognizable commit messages, pushes to `main` may produce no release.
 
+## Bootstrapping An Existing Published Package
+
+If the package already exists on npm but the repo has not been managed by `semantic-release` before, seed git with the current published version tag before enabling automated releases.
+
+Example for an existing `1.0.3` release:
+
+```sh
+git tag v1.0.3
+git push origin v1.0.3
+```
+
+Important:
+
+- `semantic-release` uses git tags and commit history as the release baseline.
+- It does not treat the current `package.json` version as the authoritative starting point.
+- If no matching release tag exists, it may try to publish `1.0.0` as if this were the first release.
+- After the bootstrap tag is in place, let `semantic-release` manage future version bumps.
+
 ## GitHub Actions Notes
 
 - Do not use shallow git history for the release job.
