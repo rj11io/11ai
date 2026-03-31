@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/rj11io/11ai/compare/v1.2.0...v1.2.1) (2026-03-31)
+
+
+### Bug Fixes
+
+* publish to github packages ([1517a42](https://github.com/rj11io/11ai/commit/1517a42299afcd7bfb49136cab6bfc709929b4b3))
+
 # [1.2.0](https://github.com/rj11io/11ai/compare/v1.1.0...v1.2.0) (2026-03-31)
 
 
