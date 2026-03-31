@@ -15,6 +15,7 @@
 - Store `NPM_TOKEN` in the project root `.env`.
 - Use a token that can publish under the target npm scope.
 - If the org enforces 2FA, use interactive auth with 2FA or a granular token that is allowed to bypass 2FA for publishing.
+- Avoid passing the token as a CLI argument; prefer a temporary `.npmrc` or equivalent npm config injection.
 
 ## Useful Commands
 

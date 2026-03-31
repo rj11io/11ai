@@ -28,9 +28,10 @@ Prefer the smallest set of changes that gets the package publishable. Keep packa
    Prefer reading `NPM_TOKEN` from a local `.env` file instead of hardcoding credentials in `package.json`.
 
 4. Add or update repo-local publish commands.
-   If the repo needs a reusable publish flow, add a small script rather than a long inline one-liner in `package.json`.
-   Keep the script at a stable path such as `./scripts/publish-public-w-local-token.sh`.
-   Use the helper at [scripts/publish-with-local-token.sh](./scripts/publish-with-local-token.sh) as the starting point when the repo does not already have its own version.
+   If the repo needs a reusable publish flow, add a small Node script rather than a long inline one-liner in `package.json`.
+   Keep the script at a stable path such as `./scripts/publish-public-w-local-token.cjs`.
+   Prefer a temporary npm config file over passing the token on the command line.
+   Use the helper at [scripts/publish-with-local-token.cjs](./scripts/publish-with-local-token.cjs) as the starting point when the repo does not already have its own version.
 
 5. Verify publish contents before release.
    Run `npm pack --dry-run` or the repo's equivalent script.
@@ -60,4 +61,4 @@ Read [references/publish-checklist.md](./references/publish-checklist.md) for a 
 
 ## Scripts
 
-Use [scripts/publish-with-local-token.sh](./scripts/publish-with-local-token.sh) as a reusable template when a repo needs to publish with `NPM_TOKEN` stored in a root `.env`.
+Use [scripts/publish-with-local-token.cjs](./scripts/publish-with-local-token.cjs) as a reusable template when a repo needs to publish with `NPM_TOKEN` stored in a root `.env` on Windows, macOS, or Linux.
