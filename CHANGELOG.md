@@ -1,3 +1,15 @@
+# [1.2.0](https://github.com/rj11io/11ai/compare/v1.1.0...v1.2.0) (2026-03-31)
+
+
+### Bug Fixes
+
+* add package lock ([c1cebed](https://github.com/rj11io/11ai/commit/c1cebed7f90a504391fd962b17df33f737b81999))
+
+
+### Features
+
+* **npm-publishing:** publish package to github ([03df42e](https://github.com/rj11io/11ai/commit/03df42e5c0daeb4047ac11e7d00df4156e308351))
+
 # [1.1.0](https://github.com/rj11io/11ai/compare/v1.0.2...v1.1.0) (2026-03-31)
 
 
