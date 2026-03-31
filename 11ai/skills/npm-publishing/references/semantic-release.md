@@ -18,6 +18,7 @@ Use these exact package versions unless the user explicitly asks to upgrade them
 - `@semantic-release/github@11.0.6`
 - `@semantic-release/npm@12.0.2`
 - `@semantic-release/release-notes-generator@14.1.0`
+- `lodash-es@4.17.21` via npm `overrides`
 
 When updating release automation, hard-reference those exact versions rather than broad guidance like "install the latest semantic-release plugins."
 
@@ -61,6 +62,10 @@ module.exports = {
 ```
 
 Treat that as the default baseline when making future changes unless the user asks for a different release policy.
+
+## Dependency Guardrail
+
+Pin `lodash-es` to `4.17.21` with npm `overrides` when using this setup. A broken `lodash-es@4.18.0` resolution can crash `semantic-release` during verify with `ReferenceError: assignWith is not defined`.
 
 ## Recommended Workflow Shape
 
