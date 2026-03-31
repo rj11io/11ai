@@ -8,6 +8,7 @@ Use this setup as the recommended stable baseline:
 - `.releaserc.js` as the release config source of truth
 - `.github/workflows/release.yml` for releases on pushes to `main`
 - GitHub Actions environment `release`
+- GitHub Actions publishing to both npmjs.org and GitHub Packages
 
 Use these exact package versions unless the user explicitly asks to upgrade them:
 
@@ -37,6 +38,7 @@ When updating release automation, hard-reference those exact versions rather tha
   `@semantic-release/github`.
 - Configure the npm plugin to write a tarball to a stable directory such as `dist`.
 - Configure the GitHub plugin to create the GitHub release and upload the npm tarball and changelog as release assets.
+- Add a workflow step after `semantic-release` to publish the generated tarball to GitHub Packages.
 
 ## Recommended Config Shape
 
@@ -90,10 +92,13 @@ Pin `lodash-es` to `4.17.21` with npm `overrides` when using this setup. A broke
 - Install dependencies before running the release script.
 - Pass `GITHUB_TOKEN` and `NPM_TOKEN` to the release step.
 - Give the job enough permissions to create releases.
+- Give the job `packages: write` if it must publish to GitHub Packages.
 - If using environment-scoped secrets, set the job `environment` to the same environment name.
 - Enable npm caching in `actions/setup-node` when using npm in CI.
 - Run `npm run semantic-release` from the workflow.
 - Use the environment name `release` unless the user explicitly wants a different name and updates the workflow and secret configuration together.
+- After `semantic-release`, configure `actions/setup-node` for `https://npm.pkg.github.com` and publish the generated tarball with `NODE_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}`.
+- Prefer deriving the GitHub Packages scope from `package.json.name` instead of hardcoding an org scope in the workflow.
 
 ## Commit Message Requirement
 
@@ -132,6 +137,9 @@ Important:
 - If the repo commits release artifacts back to git, ensure workflow permissions allow contents writes.
 - If `@semantic-release/git` is enabled, ensure files such as `CHANGELOG.md` and `package.json` are present and writable in CI.
 - If `@semantic-release/github` uploads assets, ensure the configured asset paths are created before the publish step finishes.
+- Distinguish GitHub Releases from GitHub Packages: `@semantic-release/github` creates GitHub Releases, but a separate npm publish step is needed for the GitHub Packages registry.
+- For GitHub Packages npm publishing, use `packages: write` permission and authenticate with `GITHUB_TOKEN` when publishing from the same repository.
+- If the package is scoped, derive the scope from `package.json` and feed that into `actions/setup-node`. If the package is unscoped, skip the GitHub Packages publish path rather than forcing an invalid scope.
 
 ## Useful Docs
 

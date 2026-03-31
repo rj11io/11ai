@@ -16,6 +16,7 @@ jobs:
     permissions:
       contents: write
       issues: write
+      packages: write
       pull-requests: write
       id-token: write
     steps:
@@ -38,3 +39,36 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm run semantic-release
+
+      - name: Derive package scope
+        id: package_scope
+        shell: bash
+        run: |
+          PACKAGE_NAME="$(node -p "require('./package.json').name")"
+          if [[ "$PACKAGE_NAME" == @*/* ]]; then
+            PACKAGE_SCOPE="${PACKAGE_NAME%%/*}"
+            echo "scope=$PACKAGE_SCOPE" >> "$GITHUB_OUTPUT"
+          else
+            echo "Package is not scoped; skipping GitHub Packages scope setup."
+            echo "scope=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node.js For GitHub Packages
+        if: steps.package_scope.outputs.scope != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          registry-url: "https://npm.pkg.github.com"
+          scope: ${{ steps.package_scope.outputs.scope }}
+
+      - name: Publish package to GitHub Packages
+        if: steps.package_scope.outputs.scope != ''
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if ! ls dist/*.tgz >/dev/null 2>&1; then
+            echo "No release tarball found; skipping GitHub Packages publish."
+            exit 0
+          fi
+
+          npm publish dist/*.tgz --registry=https://npm.pkg.github.com
