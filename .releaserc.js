@@ -4,7 +4,13 @@ module.exports = {
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
-    "@semantic-release/npm",
+    [
+      "@semantic-release/npm",
+      {
+        npmPublish: true,
+        tarballDir: "dist",
+      },
+    ],
     [
       "@semantic-release/git",
       {
@@ -13,6 +19,14 @@ module.exports = {
           "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}",
       },
     ],
-    "@semantic-release/github",
+    [
+      "@semantic-release/github",
+      {
+        assets: [
+          { path: "dist/*.tgz", label: "npm package tarball" },
+          { path: "CHANGELOG.md", label: "Changelog" },
+        ],
+      },
+    ],
   ],
 };

@@ -35,6 +35,8 @@ When updating release automation, hard-reference those exact versions rather tha
   `@semantic-release/npm`,
   `@semantic-release/git`,
   `@semantic-release/github`.
+- Configure the npm plugin to write a tarball to a stable directory such as `dist`.
+- Configure the GitHub plugin to create the GitHub release and upload the npm tarball and changelog as release assets.
 
 ## Recommended Config Shape
 
@@ -47,7 +49,13 @@ module.exports = {
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
-    "@semantic-release/npm",
+    [
+      "@semantic-release/npm",
+      {
+        npmPublish: true,
+        tarballDir: "dist",
+      },
+    ],
     [
       "@semantic-release/git",
       {
@@ -56,7 +64,15 @@ module.exports = {
           "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}",
       },
     ],
-    "@semantic-release/github",
+    [
+      "@semantic-release/github",
+      {
+        assets: [
+          { path: "dist/*.tgz", label: "npm package tarball" },
+          { path: "CHANGELOG.md", label: "Changelog" },
+        ],
+      },
+    ],
   ],
 };
 ```
@@ -75,6 +91,7 @@ Pin `lodash-es` to `4.17.21` with npm `overrides` when using this setup. A broke
 - Pass `GITHUB_TOKEN` and `NPM_TOKEN` to the release step.
 - Give the job enough permissions to create releases.
 - If using environment-scoped secrets, set the job `environment` to the same environment name.
+- Enable npm caching in `actions/setup-node` when using npm in CI.
 - Run `npm run semantic-release` from the workflow.
 - Use the environment name `release` unless the user explicitly wants a different name and updates the workflow and secret configuration together.
 
@@ -114,6 +131,7 @@ Important:
 - Prefer `NPM_TOKEN` as a secret, not a plain variable.
 - If the repo commits release artifacts back to git, ensure workflow permissions allow contents writes.
 - If `@semantic-release/git` is enabled, ensure files such as `CHANGELOG.md` and `package.json` are present and writable in CI.
+- If `@semantic-release/github` uploads assets, ensure the configured asset paths are created before the publish step finishes.
 
 ## Useful Docs
 
