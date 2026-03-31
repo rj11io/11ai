@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/rj11io/11ai/compare/v1.0.2...v1.1.0) (2026-03-31)
+
+
+### Features
+
+* **npm-publishing:** handle tags / version conflicts ([2bc801e](https://github.com/rj11io/11ai/commit/2bc801e0694eb3950c650000f5c474e88a12e280))
+
 # 1.0.0 (2026-03-31)
 
 
