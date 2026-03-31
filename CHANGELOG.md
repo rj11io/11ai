@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/rj11io/11ai/compare/v1.2.1...v1.2.2) (2026-03-31)
+
+
+### Bug Fixes
+
+* fixed tarball path ([e092ef3](https://github.com/rj11io/11ai/commit/e092ef3a03cee393363998706e89ff92cd49532f))
+
 ## [1.2.1](https://github.com/rj11io/11ai/compare/v1.2.0...v1.2.1) (2026-03-31)
 
 
