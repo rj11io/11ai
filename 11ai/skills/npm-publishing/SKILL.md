@@ -15,6 +15,7 @@ Prefer the smallest set of changes that gets the package publishable. Keep packa
 
 1. Inspect the package root.
    Read `package.json`, check the intended entry point, and inspect the folders that should ship.
+   If `semantic-release` is configured, check for a dedicated release config file such as `.releaserc.js` and treat that as the source of truth over older inline config examples.
 
 2. Align package metadata with the intended publish target.
    Ensure the scoped package name is correct.
@@ -40,6 +41,7 @@ Prefer the smallest set of changes that gets the package publishable. Keep packa
 6. Choose the publish mode.
    For one-off local publishing, use a repo-local helper that reads `NPM_TOKEN` from `.env`.
    For automated publishing from GitHub, prefer `semantic-release` on pushes to `main`.
+   When the repo already uses `semantic-release`, preserve the existing config shape, plugin order, and workflow naming unless the user explicitly wants a migration.
 
 7. Publish.
    For scoped public packages, use `npm publish --access public`.

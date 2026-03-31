@@ -9,6 +9,7 @@
 - Confirm `files` includes only the intended publish paths.
 - Confirm `.env` is ignored by git.
 - Confirm `README.md` and `LICENSE` are present when needed.
+- If the repo uses `semantic-release`, confirm whether `.releaserc.js` is the source of truth and update that file rather than stale inline examples.
 
 ## Token-Based Publish
 
@@ -48,6 +49,7 @@ GitHub reference:
 npm pack --dry-run
 npm publish --access public
 npm whoami
+npm run semantic-release
 ```
 
 ## Common Failures
