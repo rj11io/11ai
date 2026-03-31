@@ -140,6 +140,7 @@ Important:
 - Distinguish GitHub Releases from GitHub Packages: `@semantic-release/github` creates GitHub Releases, but a separate npm publish step is needed for the GitHub Packages registry.
 - For GitHub Packages npm publishing, use `packages: write` permission and authenticate with `GITHUB_TOKEN` when publishing from the same repository.
 - If the package is scoped, derive the scope from `package.json` and feed that into `actions/setup-node`. If the package is unscoped, skip the GitHub Packages publish path rather than forcing an invalid scope.
+- When publishing a generated tarball to GitHub Packages, pass it as an explicit local path such as `./dist/package-name.tgz`. Without the `./` prefix, npm can misread `dist/...` as a git or hosted package spec instead of a local file.
 
 ## Useful Docs
 
