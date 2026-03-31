@@ -12,7 +12,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "pack-dry": "npm pack --dry-run",
-    "publish-public": "npm publish --access public"
+    "publish-public-local": "sh ./scripts/publish-public-w-local-token.sh"
   },
   "keywords": [
     "ai",
