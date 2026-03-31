@@ -12,7 +12,7 @@
   "scripts": {
     "pack-dry": "npm pack --dry-run",
     "publish-public-local": "node ./scripts/publish-public-w-local-token.cjs",
-    "release": "semantic-release"
+    "semantic-release": "semantic-release"
   },
   "keywords": [
     "ai",
@@ -39,8 +39,13 @@
     ]
   },
   "devDependencies": {
-    "@semantic-release/github": "^11.0.6",
-    "semantic-release": "^24.2.7"
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.4",
+    "@semantic-release/npm": "^12.0.2",
+    "@semantic-release/release-notes-generator": "^14.0.1",
+    "semantic-release": "^24.2.0"
   },
   "license": "Apache-2.0"
 }
