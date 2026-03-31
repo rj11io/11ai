@@ -1,0 +1,16 @@
+{
+  "name": "@rj11io/11ai",
+  "version": "1.0.0",
+  "description": "AI skills and workflows",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ai",
+    "skills",
+    "workflows"
+  ],
+  "author": "@rj11io",
+  "license": "Apache-2.0"
+}
