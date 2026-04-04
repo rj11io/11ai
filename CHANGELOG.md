@@ -1,3 +1,15 @@
+# [1.3.0](https://github.com/rj11io/11ai/compare/v1.2.2...v1.3.0) (2026-03-31)
+
+
+### Bug Fixes
+
+* **skills:** improve npm-publishing skill description ([c536b41](https://github.com/rj11io/11ai/commit/c536b41ca77ae319e8a02ad2f72b04576ee6e7f7))
+
+
+### Features
+
+* **skills:** added new automated-releases skill ([fd52ab2](https://github.com/rj11io/11ai/commit/fd52ab25362bed35bb2234d0dd882b80cbd8314c))
+
 ## [1.2.2](https://github.com/rj11io/11ai/compare/v1.2.1...v1.2.2) (2026-03-31)
 
 
