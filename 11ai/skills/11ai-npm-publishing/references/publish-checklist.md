@@ -39,6 +39,7 @@ Use the npm docs for the current token UI and policy details:
 4. Add a new environment secret named `NPM_TOKEN`.
 5. Paste the npm token value.
 6. Ensure the workflow job uses the same environment name and passes `secrets.NPM_TOKEN` to the release step.
+7. In GitHub Actions, also expose `NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}` for npm CLI auth checks or steps that rely on `actions/setup-node` npm auth wiring.
 
 GitHub reference:
 - [Using secrets in GitHub Actions](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets?tool=webui)
@@ -58,6 +59,10 @@ npm run semantic-release
 
 Usually means the token or account is not allowed to publish this package, or the org requires stronger auth policy than the current credentials satisfy.
 
+### 401 Unauthorized In CI
+
+Usually means the workflow is not actually exposing a usable npm token to the step that is failing. Check the environment-scoped secret location, confirm the secret value is the raw token only, and in GitHub Actions set both `NPM_TOKEN` and `NODE_AUTH_TOKEN` to the same npm token when using `actions/setup-node`.
+
 ### Missing Entry Point
 
 The tarball publishes, but consumers install a broken package because `main` or `exports` points to a file that does not exist.
@@ -65,3 +70,7 @@ The tarball publishes, but consumers install a broken package because `main` or 
 ### Wrong Files In Tarball
 
 `npm pack --dry-run` shows too much or too little content. Fix the `files` array before publishing.
+
+### GitHub Packages Steps Skipped Unexpectedly
+
+If downstream publish steps are guarded by GitHub Actions outputs, confirm the step writing `$GITHUB_OUTPUT` is shell-safe. Inline `node -e` snippets that use JavaScript template literals inside double-quoted shell strings can fail to write outputs correctly and make later `if:` conditions evaluate false.

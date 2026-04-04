@@ -91,6 +91,7 @@ Pin `lodash-es` to `4.17.21` with npm `overrides` when using this setup. A broke
 - Use `actions/setup-node`.
 - Install dependencies before running the release script.
 - Pass `GITHUB_TOKEN` and `NPM_TOKEN` to the release step.
+- In GitHub Actions, also pass `NODE_AUTH_TOKEN=${{ secrets.NPM_TOKEN }}` to npm auth checks and release steps to match npm CLI auth resolution used by `actions/setup-node`.
 - Give the job enough permissions to create releases.
 - Give the job `packages: write` if it must publish to GitHub Packages.
 - If using environment-scoped secrets, set the job `environment` to the same environment name.
@@ -134,13 +135,17 @@ Important:
 - Keep the workflow on `main` unless the release policy explicitly uses more branches.
 - Prefer `GITHUB_TOKEN` for GitHub release operations.
 - Prefer `NPM_TOKEN` as a secret, not a plain variable.
+- If the workflow uses a GitHub Actions environment such as `release`, the `NPM_TOKEN` secret must exist in that same environment or the job will see an empty value even when a repository-level secret exists elsewhere.
 - If the repo commits release artifacts back to git, ensure workflow permissions allow contents writes.
 - If `@semantic-release/git` is enabled, ensure files such as `CHANGELOG.md` and `package.json` are present and writable in CI.
 - If `@semantic-release/github` uploads assets, ensure the configured asset paths are created before the publish step finishes.
+- If `npm whoami` or `@semantic-release/npm` fails with `E401` in CI, add a temporary explicit `npm whoami --registry=https://registry.npmjs.org/` step before release to isolate raw npm auth from semantic-release behavior.
 - Distinguish GitHub Releases from GitHub Packages: `@semantic-release/github` creates GitHub Releases, but a separate npm publish step is needed for the GitHub Packages registry.
 - For GitHub Packages npm publishing, use `packages: write` permission and authenticate with `GITHUB_TOKEN` when publishing from the same repository.
 - If the package is scoped, derive the scope from `package.json` and feed that into `actions/setup-node`. If the package is unscoped, skip the GitHub Packages publish path rather than forcing an invalid scope.
+- When deriving workflow outputs for later `if:` conditions, avoid `node -e "..."` snippets that contain JavaScript backticks inside double-quoted shell strings. Shell command substitution can swallow the intended `GITHUB_OUTPUT` writes and silently skip downstream steps.
 - When publishing a generated tarball to GitHub Packages, pass it as an explicit local path such as `./dist/package-name.tgz`. Without the `./` prefix, npm can misread `dist/...` as a git or hosted package spec instead of a local file.
+- If an npm auth failure triggers a secondary `@semantic-release/github` error while posting failure comments, set `repositoryUrl` explicitly and disable `failComment` if needed so the real release error remains actionable.
 
 ## Useful Docs
 

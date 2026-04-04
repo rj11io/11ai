@@ -47,12 +47,16 @@ Prefer the smallest set of changes that gets the package publishable. Keep packa
    For scoped public packages, use `npm publish --access public`.
    If the repo uses a local token helper, ensure `.env` contains `NPM_TOKEN=...` first.
    If the repo uses `semantic-release`, ensure the workflow has `GITHUB_TOKEN` and an `NPM_TOKEN` secret available.
+   In GitHub Actions, prefer setting both `NPM_TOKEN` and `NODE_AUTH_TOKEN` to the same npm secret for npm auth checks and release steps, since npm CLI auth in CI often resolves through `NODE_AUTH_TOKEN` while `@semantic-release/npm` expects `NPM_TOKEN`.
 
 8. Troubleshoot failures by category.
    For package-content issues, revisit `main`, `exports`, and `files`.
    For 403 errors, separate "wrong credentials" from "org requires 2FA or bypass-enabled token."
+   For npm `E401 Unauthorized` during `npm whoami` or `@semantic-release/npm` verify, confirm the workflow environment secret name matches the job `environment`, confirm the secret contains the raw token only, and confirm the workflow exposes the token in the variable name the active tool actually reads.
    For local permission or shell issues, inspect the execution environment before changing npm config.
    For automated releases that do not trigger, inspect branch filters, workflow permissions, and commit message format.
+   For GitHub Actions output-dependent steps, avoid inline shell strings that embed JavaScript template literals with backticks. Prefer shell-safe `echo >> "$GITHUB_OUTPUT"` or heredoc patterns so downstream `if:` checks receive the expected outputs.
+   If `@semantic-release/github` throws a secondary failure while reporting an npm auth error, make `repositoryUrl` explicit and consider disabling fail comments so the real npm problem remains visible.
    For `semantic-release` trying to publish `1.0.0` for an already-published package, bootstrap the repo with the existing published version tag before rerunning release automation.
 
 ## Quick Checks
