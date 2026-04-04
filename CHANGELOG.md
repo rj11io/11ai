@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/rj11io/11ai/compare/v1.3.0...v1.3.1) (2026-04-04)
+
+
+### Bug Fixes
+
+* prefix skills ([9da3f2e](https://github.com/rj11io/11ai/commit/9da3f2e78e06c79d728228fc6f3959be0053fdae))
+
 # [1.3.0](https://github.com/rj11io/11ai/compare/v1.2.2...v1.3.0) (2026-03-31)
 
 
