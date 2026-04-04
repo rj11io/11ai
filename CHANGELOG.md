@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/rj11io/11ai/compare/v1.3.1...v1.4.0) (2026-04-04)
+
+
+### Features
+
+* **npm-publishing:** improve error handling ([abbb097](https://github.com/rj11io/11ai/commit/abbb097d212e1fca388139592253d19fcec38968))
+
 ## [1.3.1](https://github.com/rj11io/11ai/compare/v1.3.0...v1.3.1) (2026-04-04)
 
 
