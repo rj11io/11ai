@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Automated Releases"
+  short_description: "Set up semantic-release with changelogs"
+  default_prompt: "Use $11ai-automated-releases to set up semantic-release with automated changelogs and GitHub releases."

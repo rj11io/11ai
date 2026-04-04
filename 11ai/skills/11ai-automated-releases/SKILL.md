@@ -1,5 +1,5 @@
 ---
-name: automated-releases
+name: 11ai-automated-releases
 description: Set up and maintain semantic-release based release automation for repositories that need automated versioning, changelog generation, GitHub release creation, release commits, and release workflows on pushes to main, without publishing packages to npm or GitHub Packages. Use when Codex needs to add or update semantic-release, `.releaserc.js`, or GitHub Actions release workflows focused on changelogs and GitHub releases only.
 ---
 
