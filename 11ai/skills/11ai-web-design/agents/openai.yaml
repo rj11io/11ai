@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Web Design"
+  short_description: "Design strong, non-generic websites, pages, and app UIs"
+  default_prompt: "Use $11ai-web-design to design and build a distinctive web interface with strong hierarchy, imagery, motion, and restrained structure."
