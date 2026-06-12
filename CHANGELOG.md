@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/rj11io/11ai/compare/v1.5.0...v1.5.1) (2026-06-12)
+
+
+### Bug Fixes
+
+* add v0 folder layer ([c4c5243](https://github.com/rj11io/11ai/commit/c4c5243674f2276d52bcf13b79fae13963b41298))
+
 # [1.5.0](https://github.com/rj11io/11ai/compare/v1.4.0...v1.5.0) (2026-04-17)
 
 
