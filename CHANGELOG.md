@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/rj11io/11ai/compare/v1.5.2...v1.6.0) (2026-06-12)
+
+
+### Features
+
+* reverse engineering skill ([0adba66](https://github.com/rj11io/11ai/commit/0adba66923c7ab036202c535ca8366d9623e4bd0))
+
 ## [1.5.2](https://github.com/rj11io/11ai/compare/v1.5.1...v1.5.2) (2026-06-12)
 
 
