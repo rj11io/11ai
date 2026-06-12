@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Playwright Setup"
+  short_description: "Set up Playwright tests and CI"
+  default_prompt: "Use $11ai-playwright-setup to add Playwright unit and E2E tests with CI browser setup and mock test env vars."
