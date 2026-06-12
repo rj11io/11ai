@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai WorkOS + Convex Integration"
+  short_description: "Set up WorkOS auth with Convex"
+  default_prompt: "Use $11ai-workos-convex-integration to add WorkOS AuthKit and Convex with env vars, redirects, dashboard setup, and E2E verification."

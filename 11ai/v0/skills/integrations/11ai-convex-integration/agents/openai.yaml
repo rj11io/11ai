@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Convex Integration"
+  short_description: "Set up Convex database"
+  default_prompt: "Use $11ai-convex-integration to add Convex with env vars, provider wiring, functions, and deployment guidance."
