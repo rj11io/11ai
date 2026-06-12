@@ -19,10 +19,13 @@ export interface ChatSession {
   createdAt: string      // ISO strings — sortable, serializable
   updatedAt: string
   messages: UIMessage[]  // persist the AI SDK's UIMessage[] verbatim
+  modelId?: string       // if the chat supports model selection
 }
 ```
 
 Store `UIMessage[]` as-is: it round-trips directly into `useChat({ messages })` for history restore, including tool-call parts.
+
+If the chat supports multiple models (see `11ai-ai-chat-multiple-models`), persist `modelId` in the same write as `messages`, restore the picker from it on session select, and stamp the current selection onto newly created sessions.
 
 ## Sorting: pinned first, then most recent
 

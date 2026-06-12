@@ -13,6 +13,7 @@ The complete architecture for a production-feeling AI chat grounded in your own 
 - `11ai-ai-chat-autotitle` — session naming
 - `11ai-ai-chat-session-mgmt` — session persistence
 - `11ai-ai-chat-ui-ux` — UI feature set
+- `11ai-ai-chat-multiple-models` — model picker / multi-provider support
 
 ## Architecture
 
@@ -144,7 +145,24 @@ The critical client behaviors (full code in `11ai-ai-chat-client-hooks`):
 - **Auto-scroll** on new visible messages; **refocus input** when streaming ends (both rAF-wrapped).
 - **Dismissible error banner** showing `error.message`.
 
-## 6. UI shell
+## 6. Multiple models (optional)
+
+To let users pick between models/providers (full recipe in `11ai-ai-chat-multiple-models`):
+
+- A shared **model registry** `{ id, model, provider }[]` — used by the route for validation/dispatch and by the client for the picker; first entry is the default.
+- The route builds a `providers` map of per-vendor SDK instances (`createOpenAI`, `createDeepSeek`, `createXai`, ...) — all can share one gateway baseURL — and resolves `modelId` → registry entry → provider → `provider.chat(modelId)`:
+
+```ts
+const { messages, modelId } = await req.json()
+const modelDef = models.find((m) => m.id === (modelId ?? models[0]?.id))
+// 400 on unknown model / unsupported provider, then:
+model: providers[modelDef.provider].chat(modelDef.id)
+```
+
+- The client sends the selection **per message**: `sendMessage({ text }, { body: { modelId: selectedModelId } })` — never baked into the transport, so mid-conversation switching works.
+- Persist `modelId` on the session record; restore the picker on session select, reset to default on new chat.
+
+## 7. UI shell
 
 Sidebar (sessions: pin/rename/delete via hover kebab, inline rename) + chat column (hint-chip empty state, bubbles, bottom input row), `svh`-based height math with `min-h-0` flex chain, mobile dropdown fallback. (Full checklist in `11ai-ai-chat-ui-ux`.)
 
@@ -163,4 +181,5 @@ NEXT_PUBLIC_AI_MINI=true      # optional: switch to the token-lean tool set
 4. Sessions hook + sidebar + persistence-on-completion.
 5. Title route + first-message trigger.
 6. Mini tool set + env toggle.
-7. UX polish pass: empty state hints, thinking indicator, error banner, scroll/focus, mobile.
+7. (Optional) Multi-model: registry + providers map + per-message `modelId` + picker + per-session persistence.
+8. UX polish pass: empty state hints, thinking indicator, error banner, scroll/focus, mobile.

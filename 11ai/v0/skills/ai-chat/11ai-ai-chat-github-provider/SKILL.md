@@ -62,6 +62,10 @@ GITHUB_TOKEN=ghp_...
 
 3. Server-side only — never expose via `NEXT_PUBLIC_*`.
 
+## Multiple model families on the same gateway
+
+GitHub Models serves OpenAI, DeepSeek, xAI, and other model families behind the same endpoint and token. Instantiate each vendor's AI SDK provider (`createOpenAI`, `createDeepSeek`, `createXai`) with the same `baseURL`/`apiKey` — the vendor packages keep their model-specific parameter handling while the gateway unifies auth. Model ids are gateway-qualified (`"openai/gpt-4.1"`, `"deepseek/DeepSeek-R1"`, `"xai/grok-3"`). For the full registry/dispatch/picker pattern, see `11ai-ai-chat-multiple-models`.
+
 ## Caveats
 
 - Rate limits are per-token and tight compared to paid APIs. Cap agentic loops (e.g. `stopWhen: stepCountIs(6)`) and keep tool outputs small (see `11ai-ai-chat-tool-design`).

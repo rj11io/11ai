@@ -80,6 +80,12 @@ function handleSubmit(text: string) {
 }
 ```
 
+To send per-request fields (e.g. the selected model when supporting multiple models — see `11ai-ai-chat-multiple-models`), use `sendMessage`'s options instead of the transport config, so the value is read live at send time:
+
+```tsx
+sendMessage({ text: trimmed }, { body: { modelId: selectedModelId } })
+```
+
 **Refocus input after a stream ends** — track the loading edge with a ref; `requestAnimationFrame` waits for the disabled input to re-enable:
 
 ```tsx
