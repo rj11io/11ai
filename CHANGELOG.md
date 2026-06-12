@@ -1,3 +1,11 @@
+# [1.5.0](https://github.com/rj11io/11ai/compare/v1.4.0...v1.5.0) (2026-04-17)
+
+
+### Features
+
+* compression skill ([8265276](https://github.com/rj11io/11ai/commit/8265276f685a0b2421b344e0392f12a36bc87ee2))
+* web-design skill ([83a5f4a](https://github.com/rj11io/11ai/commit/83a5f4af1f1974416457afc33b832a93f975b41c))
+
 # [1.4.0](https://github.com/rj11io/11ai/compare/v1.3.1...v1.4.0) (2026-04-04)
 
 
