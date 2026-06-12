@@ -1,3 +1,15 @@
+## [1.5.2](https://github.com/rj11io/11ai/compare/v1.5.1...v1.5.2) (2026-06-12)
+
+
+### Bug Fixes
+
+* chabot extension skill ([566b411](https://github.com/rj11io/11ai/commit/566b411bb9f4f79135fd0ac1613d2758a5495337))
+* initial ai chat skill ([25b68bf](https://github.com/rj11io/11ai/commit/25b68bf6e8511ec4da4783a82f59f498a8db0af3))
+* integrations skills ([6acc74e](https://github.com/rj11io/11ai/commit/6acc74e12a14e3df200d6c789d9741076226dde7))
+* multiple models skill ([1ac9267](https://github.com/rj11io/11ai/commit/1ac9267af8c240be9c13de81e78566f323260d2f))
+* sort skills by type ([82b8f35](https://github.com/rj11io/11ai/commit/82b8f358492d5591c40ef4d9a526e9f95795fc58))
+* testing codebase skill ([e9ddab6](https://github.com/rj11io/11ai/commit/e9ddab6ba4819a9633972680e70622399428fee1))
+
 ## [1.5.1](https://github.com/rj11io/11ai/compare/v1.5.0...v1.5.1) (2026-06-12)
 
 
