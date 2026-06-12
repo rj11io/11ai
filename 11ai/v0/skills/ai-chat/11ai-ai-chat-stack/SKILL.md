@@ -14,6 +14,7 @@ The complete architecture for a production-feeling AI chat grounded in your own 
 - `11ai-ai-chat-session-mgmt` — session persistence
 - `11ai-ai-chat-ui-ux` — UI feature set
 - `11ai-ai-chat-multiple-models` — model picker / multi-provider support
+- `11ai-aichat-chatbot-extension` — ship the same assistant as a Slack/messaging-platform bot
 
 ## Architecture
 
@@ -120,6 +121,8 @@ One-shot `generateText` with a strict system prompt ("3 to 6 words, no quotes, r
 
 `useChatSessions()` hook exposing `{ sessions, create, rename, togglePin, remove, saveMessages, getSession }` over your persistence of choice — localStorage for zero-backend, or a small REST surface for server persistence. Sessions store `UIMessage[]` verbatim, sort pinned-first then `updatedAt`. Page-level lifecycle: bootstrap most-recent-or-create, delete-falls-back-to-next, switch by loading the full session. (Full patterns in `11ai-ai-chat-session-mgmt`.)
 
+The bootstrap's create branch is what powers the first-visit experience: with zero sessions, an empty session is auto-created and made active, and because it has no messages the chat area renders the hint-chip empty state (see `11ai-ai-chat-ui-ux`) — the user always lands on the hints, never a blank pane.
+
 ## 5. Client page
 
 ```tsx
@@ -142,6 +145,7 @@ The critical client behaviors (full code in `11ai-ai-chat-client-hooks`):
 - **Persist on stream completion only**, guarded by a saved-count ref.
 - **One-shot first-message hook** (ref-guarded) → auto-title.
 - **Render only messages with non-empty text parts**; thinking indicator only while loading and before assistant text arrives.
+- **Hint screen when the active session has zero messages** — covers first visit (auto-created empty session), new chat, and delete-last-session fallback.
 - **Auto-scroll** on new visible messages; **refocus input** when streaming ends (both rAF-wrapped).
 - **Dismissible error banner** showing `error.message`.
 
@@ -162,7 +166,11 @@ model: providers[modelDef.provider].chat(modelDef.id)
 - The client sends the selection **per message**: `sendMessage({ text }, { body: { modelId: selectedModelId } })` — never baked into the transport, so mid-conversation switching works.
 - Persist `modelId` on the session record; restore the picker on session select, reset to default on new chat.
 
-## 7. UI shell
+## 7. Chatbot extension (optional)
+
+The same AI core can be shipped as a Slack (or other platform) bot via the Chat SDK (`chat` + `@chat-adapter/slack` + a state backend) — full recipe in `11ai-aichat-chatbot-extension`. The precondition is structural: keep providers, the model registry, tools, and the system prompt in shared `lib/ai/*` modules with no web/platform imports, so the web chat route and the bot are both thin consumers. The bot replaces the app-managed session store with platform threads + scoped state, replaces the model picker with a `/model` slash command (registry entries gain `label` + `aliases`), and streams via `thread.post(result.fullStream)` instead of `toUIMessageStreamResponse()`.
+
+## 8. UI shell
 
 Sidebar (sessions: pin/rename/delete via hover kebab, inline rename) + chat column (hint-chip empty state, bubbles, bottom input row), `svh`-based height math with `min-h-0` flex chain, mobile dropdown fallback. (Full checklist in `11ai-ai-chat-ui-ux`.)
 
@@ -183,3 +191,4 @@ NEXT_PUBLIC_AI_MINI=true      # optional: switch to the token-lean tool set
 6. Mini tool set + env toggle.
 7. (Optional) Multi-model: registry + providers map + per-message `modelId` + picker + per-session persistence.
 8. UX polish pass: empty state hints, thinking indicator, error banner, scroll/focus, mobile.
+9. (Optional) Chatbot extension: extract the AI core into shared modules, add the Chat SDK bot + webhook route, configure the platform app.

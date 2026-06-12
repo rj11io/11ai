@@ -27,6 +27,14 @@ Two-pane: sessions sidebar (desktop only) + chat column. The chat column is `hea
 
 ## Empty state: hint chips, not a blank box
 
+The hint screen renders whenever the **active session has zero messages** (`messages.length === 0` in the chat area) — that's the condition, not "no sessions exist". The no-sessions states must *resolve into* it:
+
+- **First visit (no sessions at all)**: the page bootstrap auto-creates an empty session and makes it active, so the user lands on the hint screen — never a blank pane or a "create a chat first" dead end.
+- **Last session deleted**: the delete fallback creates a fresh empty session → hint screen again.
+- **New chat clicked**: the fresh session has no messages → hint screen.
+
+While the bootstrap/auto-create is resolving (the active session is still null), show a centered "Loading chat..." placeholder — the only state that may briefly precede the hints.
+
 First impression is a branded empty state with clickable example prompts. Hints should be real, working queries against your data — they double as a demo script:
 
 ```tsx
@@ -113,5 +121,5 @@ Below `lg`, the sidebar disappears; a compact toolbar above the chat shows a "Ne
 - New chat from anywhere → switches immediately to the fresh, empty session (hint chips show again).
 - First message triggers auto-titling (see `11ai-ai-chat-autotitle`); sidebar title updates in place when it lands.
 - Deleting the active session falls back to the next session or a fresh one — never an empty dead state.
-- "Loading chat..." centered placeholder while the initial session resolves.
+- First visit with zero sessions auto-creates an empty session → hint screen shows immediately ("Loading chat..." placeholder only while that resolves).
 - Brand the assistant (avatar, name in the empty state heading and input placeholder) — it reads as a product feature, not a widget.

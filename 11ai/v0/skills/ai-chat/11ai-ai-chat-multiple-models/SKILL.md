@@ -33,6 +33,7 @@ export const models: Model[] = [
 - `id` is what travels over the wire and what the gateway expects (`provider/model` form for GitHub Models).
 - Adding/removing a model is a one-line registry change — route and picker pick it up automatically.
 - To disable a model temporarily, comment it out of the registry; nothing else references it directly.
+- If the assistant also ships as a messaging-platform bot (see `11ai-aichat-chatbot-extension`), extend entries with `label` (human display) and `aliases` (hand-typed shorthands like `"gpt4o"`, `"r1"`) so a `/model` command can resolve user input with normalized matching.
 
 ## 2. Per-provider SDK instances over one gateway
 
