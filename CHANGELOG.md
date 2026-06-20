@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/rj11io/11ai/compare/v1.6.0...v1.6.1) (2026-06-20)
+
+
+### Bug Fixes
+
+* readme ([aaee78c](https://github.com/rj11io/11ai/commit/aaee78ca41653b702e4deee348f6edb2a1e3a873))
+
 # [1.6.0](https://github.com/rj11io/11ai/compare/v1.5.2...v1.6.0) (2026-06-12)
 
 
