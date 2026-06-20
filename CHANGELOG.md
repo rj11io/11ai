@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/rj11io/11ai/compare/v1.6.1...v1.7.0) (2026-06-20)
+
+
+### Features
+
+* **utils:** vercel analytics skill ([4b8da39](https://github.com/rj11io/11ai/commit/4b8da39cf239b3ad530b87387e69290f7ea76b5f))
+
 ## [1.6.1](https://github.com/rj11io/11ai/compare/v1.6.0...v1.6.1) (2026-06-20)
 
 
