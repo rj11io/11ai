@@ -35,6 +35,9 @@ Key flags:
   echo "$out" | jq -r '.result'
   session=$(echo "$out" | jq -r '.session_id')
   ```
+- `--effort low|medium|high|xhigh|max` — how much reasoning the model spends. Default every delegated call to `--effort high`; go `xhigh`/`max` for the hardest design or verification work, drop below high only for trivial mechanical tasks where speed matters more than depth.
+- `--fallback-model <a,b>` — print-mode only; if the primary model is overloaded or unavailable, retries a comma-separated list in order, e.g. `--model claude-fable-5 --fallback-model claude-sonnet-5,claude-opus-4-8`.
+- `--max-budget-usd <amount>` — hard spend cap for the child; good insurance on background fan-outs.
 - `--permission-mode` — `default` (blocks on unapproved tools; safest), `acceptEdits` (auto-approves file edits), `plan` (read-only planning). `--dangerously-skip-permissions` approves everything — only with explicit user authorization, ideally sandboxed.
 - `--allowedTools` / `--disallowedTools` — scope tools, e.g. `--allowedTools "Read,Grep,Glob"` for a read-only reviewer.
 - `--max-turns N` — hard cap on agent loop iterations; good runaway protection.
@@ -65,6 +68,7 @@ Key flags:
 
 - `exec` — non-interactive; required when called from another agent.
 - `-m, --model` — e.g. `gpt-5.6`, `gpt-5.6-luna`.
+- `-c model_reasoning_effort="high"` — reasoning effort, set as a config override (values: `minimal`, `low`, `medium`, `high`; newer models add `xhigh`). Set it explicitly on every call even though it looks optional — otherwise the child inherits whatever the user's `~/.codex/config.toml` happens to say. Add `--strict-config` while testing to catch a misspelled key.
 - `--sandbox read-only|workspace-write|danger-full-access` — the permission level. Default to `read-only`; `workspace-write` when it must edit; never `danger-full-access` without explicit user authorization.
 - `-C, --cd <dir>` — working directory for the child.
 - `--output-last-message <file>` — writes only the agent's final message to a file; the cleanest way to capture the answer.
@@ -84,6 +88,20 @@ gemini -p "Summarize the API surface of src/lib/*.ts in five bullets." \
 - `--output-format json` — structured result; `.response` holds the answer.
 - `--yolo` — auto-approves all actions; same caution as skip-permissions above.
 - Also accepts stdin: `cat brief.md | gemini -p "Follow the brief above."`
+- No effort flag as of writing — control depth through model choice and the prompt.
+
+## Effort and speed
+
+Default: **high effort, normal speed** on every delegated call — `--effort high` (Claude Code) or `-c model_reasoning_effort="high"` (Codex). Effort is how long the model thinks before and between actions; more effort means better work and slower, more expensive calls.
+
+Normal speed is simply the default processing — there is no separate headless speed flag in any of these CLIs. So when the user asks for a faster or cheaper run, you have exactly two levers:
+
+- Lower the effort level (`--effort low`, `model_reasoning_effort="low"`).
+- Pick a smaller model (Haiku, a lighter GPT tier).
+
+And when a task deserves more than the default, raise effort (`xhigh`/`max` on Claude Code, `xhigh` on newer Codex models) rather than padding the prompt with "think carefully".
+
+Always set effort explicitly. The child process reads the user's local config, so an unset call inherits an invisible default that may differ per machine — the earlier warning about Codex's `config.toml` applies here too.
 
 ## Timeouts and background runs
 
