@@ -1,3 +1,11 @@
+# [1.8.0](https://github.com/rj11io/11ai/compare/v1.7.0...v1.8.0) (2026-07-13)
+
+
+### Features
+
+* **xharness:** agent delegation ([d10299a](https://github.com/rj11io/11ai/commit/d10299a2f971576e8b004f98c8a7e79094e44c5e))
+* **xharness:** cross harness agent comms ([0fd38fb](https://github.com/rj11io/11ai/commit/0fd38fb9a502da6b615181749998dc80deaea674))
+
 # [1.7.0](https://github.com/rj11io/11ai/compare/v1.6.1...v1.7.0) (2026-06-20)
 
 
