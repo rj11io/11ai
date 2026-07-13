@@ -35,7 +35,7 @@ Key flags:
   echo "$out" | jq -r '.result'
   session=$(echo "$out" | jq -r '.session_id')
   ```
-- `--effort low|medium|high|xhigh|max` — how much reasoning the model spends. Default every delegated call to `--effort high`; go `xhigh`/`max` for the hardest design or verification work, drop below high only for trivial mechanical tasks where speed matters more than depth.
+- `--effort low|medium|high` — how much reasoning the model spends. Default every delegated call to `--effort high`; drop below high only for trivial mechanical tasks where speed matters more than depth. The CLI also accepts `xhigh` and `max`, but our policy is high as the ceiling: avoid `xhigh`, never use `max` (or any "ultra"-style tier).
 - `--fallback-model <a,b>` — print-mode only; if the primary model is overloaded or unavailable, retries a comma-separated list in order, e.g. `--model claude-fable-5 --fallback-model claude-sonnet-5,claude-opus-4-8`.
 - `--max-budget-usd <amount>` — hard spend cap for the child; good insurance on background fan-outs.
 - `--permission-mode` — `default` (blocks on unapproved tools; safest), `acceptEdits` (auto-approves file edits), `plan` (read-only planning). `--dangerously-skip-permissions` approves everything — only with explicit user authorization, ideally sandboxed.
@@ -68,7 +68,7 @@ Key flags:
 
 - `exec` — non-interactive; required when called from another agent.
 - `-m, --model` — e.g. `gpt-5.6`, `gpt-5.6-luna`.
-- `-c model_reasoning_effort="high"` — reasoning effort, set as a config override (values: `minimal`, `low`, `medium`, `high`; newer models add `xhigh`). Set it explicitly on every call even though it looks optional — otherwise the child inherits whatever the user's `~/.codex/config.toml` happens to say. Add `--strict-config` while testing to catch a misspelled key.
+- `-c model_reasoning_effort="high"` — reasoning effort, set as a config override (use `minimal`, `low`, `medium`, or `high`; newer models also accept `xhigh`, but per policy `high` is the ceiling). Set it explicitly on every call even though it looks optional — otherwise the child inherits whatever the user's `~/.codex/config.toml` happens to say. Add `--strict-config` while testing to catch a misspelled key.
 - `--sandbox read-only|workspace-write|danger-full-access` — the permission level. Default to `read-only`; `workspace-write` when it must edit; never `danger-full-access` without explicit user authorization.
 - `-C, --cd <dir>` — working directory for the child.
 - `--output-last-message <file>` — writes only the agent's final message to a file; the cleanest way to capture the answer.
@@ -99,7 +99,7 @@ Normal speed is simply the default processing — there is no separate headless 
 - Lower the effort level (`--effort low`, `model_reasoning_effort="low"`).
 - Pick a smaller model (Haiku, a lighter GPT tier).
 
-And when a task deserves more than the default, raise effort (`xhigh`/`max` on Claude Code, `xhigh` on newer Codex models) rather than padding the prompt with "think carefully".
+High is also the ceiling, not just the default. The CLIs offer tiers above it (`xhigh`, `max`), but avoid `xhigh` and never use `max` or any "ultra"-style setting — the returns above high rarely justify the extra time and cost. If a task seems to need more than high effort, that's a signal to split it into smaller delegations or write a sharper brief, not to raise the dial.
 
 Always set effort explicitly. The child process reads the user's local config, so an unset call inherits an invisible default that may differ per machine — the earlier warning about Codex's `config.toml` applies here too.
 
