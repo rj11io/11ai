@@ -17,10 +17,10 @@ Six steps, in order. Each exists for a reason:
 
 1. **Scan** — run a bundled, strictly read-only script that lists every candidate with the facts needed to judge it (age, size, owner, flags). A script beats ad-hoc commands because every invocation gets the same reliable data.
 2. **Judge** — sort candidates into likely-abandoned vs. leave-alone using the skill's named signals. When unsure, say so in the report instead of guessing.
-3. **Report** — a compact table with one verdict line per row. No essay. If nothing looks abandoned, say so and stop — never invent candidates to justify the scan.
+3. **Report** — a compact table with one verdict line per row, and numbers the user can act on. Every row carries the item's size (or the resource's equivalent — a process's RAM, a worktree's disk usage), and the report leads with the roll-up analytics: total found, total per group, and above all the headline reclaimable number ("deleting the 7 stale node_modules frees 5.2 GB"). The scan script's TOTALS footer provides these figures — quote them, don't estimate. No essay. If nothing looks abandoned, say so and stop — never invent candidates to justify the scan.
 4. **Ask** — the user picks what gets cleaned. Use AskUserQuestion with `multiSelect: true` when available (recommended items first), otherwise a numbered list in chat. "None" is always an easy answer. If the action is irreversible, say so right in the question.
 5. **Execute** — act only on the selected items, gentlest effective action first (e.g. `kill` before `kill -9`, `git worktree remove` before `rm -rf`).
-6. **Verify** — re-check that the resources are actually gone/freed, report what was reclaimed, and flag anything that resisted (plus the likely reason).
+6. **Verify** — re-check that the resources are actually gone/freed, and report the reclaimed amount as a concrete number ("disk space saved by deleting the selected node_modules: 3.2 GB", "freed 4 ports and ~1.1 GB of RAM"), broken down per item when more than a couple were cleaned. Flag anything that resisted, plus the likely reason.
 
 The one rule that overrides everything: **never destroy anything the user did not explicitly pick.** Scanning and reporting are free; every destructive step goes through the user first.
 
@@ -43,6 +43,7 @@ Put it at `scripts/scan_<target>.sh` inside the new skill. Requirements:
 - **Read-only.** It lists and measures; it never deletes, kills, or modifies.
 - **Portable.** Works with stock macOS bash 3.2 (no associative arrays, no `mapfile`) and on Linux. For file mtimes use the two-way fallback: `stat -f %m "$f" 2>/dev/null || stat -c %Y "$f"`.
 - **Tab-separated output** with a header row, one line per candidate, including a FLAGS column (comma-joined, `-` if none). Flags encode the signals from step 1 so the judging step is mostly mechanical.
+- **Measures, not just lists.** Every candidate gets a size (or the resource's equivalent metric — RAM for processes), computed in machine-summable units internally, and the output ends with a **TOTALS footer**: overall count and size, per-flag subtotals, and the reclaimable-candidates subtotal. This is what lets the report and verify steps quote exact numbers instead of estimates. See any sibling scanner for the awk pattern.
 - **Handles the empty case** with a friendly one-line message and exit 0.
 
 ### 3. Write the SKILL.md

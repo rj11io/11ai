@@ -2,8 +2,12 @@
 # scan_ports.sh — list every TCP port the current user is listening on,
 # grouped by process, with signals that help spot abandoned dev servers.
 #
-# Output: tab-separated, one line per process, sorted by lowest port:
-#   PORTS   PID   AGE   CPU%   FLAGS   COMMAND
+# Output: tab-separated, one line per process:
+#   PORTS   PID   AGE   CPU%   MEM   FLAGS   COMMAND
+#
+# MEM is the process's resident memory (RAM actually held right now) — the
+# reclaim metric for a process: killing it frees this much. A TOTALS footer
+# sums it so reports can quote exact numbers.
 #
 # FLAGS (comma-joined, "-" if none):
 #   orphan  parent process is gone (PPID 1) — often a leftover from a dead agent session
@@ -31,14 +35,15 @@ if [ -z "$pid_ports" ]; then
   exit 0
 fi
 
-printf 'PORTS\tPID\tAGE\tCPU%%\tFLAGS\tCOMMAND\n'
-while IFS="$(printf '\t')" read -r pid ports; do
+rows="$(while IFS="$(printf '\t')" read -r pid ports; do
   [ -z "$pid" ] && continue
-  info="$(ps -o ppid=,etime=,pcpu= -p "$pid" 2>/dev/null || true)"
+  info="$(ps -o ppid=,etime=,pcpu=,rss= -p "$pid" 2>/dev/null || true)"
   [ -z "$info" ] && continue  # process exited between lsof and now
   ppid="$(echo "$info" | awk '{print $1}')"
   etime="$(echo "$info" | awk '{print $2}')"
   pcpu="$(echo "$info" | awk '{print $3}')"
+  rss_kb="$(echo "$info" | awk '{print $4}')"
+  mem="$(awk -v kb="${rss_kb:-0}" 'BEGIN { printf (kb >= 1048576) ? "%.1fG" : "%.0fM", (kb >= 1048576) ? kb/1048576 : kb/1024 }')"
   cmd="$(ps -o command= -p "$pid" 2>/dev/null | cut -c1-140)"
 
   flags=""
@@ -50,7 +55,20 @@ while IFS="$(printf '\t')" read -r pid ports; do
     flags="${flags:+$flags,}db"
   fi
 
-  printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$ports" "$pid" "$etime" "$pcpu" "${flags:--}" "$cmd"
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "${rss_kb:-0}" "$ports" "$pid" "$etime" "$pcpu" "$mem" "${flags:--}" "$cmd"
 done <<EOF
 $pid_ports
 EOF
+)"
+
+printf 'PORTS\tPID\tAGE\tCPU%%\tMEM\tFLAGS\tCOMMAND\n'
+echo "$rows" | cut -f2-
+echo ""
+echo "$rows" | awk -F'\t' '
+  function human(kb) { return (kb >= 1048576) ? sprintf("%.1fG", kb/1048576) : sprintf("%.0fM", kb/1024) }
+  { n++; ports += split($2, a, ","); mem += $1
+    if ($7 ~ /dev|orphan/) { nc++; memc += $1; portsc += split($2, a, ",") } }
+  END {
+    printf "TOTALS: %d listening processes on %d ports, holding %s of RAM\n", n, ports, human(mem)
+    if (nc) printf "  flagged dev/orphan (likely reclaimable): %d processes, %d ports, %s of RAM\n", nc, portsc, human(memc)
+  }'

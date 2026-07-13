@@ -13,6 +13,9 @@
 #
 # Output: tab-separated, one line per artifact, oldest first:
 #   AGE_D   SIZE   HARNESS   KIND   FLAGS   PATH
+# followed by a TOTALS footer: overall count and size, per-harness
+# subtotals, and the old->reclaimable subtotal, so reports can quote
+# exact "disk space reclaimable" numbers.
 #
 #   KIND    transcript (a saved agent conversation)
 #           scratchpad (a per-session temp working directory)
@@ -32,15 +35,18 @@ now="$(date +%s)"
 
 mtime_of() { stat -f %m "$1" 2>/dev/null || stat -c %Y "$1" 2>/dev/null || echo "$now"; }
 
+# Each row carries a hidden leading size-in-KB field for the TOTALS footer;
+# it is cut away before display.
 emit() { # harness kind path
   harness="$1"; kind="$2"; path="$3"
   age_d="$(( (now - $(mtime_of "$path")) / 86400 ))"
   [ "$age_d" -lt "$MIN_AGE_D" ] && return 0
+  size_kb="$(du -sk "$path" 2>/dev/null | awk '{print $1}')"
   size="$(du -sh "$path" 2>/dev/null | awk '{print $1}')"
   flags=""
   [ "$age_d" -gt 30 ] && flags="old"
   [ "$age_d" -lt 1 ] && flags="${flags:+$flags,}today"
-  printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$age_d" "${size:-?}" "$harness" "$kind" "${flags:--}" "$path"
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "${size_kb:-0}" "$age_d" "${size:-?}" "$harness" "$kind" "${flags:--}" "$path"
 }
 
 results="$(
@@ -90,4 +96,21 @@ if [ -z "$results" ]; then
 fi
 
 printf 'AGE_D\tSIZE\tHARNESS\tKIND\tFLAGS\tPATH\n'
-echo "$results" | sort -rn -k1,1
+echo "$results" | sort -rn -k2,2 | cut -f2-
+echo ""
+echo "$results" | awk -F'\t' '
+  function human(kb) {
+    if (kb >= 1048576) return sprintf("%.1fG", kb/1048576)
+    if (kb >= 1024)    return sprintf("%.0fM", kb/1024)
+    return kb "K"
+  }
+  { n++; total += $1
+    hn[$4]++; hs[$4] += $1
+    if ($6 ~ /old/)   { no++; so += $1 }
+    if ($6 ~ /today/) { nt++ } }
+  END {
+    printf "TOTALS: %d thread artifacts, %s on disk\n", n, human(total)
+    for (h in hn) printf "  %s: %d artifacts, %s\n", h, hn[h], human(hs[h])
+    if (no) printf "  old >30d (reclaim candidates): %d, %s reclaimable\n", no, human(so)
+    if (nt) printf "  touched today (possibly live, leave alone): %d\n", nt
+  }'

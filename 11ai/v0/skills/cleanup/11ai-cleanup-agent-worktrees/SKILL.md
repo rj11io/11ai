@@ -23,7 +23,7 @@ Run the bundled scanner against the repo (default: current directory):
 bash scripts/scan_agent_worktrees.sh [repo_path]
 ```
 
-It prints one line per non-main worktree: age in days, branch, state (`clean` / `dirty` / `missing`), flags, path. Flags mean:
+It prints one line per non-main worktree — age in days, branch, state (`clean` / `dirty` / `missing`), disk size, flags, path — followed by a TOTALS footer: overall count and disk usage, the clean-and-merged reclaimable subtotal, and the dirty subtotal. Flags mean:
 
 - `old` — untouched for over 14 days.
 - `agent` — the path matches the naming patterns of any known harness (claude, codex, gemini, goose, opencode, cursor, aider, copilot) or generic worktree/scratchpad/temp paths. Worktrees themselves are harness-agnostic — `git worktree list` sees them all regardless of which agent made them; this flag only helps attribute them.
@@ -53,15 +53,17 @@ When in doubt, put it in the report with your honest uncertainty rather than gue
 
 ### 3. Report
 
-Keep it succinct — a table plus one line of verdict per row, no essay:
+Keep it succinct — headline numbers first (quote the scanner's TOTALS footer, don't estimate), then a table with one verdict line per row, no essay:
 
 ```
-| Age | Branch            | State   | Verdict                                      |
-|-----|-------------------|---------|----------------------------------------------|
-| 41d | wt-fix-auth       | clean   | remove — merged, agent-created               |
-| —   | wt-old-experiment | missing | prune — directory already gone               |
-| 22d | wt-refactor       | dirty   | leave alone — has uncommitted changes        |
-| 9d  | review-pr-142     | clean   | remove? — unmerged commits, check first      |
+Found 4 extra worktrees using 1.9 GB — removing the clean, merged one reclaims 420 MB; pruning costs nothing.
+
+| Age | Branch            | State   | Size | Verdict                                      |
+|-----|-------------------|---------|------|----------------------------------------------|
+| 41d | wt-fix-auth       | clean   | 420M | remove — merged, agent-created               |
+| —   | wt-old-experiment | missing | —    | prune — directory already gone               |
+| 22d | wt-refactor       | dirty   | 890M | leave alone — has uncommitted changes        |
+| 9d  | review-pr-142     | clean   | 610M | remove? — unmerged commits, check first      |
 ```
 
 ### 4. Ask
@@ -88,7 +90,7 @@ Let git's own refusals (`remove` on dirty, `-d` on unmerged) work for you — es
 
 ### 6. Verify
 
-Run `git worktree list` again and confirm the removed ones are gone, report the disk space freed (`du -sh` the paths before removing if the user cares about the number), and flag anything that resisted with the likely reason (usually a process with its working directory inside the worktree — an editor or a still-running agent).
+Run `git worktree list` again and confirm the removed ones are gone, then report the headline number — "disk space saved by removing the selected worktrees: 1.0 GB" — with the per-worktree breakdown (sizes come from the scan; use them rather than re-measuring what no longer exists). Flag anything that resisted with the likely reason (usually a process with its working directory inside the worktree — an editor or a still-running agent).
 
 ## Notes
 

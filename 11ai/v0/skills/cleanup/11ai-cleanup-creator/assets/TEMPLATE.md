@@ -44,13 +44,15 @@ When in doubt, put it in the report with your honest uncertainty rather than gue
 
 ### 3. Report
 
-Keep it succinct — a table plus one line of verdict per row, no essay:
+Keep it succinct — headline numbers first, then a table with one verdict line per row, no essay. Quote the scanner's TOTALS footer for the figures; don't estimate:
 
 ```
-| <Key> | <Facts> | Age | Verdict |
-|-------|---------|-----|---------|
-| ...   | ...     | ... | abandoned — <reason> |
-| ...   | ...     | ... | leave alone — <reason> |
+Found <N> <RESOURCE> using <TOTAL SIZE> — cleaning the <M> recommended ones reclaims <RECLAIMABLE>.
+
+| <Key> | Size | <Facts> | Age | Verdict |
+|-------|------|---------|-----|---------|
+| ...   | ...  | ...     | ... | abandoned — <reason> |
+| ...   | ...  | ...     | ... | leave alone — <reason> |
 ```
 
 ### 4. Ask
@@ -73,7 +75,7 @@ For the selected items only:
 
 ### 6. Verify
 
-Re-check the cleaned items (<VERIFY COMMAND>), report what was reclaimed (<METRIC: freed disk, freed ports, …>), and flag anything that resisted with the likely reason.
+Re-check the cleaned items (<VERIFY COMMAND>) and report the reclaimed amount as a concrete headline number — "<e.g. disk space saved by deleting the selected X: 3.2 GB>" — broken down per item when more than a couple were cleaned. Flag anything that resisted with the likely reason.
 
 ## Notes
 

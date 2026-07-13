@@ -21,7 +21,7 @@ Run the bundled scanner:
 bash scripts/scan_ports.sh
 ```
 
-It prints one line per listening process: its ports, PID (process ID), age, CPU%, flags, and command. Flags mean:
+It prints one line per listening process — its ports, PID (process ID), age, CPU%, resident memory (the RAM the process holds right now, which killing it frees), flags, and command — followed by a TOTALS footer: process/port counts, total RAM held, and the likely-reclaimable subtotal. Flags mean:
 
 - `orphan` — the parent process is gone (PPID 1). Strong signal of abandonment for CLI processes — but on macOS every GUI app is launched by launchd (PID 1), so ignore this flag when the command is an `.app` bundle.
 - `dev` — the command looks like a dev server or tool an agent would start (node, vite, python, uvicorn, …).
@@ -50,14 +50,16 @@ When in doubt, put it in the report with your honest uncertainty rather than gue
 
 ### 3. Report
 
-Keep it succinct — a table plus one line of verdict per row, no essay:
+Keep it succinct — headline numbers first (quote the scanner's TOTALS footer, don't estimate), then a table with one verdict line per row, no essay:
 
 ```
-| Port(s) | Process        | Age    | Verdict                                  |
-|---------|----------------|--------|------------------------------------------|
-| 3117    | python http    | 2d 4h  | abandoned — orphaned, idle for 2 days     |
-| 5173    | vite (my-app)  | 8h     | likely abandoned — 0% CPU, temp worktree  |
-| 5432    | postgres       | 12d    | leave alone — database                    |
+5 processes are listening on 7 ports, holding 2.1 GB of RAM — killing the 2 abandoned ones frees 3 ports and ~840 MB.
+
+| Port(s) | Process        | Age    | Mem   | Verdict                                  |
+|---------|----------------|--------|-------|------------------------------------------|
+| 3117    | python http    | 2d 4h  | 120M  | abandoned — orphaned, idle for 2 days     |
+| 5173    | vite (my-app)  | 8h     | 720M  | likely abandoned — 0% CPU, temp worktree  |
+| 5432    | postgres       | 12d    | 340M  | leave alone — database                    |
 ```
 
 ### 4. Ask
@@ -79,7 +81,7 @@ kill -9 <pid>             # only for survivors
 
 ### 6. Verify
 
-Re-check the freed ports (`lsof -i :<port>`) and confirm to the user: which ports are now free, and anything that refused to die (rare — usually means a supervisor like nodemon or pm2 respawned it; say so and suggest stopping the supervisor instead).
+Re-check the freed ports (`lsof -i :<port>`) and confirm to the user with the numbers: which ports are now free and how much RAM was reclaimed ("freed ports 3117 and 5173, reclaiming ~840 MB of RAM" — sum the Mem column of what was killed). Flag anything that refused to die (rare — usually means a supervisor like nodemon or pm2 respawned it; say so and suggest stopping the supervisor instead).
 
 ## Notes
 

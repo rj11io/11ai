@@ -23,7 +23,7 @@ Run the bundled scanner. The optional argument filters to artifacts at least tha
 bash scripts/scan_agent_threads.sh [min_age_days]
 ```
 
-It prints one line per artifact, oldest first: age in days, size, harness (`claude`, `codex`, `gemini`, `goose`, `opencode`), kind (`transcript` or `scratchpad`), flags, path. The script header documents exactly where each harness keeps its threads. Flags mean:
+It prints one line per artifact, oldest first — age in days, size, harness (`claude`, `codex`, `gemini`, `goose`, `opencode`), kind (`transcript` or `scratchpad`), flags, path — followed by a TOTALS footer: overall count and disk usage, per-harness subtotals, and the old-therefore-reclaimable subtotal. The script header documents exactly where each harness keeps its threads. Flags mean:
 
 - `old` — untouched for over 30 days. Likely an abandoned thread.
 - `today` — touched within the last day. May be a live session — leave alone.
@@ -59,15 +59,20 @@ When in doubt, put it in the report with your honest uncertainty rather than gue
 
 ### 3. Report
 
-Keep it succinct — group by project, one verdict line per row, and lead with the totals (count and size):
+Keep it succinct — headline numbers first (quote the scanner's TOTALS footer, don't estimate), per-harness subtotals, then a table grouped by harness with one verdict line per row:
 
 ```
-| Age  | Size | Kind       | Thread                          | Verdict                        |
-|------|------|------------|---------------------------------|--------------------------------|
-| 94d  | 41M  | transcript | projects/-old-repo/a1b2….jsonl  | delete — repo no longer exists |
-| 62d  | 12M  | scratchpad | tmp/claude-501/…/c3d4…          | delete — session long dead     |
-| 0d   | 2M   | transcript | projects/-current/e5f6….jsonl   | leave alone — touched today    |
+Found 87 thread artifacts using 1.3 GB across 3 harnesses — deleting the 61 older than 30 days reclaims 940 MB.
+  claude: 41 artifacts, 610 MB · codex: 34, 520 MB · gemini: 12, 180 MB
+
+| Age  | Size | Harness | Kind       | Thread                          | Verdict                        |
+|------|------|---------|------------|---------------------------------|--------------------------------|
+| 94d  | 41M  | claude  | transcript | projects/-old-repo/a1b2….jsonl  | delete — repo no longer exists |
+| 62d  | 12M  | codex   | transcript | sessions/2026/05/11/rollout-…   | delete — session long dead     |
+| 0d   | 2M   | claude  | transcript | projects/-current/e5f6….jsonl   | leave alone — touched today    |
 ```
+
+With dozens of artifacts, don't table every row — show per-harness totals, the biggest and oldest few individually, and summarize the rest ("…and 43 more Codex transcripts, 60–200 days old, 310 MB").
 
 ### 4. Ask
 
@@ -88,7 +93,7 @@ rm -rf "<scratchpad-dir>"      # scratchpads are directories
 
 ### 6. Verify
 
-Confirm each selected path is gone, report the count and disk space reclaimed, and flag anything that resisted (usually permissions — name the fix). If a whole project directory under `~/.claude/projects/` is now empty except for `memory/`, mention it but leave it — the memory stays.
+Confirm each selected path is gone and report the headline number — "disk space saved by deleting the selected threads: 940 MB (61 artifacts)" — broken down per harness (sizes come from the scan; use them rather than re-measuring what no longer exists). Flag anything that resisted (usually permissions — name the fix). If a whole project directory under `~/.claude/projects/` is now empty except for `memory/`, mention it but leave it — the memory stays.
 
 ## Notes
 

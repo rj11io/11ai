@@ -21,7 +21,7 @@ Run the bundled scanner. Default root is the user's home directory; pass a narro
 bash scripts/scan_node_modules.sh [root]
 ```
 
-It prints one line per top-level node_modules (nested ones are counted with their parent), biggest first: size, days since the project was touched, last git commit, flags, project path. Flags mean:
+It prints one line per top-level node_modules (nested ones are counted with their parent), biggest first — size, days since the project was touched, last git commit, flags, project path — followed by a TOTALS footer: overall count and disk usage, plus per-flag subtotals with the stale-reclaimable number the report leads with. Flags mean:
 
 - `stale` — the project hasn't been touched in over 60 days. Prime candidate.
 - `big` — node_modules over 500 MB. High-value cleanup even if not stale.
@@ -47,9 +47,11 @@ When in doubt, put it in the report with your honest uncertainty rather than gue
 
 ### 3. Report
 
-Keep it succinct — a table plus one line of verdict per row, no essay. Lead with the total reclaimable size:
+Keep it succinct — headline numbers first (quote the scanner's TOTALS footer, don't estimate), then a table with one verdict line per row, no essay:
 
 ```
+Found 12 node_modules directories using 8.4 GB — deleting the 7 stale ones reclaims 5.2 GB.
+
 | Size  | Project              | Last touched | Verdict                              |
 |-------|----------------------|--------------|--------------------------------------|
 | 1.2G  | ~/dev/old-dashboard  | 8 months ago | reclaim — stale, has lockfile        |
@@ -77,7 +79,7 @@ Delete only the node_modules directory — never the project around it.
 
 ### 6. Verify
 
-Confirm each selected directory is gone (`ls "<project>/node_modules"` should fail), sum up and report the disk space freed, and flag anything that resisted (usually a permissions issue or a process holding files — name the fix).
+Confirm each selected directory is gone (`ls "<project>/node_modules"` should fail) and report the headline number — "disk space saved by deleting the detected node_modules: 5.2 GB" — with the per-project breakdown beneath it (sizes come from the scan; use them rather than re-measuring what no longer exists). Flag anything that resisted (usually a permissions issue or a process holding files — name the fix).
 
 ## Notes
 

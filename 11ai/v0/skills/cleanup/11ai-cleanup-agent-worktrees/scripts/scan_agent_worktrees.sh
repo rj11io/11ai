@@ -4,7 +4,10 @@
 # to judge whether it's an abandoned agent worktree.
 #
 # Output: tab-separated, one line per worktree, oldest first:
-#   AGE_D   BRANCH   STATE   FLAGS   PATH
+#   AGE_D   BRANCH   STATE   SIZE   FLAGS   PATH
+# followed by a TOTALS footer: overall count and disk usage, plus the
+# clean (safely removable) subtotal, so reports can quote exact
+# "disk space reclaimable" numbers.
 #
 #   STATE   clean (no uncommitted changes), dirty (uncommitted changes),
 #           or missing (directory gone — git still tracks it)
@@ -48,6 +51,8 @@ results="$(echo "$wt_list" | while IFS="$(printf '\t')" read -r wt branch prunab
 
   if [ -d "$wt" ]; then
     age_d="$(( (now - $(mtime_of "$wt")) / 86400 ))"
+    size_kb="$(du -sk "$wt" 2>/dev/null | awk '{print $1}')"
+    size="$(du -sh "$wt" 2>/dev/null | awk '{print $1}')"
     if [ -n "$(git -C "$wt" status --porcelain 2>/dev/null | head -1)" ]; then
       state="dirty"
     else
@@ -55,6 +60,8 @@ results="$(echo "$wt_list" | while IFS="$(printf '\t')" read -r wt branch prunab
     fi
   else
     age_d="?"
+    size_kb="0"
+    size="-"
     state="missing"
   fi
 
@@ -70,7 +77,7 @@ results="$(echo "$wt_list" | while IFS="$(printf '\t')" read -r wt branch prunab
   fi
   [ "$prunable" = "yes" ] && flags="${flags:+$flags,}prunable"
 
-  printf '%s\t%s\t%s\t%s\t%s\n' "$age_d" "$branch" "$state" "${flags:--}" "$wt"
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "${size_kb:-0}" "$age_d" "$branch" "$state" "${size:--}" "${flags:--}" "$wt"
 done)"
 
 if [ -z "$results" ]; then
@@ -78,5 +85,22 @@ if [ -z "$results" ]; then
   exit 0
 fi
 
-printf 'AGE_D\tBRANCH\tSTATE\tFLAGS\tPATH\n'
-echo "$results" | sort -rn -k1,1
+printf 'AGE_D\tBRANCH\tSTATE\tSIZE\tFLAGS\tPATH\n'
+echo "$results" | sort -rn -k2,2 | cut -f2-
+echo ""
+echo "$results" | awk -F'\t' '
+  function human(kb) {
+    if (kb >= 1048576) return sprintf("%.1fG", kb/1048576)
+    if (kb >= 1024)    return sprintf("%.0fM", kb/1024)
+    return kb "K"
+  }
+  { n++; total += $1
+    if ($4 == "clean" && $6 !~ /unmerged/) { nc++; sc += $1 }
+    if ($4 == "dirty")                     { nd++; sd += $1 }
+    if ($6 ~ /prunable/)                   { np++ } }
+  END {
+    printf "TOTALS: %d extra worktrees, %s on disk\n", n, human(total)
+    if (nc) printf "  clean + merged (safely removable): %d, %s reclaimable\n", nc, human(sc)
+    if (nd) printf "  dirty (uncommitted work, leave alone): %d, %s\n", nd, human(sd)
+    if (np) printf "  prunable (directory already gone): %d\n", np
+  }'
