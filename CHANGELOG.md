@@ -1,3 +1,12 @@
+# [1.9.0](https://github.com/rj11io/11ai/compare/v1.8.0...v1.9.0) (2026-07-13)
+
+
+### Features
+
+* cleanup analytics ([552317e](https://github.com/rj11io/11ai/commit/552317ea8def3f2d1a1b1ee61db09b1278da2403))
+* cleanup skills ([9754450](https://github.com/rj11io/11ai/commit/97544506d1bd6222d5c924f4c5813c1a16672796))
+* roast skill ([2bfb398](https://github.com/rj11io/11ai/commit/2bfb398db4c05d02c512d3e01f33933ae6fa11cb))
+
 # [1.8.0](https://github.com/rj11io/11ai/compare/v1.7.0...v1.8.0) (2026-07-13)
 
 
