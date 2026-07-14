@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pimp My UI"
+  short_description: "Give an existing UI a deliberate visual direction"
+  default_prompt: "Use $11ai-pimp-my-ui to style and polish this existing interface end to end."
