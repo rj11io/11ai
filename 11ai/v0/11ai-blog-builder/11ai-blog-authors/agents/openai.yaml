@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Blog Authors"
+  short_description: "Add multi-author blog profiles"
+  default_prompt: "Use $11ai-blog-authors to add multi-author bylines and author profile pages to this blog."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Blog TOC"
+  short_description: "Build responsive article tables of contents"
+  default_prompt: "Use $11ai-blog-toc to add a responsive, accessible table of contents to this blog."

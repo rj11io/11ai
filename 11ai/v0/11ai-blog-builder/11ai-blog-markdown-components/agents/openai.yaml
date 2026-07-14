@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Blog Markdown"
+  short_description: "Install polished Markdown blog rendering"
+  default_prompt: "Use $11ai-blog-markdown-components to add a polished react-markdown renderer, GFM, embeds, and TOC-aligned heading IDs."

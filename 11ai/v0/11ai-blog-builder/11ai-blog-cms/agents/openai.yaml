@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Blog CMS"
+  short_description: "Build a publications and posts content system"
+  default_prompt: "Use $11ai-blog-cms to build a white-label publications and posts CMS."

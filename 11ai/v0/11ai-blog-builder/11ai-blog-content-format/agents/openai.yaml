@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Blog Content Format"
+  short_description: "Format content for 11ai blogs"
+  default_prompt: "Use $11ai-blog-content-format to convert draft content into the Markdown and metadata format expected by an 11ai blog."

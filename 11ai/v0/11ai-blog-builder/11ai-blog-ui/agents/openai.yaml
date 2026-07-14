@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Blog UI"
+  short_description: "Recreate polished editorial blog UI"
+  default_prompt: "Use $11ai-blog-ui to apply the 11ai-style editorial blog visual system."

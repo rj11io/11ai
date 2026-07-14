@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Blog Content Generation"
+  short_description: "Generate 11ai-ready blog content"
+  default_prompt: "Use $11ai-blog-content-generation to generate blog content in the Markdown and metadata format expected by an 11ai blog."

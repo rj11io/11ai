@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Blog Builder"
+  short_description: "Orchestrate complete blog builds"
+  default_prompt: "Use $11ai-blog-builder to recreate a complete file-backed editorial blog."
