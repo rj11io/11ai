@@ -1,102 +1,75 @@
 # 11ai
 
-Deployed at https://ai.rj11.io/
+Reusable AI-agent skills for building chat products, automating agent work, benchmarking coding models, integrating application services, maintaining codebases, and cleaning up local development environments.
 
-Reusable AI-agent skills for building AI chat products, integrating application services, improving web interfaces, and maintaining JavaScript projects.
+Project site: https://ai.rj11.io/
 
-Each skill is a self-contained directory led by a `SKILL.md` file. Some skills also include references, scripts, or agent metadata. Use the whole directory so those supporting files remain available.
+Each skill is a self-contained directory led by a `SKILL.md` file. Keep the whole directory together so its references, scripts, assets, and agent metadata remain available.
 
 ## Install
 
-Install the collection with the [skills.sh CLI](https://skills.sh/docs/cli):
+Install the collection from GitHub with the [skills CLI](https://skills.sh/docs/cli):
 
 ```bash
-npx skills add @rj11io/11ai
+npx skills add rj11io/11ai
 ```
 
-The CLI runs through `npx`, so it does not require a separate global installation. It discovers the skills in this package and configures the ones you select for your AI agent.
+The CLI runs through `npx`, discovers the repository's skills, and configures the skills you select for your agent.
 
-After installation, ask your agent to use a skill by name when the task calls for it. For example:
+After installation, ask your agent to use a skill by name. For example:
 
 ```text
 Use 11ai-ai-chat-stack to add a complete AI chat surface to this application.
 ```
 
-See the [skills.sh documentation](https://skills.sh/docs) for more about the skills ecosystem and supported agents.
-
 ### Package-only installation
 
-Install the npm package directly only when you need a versioned copy of the raw skill files rather than agent configuration:
+Install the npm package directly when you need a versioned copy of the raw files rather than agent configuration:
 
 ```bash
 npm install --save-dev @rj11io/11ai
 ```
 
-The files will be available at `node_modules/@rj11io/11ai/11ai/v0/skills/`. You can also clone this repository and use [`11ai/v0/skills`](./11ai/v0/skills) directly.
-
-## Use a skill
-
-Choose the skill that matches the task and name it in your request to the agent. Each skill is a self-contained directory; keep the complete directory together if you copy or vendor it manually so its references, scripts, and agent metadata remain available.
-
-Skills provide implementation guidance and examples. They do not install the application dependencies shown in their examples or modify a project by themselves.
+The files are installed at `node_modules/@rj11io/11ai/11ai/v0/`. You can also clone this repository and use [`11ai/v0`](./11ai/v0) directly.
 
 ## Skill catalog
 
-### AI chat
+The repository currently contains 46 skills in eight groups.
 
-| Skill | Use it for |
-| --- | --- |
-| [`11ai-ai-chat-stack`](./11ai/v0/skills/ai-chat/11ai-ai-chat-stack/SKILL.md) | Building an end-to-end, tool-using chat in a Next.js App Router application with the Vercel AI SDK |
-| [`11ai-ai-chat-client-hooks`](./11ai/v0/skills/ai-chat/11ai-ai-chat-client-hooks/SKILL.md) | Wiring `useChat`, streaming state, restored history, session changes, and persistence |
-| [`11ai-ai-chat-session-mgmt`](./11ai/v0/skills/ai-chat/11ai-ai-chat-session-mgmt/SKILL.md) | Adding chat history and session create, rename, pin, delete, and persistence behavior |
-| [`11ai-ai-chat-autotitle`](./11ai/v0/skills/ai-chat/11ai-ai-chat-autotitle/SKILL.md) | Generating non-blocking titles for new chat sessions |
-| [`11ai-ai-chat-tool-design`](./11ai/v0/skills/ai-chat/11ai-ai-chat-tool-design/SKILL.md) | Designing bounded, token-efficient AI SDK tools grounded in application data |
-| [`11ai-ai-chat-ui-ux`](./11ai/v0/skills/ai-chat/11ai-ai-chat-ui-ux/SKILL.md) | Building a polished chat layout, empty states, feedback states, and responsive behavior |
-| [`11ai-ai-chat-multiple-models`](./11ai/v0/skills/ai-chat/11ai-ai-chat-multiple-models/SKILL.md) | Supporting model selection, multiple providers, request routing, and per-session model persistence |
-| [`11ai-ai-chat-github-provider`](./11ai/v0/skills/ai-chat/11ai-ai-chat-github-provider/SKILL.md) | Using GitHub Models through its OpenAI-compatible endpoint with the Vercel AI SDK |
-| [`11ai-aichat-chatbot-extension`](./11ai/v0/skills/ai-chat/11ai-aichat-chatbot-extension/SKILL.md) | Extending a web assistant to Slack or another messaging platform with the Chat SDK |
+| Group | Skills | Use them for |
+| --- | ---: | --- |
+| [Agent automation](./11ai/v0/11ai-agent-automation/README.md) | 8 | Scheduled autonomous work using the Ledger + Conductor + Routine pattern |
+| [AI chat](./11ai/v0/11ai-ai-chat/README.md) | 9 | End-to-end chat, sessions, tools, models, providers, UI, and messaging-platform extensions |
+| [Benchmarks](./11ai/v0/11ai-benchmarks/README.md) | 11 | Creating, running, auditing, judging, costing, reviewing, and reporting AI-coding benchmarks |
+| [Cleanup](./11ai/v0/11ai-cleanup/README.md) | 5 | Safely finding and removing abandoned local resources |
+| [Codebase](./11ai/v0/11ai-codebase/README.md) | 3 | Playwright setup, npm publishing, and automated releases |
+| [Integrations](./11ai/v0/11ai-integrations/README.md) | 3 | Adding Convex, WorkOS AuthKit, or both to Next.js applications |
+| [Utilities](./11ai/v0/11ai-utils/README.md) | 5 | Markdown compression, README maintenance, reviews, analytics, and web design |
+| [Cross-harness](./11ai/v0/11ai-xharness/README.md) | 2 | Delegating work to agents running in other CLI harnesses |
 
-Start with `11ai-ai-chat-stack` for a new chat surface; use the narrower companion skills when implementing or debugging one layer.
+Start with a group's README to choose a skill, then name that skill in your request. Skills provide instructions and examples; they do not install the application dependencies used in those examples by themselves.
 
-### Integrations
-
-| Skill | Use it for |
-| --- | --- |
-| [`11ai-convex-integration`](./11ai/v0/skills/integrations/11ai-convex-integration/SKILL.md) | Adding Convex data, backend functions, providers, environments, and deployment configuration |
-| [`11ai-workos-integration`](./11ai/v0/skills/integrations/11ai-workos-integration/SKILL.md) | Adding WorkOS AuthKit to a Next.js application |
-| [`11ai-workos-convex-integration`](./11ai/v0/skills/integrations/11ai-workos-convex-integration/SKILL.md) | Combining WorkOS authentication and Convex in one application |
-
-### Codebase maintenance
-
-| Skill | Use it for |
-| --- | --- |
-| [`11ai-playwright-setup`](./11ai/v0/skills/codebase/11ai-playwright-setup/SKILL.md) | Adding Playwright unit-style and browser E2E tests, scripts, artifacts, and CI wiring |
-| [`11ai-npm-publishing`](./11ai/v0/skills/codebase/11ai-npm-publishing/SKILL.md) | Preparing and publishing npm packages locally or through semantic-release |
-| [`11ai-automated-releases`](./11ai/v0/skills/codebase/11ai-automated-releases/SKILL.md) | Automating changelogs, versioning, tags, and GitHub releases without registry publishing |
-
-### Utilities
-
-| Skill | Use it for |
-| --- | --- |
-| [`11ai-web-design`](./11ai/v0/skills/utils/11ai-web-design/SKILL.md) | Designing or restyling distinctive, production-quality web interfaces |
-| [`11ai-compression`](./11ai/v0/skills/utils/11ai-compression/SKILL.md) | Compressing Markdown guidance while preserving its structure and technical artifacts |
-
-## Package layout and versioning
+## Repository layout
 
 ```text
 11ai/
-  index.js                 Package entry point
+  index.js                    CommonJS package entry point
   v0/
-    skills/
-      ai-chat/
-      codebase/
-      integrations/
-      utils/
+    11ai-agent-automation/    8 automation skills
+    11ai-ai-chat/             9 AI chat skills
+    11ai-benchmarks/          11 benchmark skills
+    11ai-cleanup/             5 cleanup skills
+    11ai-codebase/            3 codebase skills
+    11ai-integrations/        3 integration skills
+    11ai-utils/               5 utility skills
+    11ai-xharness/            2 cross-harness skills
+scripts/                      Root package publishing helper
+www/                          Next.js project site
 ```
 
-`v0` is the current skill-format namespace. Pin the npm package version or commit when reproducibility matters, because skill content can change between package releases. See [`CHANGELOG.md`](./CHANGELOG.md) for release history.
+`v0` is the current skill-format namespace. Pin the npm package version or a commit when reproducibility matters, because skill content can change between releases. See [`CHANGELOG.md`](./CHANGELOG.md) for release history.
 
-The CommonJS entry point currently exposes package metadata only:
+The CommonJS entry point exposes package metadata only:
 
 ```js
 const elevenAI = require("@rj11io/11ai")
@@ -104,7 +77,20 @@ const elevenAI = require("@rj11io/11ai")
 console.log(elevenAI.name) // "@rj11io/11ai"
 ```
 
-The supported consumer surface is the skill content under `11ai/v0/skills`, not a JavaScript runtime API.
+The supported consumer surface is the skill content under `11ai/v0`, not a JavaScript runtime API.
+
+## Repository commands
+
+Install root package tooling before running these commands:
+
+```bash
+npm install
+npm run pack-dry
+```
+
+`pack-dry` shows the npm tarball contents without publishing. The manual publishing command and its token requirements are documented in [`scripts/README.md`](./scripts/README.md). The project site has its own dependencies and commands in [`www/README.md`](./www/README.md).
+
+Pushes to `main` run semantic-release, which updates the changelog and package version, publishes to npm, creates a GitHub release, and publishes the generated tarball to GitHub Packages.
 
 ## License
 
