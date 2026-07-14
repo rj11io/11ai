@@ -54,7 +54,7 @@ The repository currently contains 65 skills in 10 groups.
 | [Codebase](./11ai/v0/11ai-codebase/README.md) | 3 | Playwright setup, npm publishing, and automated releases |
 | [Integrations](./11ai/v0/11ai-integrations/README.md) | 3 | Adding Convex, WorkOS AuthKit, or both to Next.js applications |
 | [Super](./11ai/v0/11ai-super/README.md) | 8 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
-| [Utilities](./11ai/v0/11ai-utils/README.md) | 8 | Markdown compression, reverse engineering, critique, analytics, web design, publication CMS, calls to action, and project sites |
+| [Utilities](./11ai/v0/11ai-utils/README.md) | 8 | Markdown compression, reverse engineering, critique, analytics, UI styling, publication CMS, calls to action, and project sites |
 | [Cross-harness](./11ai/v0/11ai-xharness/README.md) | 2 | Delegating work to agents running in other CLI harnesses |
 
 Start with a group's README to choose a skill, then name that skill in your request. Skills provide instructions and examples; they do not install the application dependencies used in those examples by themselves.

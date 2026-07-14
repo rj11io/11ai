@@ -1,6 +1,6 @@
 # 11ai Utilities
 
-Nine general-purpose skills for text compression, reverse engineering, reviews, analytics, web interface work, UI styling, publication CMS, calls to action, and project sites.
+Eight general-purpose skills for text compression, reverse engineering, reviews, analytics, UI styling, publication CMS, calls to action, and project sites.
 
 ## Choose a skill
 
@@ -13,7 +13,6 @@ Nine general-purpose skills for text compression, reverse engineering, reviews, 
 | [`11ai-reverse-engineering`](./11ai-reverse-engineering/SKILL.md) | Producing a sanitized blueprint for rebuilding and modernizing a locally cloned repository |
 | [`11ai-roast`](./11ai-roast/SKILL.md) | Giving a blunt, prioritized, read-only critique of code or another work product |
 | [`11ai-vercel-analytics`](./11ai-vercel-analytics/SKILL.md) | Adding or verifying Vercel Web Analytics in a web application |
-| [`11ai-web-design`](./11ai-web-design/SKILL.md) | Designing or restyling a distinctive production-quality web interface |
 | [`11ai-www`](./11ai-www/SKILL.md) | Examining a project and building a repo-driven site that displays it, in a `www/` folder or embedded app |
 
 The compression skill includes local scripts for transforming and validating Markdown. The roast skill is read-only. For repeated repository-wide audits of documentation, metadata, performance, security, or UX, use the [`11ai-super`](../11ai-super/README.md) group.
