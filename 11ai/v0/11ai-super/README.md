@@ -14,6 +14,6 @@ Five long-running specialist skills that synchronize a clean repository, audit a
 
 ## Shared workflow
 
-Run these skills from the Git repository you want to improve. Each one requires a clean worktree, fetches and fast-forwards the current branch, records a rollback point, and uses repeated audit and verification passes instead of stopping after the first fix.
+Run these skills from the Git repository you want to improve. Each one requires a clean worktree, synchronizes the current branch, records a rollback point, and uses repeated audit and verification passes instead of stopping after the first fix. The security skill may create a conflict-free merge commit when its branch has diverged from upstream and cannot fast-forward; it aborts and reports any conflicted merge.
 
 The skills preserve unrelated work and do not commit or push unless the user explicitly requests it. `11ai-super-readme` is documentation-only; the other super skills may update the project areas named in their playbooks.

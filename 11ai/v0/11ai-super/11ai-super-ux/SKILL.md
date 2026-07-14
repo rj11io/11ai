@@ -1,6 +1,6 @@
 ---
 name: 11ai-super-ux
-description: Synchronize a clean Git repository, then audit, repair, and iteratively improve a project's user interface and user experience using the running product, source code, and objective quality gates. Use when Codex must review UI/UX, fix critical or major usability and accessibility defects, improve responsive behavior, interaction states, information architecture, visual hierarchy, consistency, or polish, and continue validating improvements until the experience meets a high bar. Abort and restore session-owned changes if the work becomes unmanageably dirty or debugging exceeds safe bounds. Apply to web, mobile, and desktop interfaces; commit and push only when explicitly requested, using conventional commits, and honor audit-only requests by reporting findings without editing.
+description: Synchronize a clean Git repository from origin, allowing a conflict-free merge of divergent incoming changes when required, then audit, repair, and iteratively improve a project's user interface and user experience using the running product, source code, and objective quality gates. Use when Codex must review UI/UX, fix critical or major usability and accessibility defects, improve responsive behavior, interaction states, information architecture, visual hierarchy, consistency, or polish, and continue validating improvements until the experience meets a high bar. Abort and restore session-owned changes if the work becomes unmanageably dirty or debugging exceeds safe bounds. Apply to web, mobile, and desktop interfaces; commit and push UX changes only when explicitly requested, using conventional commits, and honor audit-only requests by reporting findings without editing.
 ---
 
 # 11ai Super UX
@@ -24,7 +24,7 @@ Preserve the product's purpose, working behavior, established brand, and intenti
 - Keep changes proportional to the existing product. Ask only when a decision would materially change product strategy, brand direction, or data behavior.
 - Do not stop after producing an audit when the request authorizes fixes. Implement, verify, and iterate.
 - If the user explicitly requests a read-only audit, do not edit files; complete the discovery, evidence, severity, and recommendation portions only.
-- Do not commit or push unless the user explicitly instructs you to do so. Treat commit and push as separate authorization from performing the UX routine.
+- Do not commit UX work or push unless the user explicitly instructs you to do so. A conflict-free merge commit created solely to synchronize divergent upstream changes is the only commit exception. Treat commit and push as separate authorization from performing the UX routine.
 
 ## Workflow
 
@@ -35,17 +35,20 @@ Locate the current repository root. Abort with a session summary if the director
 Before fetching or pulling:
 
 1. Check for an in-progress merge, rebase, cherry-pick, revert, or bisect. Abort if any exists.
-2. Require an attached branch with a configured upstream. Do not guess a branch or remote.
+2. Require an attached branch with a configured upstream on `origin`. Do not guess or retarget a branch, upstream, or remote.
 3. Run `git status --porcelain=v1 --untracked-files=all` and require empty output.
 4. If the tree is dirty, stop without stashing, deleting, restoring, or modifying anything. Report the dirty paths so the user can resolve them.
+5. Record the pre-synchronization commit as `PRE_SYNC_SHA`.
 
 Then synchronize the current branch:
 
-1. Run `git fetch --prune` against the configured remote.
-2. Run `git pull --ff-only` so synchronization can never create a merge commit or implicit rebase.
-3. Abort if authentication fails, the upstream is unavailable, or a fast-forward-only pull is impossible.
-4. Require the working tree to remain clean after the pull.
-5. Record the branch, upstream, and post-pull `BASE_SHA`. This clean commit is the rollback checkpoint for the session.
+1. Run `git fetch --prune origin`.
+2. Attempt `git pull --ff-only` from the configured `origin` upstream first. Never rebase during synchronization.
+3. If fast-forward-only pull fails solely because the local and fetched upstream histories have diverged, merge the fetched upstream into the current branch with the repository's default merge strategy and a non-interactive merge message.
+4. Accept the synchronization merge only when Git completes it automatically without conflicts, the index and working tree are clean, and the merged history contains both the prior local tip and fetched upstream tip.
+5. If the merge reports any conflict, requires manual content resolution, leaves a dirty tree, or fails validation, abort the merge immediately, verify `HEAD` has returned to `PRE_SYNC_SHA`, require a clean tree, and stop with a session summary. Do not resolve synchronization conflicts as part of this skill.
+6. Abort if authentication fails, `origin` or the upstream is unavailable, or synchronization cannot complete under these rules.
+7. Record the branch, upstream, synchronization method, and post-sync `BASE_SHA`. This clean commit is the rollback checkpoint for the UX session. When a merge was required, `BASE_SHA` is the resulting local merge commit.
 
 Do not continue unless every preflight condition passes. A successful fetch alone does not satisfy the synchronization requirement.
 
@@ -142,7 +145,7 @@ On an abort after the clean checkpoint:
 7. Verify that `HEAD` equals `BASE_SHA` and `git status --porcelain=v1 --untracked-files=all` is empty.
 8. Stop the routine and return an aborted-session summary. Do not immediately retry the whole operation.
 
-Never create intermediate commits. Commit only after the completion gate passes, so rollback normally operates on uncommitted session changes. Make push the final repository mutation; perform no further code changes after a successful push.
+Never create intermediate UX commits. The synchronization merge is the sole exception. Commit UX changes only after the completion gate passes, so rollback normally operates on uncommitted session changes. Make push the final repository mutation; perform no further code changes after a successful push.
 
 ### 8. Run the Improvement Loop
 
@@ -191,7 +194,7 @@ If commit or push fails, do not improvise history edits. If nothing reached the 
 
 Always end with a concise summary of the complete session, including successful, blocked, audit-only, and aborted runs. Lead with the outcome and include:
 
-- synchronization result, branch, upstream, and whether the tree passed the clean preflight
+- synchronization result, branch, upstream, whether fast-forward or merge was used, and whether the tree passed the clean preflight
 - the core journeys and viewports verified
 - critical and major issues fixed, grouped by user impact
 - the most valuable iterative improvements beyond defect repair

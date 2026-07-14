@@ -1,6 +1,6 @@
 ---
 name: 11ai-super-performance
-description: Synchronize a clean Git repository, then audit, profile, fix, and repeatedly optimize software project speed and resource efficiency with safe rollback and optional explicitly authorized conventional commits. Use when Codex needs to investigate a slow application, API, page, query, build, test suite, startup path, or background job; eliminate critical and major performance problems; improve latency, throughput, responsiveness, bundle size, memory, CPU, network, or database efficiency; validate production-like performance; or continue performance work until the project meets a high evidence-based bar.
+description: Synchronize a clean Git repository, including a conflict-free merge of incoming upstream changes when needed, then audit, profile, fix, and repeatedly optimize software project speed and resource efficiency with safe rollback and optional explicitly authorized conventional commits. Use when Codex needs to investigate a slow application, API, page, query, build, test suite, startup path, or background job; eliminate critical and major performance problems; improve latency, throughput, responsiveness, bundle size, memory, CPU, network, or database efficiency; validate production-like performance; or continue performance work until the project meets a high evidence-based bar.
 ---
 
 # 11ai Super Performance
@@ -15,10 +15,12 @@ Make Git synchronization and cleanliness the first execution phase. Do not begin
 
 1. Locate the current repository root and confirm it is a Git worktree.
 2. Inspect the complete status, including untracked files. Require a clean tree before fetching or pulling. If it is dirty, abort and report the paths; do not stash, commit, reset, clean, or discard pre-existing work.
-3. Identify the current branch, remote, and configured upstream. If the checkout is detached or has no usable upstream, abort unless the user explicitly supplies the intended branch or remote.
+3. Identify the current branch, remote, and configured upstream. If the checkout is detached or has no usable upstream, abort unless the user explicitly supplies the intended branch or remote. Record the current commit as `PRE_SYNC_COMMIT`.
 4. Fetch remote updates and prune stale remote-tracking refs.
-5. Pull the current upstream with fast-forward only. Never create an implicit merge commit or rebase local commits as part of setup.
-6. Confirm the tree is still clean and record the synchronized commit as `START_COMMIT`.
+5. Attempt to pull the current upstream with fast-forward only.
+6. If and only if fast-forwarding fails because the local branch and its upstream have diverged, merge the fetched upstream into the current branch. Permit the automatically created merge commit as part of synchronization when the merge completes without conflicts.
+7. If the merge reports any conflict, run `git merge --abort`, verify the tree returned cleanly to `PRE_SYNC_COMMIT`, and abort the entire operation. Do not resolve merge conflicts or begin performance work.
+8. Confirm the tree is clean and record the synchronized commit, including any clean synchronization merge commit, as `START_COMMIT`.
 
 Use the repository's remote and upstream rather than assuming names such as `origin` or `main`. A typical gate is:
 
@@ -27,11 +29,16 @@ git status --short --branch --untracked-files=all
 git branch --show-current
 git remote -v
 git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}'
+git rev-parse HEAD
 git fetch --prune
 git pull --ff-only
+# Only when the pull fails specifically because the branches have diverged:
+git merge --no-edit '@{upstream}'
 git status --short --branch --untracked-files=all
 git rev-parse HEAD
 ```
+
+Do not fall back to a merge for authentication, network, missing-ref, remote, configuration, or other pull failures. Use the configured upstream, normally an `origin/*` branch, and merge only that fetched upstream. Do not merge an arbitrary remote branch. Never rebase local commits as part of setup.
 
 Maintain a session change inventory after every coherent fix. Track every file created, modified, renamed, or deleted by the session, and distinguish source changes from disposable benchmark, profile, build, coverage, cache, and log artifacts.
 
@@ -51,7 +58,7 @@ On abort, stop project processes and return the repository to `START_COMMIT` usi
 - Never use a blanket `git reset --hard`, `git clean -fd`, or equivalent destructive command.
 - Verify the final status against `START_COMMIT` and report the rollback result.
 
-Do not commit or push by default. Only when the user explicitly instructs it:
+The conflict-free synchronization merge above is the sole automatic commit exception. Do not create performance-work commits or push any commit by default. Only when the user explicitly instructs it:
 
 1. Review the final diff and validation results.
 2. Stage only the intended session changes.
@@ -176,7 +183,7 @@ Never claim an improvement from a single noisy run. If precise tooling is unavai
 
 Always end with a self-contained summary of the session. Lead with the outcome and include:
 
-- Git synchronization result, branch, upstream, `START_COMMIT`, and final status
+- Git synchronization result, branch, upstream, `PRE_SYNC_COMMIT`, `START_COMMIT`, whether synchronization fast-forwarded or merged, and final status
 - Critical and major issues fixed, with their root causes
 - Before/after metrics, sample counts, environment, and commands or journeys used
 - Important files or subsystems changed

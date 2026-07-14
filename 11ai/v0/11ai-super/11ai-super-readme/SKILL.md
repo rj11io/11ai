@@ -1,6 +1,6 @@
 ---
 name: 11ai-super-readme
-description: Audit, update, and repeatedly improve a repository's README files until they meet a high documentation bar — fix existing READMEs that no longer match the code, add missing information, create new READMEs in folders that need one, and keep running fresh review passes until no material issue remains. Always fetches and pulls the latest repository changes, requires a clean Git tree before editing, restores its changes if the operation becomes unsafe or troubleshooting-heavy, and commits or pushes with Conventional Commits only when explicitly instructed. Use when Codex needs to refresh, audit, sync, fix, or generate READMEs or repository documentation, when docs are stale or out of date, or when the user asks to "update the readmes" in any form and wants them iterated to a high-confidence quality bar.
+description: Audit, update, and repeatedly improve a repository's README files until they meet a high documentation bar — fix existing READMEs that no longer match the code, add missing information, create new READMEs in folders that need one, and keep running fresh review passes until no material issue remains. Always fetches and pulls the latest repository changes (merging incoming changes cleanly when a fast-forward is not possible), requires a clean Git tree before editing, restores its changes if the operation becomes unsafe or troubleshooting-heavy, and commits or pushes with Conventional Commits only when explicitly instructed. Use when Codex needs to refresh, audit, sync, fix, or generate READMEs or repository documentation, when docs are stale or out of date, or when the user asks to "update the readmes" in any form and wants them iterated to a high-confidence quality bar.
 ---
 
 # 11ai Super Readme
@@ -27,9 +27,9 @@ Read [references/readme-guidelines.md](references/readme-guidelines.md) before a
 Complete this gate before reading deeply or editing any file:
 
 1. Confirm the current directory belongs to the intended Git repository. Run `git status --porcelain`. If it returns any tracked, staged, or untracked change, stop and report the dirty paths. Do not stash, discard, commit, or absorb them into the session.
-2. Record the current branch and upstream. Run `git fetch --prune`, then `git pull --ff-only` on the current branch. If the repository is detached, has no usable upstream, the fetch/pull fails, or a fast-forward pull is impossible, stop before editing and report the blocker. Never resolve merge conflicts as part of this gate.
+2. Record the current branch and upstream. Run `git fetch --prune`, then `git pull --ff-only` on the current branch. If a fast-forward is impossible because the local and remote branches have diverged, a clean merge of the incoming changes is allowed to proceed: run `git pull --no-rebase` and let Git create the merge commit on its own. "Clean" means Git completes the merge with no conflicts — if any conflict appears, run `git merge --abort`, stop before editing, and report the conflicting paths. Never resolve merge conflicts as part of this gate. Also stop and report if the repository is detached, has no usable upstream, or the fetch/pull fails.
 3. Run `git status --porcelain` again. Continue only if it is empty.
-4. Record `git rev-parse HEAD` as `ROLLBACK_HEAD`. Maintain a change manifest containing every tracked path modified and every untracked path created during the session. Update it after each editing batch.
+4. Record `git rev-parse HEAD` as `ROLLBACK_HEAD` — after the pull, and after the merge commit if one was created, so the rollback point already includes the incoming changes. Maintain a change manifest containing every tracked path modified and every untracked path created during the session. Update it after each editing batch.
 
 The post-pull `ROLLBACK_HEAD` and clean tree are the exact local state to restore if the operation aborts. Do not begin the README routine without both.
 
@@ -91,7 +91,7 @@ When instructed:
 
 1. Stage only paths in the change manifest and inspect the staged diff.
 2. Group the changes into one commit (or a few logical ones) using Conventional Commits with the `docs` type, e.g. `docs: update package readmes with current scripts and setup steps` or `docs(www): add readme for the website app`.
-3. Push the current branch without force, only if a push was explicitly requested. If the push is rejected, pull with `--ff-only`, re-check the tree, and retry once — a second failure means stop and report. Never force-push or rewrite history as part of this skill.
+3. Push the current branch without force, only if a push was explicitly requested. If the push is rejected, pull again under the same rules as the sync gate (fast-forward first, a conflict-free merge is allowed, any conflict means abort the merge and stop), re-check the tree, and retry once — a second failure means stop and report. Never force-push or rewrite history as part of this skill.
 
 ## Exit criteria
 
@@ -109,7 +109,7 @@ All of the following must be true before declaring the documentation pass comple
 
 Always end with a concise plain-language session summary, whether the operation succeeded, blocked, or aborted. Lead with the outcome, then report:
 
-- starting branch, post-pull `ROLLBACK_HEAD`, fetch/pull result, and clean-start confirmation;
+- starting branch, post-pull `ROLLBACK_HEAD`, fetch/pull result (including whether a merge commit was created to absorb incoming changes), and clean-start confirmation;
 - which READMEs were updated and what changed in each;
 - which READMEs were created and why those folders needed one;
 - how many review passes ran and what each fresh lens found;

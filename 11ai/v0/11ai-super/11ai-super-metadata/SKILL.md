@@ -1,6 +1,6 @@
 ---
 name: 11ai-super-metadata
-description: Audit, repair, and iteratively improve a web project's search metadata, technical SEO, social sharing metadata, structured data, indexability controls, sitemap, robots directives, canonical URLs, favicons, and Open Graph images, including generating or replacing social preview images when needed. Use when asked to review or fix SEO, metadata, search appearance, link previews, OG or Twitter images, canonicalization, robots.txt, sitemaps, JSON-LD, or route-level metadata in a website or web application. Before auditing, require a clean Git tree and fetch and pull the latest current-branch changes; continue until all critical and major findings are resolved and the project meets a high-confidence quality bar. Commit or push only when explicitly instructed, use Conventional Commits, and always end with a session summary.
+description: Audit, repair, and iteratively improve a web project's search metadata, technical SEO, social sharing metadata, structured data, indexability controls, sitemap, robots directives, canonical URLs, favicons, and Open Graph images, including generating or replacing social preview images when needed. Use when asked to review or fix SEO, metadata, search appearance, link previews, OG or Twitter images, canonicalization, robots.txt, sitemaps, JSON-LD, or route-level metadata in a website or web application. Before auditing, require a clean Git tree and fetch and pull the latest current-branch changes from origin, allowing a conflict-free merge of incoming changes when fast-forwarding is impossible; continue until all critical and major findings are resolved and the project meets a high-confidence quality bar. Commit or push project changes only when explicitly instructed, use Conventional Commits, and always end with a session summary.
 ---
 
 # 11ai Super Metadata
@@ -22,6 +22,7 @@ Read [references/seo-quality-bar.md](./references/seo-quality-bar.md) before aud
 - Never invent awards, ratings, authors, prices, addresses, social handles, locales, dates, or structured-data facts.
 - Do not add `keywords` meta tags as filler or promise rankings.
 - Do not commit or push unless the user explicitly requests that action. Never deploy, submit sitemaps, or change external search-console settings unless explicitly asked.
+- Treat a merge commit created solely to integrate fetched `origin` changes during the sync gate as the one exception to the project-change commit restriction. Never push that merge unless the user explicitly requests a push.
 - Defer any requested commit and push until all audit, verification, and rollback-sensitive work is complete.
 - Continue through verification and at least one fresh re-audit after the first fixes. Do not stop at a report when the request authorizes fixes.
 - Always end with the session summary defined below, including when stopping at the sync gate or aborting.
@@ -32,15 +33,17 @@ Read [references/seo-quality-bar.md](./references/seo-quality-bar.md) before aud
 
 Complete this gate before the intended SEO routine:
 
-1. Confirm the current directory belongs to a Git worktree. Record the current branch and configured upstream.
+1. Confirm the current directory belongs to a Git worktree. Record the current branch, configured upstream, and pre-sync commit as `PRE_SYNC_HEAD`. Require the upstream remote to be `origin`; stop and report if `origin` or an unambiguous origin upstream is unavailable.
 2. Run `git status --porcelain=v1 --untracked-files=all`. If it returns any entry, stop immediately. Report that the tree is dirty and list the paths; do not stash, clean, restore, pull, or edit anything.
-3. Fetch the latest remote state with `git fetch --prune`, then update the current branch with `git pull --ff-only`. Do not use autostash, rebase, force, or automatic conflict resolution.
-4. If fetch or pull fails, the branch lacks enough upstream information, or a fast-forward is impossible, stop without making project changes and report the exact failure.
-5. Run the clean-tree check again. If it is no longer clean, stop and report; do not begin the audit.
-6. Record the post-pull commit with `git rev-parse HEAD` as `BASELINE_HEAD`. This is the required rollback state.
-7. Maintain a session change ledger from the first edit onward: record every tracked path modified and every untracked path created by this session. Reconcile it frequently with `git status --short`.
+3. Fetch the latest origin state with `git fetch origin --prune`. Stop and report authentication, network, missing-ref, or remote-configuration failures.
+4. Pull the configured origin upstream with `git pull --ff-only origin <upstream-branch>` first. If the update fails specifically because the local and origin histories have diverged, verify the tree is still clean, then merge the fetched origin upstream with `git merge --no-edit <origin-upstream-ref>`.
+5. Accept the incoming merge only when Git completes it without conflicts and the resulting tree is clean. Do not edit merge conflicts or guess resolutions. If a conflict occurs, run `git merge --abort`, verify `HEAD` equals `PRE_SYNC_HEAD` and the tree is clean, then stop and report the conflict paths.
+6. Do not use autostash, rebase, squash, force, or history rewriting during synchronization. Do not merge after a fetch or pull failure unrelated to branch divergence.
+7. Run the clean-tree check again. If it is no longer clean, stop and report; do not begin the audit.
+8. Record the successful post-sync commit with `git rev-parse HEAD` as `BASELINE_HEAD`. A required clean incoming merge commit is part of this baseline and must remain in place if later SEO work is rolled back.
+9. Maintain a session change ledger from the first project edit onward: record every tracked path modified and every untracked path created by this session. Reconcile it frequently with `git status --short`.
 
-Do not treat a successful fetch as a substitute for pulling the current branch. Do not continue from a dirty tree even when the existing changes appear related to metadata or SEO.
+Do not treat a successful fetch as a substitute for integrating the configured origin upstream. Do not continue from a dirty tree even when the existing changes appear related to metadata or SEO. A conflict-free merge of incoming origin changes is authorized when necessary to synchronize; resolving a conflicted merge is not.
 
 ### 2. Discover the project and production origin
 
@@ -160,17 +163,18 @@ Do not use `git reset --hard`, force checkout, or history rewriting for rollback
 Do this only after the completion gate and final diff review:
 
 1. Confirm the user explicitly requested a commit, a push, or both in the current task. Absence of that instruction means leave the verified changes uncommitted.
-2. Stage only the reviewed session-owned paths. Do not use blanket staging when unrelated paths could exist.
-3. Create a Conventional Commit describing the actual change, for example `fix(seo): correct canonical and social metadata` or `feat(seo): add generated route previews`.
-4. If a commit was requested without a push, stop after the commit and report its hash.
-5. Push the current branch only when push was explicitly requested. Never force push. If the push is rejected or the upstream is ambiguous, stop and report instead of beginning a rebase or extended troubleshooting session.
-6. Confirm the final Git status and record the commit hash and pushed remote/branch when applicable.
+2. Exclude the synchronization merge described in Workflow section 1 from this authorization check: it is allowed only to establish the latest clean baseline and does not authorize pushing or committing the SEO changes.
+3. Stage only the reviewed session-owned paths. Do not use blanket staging when unrelated paths could exist.
+4. Create a Conventional Commit describing the actual change, for example `fix(seo): correct canonical and social metadata` or `feat(seo): add generated route previews`.
+5. If a commit was requested without a push, stop after the commit and report its hash.
+6. Push the current branch only when push was explicitly requested. Never force push. If the push is rejected or the upstream is ambiguous, stop and report instead of beginning a rebase or extended troubleshooting session.
+7. Confirm the final Git status and record the commit hash and pushed remote/branch when applicable.
 
 ## Required Session Summary
 
 Always reply with a concise session summary containing:
 
-- sync result: branch, upstream, fetch/pull outcome, and `BASELINE_HEAD`
+- sync result: branch, origin upstream, `PRE_SYNC_HEAD`, fetch outcome, integration method (`no-op`, fast-forward, or clean merge), and `BASELINE_HEAD`
 - whether the operation completed, stopped at the clean-tree gate, or aborted and rolled back
 - production origin used and where it was found
 - route archetypes audited

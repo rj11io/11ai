@@ -1,6 +1,6 @@
 ---
 name: 11ai-super-security
-description: Audit, remediate, and harden a software project's security through repeated evidence-based review and verification. Always fetches and pulls the latest repository changes, requires a clean Git tree before editing, restores its changes if the operation becomes unsafe or troubleshooting-heavy, and commits or pushes with Conventional Commits only when explicitly instructed. Use when Codex needs to perform a security audit or secure-code review, fix vulnerabilities, address critical/high/major security findings, harden authentication, authorization, APIs, dependencies, secrets, deployment configuration, or production-facing web controls, and continue improving the project until it meets a high-confidence security bar.
+description: Audit, remediate, and harden a software project's security through repeated evidence-based review and verification. Always fetches and pulls the latest repository changes, permits a conflict-free upstream merge when fast-forwarding is impossible, requires a clean Git tree before editing, restores its changes if the operation becomes unsafe or troubleshooting-heavy, and commits or pushes with Conventional Commits only when explicitly instructed. Use when Codex needs to perform a security audit or secure-code review, fix vulnerabilities, address critical/high/major security findings, harden authentication, authorization, APIs, dependencies, secrets, deployment configuration, or production-facing web controls, and continue improving the project until it meets a high-confidence security bar.
 ---
 
 # 11ai Super Security
@@ -12,7 +12,7 @@ Read [references/security-review.md](references/security-review.md) before audit
 ## Non-negotiable boundaries
 
 - Work only on code, configuration, infrastructure definitions, and environments the user has placed in scope.
-- Refuse to edit unless the repository has been fetched, pulled, and confirmed clean. Never stash, commit, discard, or overwrite pre-existing work to manufacture a clean starting state.
+- Refuse to edit unless the repository has been fetched, pulled or cleanly merged with its upstream when necessary, and confirmed clean. Never stash, discard, or overwrite pre-existing work to manufacture a clean starting state.
 - Track every file created or changed by the audit. Preserve concurrent or unrelated work and never use blanket destructive cleanup commands.
 - Do not commit or push unless the user explicitly requests that exact action in the current session. Defer any authorized commit or push until the audit and all verification are complete.
 - Do not deploy, alter live data, rotate credentials, rewrite Git history, or change external service settings unless the user explicitly authorizes that action.
@@ -28,9 +28,11 @@ Read [references/security-review.md](references/security-review.md) before audit
 Complete this gate before reading deeply, installing dependencies, running mutating commands, or editing any file:
 
 1. Confirm the current directory belongs to the intended Git repository. Run `git status --porcelain`. If it returns any tracked, staged, or untracked change, stop and report the dirty paths. Do not stash, discard, commit, or absorb them into the audit.
-2. Record the current branch and upstream. Run `git fetch --prune`, then `git pull --ff-only` on the current branch. If the repository is detached, has no usable upstream, the fetch/pull fails, or a fast-forward pull is impossible, stop before editing and report the blocker. Never resolve merge conflicts as part of this gate.
-3. Run `git status --porcelain` again. Continue only if it is empty.
-4. Record `git rev-parse HEAD` as `ROLLBACK_HEAD`. Maintain a change manifest containing every tracked path modified and every untracked path created during the session. Update it after each remediation batch.
+2. Record the current branch, upstream, and `git rev-parse HEAD` as `SYNC_START_HEAD`. Run `git fetch --prune`, then try `git pull --ff-only` on the current branch. If the repository is detached, has no usable upstream, or the fetch fails, stop before editing and report the blocker.
+3. If the fast-forward pull fails only because the local and upstream branches have diverged, merge the fetched upstream into the current branch with `git merge --no-edit @{upstream}`. A conflict-free merge commit is explicitly allowed as part of synchronization even when the user did not request an audit-results commit. Do not amend, squash, or rewrite that merge.
+4. If the merge reports conflicts, do not resolve them as part of this skill. Run `git merge --abort`, verify that `HEAD` equals `SYNC_START_HEAD` and `git status --porcelain` is empty, then stop and report the conflict. If aborting fails, preserve the repository state and report it immediately.
+5. Run `git status --porcelain` after the pull or merge. Continue only if it is empty. Record `git rev-parse HEAD` as `ROLLBACK_HEAD` and record whether synchronization fast-forwarded or created a merge commit.
+6. Maintain a change manifest containing every tracked path modified and every untracked path created during the security routine. Update it after each remediation batch.
 
 The post-pull `ROLLBACK_HEAD` and clean tree are the exact local state to restore if the operation aborts. Do not begin the security routine without both.
 
@@ -122,7 +124,7 @@ On abort:
 5. Verify that `git rev-parse HEAD` still equals `ROLLBACK_HEAD` and `git status --porcelain` is empty. If either check fails, report the exact difference and stop.
 6. End with the session summary, including the abort trigger and restoration result.
 
-Do not commit during the audit, even when the user requested a commit, because commits complicate safe rollback. Commit only after every exit criterion passes.
+Do not create audit-results commits during the audit, even when the user requested one, because commits complicate safe rollback. The conflict-free synchronization merge described in step 0 is the sole exception. Commit audit results only after every exit criterion passes.
 
 ### 8. Commit and push only when explicitly instructed
 
@@ -154,7 +156,7 @@ If a critical/high issue cannot be safely remediated without new authority, miss
 
 Always end with a concise session summary, whether the operation succeeded, blocked, or aborted. Lead with the security outcome, then report:
 
-- starting branch, post-pull `ROLLBACK_HEAD`, fetch/pull result, and clean-start confirmation;
+- starting branch, `SYNC_START_HEAD`, post-sync `ROLLBACK_HEAD`, fetch/pull/merge result, and clean-start confirmation;
 - critical/high findings fixed, with affected files, impact, remediation, and verification;
 - material defense-in-depth improvements;
 - commands and tests run, including any production checks and their limits;

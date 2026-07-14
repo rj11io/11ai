@@ -1,4 +1,4 @@
 interface:
   display_name: "11ai Super Security"
   short_description: "Sync, audit, fix, and harden project security"
-  default_prompt: "Use $11ai-super-security to sync this repository, require a clean tree, fix its critical and high-severity security issues, iterate to a high security bar, and summarize the session."
+  default_prompt: "Use $11ai-super-security to sync this repository, cleanly merge upstream if needed, require a clean tree, fix its critical and high-severity security issues, and summarize the session."
