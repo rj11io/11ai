@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "config": {
+    "capacity": 1,
+    "maxItems": 30,
+    "reviewMaxIterations": 2,
+    "theme": "developer environment and self-hosting how-to guides",
+    "modelTier": "capable"
+  },
+  "items": [
+    {
+      "id": "guide-001",
+      "title": "Run a scheduled job with a systemd user timer",
+      "summary": "Create, enable, and debug a systemd user timer that survives logout",
+      "status": "done",
+      "milestones": [
+        { "id": "m1", "title": "Core walkthrough: unit + timer + enable-linger", "status": "done" },
+        { "id": "m2", "title": "Failure modes: timer not firing, PATH, journal debugging", "status": "done" },
+        { "id": "m3", "title": "Variant: macOS launchd equivalent", "status": "done" }
+      ],
+      "refs": [
+        "guides/guide-001/spec.md",
+        "guides/guide-001/guide.md",
+        "guides/guide-001/transcripts/",
+        "guides/guide-001/reviews/shipping-1.md"
+      ],
+      "lastReview": {
+        "verdict": "approved",
+        "evidence": "verify-guide.mjs guide-001 → PASS (14/14); re-ran block 3 (systemctl --user list-timers), output matches transcript",
+        "notes": null,
+        "at": "2026-06-28T14:02:11Z"
+      },
+      "blockedReason": null,
+      "createdAt": "2026-06-24T09:00:41Z",
+      "updatedAt": "2026-06-28T14:05:37Z"
+    },
+    {
+      "id": "guide-002",
+      "title": "Serve a static site with Caddy and automatic HTTPS",
+      "summary": "Install Caddy, write a Caddyfile, get certificates, add a reverse proxy",
+      "status": "building",
+      "milestones": [
+        { "id": "m1", "title": "Core walkthrough: install, Caddyfile, first HTTPS response", "status": "done" },
+        { "id": "m2", "title": "Failure modes: port 80/443 conflicts, DNS, cert rate limits", "status": "todo" },
+        { "id": "m3", "title": "Variant: Docker compose deployment", "status": "todo" }
+      ],
+      "refs": [
+        "guides/guide-002/spec.md",
+        "guides/guide-002/guide.md",
+        "guides/guide-002/transcripts/",
+        "guides/guide-002/reviews/building-1.md"
+      ],
+      "lastReview": {
+        "verdict": "approved",
+        "evidence": "verify-guide.mjs guide-002 → PASS (6/6 m1 assertions); re-ran block 2 (curl -I https://localhost), 200 with valid local cert as transcripted",
+        "notes": null,
+        "at": "2026-07-01T10:17:44Z"
+      },
+      "blockedReason": null,
+      "createdAt": "2026-06-29T09:01:02Z",
+      "updatedAt": "2026-07-01T10:20:09Z"
+    }
+  ]
+}
