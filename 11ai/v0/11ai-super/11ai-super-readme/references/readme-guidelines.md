@@ -12,6 +12,26 @@ Order matters — put the most useful thing first. Not every section applies to 
 
 Keep it short. Every line must earn its place — a README nobody finishes reading helps nobody.
 
+## Issue-severity rubric
+
+Grade every finding in the ledger so passes fix the worst problems first and the exit criteria have a clear meaning. "Material" means severity high or above.
+
+- **Critical** — the README actively misleads: a documented command fails, a setup step breaks the project, a path or package name is wrong, or the README describes something the folder no longer does.
+- **High** — essential information is missing: a folder that needs a README has none, a required env var or setup step is undocumented, a major feature or package is never mentioned, or two READMEs contradict each other.
+- **Medium** — present but weak: incomplete instructions, unclear purpose statement, stale version numbers, badges, or links that still resolve but point somewhere outdated.
+- **Low** — polish: wording, ordering, formatting, tone. Fix in passing when already editing the file; never let low findings alone drive another pass.
+
+## Review lenses for fresh passes
+
+Each improvement pass after the first should use one lens, in roughly this order:
+
+1. **Newcomer** — read each README cold. Could someone new run the commands and understand the folder without opening the code?
+2. **Accuracy** — re-verify every command, path, env var, link, and claim against the current code, including text the previous pass didn't touch.
+3. **Coverage** — walk the tree again. Is anything important still undocumented? Was any README missed in the first mapping?
+4. **Consistency** — do the READMEs agree with each other? Do index READMEs (a root file listing its children) match what actually exists? Is anything duplicated that should be a link?
+
+A pass is "clean" when it produces no new critical or high finding.
+
 ## Does this folder need a README?
 
 Say **yes** when:
@@ -36,7 +56,7 @@ Duplication is the main failure mode: two READMEs describing the same thing will
 - Env vars: confirm the code actually reads them (grep for the variable name).
 - Behavior: confirm from the code, a config file, or a CI workflow — not from an older README.
 
-If you can't verify a claim, leave it out and mention it in the session summary as an open question.
+If you can't verify a claim, leave it out and record it in the session summary as an open question.
 
 ## Conventional Commits for documentation changes
 

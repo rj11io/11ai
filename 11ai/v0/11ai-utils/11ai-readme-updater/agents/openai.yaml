@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Readme Updater"
-  short_description: "Audit and refresh all repo READMEs"
-  default_prompt: "Use $11ai-readme-updater to pull the latest changes, review the codebase, and bring all READMEs up to date."

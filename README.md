@@ -34,7 +34,7 @@ The files are installed at `node_modules/@rj11io/11ai/11ai/v0/`. You can also cl
 
 ## Skill catalog
 
-The repository currently contains 46 skills in eight groups.
+The repository currently contains 47 skills in eight groups.
 
 | Group | Skills | Use them for |
 | --- | ---: | --- |
@@ -44,7 +44,7 @@ The repository currently contains 46 skills in eight groups.
 | [Cleanup](./11ai/v0/11ai-cleanup/README.md) | 5 | Safely finding and removing abandoned local resources |
 | [Codebase](./11ai/v0/11ai-codebase/README.md) | 3 | Playwright setup, npm publishing, and automated releases |
 | [Integrations](./11ai/v0/11ai-integrations/README.md) | 3 | Adding Convex, WorkOS AuthKit, or both to Next.js applications |
-| [Utilities](./11ai/v0/11ai-utils/README.md) | 5 | Markdown compression, README maintenance, reviews, analytics, and web design |
+| [Utilities](./11ai/v0/11ai-utils/README.md) | 6 | Markdown compression, README maintenance, reviews, analytics, technical SEO, and web design |
 | [Cross-harness](./11ai/v0/11ai-xharness/README.md) | 2 | Delegating work to agents running in other CLI harnesses |
 
 Start with a group's README to choose a skill, then name that skill in your request. Skills provide instructions and examples; they do not install the application dependencies used in those examples by themselves.
