@@ -30,6 +30,7 @@ Prefer a file-based semantic-release config, a release workflow on `main`, and a
 4. Add the GitHub Actions workflow.
    Trigger on pushes to `main`.
    Use `actions/checkout` with `fetch-depth: 0`.
+   Do not configure npm caching in `actions/setup-node`.
    Install dependencies.
    Run `npm run semantic-release`.
    Grant the workflow enough permissions for changelog commits, tags, and GitHub releases.

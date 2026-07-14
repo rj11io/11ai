@@ -95,7 +95,7 @@ Pin `lodash-es` to `4.17.21` with npm `overrides` when using this setup. A broke
 - Give the job enough permissions to create releases.
 - Give the job `packages: write` if it must publish to GitHub Packages.
 - If using environment-scoped secrets, set the job `environment` to the same environment name.
-- Enable npm caching in `actions/setup-node` when using npm in CI.
+- Do not set `cache: npm` or `cache-dependency-path` on `actions/setup-node` in the release workflow.
 - Run `npm run semantic-release` from the workflow.
 - Use the environment name `release` unless the user explicitly wants a different name and updates the workflow and secret configuration together.
 - After `semantic-release`, configure `actions/setup-node` for `https://npm.pkg.github.com` and publish the generated tarball with `NODE_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}`.

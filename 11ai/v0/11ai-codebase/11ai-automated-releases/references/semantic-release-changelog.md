@@ -88,7 +88,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
-          cache: npm
 
       - name: Install dependencies
         run: npm install
@@ -104,5 +103,6 @@ jobs:
 - This setup creates GitHub Releases, changelog updates, tags, and release commits.
 - This setup does not publish to npm.
 - This setup does not publish to GitHub Packages.
+- Do not set `cache: npm` or `cache-dependency-path` on `actions/setup-node` in the release workflow.
 - Use Conventional Commits so semantic-release can determine the next version.
 - If the project already has a published or released baseline, seed git with a matching tag such as `v1.0.3` before first run.

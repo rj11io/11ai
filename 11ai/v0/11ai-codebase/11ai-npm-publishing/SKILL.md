@@ -41,6 +41,7 @@ Prefer the smallest set of changes that gets the package publishable. Keep packa
 6. Choose the publish mode.
    For one-off local publishing, use a repo-local helper that reads `NPM_TOKEN` from `.env`.
    For automated publishing from GitHub, prefer `semantic-release` on pushes to `main`.
+   Do not configure npm caching in `actions/setup-node` for the release workflow.
    When the repo already uses `semantic-release`, preserve the existing config shape, plugin order, and workflow naming unless the user explicitly wants a migration.
 
 7. Publish.
