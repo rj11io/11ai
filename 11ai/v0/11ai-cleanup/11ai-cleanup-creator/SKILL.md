@@ -1,6 +1,14 @@
 ---
 name: 11ai-cleanup-creator
-description: Create a new 11ai cleanup skill for any kind of idle, hanging, or abandoned resource — ports, node_modules folders, caches, agent sessions, Docker containers, stale branches, whatever the user names. Use whenever the user asks to create, make, or generate a cleanup skill for something, wants a scan-and-clean workflow for a resource, or wants to extend the 11ai cleanup skill family. The generated skill always follows the same pattern: scan → judge → report → ask → execute → verify, and never destroys anything the user didn't explicitly pick.
+description: >-
+  Create a new 11ai cleanup skill for any kind of idle, hanging, or abandoned
+  resource — ports, node_modules folders, caches, agent sessions, Docker
+  containers, stale branches, whatever the user names. Use whenever the user
+  asks to create, make, or generate a cleanup skill for something, wants a
+  scan-and-clean workflow for a resource, or wants to extend the 11ai cleanup
+  skill family. The generated skill always follows the same pattern: scan →
+  judge → report → ask → execute → verify, and never destroys anything the
+  user didn't explicitly pick.
 ---
 
 # 11ai Cleanup Creator

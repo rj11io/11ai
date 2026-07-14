@@ -56,11 +56,18 @@ const GROUP_CONFIG = [
       "Add Convex, WorkOS AuthKit, or both to Next.js applications the right way.",
   },
   {
+    slug: "super",
+    dir: "11ai-super",
+    title: "Super",
+    tagline:
+      "Long-running specialist routines that audit and fix repeatedly until a high quality bar is met: metadata and SEO, performance, security, READMEs, and UX.",
+  },
+  {
     slug: "utils",
     dir: "11ai-utils",
     title: "Utilities",
     tagline:
-      "Markdown compression, README maintenance, honest reviews, analytics, web design, and deep SEO, performance, and security audits.",
+      "Markdown compression, honest reviews, analytics, and web design.",
   },
   {
     slug: "xharness",

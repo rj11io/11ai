@@ -95,7 +95,14 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-border/60">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 font-mono text-xs text-muted-foreground sm:px-6">
-          <span>© {new Date().getFullYear()} rj11io</span>
+          <a
+            href="https://www.rj11.io/"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-foreground"
+          >
+            © {new Date().getFullYear()} rj11io
+          </a>
           {version ? <span>v{version}</span> : null}
         </div>
       </div>
