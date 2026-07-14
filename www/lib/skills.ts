@@ -60,7 +60,7 @@ const GROUP_CONFIG = [
     dir: "11ai-super",
     title: "Super",
     tagline:
-      "Long-running specialist routines that audit and fix repeatedly until a high quality bar is met: metadata and SEO, performance, security, READMEs, and UX.",
+      "Long-running general and specialist routines that perform, audit, fix, and verify repeatedly until a high quality bar is met.",
   },
   {
     slug: "utils",

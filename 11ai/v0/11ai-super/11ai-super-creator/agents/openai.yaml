@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Super Creator"
+  short_description: "Run any task repeatedly to a high quality bar"
+  default_prompt: "Use $11ai-super-creator to synchronize this clean repository, perform the specified task, verify it, and keep improving until the result meets a high-confidence quality bar."
