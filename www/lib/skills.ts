@@ -74,7 +74,7 @@ const GROUP_CONFIG = [
     dir: "11ai-utils",
     title: "Utilities",
     tagline:
-      "Markdown compression, reverse engineering, reviews, analytics, web design, publication CMS, calls to action, and project sites.",
+      "Markdown compression, reverse engineering, reviews, analytics, web design, UI styling, publication CMS, calls to action, and project sites.",
   },
   {
     slug: "xharness",

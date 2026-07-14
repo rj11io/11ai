@@ -12,10 +12,9 @@ content, decide design, execute. The output is a small, fast, statically
 generated frontend whose pages are derived from the project's own files —
 never hand-copied prose that can drift.
 
-Works standalone in a dedicated `www/` folder or as routes embedded in an
-existing app. Companion skills: `11ai-web-design` for art direction,
-`11ai-vercel-analytics` for traffic, `11ai-super-metadata` for SEO after
-launch.
+Fully standalone: it carries its own content, design, and execution process
+and needs no other skill. Works in a dedicated `www/` folder or as routes
+embedded in an existing app.
 
 ## Phase 1 — Examine the project
 
@@ -64,13 +63,31 @@ testimonials, fake logos, or placeholder metrics.
 
 ## Phase 3 — Decide design and style
 
-- Match the audience's native environment. CLI and developer tools:
-  terminal/monospace accents, window-dot code blocks, `$`-prefixed commands.
-  Consumer products: defer to `11ai-web-design` direction picking.
-- Support light and dark from day one; wire the toggle into the existing
-  theme system if the scaffold has one.
-- One accent color. Mono font for names, identifiers, and metadata rows;
-  sans for prose.
+Read the audience from the content, then commit to one direction in a
+sentence before styling anything:
+
+- CLI and developer tools: terminal/monospace accents, window-dot code
+  blocks, `$`-prefixed commands, uppercase mono section kickers.
+- Consumer or editorial products: one dominant mood (minimal, editorial,
+  playful, industrial) chosen from the product's own voice — never a generic
+  SaaS template look.
+
+Then apply the same rules regardless of direction:
+
+- Inventory the existing stack first — framework, CSS system, component
+  library, theme tokens, fonts, dark-mode wiring — and reuse it. Never add a
+  parallel styling system beside one that already works.
+- Style with the scaffold's semantic tokens (background, card, muted,
+  border) instead of raw color values, so light and dark both work without
+  per-component fixes.
+- One accent color; keep everything else neutral. Mono for names,
+  identifiers, and metadata rows; sans for prose.
+- Build hierarchy with type, not decoration: small uppercase mono kickers
+  above sections, tight-tracked semibold headings, generous whitespace, thin
+  borders between sections.
+- Motion restraint: hover transitions and small translates only.
+- Support light and dark from day one; wire into the existing theme toggle
+  if the scaffold has one.
 - Responsive by default; verify mobile before calling it done.
 - Write copy in plain language: short words, active voice, concrete examples
   before abstractions.

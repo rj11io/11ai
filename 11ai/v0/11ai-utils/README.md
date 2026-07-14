@@ -1,12 +1,13 @@
 # 11ai Utilities
 
-Eight general-purpose skills for text compression, reverse engineering, reviews, analytics, web interface work, publication CMS, calls to action, and project sites.
+Nine general-purpose skills for text compression, reverse engineering, reviews, analytics, web interface work, UI styling, publication CMS, calls to action, and project sites.
 
 ## Choose a skill
 
 | Skill | Use it for |
 | --- | --- |
 | [`11ai-compression`](./11ai-compression/SKILL.md) | Shortening Markdown guidance locally while preserving its technical structure |
+| [`11ai-pimp-my-ui`](./11ai-pimp-my-ui/SKILL.md) | Reaching one deliberate design direction for existing user-facing content and executing it with the codebase's own tools |
 | [`11ai-platform-cta`](./11ai-platform-cta/SKILL.md) | Adding context-aware platform calls to action with measurable conversion events |
 | [`11ai-publications-cms`](./11ai-publications-cms/SKILL.md) | Building a file-backed publications CMS with validated content and routes |
 | [`11ai-reverse-engineering`](./11ai-reverse-engineering/SKILL.md) | Producing a sanitized blueprint for rebuilding and modernizing a locally cloned repository |
