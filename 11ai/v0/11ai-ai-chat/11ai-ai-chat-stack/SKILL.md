@@ -1,6 +1,6 @@
 ---
 name: 11ai-ai-chat-stack
-description: End-to-end recipe for a grounded, tool-using AI chat in a Next.js App Router app — streaming route, tool sets, sessions, auto-titling, and client UI, using the Vercel AI SDK. Use when adding a complete AI chat surface to an app from scratch.
+description: "End-to-end recipe for a grounded, tool-using AI chat in a Next.js App Router app — streaming route, tool sets, sessions, auto-titling, and client UI, using the Vercel AI SDK. Use when adding a complete AI chat surface to an app from scratch."
 ---
 
 # Full AI chat stack

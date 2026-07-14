@@ -6,11 +6,14 @@
   "main": "11ai/index.js",
   "files": [
     "11ai",
+    ".claude-plugin",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
     "pack-dry": "npm pack --dry-run",
+    "validate-skills": "node ./scripts/validate-skills.mjs",
+    "postversion": "node ./scripts/sync-claude-plugin-versions.mjs && npm run validate-skills",
     "publish-public-local": "node ./scripts/publish-public-w-local-token.cjs",
     "semantic-release": "semantic-release"
   },

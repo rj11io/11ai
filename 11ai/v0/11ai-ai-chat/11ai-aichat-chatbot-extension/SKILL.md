@@ -1,6 +1,6 @@
 ---
 name: 11ai-aichat-chatbot-extension
-description: Extend an AI chat into a Slack (or other messaging platform) chatbot using the Chat SDK — webhook route, mention/DM/thread handlers, streaming replies, slash-command model switching, and Redis-backed conversation state. Use when shipping the assistant as a Slack bot or adding a new messaging platform.
+description: "Extend an AI chat into a Slack (or other messaging platform) chatbot using the Chat SDK — webhook route, mention/DM/thread handlers, streaming replies, slash-command model switching, and Redis-backed conversation state. Use when shipping the assistant as a Slack bot or adding a new messaging platform."
 ---
 
 # Chatbot extension (Slack via Chat SDK)

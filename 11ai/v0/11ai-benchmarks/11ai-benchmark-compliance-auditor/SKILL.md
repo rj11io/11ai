@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-compliance-auditor
-description: Mechanically verify that a finished benchmark run obeyed the hard rules — wrote only inside its folder, added no dependencies, left content and baseline untouched, kept typecheck/lint clean, renders, and passes the content-edit regression test. Writes a pass/fail report to benchmark/audits/. Use after a run finishes, before judging. Every check is a command, not a judgment call; use the judge skill for quality scoring.
+description: "Mechanically verify that a finished benchmark run obeyed the hard rules — wrote only inside its folder, added no dependencies, left content and baseline untouched, kept typecheck/lint clean, renders, and passes the content-edit regression test. Writes a pass/fail report to benchmark/audits/. Use after a run finishes, before judging. Every check is a command, not a judgment call; use the judge skill for quality scoring."
 ---
 
 # 11ai Benchmark Compliance Auditor

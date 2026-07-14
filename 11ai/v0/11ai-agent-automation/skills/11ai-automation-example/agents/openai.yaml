@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Automation Example"
+  short_description: "Explore a complete agent automation example"
+  default_prompt: "Use $11ai-automation-example to apply the Agent Automation Example workflow to this task."

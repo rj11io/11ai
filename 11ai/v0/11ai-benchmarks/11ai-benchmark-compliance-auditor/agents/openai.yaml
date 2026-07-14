@@ -1,0 +1,4 @@
+interface:
+  display_name: "Benchmark Compliance Auditor"
+  short_description: "Audit benchmark runs against hard rules"
+  default_prompt: "Use $11ai-benchmark-compliance-auditor to apply the Benchmark Compliance Auditor workflow to this task."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI Chat Stack"
+  short_description: "Build an end-to-end grounded AI chat"
+  default_prompt: "Use $11ai-ai-chat-stack to apply the AI Chat Stack workflow to this task."

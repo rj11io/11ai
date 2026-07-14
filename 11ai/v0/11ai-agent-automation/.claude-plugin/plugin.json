@@ -1,11 +1,15 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-agent-automation",
-  "version": "2.0.0",
+  "version": "1.13.1",
   "description": "Build autonomous, scheduled agent automations with the Ledger + Conductor + Routine pattern: one milestone per tick (a full vertical slice per run), a depth bar that blocks brochure-ware output, evidence-backed reviews, and a provider-agnostic runner for any headless agent CLI. Eight skills: the core method, a worked example, an any-goal automation creator, a ledger idea-seeder for humans to queue work, a SaaS product-fleet lifecycle and its creator, and a single-SaaS production-depth lifecycle and its creator.",
   "author": {
     "name": "rj11io",
     "email": "ricardojorgexyz@gmail.com"
   },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "skills": "./skills/",
   "keywords": [
     "agent",
     "automation",

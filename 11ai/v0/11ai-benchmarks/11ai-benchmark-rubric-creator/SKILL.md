@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-rubric-creator
-description: Create and freeze a benchmark's judging criteria — benchmark/rubric.md, with 4–6 weighted dimensions and concrete 1/5/10 anchors matched to the skill under test — before any run output is seen. Use when the user wants to define, create, or edit judging criteria or a rubric for a benchmark, and right after scaffolding a new benchmark. The judge skill requires this file and never creates it; editing a rubric after judging has happened means a new version and a full re-judge.
+description: "Create and freeze a benchmark's judging criteria — benchmark/rubric.md, with 4–6 weighted dimensions and concrete 1/5/10 anchors matched to the skill under test — before any run output is seen. Use when the user wants to define, create, or edit judging criteria or a rubric for a benchmark, and right after scaffolding a new benchmark. The judge skill requires this file and never creates it; editing a rubric after judging has happened means a new version and a full re-judge."
 ---
 
 # 11ai Benchmark Rubric Creator

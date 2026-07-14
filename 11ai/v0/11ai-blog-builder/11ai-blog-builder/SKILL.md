@@ -1,6 +1,6 @@
 ---
 name: 11ai-blog-builder
-description: Orchestrate the complete 11ai blog-builder plugin to recreate a file-backed editorial blog with publications, posts, author profiles, library browsing, and responsive article table of contents. Use when a user asks to build, recreate, migrate, or audit an entire blog experience rather than only one subsystem. Treat 11ai-blog-ui as an optional standalone visual add-on only when requested.
+description: "Orchestrate the complete 11ai blog-builder plugin to recreate a file-backed editorial blog with publications, posts, author profiles, library browsing, and responsive article table of contents. Use when a user asks to build, recreate, migrate, or audit an entire blog experience rather than only one subsystem. Treat 11ai-blog-ui as an optional standalone visual add-on only when requested."
 ---
 
 # 11ai Blog Builder

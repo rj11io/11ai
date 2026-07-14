@@ -1,19 +1,6 @@
 ---
 name: 11ai-saas-fleet-automation
-description: >-
-  Ready-made agent automation for building a fleet of real SaaS products,
-  one milestone per scheduled run, on the 11ai-automation method (Ledger +
-  Conductor + Routine). Includes the SaaS state machine (scoping → building
-  per-milestone → hardening → shipping → done), a five-probe DEPTH BAR that
-  blocks static brochure-ware from ever counting as done (real user input,
-  real persistence round-trip, real interactivity, a live data path, honest
-  copy), anti-theater hardening rules, and the payments boundary (pricing is
-  real, checkout does not exist). Use when the user wants an autonomous,
-  cron-driven agent that researches, builds, and ships MANY SaaS
-  products/POCs/MVPs unattended. To tailor a new fleet to a specific niche
-  via an interview, use 11ai-saas-fleet-automation-creator instead. To pour
-  every tick into ONE product at production depth, use
-  11ai-single-saas-automation instead.
+description: "Ready-made agent automation for building a fleet of real SaaS products, one milestone per scheduled run, on the 11ai-automation method (Ledger + Conductor + Routine). Includes the SaaS state machine (scoping → building per-milestone → hardening → shipping → done), a five-probe DEPTH BAR that blocks static brochure-ware from ever counting as done (real user input, real persistence round-trip, real interactivity, a live data path, honest copy), anti-theater hardening rules, and the payments boundary (pricing is real, checkout does not exist). Use when the user wants an autonomous, cron-driven agent that researches, builds, and ships MANY SaaS products/POCs/MVPs unattended. To tailor a new fleet to a specific niche via an interview, use 11ai-saas-fleet-automation-creator instead. To pour every tick into ONE product at production depth, use 11ai-single-saas-automation instead."
 ---
 
 # SaaS Fleet Automation — many real products, one milestone per tick

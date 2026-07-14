@@ -1,4 +1,4 @@
 interface:
   display_name: "11ai Cross-Harness Agent Delegation"
-  short_description: "Route delegated tasks to the right model by type, scope, and impact"
+  short_description: "Route tasks by type, scope, and impact"
   default_prompt: "Use $11ai-xharness-agent-delegation to pick the right model for this task, then delegate it."

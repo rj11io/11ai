@@ -1,6 +1,6 @@
 ---
 name: 11ai-xharness-agent-comms
-description: Call, spawn, or delegate to an AI agent running in a different harness (Claude Code, Codex CLI, Gemini CLI) and collect its output. Use whenever one agent should hand a task to a model it cannot run itself — for example Codex (GPT 5.6) calling Claude Code (Claude Fable 5) for UI work, or Claude Code calling Codex (GPT 5.6 Luna) to generate a title — including cross-model second opinions, fan-out to parallel workers, and multi-turn sessions with another CLI agent.
+description: "Call, spawn, or delegate to an AI agent running in a different harness (Claude Code, Codex CLI, Gemini CLI) and collect its output. Use whenever one agent should hand a task to a model it cannot run itself — for example Codex (GPT 5.6) calling Claude Code (Claude Fable 5) for UI work, or Claude Code calling Codex (GPT 5.6 Luna) to generate a title — including cross-model second opinions, fan-out to parallel workers, and multi-turn sessions with another CLI agent."
 ---
 
 # 11ai Cross-Harness Agent Comms

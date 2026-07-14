@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cleanup <Target>"
+  short_description: "Safely inspect and clean selected <resources>"
+  default_prompt: "Use $11ai-cleanup-<target> to scan, report, and clean only the resources I explicitly select."

@@ -1,6 +1,6 @@
 ---
 name: 11ai-convex-integration
-description: Add or maintain a standalone Convex integration for application database and backend functions, including package setup, Convex project initialization, Next.js provider wiring, queries and mutations, generated API handling, local and production environment variables, Convex dashboard/deployment settings, CI deploy keys, and troubleshooting missing deployment or dashboard visibility issues.
+description: "Add or maintain a standalone Convex integration for application database and backend functions, including package setup, Convex project initialization, Next.js provider wiring, queries and mutations, generated API handling, local and production environment variables, Convex dashboard/deployment settings, CI deploy keys, and troubleshooting missing deployment or dashboard visibility issues."
 ---
 
 # Convex Integration

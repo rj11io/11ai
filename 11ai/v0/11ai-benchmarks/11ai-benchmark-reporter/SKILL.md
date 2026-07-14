@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-reporter
-description: Render a benchmark's results into an elegant, self-contained HTML report — verdict, scoreboard, side-by-side screenshot gallery, findings, method note. Use when the user asks for a benchmark report, comparison write-up, results page, or wants to share how the models did. Primary input is benchmark/report/data.json, the consolidated file the reviewer skill validates and writes; falls back to the raw artifacts (runs.json, audits/, results.json, costs/, screenshots/) when no data.json exists. It does not run, audit, score, or price anything itself.
+description: "Render a benchmark's results into an elegant, self-contained HTML report — verdict, scoreboard, side-by-side screenshot gallery, findings, method note. Use when the user asks for a benchmark report, comparison write-up, results page, or wants to share how the models did. Primary input is benchmark/report/data.json, the consolidated file the reviewer skill validates and writes; falls back to the raw artifacts (runs.json, audits/, results.json, costs/, screenshots/) when no data.json exists. It does not run, audit, score, or price anything itself."
 ---
 
 # 11ai Benchmark Reporter

@@ -5,7 +5,7 @@ import matter from "gray-matter"
 
 export const GITHUB_REPO_URL = "https://github.com/rj11io/11ai"
 export const NPM_URL = "https://www.npmjs.com/package/@rj11io/11ai"
-export const INSTALL_COMMAND = "npx skills add rj11io/11ai"
+export const INSTALL_COMMAND = "npx skills add rj11io/11ai --full-depth"
 
 /**
  * Curated per-group presentation data. Skills, counts, and descriptions all
@@ -33,6 +33,13 @@ const GROUP_CONFIG = [
     title: "Benchmarks",
     tagline:
       "Create, run, audit, judge, cost, review, and report benchmarks that compare AI coding models.",
+  },
+  {
+    slug: "blog-builder",
+    dir: "11ai-blog-builder",
+    title: "Blog builder",
+    tagline:
+      "Build file-backed editorial blogs with composable CMS, author, Markdown, content, navigation, and UI skills.",
   },
   {
     slug: "cleanup",
@@ -67,7 +74,7 @@ const GROUP_CONFIG = [
     dir: "11ai-utils",
     title: "Utilities",
     tagline:
-      "Markdown compression, honest reviews, analytics, web design, and repo-driven project sites.",
+      "Markdown compression, reverse engineering, reviews, analytics, web design, publication CMS, calls to action, and project sites.",
   },
   {
     slug: "xharness",
@@ -99,41 +106,11 @@ export type Skill = {
   githubUrl: string
 }
 
-/**
- * Split frontmatter from body without a YAML parser. Fallback for skill
- * files whose long unquoted descriptions are not strictly valid YAML
- * (e.g. an unquoted "pattern: scan" inside the description).
- */
-function parseSkillFileLenient(raw: string): {
-  data: Record<string, string>
-  content: string
-} {
-  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/)
-  if (!match) return { data: {}, content: raw }
-  const [, frontmatter, content] = match
-  const data: Record<string, string> = {}
-  let currentKey: string | null = null
-  for (const line of frontmatter.split(/\r?\n/)) {
-    const keyMatch = line.match(/^([A-Za-z][\w-]*):\s*(.*)$/)
-    if (keyMatch && !line.startsWith(" ")) {
-      currentKey = keyMatch[1]
-      data[currentKey] = keyMatch[2].replace(/^>-?\s*$/, "")
-    } else if (currentKey) {
-      data[currentKey] = `${data[currentKey]} ${line.trim()}`.trim()
-    }
-  }
-  return { data, content }
-}
-
 function parseSkillFile(raw: string): {
   data: Record<string, unknown>
   content: string
 } {
-  try {
-    return matter(raw)
-  } catch {
-    return parseSkillFileLenient(raw)
-  }
+  return matter(raw)
 }
 
 function resolveSkillsRoot(): string {

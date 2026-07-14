@@ -14,7 +14,11 @@ module.exports = {
     [
       "@semantic-release/git",
       {
-        assets: ["package.json", "CHANGELOG.md"],
+        assets: [
+          "package.json",
+          "CHANGELOG.md",
+          "11ai/v0/*/.claude-plugin/plugin.json",
+        ],
         message:
           "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}",
       },

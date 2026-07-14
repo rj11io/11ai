@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-content-pack-creator
-description: Turn raw source material (screenshots, documents, existing sites, product specs, profile exports) into a benchmark's pinned content/ pack — markdown files in the loader format, verified against the repo's parser, with gaps flagged as placeholders instead of invented. Use when the user wants to fill or update a benchmark's content folder from real material. Content edits between runs break comparability — this skill warns when runs already exist.
+description: "Turn raw source material (screenshots, documents, existing sites, product specs, profile exports) into a benchmark's pinned content/ pack — markdown files in the loader format, verified against the repo's parser, with gaps flagged as placeholders instead of invented. Use when the user wants to fill or update a benchmark's content folder from real material. Content edits between runs break comparability — this skill warns when runs already exist."
 ---
 
 # 11ai Benchmark Content Pack Creator

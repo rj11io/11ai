@@ -1,6 +1,6 @@
 ---
 name: 11ai-ai-chat-autotitle
-description: Auto-name a new chat session from the user's first message using a tiny one-shot LLM endpoint, called fire-and-forget from the client. Use when adding session titles to an AI chat.
+description: "Auto-name a new chat session from the user's first message using a tiny one-shot LLM endpoint, called fire-and-forget from the client. Use when adding session titles to an AI chat."
 ---
 
 # Auto-titling chat sessions

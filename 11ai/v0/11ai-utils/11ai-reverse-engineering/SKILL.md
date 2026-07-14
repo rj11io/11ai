@@ -1,7 +1,6 @@
 ---
 name: 11ai-reverse-engineering
-description: Reverse engineer a locally cloned repo — extract core logic, data flows, and key implementation pieces (sanitized of all branded/personal/company information), then produce a single markdown blueprint with instructions to rebuild it better using modern technologies and best practices. Use when the user wants to study, reverse engineer, modernize, or rebuild an existing repo.
-argument-hint: [path-to-repo]
+description: "Reverse engineer a locally cloned repo — extract core logic, data flows, and key implementation pieces (sanitized of all branded/personal/company information), then produce a single markdown blueprint with instructions to rebuild it better using modern technologies and best practices. Use when the user wants to study, reverse engineer, modernize, or rebuild an existing repo."
 ---
 
 # 11ai Reverse Engineering

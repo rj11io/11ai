@@ -1,6 +1,6 @@
 ---
 name: 11ai-ai-chat-client-hooks
-description: Client-side wiring of @ai-sdk/react useChat — transport setup, per-session remounting, restoring history, persisting on stream completion, and the ref guards that prevent duplicate saves/titles/focus bugs. Use when building or debugging the React side of an AI chat.
+description: "Client-side wiring of @ai-sdk/react useChat — transport setup, per-session remounting, restoring history, persisting on stream completion, and the ref guards that prevent duplicate saves/titles/focus bugs. Use when building or debugging the React side of an AI chat."
 ---
 
 # useChat client wiring

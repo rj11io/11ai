@@ -1,6 +1,6 @@
 ---
 name: 11ai-xharness-agent-delegation
-description: Decide which model gets which task when delegating work across harnesses — routes UI, design, and copywriting to Claude Fable 5 (with Sonnet 5 and Opus 4.8 fallbacks) and everything else to a GPT 5.6 tier (Luna, Terra, or Sol) by scope and impact. Use whenever an agent must choose a model for a delegated task, pick between GPT and Claude for a job, apply the team's model routing policy, or resolve a fallback when the assigned model is unavailable.
+description: "Decide which model gets which task when delegating work across harnesses — routes UI, design, and copywriting to Claude Fable 5 (with Sonnet 5 and Opus 4.8 fallbacks) and everything else to a GPT 5.6 tier (Luna, Terra, or Sol) by scope and impact. Use whenever an agent must choose a model for a delegated task, pick between GPT and Claude for a job, apply the team's model routing policy, or resolve a fallback when the assigned model is unavailable."
 ---
 
 # 11ai Cross-Harness Agent Delegation

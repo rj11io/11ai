@@ -1,6 +1,6 @@
 ---
 name: 11ai-cleanup-agent-worktrees
-description: Scan a git repository for abandoned worktrees — the isolated working copies AI agents (Claude Code, Codex CLI, Gemini CLI, Cursor, Aider, or any other harness) create and leave behind — report each one's age, branch, and safety in a compact table, ask the user which to remove, then clean up only what they picked. Use whenever the user wants to clean up worktrees, mentions leftover / stale / agent-created worktrees or branches, notices `git worktree list` is full of junk, or complains about mystery sibling directories of their repo — even if they only mention one.
+description: "Scan a git repository for abandoned worktrees — the isolated working copies AI agents (Claude Code, Codex CLI, Gemini CLI, Cursor, Aider, or any other harness) create and leave behind — report each one's age, branch, and safety in a compact table, ask the user which to remove, then clean up only what they picked. Use whenever the user wants to clean up worktrees, mentions leftover / stale / agent-created worktrees or branches, notices `git worktree list` is full of junk, or complains about mystery sibling directories of their repo — even if they only mention one."
 ---
 
 # 11ai Cleanup Agent Worktrees

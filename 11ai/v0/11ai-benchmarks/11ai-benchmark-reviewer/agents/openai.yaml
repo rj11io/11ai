@@ -1,0 +1,4 @@
+interface:
+  display_name: "Benchmark Reviewer"
+  short_description: "Validate and publish benchmark results"
+  default_prompt: "Use $11ai-benchmark-reviewer to apply the Benchmark Reviewer workflow to this task."

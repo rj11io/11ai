@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Automation"
+  short_description: "Build scheduled ledger-driven agent workflows"
+  default_prompt: "Use $11ai-automation to apply the Agent Automation workflow to this task."

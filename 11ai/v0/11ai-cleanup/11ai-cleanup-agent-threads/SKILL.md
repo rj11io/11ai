@@ -1,6 +1,6 @@
 ---
 name: 11ai-cleanup-agent-threads
-description: Scan for abandoned AI agent threads across harnesses — Claude Code, OpenAI Codex CLI, Gemini CLI, Goose, OpenCode — covering old conversation transcripts and leftover per-session scratchpad directories, report them in a compact table, ask the user which to delete, then remove only what they picked. Use whenever the user wants to clean up agent sessions, threads, transcripts, or old conversations from any coding agent, complains about accumulated session junk or temp directories from agents, or asks how much space their agent history is taking — even if they only mention one session or one tool.
+description: "Scan for abandoned AI agent threads across harnesses — Claude Code, OpenAI Codex CLI, Gemini CLI, Goose, OpenCode — covering old conversation transcripts and leftover per-session scratchpad directories, report them in a compact table, ask the user which to delete, then remove only what they picked. Use whenever the user wants to clean up agent sessions, threads, transcripts, or old conversations from any coding agent, complains about accumulated session junk or temp directories from agents, or asks how much space their agent history is taking — even if they only mention one session or one tool."
 ---
 
 # 11ai Cleanup Agent Threads

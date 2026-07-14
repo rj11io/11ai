@@ -1,6 +1,6 @@
 ---
 name: 11ai-ai-chat-session-mgmt
-description: Manage multi-session AI chat state — session entity shape, a CRUD hook with reactive refresh, pinned-first sorting, and persistence via localStorage or a service API. Use when adding chat history, pin/rename/delete, or session switching to an AI chat.
+description: "Manage multi-session AI chat state — session entity shape, a CRUD hook with reactive refresh, pinned-first sorting, and persistence via localStorage or a service API. Use when adding chat history, pin/rename/delete, or session switching to an AI chat."
 ---
 
 # Chat session management

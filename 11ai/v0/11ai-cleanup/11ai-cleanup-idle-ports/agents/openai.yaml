@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cleanup Idle Ports"
+  short_description: "Find and stop selected idle port processes"
+  default_prompt: "Use $11ai-cleanup-idle-ports to apply the Cleanup Idle Ports workflow to this task."

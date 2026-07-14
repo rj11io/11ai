@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI Chat Multiple Models"
+  short_description: "Add model and provider selection to AI chat"
+  default_prompt: "Use $11ai-ai-chat-multiple-models to apply the AI Chat Multiple Models workflow to this task."

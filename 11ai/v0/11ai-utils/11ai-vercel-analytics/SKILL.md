@@ -1,6 +1,6 @@
 ---
 name: 11ai-vercel-analytics
-description: Add, configure, or verify Vercel Web Analytics in web applications using the official `@vercel/analytics` package. Use when Codex needs to enable page-view analytics, integrate the Analytics component into Next.js App Router or Pages Router projects, diagnose missing Vercel analytics traffic, or confirm an existing installation without adding a separate analytics provider.
+description: "Add, configure, or verify Vercel Web Analytics in web applications using the official `@vercel/analytics` package. Use when Codex needs to enable page-view analytics, integrate the Analytics component into Next.js App Router or Pages Router projects, diagnose missing Vercel analytics traffic, or confirm an existing installation without adding a separate analytics provider."
 ---
 
 # 11ai Vercel Analytics

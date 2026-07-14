@@ -1,0 +1,4 @@
+interface:
+  display_name: "Benchmark Rubric Creator"
+  short_description: "Create frozen evidence-based rubrics"
+  default_prompt: "Use $11ai-benchmark-rubric-creator to apply the Benchmark Rubric Creator workflow to this task."

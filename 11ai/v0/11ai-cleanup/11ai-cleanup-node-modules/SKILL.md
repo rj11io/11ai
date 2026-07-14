@@ -1,6 +1,6 @@
 ---
 name: 11ai-cleanup-node-modules
-description: Scan for node_modules directories in stale or abandoned projects, report each one's size and age in a compact table, ask the user which to delete, then remove only what they picked. Use whenever the user wants to clean up node_modules, reclaim disk space from old JavaScript/Node projects, complains their disk is almost full, or mentions bloated / forgotten / duplicate node_modules folders — even if they only mention one project.
+description: "Scan for node_modules directories in stale or abandoned projects, report each one's size and age in a compact table, ask the user which to delete, then remove only what they picked. Use whenever the user wants to clean up node_modules, reclaim disk space from old JavaScript/Node projects, complains their disk is almost full, or mentions bloated / forgotten / duplicate node_modules folders — even if they only mention one project."
 ---
 
 # 11ai Cleanup node_modules

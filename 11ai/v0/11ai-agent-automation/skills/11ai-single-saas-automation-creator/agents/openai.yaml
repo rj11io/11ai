@@ -1,0 +1,4 @@
+interface:
+  display_name: "Single SaaS Automation Creator"
+  short_description: "Create a production-focused SaaS workflow"
+  default_prompt: "Use $11ai-single-saas-automation-creator to apply the Single SaaS Automation Creator workflow to this task."

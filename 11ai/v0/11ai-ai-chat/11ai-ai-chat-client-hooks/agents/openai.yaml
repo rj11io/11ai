@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI Chat Client Hooks"
+  short_description: "Wire reliable React hooks for AI chat"
+  default_prompt: "Use $11ai-ai-chat-client-hooks to apply the AI Chat Client Hooks workflow to this task."

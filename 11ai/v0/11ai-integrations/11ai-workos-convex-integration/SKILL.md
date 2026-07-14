@@ -1,6 +1,6 @@
 ---
 name: 11ai-workos-convex-integration
-description: Add or maintain a combined WorkOS AuthKit and Convex integration for authenticated product applications, including Next.js AuthKit routes, protected pages, Convex provider/functions, env var setup across local/Vercel/GitHub/Convex, WorkOS application redirects, Convex deployment linking, optional WorkOS-to-Convex environment sharing, CI mock auth values, and end-to-end verification.
+description: "Add or maintain a combined WorkOS AuthKit and Convex integration for authenticated product applications, including Next.js AuthKit routes, protected pages, Convex provider/functions, env var setup across local/Vercel/GitHub/Convex, WorkOS application redirects, Convex deployment linking, optional WorkOS-to-Convex environment sharing, CI mock auth values, and end-to-end verification."
 ---
 
 # WorkOS and Convex Integration

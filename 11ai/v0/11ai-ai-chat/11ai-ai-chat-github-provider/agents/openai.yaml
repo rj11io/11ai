@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI Chat GitHub Provider"
+  short_description: "Connect GitHub Models to the AI SDK"
+  default_prompt: "Use $11ai-ai-chat-github-provider to apply the AI Chat GitHub Provider workflow to this task."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Benchmark Token Accountant"
+  short_description: "Calculate benchmark token usage and cost"
+  default_prompt: "Use $11ai-benchmark-token-accountant to apply the Benchmark Token Accountant workflow to this task."

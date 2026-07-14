@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-creator-multirepo
-description: Scaffold an isolated-run AI coding benchmark — a pristine template tagged in git, with each run on its own branch (or its own repo/worktree), for objectives where runs need their own dependencies, full-app control, a backend, or true independence from other runs' code. Use when the single-app structure's trade-offs stop being acceptable; use 11ai-benchmark-creator-singleapp when runs can share one Next.js app and browsable side-by-side routes matter more than isolation.
+description: "Scaffold an isolated-run AI coding benchmark — a pristine template tagged in git, with each run on its own branch (or its own repo/worktree), for objectives where runs need their own dependencies, full-app control, a backend, or true independence from other runs' code. Use when the single-app structure's trade-offs stop being acceptable; use 11ai-benchmark-creator-singleapp when runs can share one Next.js app and browsable side-by-side routes matter more than isolation."
 ---
 
 # 11ai Benchmark Creator (multirepo / branch-per-run)

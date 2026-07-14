@@ -1,6 +1,6 @@
 ---
 name: 11ai-blog-cms
-description: Build or retrofit a white-label, file-backed blog CMS organized as publications with nested posts, including a single combined library that switches between Posts and Publications (default Posts), list/card display modes (default List), typed Markdown content, search, AND-tag filters, sorting, publication detail pages, and post readers. Use for multi-publication blogs, journals, editorial sites, author blogs, or Git-managed Next.js content systems without a database. Pair with 11ai-blog-authors when the library should also include an Authors content type.
+description: "Build or retrofit a white-label, file-backed blog CMS organized as publications with nested posts, including a single combined library that switches between Posts and Publications (default Posts), list/card display modes (default List), typed Markdown content, search, AND-tag filters, sorting, publication detail pages, and post readers. Use for multi-publication blogs, journals, editorial sites, author blogs, or Git-managed Next.js content systems without a database. Pair with 11ai-blog-authors when the library should also include an Authors content type."
 ---
 
 # 11ai Blog CMS

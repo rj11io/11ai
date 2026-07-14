@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-creator-singleapp
-description: Scaffold a new single-app AI coding benchmark — one Next.js + shadcn repo where several agent runs (harness + model + effort, e.g. app/codex-gpt5.5-high) each build the same objective from the same read-only content, so results compare taste and skill alone. Use when the user asks to create a new benchmark of this kind for any objective (landing page, dashboard, blog, docs site, pricing page, data explorer). Not for running or judging an existing benchmark.
+description: "Scaffold a new single-app AI coding benchmark — one Next.js + shadcn repo where several agent runs (harness + model + effort, e.g. app/codex-gpt5.5-high) each build the same objective from the same read-only content, so results compare taste and skill alone. Use when the user asks to create a new benchmark of this kind for any objective (landing page, dashboard, blog, docs site, pricing page, data explorer). Not for running or judging an existing benchmark."
 ---
 
 # 11ai Single-App Benchmark Creator

@@ -1,17 +1,6 @@
 ---
 name: 11ai-automation
-description: >-
-  Build autonomous, scheduled agent automations with the Ledger + Conductor +
-  Routine pattern. Each scheduled run ships ONE MILESTONE — a complete
-  vertical slice with checks, implementation, one evidence-backed review, and
-  a quality gate, all in a single run — against a durable JSON ledger, driven
-  by any headless agent CLI (Claude Code, Codex, Gemini, opencode, Cursor,
-  aider, and others). Use when the user wants a self-running pipeline, a
-  fleet builder, or any cron-driven agent that must keep making real,
-  verifiable progress unattended — resumable, serial, and never corrupting
-  shared state. This is the core method; sibling skills provide a worked
-  example, a SaaS product pipeline, and creators that generate a tailored
-  automation from an interview.
+description: "Build autonomous, scheduled agent automations with the Ledger + Conductor + Routine pattern. Each scheduled run ships ONE MILESTONE — a complete vertical slice with checks, implementation, one evidence-backed review, and a quality gate, all in a single run — against a durable JSON ledger, driven by any headless agent CLI (Claude Code, Codex, Gemini, opencode, Cursor, aider, and others). Use when the user wants a self-running pipeline, a fleet builder, or any cron-driven agent that must keep making real, verifiable progress unattended — resumable, serial, and never corrupting shared state. This is the core method; sibling skills provide a worked example, a SaaS product pipeline, and creators that generate a tailored automation from an interview."
 ---
 
 # AI Agent Automation — Ledger + Conductor + Routine

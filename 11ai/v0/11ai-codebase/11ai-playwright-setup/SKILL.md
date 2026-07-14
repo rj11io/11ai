@@ -1,6 +1,6 @@
 ---
 name: 11ai-playwright-setup
-description: Add or maintain Playwright testing for web applications, including unit-style Playwright tests, browser E2E tests, separate Playwright configs, npm scripts, GitHub Actions CI wiring, browser installation, localhost web server setup, mock environment variables for auth-dependent apps, ignored test artifacts, and troubleshooting CI failures.
+description: "Add or maintain Playwright testing for web applications, including unit-style Playwright tests, browser E2E tests, separate Playwright configs, npm scripts, GitHub Actions CI wiring, browser installation, localhost web server setup, mock environment variables for auth-dependent apps, ignored test artifacts, and troubleshooting CI failures."
 ---
 
 # Playwright Setup

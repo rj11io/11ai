@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-runner
-description: Prepare, launch, and record a single benchmark run in an existing single-app benchmark repo — pick the run id, freeze the exact prompt given to the agent, write the run ledger entry (benchmark/runs.json), and hand off or launch the harness. Use when the user says to start, kick off, or register a benchmark run for a given harness + model + effort. Not for creating a benchmark (use the creator skills) or checking a finished run (use the compliance auditor).
+description: "Prepare, launch, and record a single benchmark run in an existing single-app benchmark repo — pick the run id, freeze the exact prompt given to the agent, write the run ledger entry (benchmark/runs.json), and hand off or launch the harness. Use when the user says to start, kick off, or register a benchmark run for a given harness + model + effort. Not for creating a benchmark (use the creator skills) or checking a finished run (use the compliance auditor)."
 ---
 
 # 11ai Benchmark Runner

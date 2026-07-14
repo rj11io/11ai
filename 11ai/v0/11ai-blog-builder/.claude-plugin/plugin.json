@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "11ai-blog-builder",
+  "version": "1.13.1",
+  "description": "Build file-backed editorial blogs with composable CMS, author, Markdown, content, navigation, and UI skills.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "skills": "./"
+}

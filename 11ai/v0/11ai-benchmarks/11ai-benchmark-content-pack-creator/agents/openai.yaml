@@ -1,0 +1,4 @@
+interface:
+  display_name: "Benchmark Content Pack Creator"
+  short_description: "Build verified benchmark content packs"
+  default_prompt: "Use $11ai-benchmark-content-pack-creator to apply the Benchmark Content Pack Creator workflow to this task."

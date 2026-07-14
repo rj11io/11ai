@@ -1,6 +1,6 @@
 ---
 name: 11ai-ai-chat-multiple-models
-description: Let users pick between multiple LLMs (across providers) in an AI chat — model registry, per-provider SDK instances over one gateway, per-message modelId routing, model picker UI, and per-session model persistence. Use when adding model selection or multi-provider support to an AI chat.
+description: "Let users pick between multiple LLMs (across providers) in an AI chat — model registry, per-provider SDK instances over one gateway, per-message modelId routing, model picker UI, and per-session model persistence. Use when adding model selection or multi-provider support to an AI chat."
 ---
 
 # Multiple models in an AI chat

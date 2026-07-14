@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Automation Seed"
+  short_description: "Add validated ideas to an automation ledger"
+  default_prompt: "Use $11ai-automation-seed to apply the Agent Automation Seed workflow to this task."

@@ -1,6 +1,6 @@
 ---
 name: 11ai-super-performance
-description: Synchronize a clean Git repository, including a conflict-free merge of incoming upstream changes when needed, then audit, profile, fix, and repeatedly optimize software project speed and resource efficiency with safe rollback and optional explicitly authorized conventional commits. Use when Codex needs to investigate a slow application, API, page, query, build, test suite, startup path, or background job; eliminate critical and major performance problems; improve latency, throughput, responsiveness, bundle size, memory, CPU, network, or database efficiency; validate production-like performance; or continue performance work until the project meets a high evidence-based bar.
+description: "Synchronize a clean Git repository, including a conflict-free merge of incoming upstream changes when needed, then audit, profile, fix, and repeatedly optimize software project speed and resource efficiency with safe rollback and optional explicitly authorized conventional commits. Use when Codex needs to investigate a slow application, API, page, query, build, test suite, startup path, or background job; eliminate critical and major performance problems; improve latency, throughput, responsiveness, bundle size, memory, CPU, network, or database efficiency; validate production-like performance; or continue performance work until the project meets a high evidence-based bar."
 ---
 
 # 11ai Super Performance

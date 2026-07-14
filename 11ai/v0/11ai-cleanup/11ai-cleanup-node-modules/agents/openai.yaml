@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cleanup node_modules"
+  short_description: "Find and remove selected stale dependencies"
+  default_prompt: "Use $11ai-cleanup-node-modules to apply the Cleanup node_modules workflow to this task."

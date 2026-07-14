@@ -1,17 +1,6 @@
 ---
 name: 11ai-super-creator
-description: >-
-  Execute any clearly specified repository task as a long-running,
-  evidence-driven routine: synchronize a clean current branch with origin
-  first, permit an automatic conflict-free merge of incoming changes when
-  fast-forwarding is impossible, perform and verify the requested work, and
-  repeat fresh improvement passes until the result meets a high-confidence
-  completion bar. Use when Codex should keep creating, changing, fixing,
-  migrating, documenting, testing, or auditing a project until materially
-  satisfied instead of stopping after one pass. Abort and restore
-  session-owned changes if the worktree becomes unmanageably dirty or
-  troubleshooting outweighs progress. Commit or push only when explicitly
-  instructed, using Conventional Commits.
+description: "Execute any clearly specified repository task as a long-running, evidence-driven routine: synchronize a clean current branch with origin first, permit an automatic conflict-free merge of incoming changes when fast-forwarding is impossible, perform and verify the requested work, and repeat fresh improvement passes until the result meets a high-confidence completion bar. Use when Codex should keep creating, changing, fixing, migrating, documenting, testing, or auditing a project until materially satisfied instead of stopping after one pass. Abort and restore session-owned changes if the worktree becomes unmanageably dirty or troubleshooting outweighs progress. Commit or push only when explicitly instructed, using Conventional Commits."
 ---
 
 # 11ai Super Creator

@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI Chatbot Extension"
+  short_description: "Extend AI chat to messaging platforms"
+  default_prompt: "Use $11ai-aichat-chatbot-extension to apply the AI Chatbot Extension workflow to this task."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "SaaS Fleet Automation"
+  short_description: "Run an autonomous SaaS product fleet"
+  default_prompt: "Use $11ai-saas-fleet-automation to apply the SaaS Fleet Automation workflow to this task."

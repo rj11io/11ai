@@ -1,6 +1,6 @@
 ---
 name: 11ai-blog-toc
-description: Build or retrofit a white-label, responsive, accessible table of contents for Markdown, MDX, CMS, or rich-text blog articles, including deterministic heading IDs, duplicate handling, native hash deep links, sticky desktop and collapsible mobile navigation, scroll-aware active-section highlighting, fixed-header offsets, and tests. Use when adding, recreating, repairing, or auditing an article “On this page” index, scrollspy, heading anchors, or TOC in React, Next.js, or another web project.
+description: "Build or retrofit a white-label, responsive, accessible table of contents for Markdown, MDX, CMS, or rich-text blog articles, including deterministic heading IDs, duplicate handling, native hash deep links, sticky desktop and collapsible mobile navigation, scroll-aware active-section highlighting, fixed-header offsets, and tests. Use when adding, recreating, repairing, or auditing an article “On this page” index, scrollspy, heading anchors, or TOC in React, Next.js, or another web project."
 ---
 
 # 11ai Blog TOC

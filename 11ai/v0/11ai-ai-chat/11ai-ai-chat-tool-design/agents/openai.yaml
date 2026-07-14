@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI Chat Tool Design"
+  short_description: "Design token-efficient grounded chat tools"
+  default_prompt: "Use $11ai-ai-chat-tool-design to apply the AI Chat Tool Design workflow to this task."

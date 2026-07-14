@@ -1,0 +1,4 @@
+interface:
+  display_name: "Multirepo Benchmark Creator"
+  short_description: "Create isolated multi-repository benchmarks"
+  default_prompt: "Use $11ai-benchmark-creator-multirepo to apply the Multirepo Benchmark Creator workflow to this task."

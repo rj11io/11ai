@@ -1,4 +1,4 @@
 interface:
   display_name: "11ai WorkOS Integration"
-  short_description: "Set up WorkOS AuthKit"
+  short_description: "Set up and verify WorkOS AuthKit"
   default_prompt: "Use $11ai-workos-integration to add WorkOS AuthKit with env vars, redirects, and protected routes."

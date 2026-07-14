@@ -1,6 +1,6 @@
 ---
 name: 11ai-ai-chat-github-provider
-description: Use GitHub Models as a free OpenAI-compatible inference provider for the Vercel AI SDK. Use when wiring an AI chat, title generator, or any LLM call that should run on the free GitHub Models endpoint instead of a paid API key.
+description: "Use GitHub Models as a free OpenAI-compatible inference provider for the Vercel AI SDK. Use when wiring an AI chat, title generator, or any LLM call that should run on the free GitHub Models endpoint instead of a paid API key."
 ---
 
 # GitHub Models as a free AI SDK provider

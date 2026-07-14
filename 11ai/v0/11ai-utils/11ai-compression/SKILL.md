@@ -1,6 +1,6 @@
 ---
 name: 11ai-compression
-description: Compress markdown and text guidance files locally without external LLM or Claude CLI calls. Use when Codex needs to shorten SKILL.md, CLAUDE.md, prompts, runbooks, or other natural-language instruction files while preserving headings, fenced code, inline code, links, URLs, paths, and markdown structure.
+description: "Compress markdown and text guidance files locally without external LLM or Claude CLI calls. Use when Codex needs to shorten SKILL.md, CLAUDE.md, prompts, runbooks, or other natural-language instruction files while preserving headings, fenced code, inline code, links, URLs, paths, and markdown structure."
 ---
 
 # 11ai Compression

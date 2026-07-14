@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI Chat UI and UX"
+  short_description: "Build polished and accessible AI chat UI"
+  default_prompt: "Use $11ai-ai-chat-ui-ux to apply the AI Chat UI and UX workflow to this task."

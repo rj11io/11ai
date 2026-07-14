@@ -1,0 +1,4 @@
+interface:
+  display_name: "Benchmark Runner"
+  short_description: "Prepare and launch a benchmark run"
+  default_prompt: "Use $11ai-benchmark-runner to apply the Benchmark Runner workflow to this task."

@@ -1,6 +1,6 @@
 ---
 name: 11ai-workos-integration
-description: Add or maintain a standalone WorkOS AuthKit integration for Next.js applications, including package setup, AuthKit provider wiring, login/callback/logout routes, protected pages, proxy or middleware configuration, environment variables, WorkOS application redirect settings, CI test mocks, and troubleshooting signed-out or missing-env auth failures.
+description: "Add or maintain a standalone WorkOS AuthKit integration for Next.js applications, including package setup, AuthKit provider wiring, login/callback/logout routes, protected pages, proxy or middleware configuration, environment variables, WorkOS application redirect settings, CI test mocks, and troubleshooting signed-out or missing-env auth failures."
 ---
 
 # WorkOS Integration

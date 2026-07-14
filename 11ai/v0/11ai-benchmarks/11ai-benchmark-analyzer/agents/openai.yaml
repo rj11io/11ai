@@ -1,0 +1,4 @@
+interface:
+  display_name: "Benchmark Analyzer"
+  short_description: "Analyze results across multiple benchmarks"
+  default_prompt: "Use $11ai-benchmark-analyzer to apply the Benchmark Analyzer workflow to this task."

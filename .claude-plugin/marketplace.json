@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "11ai",
+  "owner": {
+    "name": "rj11io"
+  },
+  "description": "Reusable AI-agent skills grouped by workflow.",
+  "plugins": [
+    {
+      "name": "11ai-agent-automation",
+      "source": "./11ai/v0/11ai-agent-automation"
+    },
+    {
+      "name": "11ai-ai-chat",
+      "source": "./11ai/v0/11ai-ai-chat"
+    },
+    {
+      "name": "11ai-benchmarks",
+      "source": "./11ai/v0/11ai-benchmarks"
+    },
+    {
+      "name": "11ai-blog-builder",
+      "source": "./11ai/v0/11ai-blog-builder"
+    },
+    {
+      "name": "11ai-cleanup",
+      "source": "./11ai/v0/11ai-cleanup"
+    },
+    {
+      "name": "11ai-codebase",
+      "source": "./11ai/v0/11ai-codebase"
+    },
+    {
+      "name": "11ai-integrations",
+      "source": "./11ai/v0/11ai-integrations"
+    },
+    {
+      "name": "11ai-super",
+      "source": "./11ai/v0/11ai-super"
+    },
+    {
+      "name": "11ai-utils",
+      "source": "./11ai/v0/11ai-utils"
+    },
+    {
+      "name": "11ai-xharness",
+      "source": "./11ai/v0/11ai-xharness"
+    }
+  ]
+}

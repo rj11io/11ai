@@ -1,6 +1,6 @@
 ---
 name: 11ai-cleanup-idle-ports
-description: Scan for idle, hanging, or abandoned local ports (usually dev servers left behind by AI agents), report what's open in a compact table, ask the user which ones to clean up, then kill only the processes they picked. Use whenever the user wants to clean up ports or processes, asks "what's running on my ports", complains a port is already in use / EADDRINUSE, mentions leftover or zombie dev servers, or wants to free up a port — even if they only name a single port.
+description: "Scan for idle, hanging, or abandoned local ports (usually dev servers left behind by AI agents), report what's open in a compact table, ask the user which ones to clean up, then kill only the processes they picked. Use whenever the user wants to clean up ports or processes, asks \"what's running on my ports\", complains a port is already in use / EADDRINUSE, mentions leftover or zombie dev servers, or wants to free up a port — even if they only name a single port."
 ---
 
 # 11ai Cleanup Idle Ports

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Automation Creator"
+  short_description: "Create a tailored autonomous agent workflow"
+  default_prompt: "Use $11ai-automation-creator to apply the Agent Automation Creator workflow to this task."

@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-analyzer
-description: Aggregate results across multiple 11ai benchmark repos into a cross-benchmark leaderboard — per-model and per-harness standings, cost-vs-quality profiles, and trends over time — with honest sample-size caveats. Use when the user asks how models compare across benchmarks, wants a leaderboard, or wants patterns spanning several benchmark repos. Needs at least two benchmarks with results; for one benchmark's write-up use the reporter skill.
+description: "Aggregate results across multiple 11ai benchmark repos into a cross-benchmark leaderboard — per-model and per-harness standings, cost-vs-quality profiles, and trends over time — with honest sample-size caveats. Use when the user asks how models compare across benchmarks, wants a leaderboard, or wants patterns spanning several benchmark repos. Needs at least two benchmarks with results; for one benchmark's write-up use the reporter skill."
 ---
 
 # 11ai Benchmark Analyzer

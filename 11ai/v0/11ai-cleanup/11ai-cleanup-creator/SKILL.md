@@ -1,14 +1,6 @@
 ---
 name: 11ai-cleanup-creator
-description: >-
-  Create a new 11ai cleanup skill for any kind of idle, hanging, or abandoned
-  resource — ports, node_modules folders, caches, agent sessions, Docker
-  containers, stale branches, whatever the user names. Use whenever the user
-  asks to create, make, or generate a cleanup skill for something, wants a
-  scan-and-clean workflow for a resource, or wants to extend the 11ai cleanup
-  skill family. The generated skill always follows the same pattern: scan →
-  judge → report → ask → execute → verify, and never destroys anything the
-  user didn't explicitly pick.
+description: "Create a new 11ai cleanup skill for any kind of idle, hanging, or abandoned resource — ports, node_modules folders, caches, agent sessions, Docker containers, stale branches, whatever the user names. Use whenever the user asks to create, make, or generate a cleanup skill for something, wants a scan-and-clean workflow for a resource, or wants to extend the 11ai cleanup skill family. The generated skill always follows the same pattern: scan → judge → report → ask → execute → verify, and never destroys anything the user didn't explicitly pick."
 ---
 
 # 11ai Cleanup Creator
@@ -54,18 +46,22 @@ Put it at `scripts/scan_<target>.sh` inside the new skill. Requirements:
 - **Measures, not just lists.** Every candidate gets a size (or the resource's equivalent metric — RAM for processes), computed in machine-summable units internally, and the output ends with a **TOTALS footer**: overall count and size, per-flag subtotals, and the reclaimable-candidates subtotal. This is what lets the report and verify steps quote exact numbers instead of estimates. See any sibling scanner for the awk pattern.
 - **Handles the empty case** with a friendly one-line message and exit 0.
 
-### 3. Write the SKILL.md
+### 3. Write the skill metadata
 
-Copy `assets/TEMPLATE.md` and fill in the placeholders. Conventions:
+Create `SKILL.md` from `assets/TEMPLATE.md` and `agents/openai.yaml` from `assets/openai.yaml`. Fill every placeholder. Conventions:
 
 - Name: `11ai-cleanup-<target>` (kebab-case).
-- Location: `v0/skills/cleanup/11ai-cleanup-<target>/` alongside the others.
+- Location: `11ai/v0/11ai-cleanup/11ai-cleanup-<target>/` alongside the others.
 - Description: state what it scans and cleans, and be generous with trigger phrasings — include the complaints a user would actually type ("disk full", "port already in use"), not just the skill's own vocabulary. Skills tend to under-trigger; a slightly pushy description compensates.
+- Frontmatter must contain exactly `name` and `description`. Keep `description` as one JSON-compatible double-quoted line; never use YAML block scalars such as `>-`.
+- `agents/openai.yaml` must contain quoted `display_name`, `short_description` (25–64 characters), and `default_prompt`; the prompt must mention the exact `$11ai-cleanup-<target>` name.
 - Keep the body under ~120 lines. The six steps carry the structure; the skill-specific content is the signals, the flags, and the exact execute commands.
 
 ### 4. Make the script executable
 
 `chmod +x` the scan script. Do not run or test the new skill — not even its read-only scan — unless the user explicitly asks for a test. A cleanup skill exercised without approval is exactly the accident these skills exist to prevent.
+
+Validate the generated files without invoking the cleanup routine. From the repository root, run `npm run validate-skills`; fix every metadata, path, link, and executable-bit failure before returning the skill.
 
 ## Hard rules for generated skills
 

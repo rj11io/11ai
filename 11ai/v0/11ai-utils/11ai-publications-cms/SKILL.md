@@ -1,6 +1,6 @@
 ---
 name: 11ai-publications-cms
-description: Build or retrofit a white-label, file-backed publications CMS with publications, nested chapters, typed metadata, Markdown reading pages, search, AND-tag filters, sorting, optional synopsis and author notes, previous/next navigation, and list/card display modes defaulting to list. Use for Next.js author libraries, serial publishing sites, publications-and-chapters catalogs, or requests to reproduce this exact Git-managed content workflow without a database.
+description: "Build or retrofit a white-label, file-backed publications CMS with publications, nested chapters, typed metadata, Markdown reading pages, search, AND-tag filters, sorting, optional synopsis and author notes, previous/next navigation, and list/card display modes defaulting to list. Use for Next.js author libraries, serial publishing sites, publications-and-chapters catalogs, or requests to reproduce this exact Git-managed content workflow without a database."
 ---
 
 # 11ai Publications CMS

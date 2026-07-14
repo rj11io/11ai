@@ -1,17 +1,6 @@
 ---
 name: 11ai-automation-seed
-description: >-
-  Add a human idea to an existing agent automation's ledger so the
-  autonomous agent picks it up and works on it in later scheduled runs.
-  Reads the automation's CONDUCTOR.md and ledger.json, checks the idea fits
-  the theme, dedupes it against existing items, writes a well-formed ledger
-  entry carrying a `seed` (the idea, why, constraints), and commits it
-  safely between ticks. Use when the user says "add this idea to the
-  ledger/queue/backlog", "have the agent build X next", "seed the
-  automation with these ideas", or pastes a list of ideas for the fleet.
-  Works with any ledger built on the 11ai-automation method, including
-  11ai-saas-fleet-automation fleets (seed = a product idea) and
-  11ai-single-saas-automation products (seed = a feature/capability request).
+description: "Add a human idea to an existing agent automation's ledger so the autonomous agent picks it up and works on it in later scheduled runs. Reads the automation's CONDUCTOR.md and ledger.json, checks the idea fits the theme, dedupes it against existing items, writes a well-formed ledger entry carrying a `seed` (the idea, why, constraints), and commits it safely between ticks. Use when the user says \"add this idea to the ledger/queue/backlog\", \"have the agent build X next\", \"seed the automation with these ideas\", or pastes a list of ideas for the fleet. Works with any ledger built on the 11ai-automation method, including 11ai-saas-fleet-automation fleets (seed = a product idea) and 11ai-single-saas-automation products (seed = a feature/capability request)."
 ---
 
 # Seed the Ledger — queue human ideas for the agent

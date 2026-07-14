@@ -1,6 +1,6 @@
 ---
 name: 11ai-roast
-description: Review, critique, and roast code, documents, designs, or any work product for improvements — read-only, no file edits. Use whenever the user asks to review, critique, roast, tear apart, poke holes in, or get honest/brutal feedback on something, or asks "what's wrong with this" or "how would you improve this", even if they don't say the word "roast". Delivers blunt, prioritized suggestions only; never modifies files.
+description: "Review, critique, and roast code, documents, designs, or any work product for improvements — read-only, no file edits. Use whenever the user asks to review, critique, roast, tear apart, poke holes in, or get honest/brutal feedback on something, or asks \"what's wrong with this\" or \"how would you improve this\", even if they don't say the word \"roast\". Delivers blunt, prioritized suggestions only; never modifies files."
 ---
 
 # 11ai Roast

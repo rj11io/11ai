@@ -1,0 +1,4 @@
+interface:
+  display_name: "Single-App Benchmark Creator"
+  short_description: "Create comparable single-app benchmarks"
+  default_prompt: "Use $11ai-benchmark-creator-singleapp to apply the Single-App Benchmark Creator workflow to this task."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Benchmark Judge"
+  short_description: "Score audited benchmark runs fairly"
+  default_prompt: "Use $11ai-benchmark-judge to apply the Benchmark Judge workflow to this task."

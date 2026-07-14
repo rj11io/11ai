@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cleanup Agent Threads"
+  short_description: "Safely remove selected abandoned agent threads"
+  default_prompt: "Use $11ai-cleanup-agent-threads to apply the Cleanup Agent Threads workflow to this task."

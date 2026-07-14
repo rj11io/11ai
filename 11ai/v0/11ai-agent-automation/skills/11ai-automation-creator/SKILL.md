@@ -1,15 +1,6 @@
 ---
 name: 11ai-automation-creator
-description: >-
-  Create a complete agent automation for ANY goal of the user's choice, on
-  the 11ai-automation method (Ledger + Conductor + Routine). Runs a short
-  interview about the goal, work item, milestones, depth bar, quality gate,
-  platform, and agent CLI — then generates every file: a filled-in
-  CONDUCTOR.md, ledger.json, the provider-agnostic runner script and config,
-  and a first-tick walkthrough. Use when the user says "create/build/set up
-  an agent automation for X", "I want an agent that keeps doing X on a
-  schedule", or "turn this recurring work into an autonomous pipeline". For
-  SaaS product fleets specifically, prefer 11ai-saas-fleet-automation-creator.
+description: "Create a complete agent automation for ANY goal of the user's choice, on the 11ai-automation method (Ledger + Conductor + Routine). Runs a short interview about the goal, work item, milestones, depth bar, quality gate, platform, and agent CLI — then generates every file: a filled-in CONDUCTOR.md, ledger.json, the provider-agnostic runner script and config, and a first-tick walkthrough. Use when the user says \"create/build/set up an agent automation for X\", \"I want an agent that keeps doing X on a schedule\", or \"turn this recurring work into an autonomous pipeline\". For SaaS product fleets specifically, prefer 11ai-saas-fleet-automation-creator."
 ---
 
 # Agent Automation Creator

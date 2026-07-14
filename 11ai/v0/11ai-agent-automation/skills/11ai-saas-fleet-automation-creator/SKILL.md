@@ -1,17 +1,6 @@
 ---
 name: 11ai-saas-fleet-automation-creator
-description: >-
-  Create a complete SaaS product-fleet agent automation for a niche and goal
-  of the user's choice, combining the 11ai-automation method with the
-  11ai-saas-fleet-automation lifecycle (milestone ticks + the five-probe depth bar
-  that blocks brochure-ware + the payments boundary). Runs a short interview
-  about the niche, target users, stack, and caps — then generates the
-  conductor, ledger, runner, and per-product scaffolding conventions. Use
-  when the user says "create an agent automation that builds SaaS products /
-  POCs / MVPs for X", "set up an autonomous product factory", or wants a
-  cron-driven agent shipping many products in a chosen market unattended.
-  For ONE product deepened to production grade, use
-  11ai-single-saas-automation-creator instead.
+description: "Create a complete SaaS product-fleet agent automation for a niche and goal of the user's choice, combining the 11ai-automation method with the 11ai-saas-fleet-automation lifecycle (milestone ticks + the five-probe depth bar that blocks brochure-ware + the payments boundary). Runs a short interview about the niche, target users, stack, and caps — then generates the conductor, ledger, runner, and per-product scaffolding conventions. Use when the user says \"create an agent automation that builds SaaS products / POCs / MVPs for X\", \"set up an autonomous product factory\", or wants a cron-driven agent shipping many products in a chosen market unattended. For ONE product deepened to production grade, use 11ai-single-saas-automation-creator instead."
 ---
 
 # SaaS Fleet Automation Creator

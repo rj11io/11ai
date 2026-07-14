@@ -1,17 +1,6 @@
 ---
 name: 11ai-super-bugfixing
-description: >-
-  Synchronize a clean Git repository from origin, allowing an automatic
-  conflict-free merge of incoming changes when fast-forwarding is impossible,
-  then continuously inspect, reproduce, prioritize, fix, verify, and re-audit
-  software defects until the project reaches a high-confidence quality bar.
-  Use when Codex must find and fix bugs across a project, debug failing tests or
-  builds, eliminate regressions, repair runtime, type, API, data, integration,
-  UI, state, concurrency, or resource-lifecycle errors, or keep hunting for
-  additional defects after a known bug is resolved. Abort and restore
-  session-owned changes when the diff becomes unsafe or troubleshooting
-  outweighs progress. Commit or push only when explicitly instructed, using
-  Conventional Commits.
+description: "Synchronize a clean Git repository from origin, allowing an automatic conflict-free merge of incoming changes when fast-forwarding is impossible, then continuously inspect, reproduce, prioritize, fix, verify, and re-audit software defects until the project reaches a high-confidence quality bar. Use when Codex must find and fix bugs across a project, debug failing tests or builds, eliminate regressions, repair runtime, type, API, data, integration, UI, state, concurrency, or resource-lifecycle errors, or keep hunting for additional defects after a known bug is resolved. Abort and restore session-owned changes when the diff becomes unsafe or troubleshooting outweighs progress. Commit or push only when explicitly instructed, using Conventional Commits."
 ---
 
 # 11ai Super Bugfixing

@@ -1,17 +1,6 @@
 ---
 name: 11ai-single-saas-automation-creator
-description: >-
-  Create an agent automation that builds and continuously deepens ONE SaaS
-  product to production grade, for a product of the user's choice —
-  combining the 11ai-automation method with the 11ai-single-saas-automation
-  lifecycle (capability items, the production depth bar with accounts/
-  tenancy/test-mode payments/migrations, the walking skeleton, the spine
-  e2e). Runs an interview about the product's mission, users, monetization,
-  stack, and initial capability backlog — then generates PRODUCT.md, the
-  conductor, a pre-seeded ledger, and the runner. Use when the user says
-  "set up an agent to build my product", "create an automation that takes
-  this SaaS to production", or names one specific product to work on. For a
-  fleet of many products, use 11ai-saas-fleet-automation-creator.
+description: "Create an agent automation that builds and continuously deepens ONE SaaS product to production grade, for a product of the user's choice — combining the 11ai-automation method with the 11ai-single-saas-automation lifecycle (capability items, the production depth bar with accounts/ tenancy/test-mode payments/migrations, the walking skeleton, the spine e2e). Runs an interview about the product's mission, users, monetization, stack, and initial capability backlog — then generates PRODUCT.md, the conductor, a pre-seeded ledger, and the runner. Use when the user says \"set up an agent to build my product\", \"create an automation that takes this SaaS to production\", or names one specific product to work on. For a fleet of many products, use 11ai-saas-fleet-automation-creator."
 ---
 
 # Single-SaaS Automation Creator

@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-judge
-description: Score audited benchmark runs on quality — capture screenshots of every run at every output surface, have a panel of model judges score anonymized runs against the frozen rubric, and leave a complete judgement artifact (per-judge scores with justifications, mapping, aggregated benchmark/results.json). Use when the user asks to judge, score, rank, or compare finished runs. Requires passed compliance audits (auditor skill) and an existing frozen benchmark/rubric.md (rubric-creator skill — this skill never writes criteria); the reviewer skill validates and publishes what this produces.
+description: "Score audited benchmark runs on quality — capture screenshots of every run at every output surface, have a panel of model judges score anonymized runs against the frozen rubric, and leave a complete judgement artifact (per-judge scores with justifications, mapping, aggregated benchmark/results.json). Use when the user asks to judge, score, rank, or compare finished runs. Requires passed compliance audits (auditor skill) and an existing frozen benchmark/rubric.md (rubric-creator skill — this skill never writes criteria); the reviewer skill validates and publishes what this produces."
 ---
 
 # 11ai Benchmark Judge

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cleanup Skill Creator"
+  short_description: "Create safe scan-and-clean skills"
+  default_prompt: "Use $11ai-cleanup-creator to apply the Cleanup Skill Creator workflow to this task."

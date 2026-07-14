@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI Chat Session Management"
+  short_description: "Build persistent multi-session AI chat"
+  default_prompt: "Use $11ai-ai-chat-session-mgmt to apply the AI Chat Session Management workflow to this task."

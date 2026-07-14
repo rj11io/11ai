@@ -1,16 +1,6 @@
 ---
 name: 11ai-www
-description: >-
-  Examine a project, decide what its public site should display, choose a
-  design direction, and build an elegant frontend that presents the project —
-  either in a dedicated www/ folder or embedded in an existing app. The site
-  treats the repository as its single source of truth: real project files are
-  scanned at build time, so content, counts, and catalog pages update
-  automatically when the project changes. Use when the user asks for a
-  project site, a landing page for a repo, a catalog or docs browser over
-  repository content, "build a www for this", or "display the concept of the
-  project" — and follow through from content inventory to a verified,
-  statically generated build.
+description: "Examine a project, decide what its public site should display, choose a design direction, and build an elegant frontend that presents the project — either in a dedicated www/ folder or embedded in an existing app. The site treats the repository as its single source of truth: real project files are scanned at build time, so content, counts, and catalog pages update automatically when the project changes. Use when the user asks for a project site, a landing page for a repo, a catalog or docs browser over repository content, \"build a www for this\", or \"display the concept of the project\" — and follow through from content inventory to a verified, statically generated build."
 ---
 
 # 11ai WWW

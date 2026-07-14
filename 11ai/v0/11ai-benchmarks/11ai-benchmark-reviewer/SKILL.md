@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-reviewer
-description: Review a benchmark's finished artifacts (judging results, audits, costs) for completeness and consistency, consolidate them into one canonical benchmark/report/data.json, and propagate the results outward — into the benchmark's README, the parent folder's README, the root README, and the web app's data files when one exists. Use when the user asks to review, publish, sync, or propagate benchmark results, or to update the READMEs or site with results. Runs after the judge and token accountant, before the reporter; it validates and distributes but never computes a score or a cost itself.
+description: "Review a benchmark's finished artifacts (judging results, audits, costs) for completeness and consistency, consolidate them into one canonical benchmark/report/data.json, and propagate the results outward — into the benchmark's README, the parent folder's README, the root README, and the web app's data files when one exists. Use when the user asks to review, publish, sync, or propagate benchmark results, or to update the READMEs or site with results. Runs after the judge and token accountant, before the reporter; it validates and distributes but never computes a score or a cost itself."
 ---
 
 # 11ai Benchmark Reviewer

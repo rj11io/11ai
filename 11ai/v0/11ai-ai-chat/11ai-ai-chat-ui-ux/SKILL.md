@@ -1,6 +1,6 @@
 ---
 name: 11ai-ai-chat-ui-ux
-description: The UX feature set and layout patterns for a polished AI chat surface — hint-chip empty state, message bubbles, thinking indicator, dismissible errors, sessions sidebar with pin/rename/delete, mobile fallback, scroll/focus behavior. Use when building or reviewing an AI chat UI.
+description: "The UX feature set and layout patterns for a polished AI chat surface — hint-chip empty state, message bubbles, thinking indicator, dismissible errors, sessions sidebar with pin/rename/delete, mobile fallback, scroll/focus behavior. Use when building or reviewing an AI chat UI."
 ---
 
 # AI chat UI/UX patterns

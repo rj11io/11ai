@@ -1,6 +1,6 @@
 ---
 name: 11ai-web-design
-description: Design and build distinctive websites, landing pages, product surfaces, prototypes, demos, and web UI with strong art direction, hierarchy, typography, imagery, and motion. Use when you must create or restyle a frontend so it feels intentional and premium rather than generic, especially for React apps, HTML/CSS pages, marketing sites, dashboards, or component-level UI polish.
+description: "Design and build distinctive websites, landing pages, product surfaces, prototypes, demos, and web UI with strong art direction, hierarchy, typography, imagery, and motion. Use when you must create or restyle a frontend so it feels intentional and premium rather than generic, especially for React apps, HTML/CSS pages, marketing sites, dashboards, or component-level UI polish."
 ---
 
 # 11ai Web Design

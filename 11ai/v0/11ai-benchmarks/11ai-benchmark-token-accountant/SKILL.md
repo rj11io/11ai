@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-token-accountant
-description: Compute the tokens spent and dollar cost of benchmark work by parsing the harness's own session transcripts (Claude Code, Codex, or reported totals), pricing them against a maintained per-model rate file (web-verified, never from memory), and writing structured cost artifacts to benchmark/costs/ at session-level granularity — every thread classified as a run, benchmark operations (judging, audits, scaffolding), or unrelated, with per-bucket and grand totals. Use when the user asks what a run or benchmark cost, how many tokens were spent, what the benchmark cost beyond the runs, or for cost analytics across runs and models.
+description: "Compute the tokens spent and dollar cost of benchmark work by parsing the harness's own session transcripts (Claude Code, Codex, or reported totals), pricing them against a maintained per-model rate file (web-verified, never from memory), and writing structured cost artifacts to benchmark/costs/ at session-level granularity — every thread classified as a run, benchmark operations (judging, audits, scaffolding), or unrelated, with per-bucket and grand totals. Use when the user asks what a run or benchmark cost, how many tokens were spent, what the benchmark cost beyond the runs, or for cost analytics across runs and models."
 ---
 
 # 11ai Benchmark Token Accountant

@@ -1,20 +1,6 @@
 ---
 name: 11ai-single-saas-automation
-description: >-
-  Agent automation that builds and continuously deepens ONE SaaS product to
-  production grade, on the 11ai-automation method (Ledger + Conductor +
-  Routine). Where the fleet skill ships many demo-grade products, this one
-  pours every tick into a single product: ledger items are CAPABILITIES of
-  the product (auth, billing, the core feature, admin, notifications), each
-  built milestone-by-milestone against a production depth bar — real
-  accounts with tenant isolation, payments in provider test mode, schema
-  migrations, error/empty/loading states, rate limiting, and a growing
-  cross-capability "spine" e2e that must stay green forever. Use when the
-  user wants an autonomous agent working on one real product ("keep building
-  my app", "deepen this SaaS", "take this product to production quality").
-  For many small products instead, use 11ai-saas-fleet-automation. To set a
-  new single-product automation up via interview, use
-  11ai-single-saas-automation-creator.
+description: "Agent automation that builds and continuously deepens ONE SaaS product to production grade, on the 11ai-automation method (Ledger + Conductor + Routine). Where the fleet skill ships many demo-grade products, this one pours every tick into a single product: ledger items are CAPABILITIES of the product (auth, billing, the core feature, admin, notifications), each built milestone-by-milestone against a production depth bar — real accounts with tenant isolation, payments in provider test mode, schema migrations, error/empty/loading states, rate limiting, and a growing cross-capability \"spine\" e2e that must stay green forever. Use when the user wants an autonomous agent working on one real product (\"keep building my app\", \"deepen this SaaS\", \"take this product to production quality\"). For many small products instead, use 11ai-saas-fleet-automation. To set a new single-product automation up via interview, use 11ai-single-saas-automation-creator."
 ---
 
 # Single-SaaS Agent Automation — one product, production depth

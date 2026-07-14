@@ -1,6 +1,6 @@
 ---
 name: 11ai-npm-publishing
-description: Prepare, publish, and automate releases for npm packages, especially scoped packages that need package.json fixes, publish scripts, npm dry-run checks, `.env`-managed `NPM_TOKEN` handling, npm org token setup, GitHub Actions secrets, semantic-release workflows, npmjs.org publishing, GitHub Packages publishing, GitHub Releases, or release troubleshooting. Use when Codex needs to make a repo publish-ready, verify what npm will ship, configure automated publishing, or diagnose failures involving package contents, registry auth, 2FA, tokens, tags, changelogs, GitHub Actions, or semantic-release.
+description: "Prepare, publish, and automate releases for npm packages, especially scoped packages that need package.json fixes, publish scripts, npm dry-run checks, `.env`-managed `NPM_TOKEN` handling, npm org token setup, GitHub Actions secrets, semantic-release workflows, npmjs.org publishing, GitHub Packages publishing, GitHub Releases, or release troubleshooting. Use when Codex needs to make a repo publish-ready, verify what npm will ship, configure automated publishing, or diagnose failures involving package contents, registry auth, 2FA, tokens, tags, changelogs, GitHub Actions, or semantic-release."
 ---
 
 # Npm Publishing
