@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/rj11io/11ai/compare/v1.12.0...v1.13.0) (2026-07-14)
+
+
+### Features
+
+* add analytics ([9569800](https://github.com/rj11io/11ai/commit/956980062241907c251b46f1bb8c95f46aa2416e))
+
 # [1.12.0](https://github.com/rj11io/11ai/compare/v1.11.0...v1.12.0) (2026-07-14)
 
 
