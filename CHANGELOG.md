@@ -1,3 +1,15 @@
+# [1.12.0](https://github.com/rj11io/11ai/compare/v1.11.0...v1.12.0) (2026-07-14)
+
+
+### Bug Fixes
+
+* improve super skills ([8cc7d3b](https://github.com/rj11io/11ai/commit/8cc7d3b087a4c351222bda081cbb312ed814ba4a))
+
+
+### Features
+
+* www skill ([6d54dff](https://github.com/rj11io/11ai/commit/6d54dff5b8f7ad6331a137c19a548a51f028b323))
+
 # [1.11.0](https://github.com/rj11io/11ai/compare/v1.10.0...v1.11.0) (2026-07-14)
 
 
