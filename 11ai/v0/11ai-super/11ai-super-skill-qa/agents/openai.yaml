@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Super Skill QA"
+  short_description: "Audit and repair cross-harness skill packaging"
+  default_prompt: "Use $11ai-super-skill-qa to audit and repair this repository’s skills for portable formatting, metadata, discovery, and packaging."

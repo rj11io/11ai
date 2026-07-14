@@ -42,7 +42,7 @@ The files are installed at `node_modules/@rj11io/11ai/11ai/v0/`. You can also cl
 
 ## Skill catalog
 
-The repository currently contains 64 skills in 10 groups.
+The repository currently contains 65 skills in 10 groups.
 
 | Group | Skills | Use them for |
 | --- | ---: | --- |
@@ -53,7 +53,7 @@ The repository currently contains 64 skills in 10 groups.
 | [Cleanup](./11ai/v0/11ai-cleanup/README.md) | 5 | Safely finding and removing abandoned local resources |
 | [Codebase](./11ai/v0/11ai-codebase/README.md) | 3 | Playwright setup, npm publishing, and automated releases |
 | [Integrations](./11ai/v0/11ai-integrations/README.md) | 3 | Adding Convex, WorkOS AuthKit, or both to Next.js applications |
-| [Super](./11ai/v0/11ai-super/README.md) | 7 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
+| [Super](./11ai/v0/11ai-super/README.md) | 8 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
 | [Utilities](./11ai/v0/11ai-utils/README.md) | 8 | Markdown compression, reverse engineering, critique, analytics, web design, publication CMS, calls to action, and project sites |
 | [Cross-harness](./11ai/v0/11ai-xharness/README.md) | 2 | Delegating work to agents running in other CLI harnesses |
 
@@ -72,7 +72,7 @@ Start with a group's README to choose a skill, then name that skill in your requ
     11ai-cleanup/             5 cleanup skills
     11ai-codebase/            3 codebase skills
     11ai-integrations/        3 integration skills
-    11ai-super/               7 iterative task and improvement skills
+    11ai-super/               8 iterative task and improvement skills
     11ai-utils/               8 utility skills
     11ai-xharness/            2 cross-harness skills
 scripts/                      Root package publishing helper

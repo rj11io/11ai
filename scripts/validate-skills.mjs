@@ -268,6 +268,9 @@ function validatePackageConfiguration() {
   if (!siteCatalog.includes(`INSTALL_COMMAND = "${installCommand}"`)) {
     fail(path.join(root, "www", "lib", "skills.ts"), "site install command must use --full-depth")
   }
+  if (!siteCatalog.includes("must use canonical skill frontmatter")) {
+    fail(path.join(root, "www", "lib", "skills.ts"), "site skill parser must reject non-canonical frontmatter")
+  }
 }
 
 if (!fs.existsSync(skillsRoot)) {
@@ -276,9 +279,22 @@ if (!fs.existsSync(skillsRoot)) {
 }
 
 const skillFiles = walk(skillsRoot, (file) => path.basename(file) === "SKILL.md").sort()
-const skills = skillFiles.map(parseSkill).filter(Boolean)
+const inventorySkills = skillFiles.map((file) => ({
+  file,
+  dir: path.dirname(file),
+  name: path.basename(path.dirname(file)),
+}))
 const names = new Map()
-for (const skill of skills) {
+for (const inventorySkill of inventorySkills) {
+  const skill = parseSkill(inventorySkill.file)
+  if (!skill) {
+    parseOpenAiConfig(inventorySkill)
+    validateLinks({
+      ...inventorySkill,
+      raw: fs.readFileSync(inventorySkill.file, "utf8"),
+    })
+    continue
+  }
   if (names.has(skill.name)) fail(skill.file, `duplicate name also used by ${names.get(skill.name)}`)
   else names.set(skill.name, path.relative(root, skill.file))
   parseOpenAiConfig(skill)
@@ -289,18 +305,20 @@ const groups = fs
   .readdirSync(skillsRoot, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name)
-  .filter((group) => skills.some((skill) => skill.dir.startsWith(path.join(skillsRoot, group))))
+  .filter((group) =>
+    inventorySkills.some((skill) => skill.dir.startsWith(path.join(skillsRoot, group))),
+  )
   .sort()
 const groupSkills = new Map(
   groups.map((group) => [
     group,
-    skills.filter((skill) => skill.dir.startsWith(path.join(skillsRoot, group))),
+    inventorySkills.filter((skill) => skill.dir.startsWith(path.join(skillsRoot, group))),
   ]),
 )
 
 validateScripts()
 validateClaude(groups, groupSkills)
-validateCatalog(groups, groupSkills, skills)
+validateCatalog(groups, groupSkills, inventorySkills)
 validatePackageConfiguration()
 
 const trackedArtifacts = spawnSync("git", ["ls-files", "-z"], { encoding: "utf8" })
@@ -315,5 +333,5 @@ if (errors.length > 0) {
 }
 
 console.log(
-  `Validated ${skills.length} skills across ${groups.length} groups: canonical frontmatter, Codex metadata, Claude packaging, links, scripts, and catalogs.`,
+  `Validated ${inventorySkills.length} skills across ${groups.length} groups: canonical frontmatter, Codex metadata, Claude packaging, links, scripts, and catalogs.`,
 )

@@ -106,11 +106,28 @@ export type Skill = {
   githubUrl: string
 }
 
-function parseSkillFile(raw: string): {
-  data: Record<string, unknown>
+function parseSkillFile(raw: string, filePath: string): {
+  data: { name: string; description: string }
   content: string
 } {
-  return matter(raw)
+  const match = raw.match(
+    /^---\nname: ([a-z0-9]+(?:-[a-z0-9]+)*)\ndescription: ("(?:\\.|[^"\\])*")\n---\n([\s\S]*)$/,
+  )
+  if (!match) {
+    throw new Error(
+      `${filePath} must use canonical skill frontmatter with a plain name and one JSON-quoted description line`,
+    )
+  }
+
+  const parsed = matter(raw)
+  const description = JSON.parse(match[2]) as unknown
+  if (typeof description !== "string" || !description.trim()) {
+    throw new Error(`${filePath} must have a non-empty string description`)
+  }
+  return {
+    data: { name: match[1], description },
+    content: parsed.content,
+  }
 }
 
 function resolveSkillsRoot(): string {
@@ -187,18 +204,23 @@ function loadAllSkills(): { skills: Skill[]; groups: SkillGroup[] } {
     if (skillDirs.length === 0) continue
 
     for (const skillDir of skillDirs) {
-      const raw = fs.readFileSync(path.join(skillDir, "SKILL.md"), "utf8")
-      const { data } = parseSkillFile(raw)
+      const skillFile = path.join(skillDir, "SKILL.md")
+      const raw = fs.readFileSync(skillFile, "utf8")
+      const { data } = parseSkillFile(raw, skillFile)
       const slug = path.basename(skillDir)
+      if (data.name !== slug) {
+        throw new Error(
+          `${skillFile} name '${data.name}' does not match its containing directory`,
+        )
+      }
       const repoPath = path
         .join("11ai", "v0", path.relative(root, skillDir))
         .split(path.sep)
         .join("/")
       skills.push({
         slug,
-        name: typeof data.name === "string" ? data.name : slug,
-        description:
-          typeof data.description === "string" ? data.description.trim() : "",
+        name: data.name,
+        description: data.description.trim(),
         groupSlug: group.slug,
         groupTitle: group.title,
         repoPath,
@@ -256,7 +278,7 @@ export function getSkillContent(slug: string): string {
     skill.repoPath.replace(/^11ai\/v0\//, "").split("/").join(path.sep),
     "SKILL.md",
   )
-  const { content } = parseSkillFile(fs.readFileSync(filePath, "utf8"))
+  const { content } = parseSkillFile(fs.readFileSync(filePath, "utf8"), filePath)
   return content.trim()
 }
 
