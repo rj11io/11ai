@@ -1,3 +1,23 @@
+# [1.14.0](https://github.com/rj11io/11ai/compare/v1.13.1...v1.14.0) (2026-07-14)
+
+
+### Bug Fixes
+
+* add openai.yaml ([90721b6](https://github.com/rj11io/11ai/commit/90721b64f9582edab281e2a8abcfff7a9a0af796))
+
+
+### Features
+
+* blog builder skills ([a63528f](https://github.com/rj11io/11ai/commit/a63528fd41e8379da7965c6e8adfc69b1b2495e9))
+* general skill QA ([bb0c79d](https://github.com/rj11io/11ai/commit/bb0c79de952a5ae8a1406208f37e4c00ac8d7856))
+* pimp my ui skill ([e20866f](https://github.com/rj11io/11ai/commit/e20866f165f54d00c80a3d5b57f1520a922b1909))
+* reverse engineering skill ([15c8ac1](https://github.com/rj11io/11ai/commit/15c8ac18b2fef158281423659c7a1659ce5ac23b))
+* super bugfixing skill ([dcdb25e](https://github.com/rj11io/11ai/commit/dcdb25e1ce7ed5ff7f7e7538c077e583784d1a5a))
+* super skill creator ([87e92ab](https://github.com/rj11io/11ai/commit/87e92abc8737ab89d3f48bee239d9ce4de18715f))
+* super skill qa ([b890a96](https://github.com/rj11io/11ai/commit/b890a9681494c13c7f99d7622d1746efe916e611))
+* update docs ([36c8dfa](https://github.com/rj11io/11ai/commit/36c8dfa705e6894bf8837437732991fe607afc29))
+* utility skills ([2ec6054](https://github.com/rj11io/11ai/commit/2ec6054d3e121e0421c2b8a17127b6e7239a2468))
+
 ## [1.13.1](https://github.com/rj11io/11ai/compare/v1.13.0...v1.13.1) (2026-07-14)
 
 
