@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Publications CMS"
+  short_description: "Build a file-backed publications and chapters CMS"
+  default_prompt: "Use $11ai-publications-cms to build a white-label publications and chapters CMS."

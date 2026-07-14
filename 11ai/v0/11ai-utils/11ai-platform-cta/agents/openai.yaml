@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Platform CTA"
+  short_description: "Build a platform-services marketing page"
+  default_prompt: "Use $11ai-platform-cta to build a marketing page for platform-building services."
