@@ -1,6 +1,6 @@
 # 11ai
 
-Reusable AI-agent skills for building chat products, automating agent work, benchmarking coding models, integrating application services, maintaining codebases, and cleaning up local development environments.
+Reusable AI-agent skills for building chat products, automating agent work, benchmarking coding models, integrating application services, maintaining codebases, cleaning up local development environments, and running deep iterative project audits.
 
 Project site: https://ai.rj11.io/
 
@@ -34,7 +34,7 @@ The files are installed at `node_modules/@rj11io/11ai/11ai/v0/`. You can also cl
 
 ## Skill catalog
 
-The repository currently contains 47 skills in eight groups.
+The repository currently contains 50 skills in nine groups.
 
 | Group | Skills | Use them for |
 | --- | ---: | --- |
@@ -44,7 +44,8 @@ The repository currently contains 47 skills in eight groups.
 | [Cleanup](./11ai/v0/11ai-cleanup/README.md) | 5 | Safely finding and removing abandoned local resources |
 | [Codebase](./11ai/v0/11ai-codebase/README.md) | 3 | Playwright setup, npm publishing, and automated releases |
 | [Integrations](./11ai/v0/11ai-integrations/README.md) | 3 | Adding Convex, WorkOS AuthKit, or both to Next.js applications |
-| [Utilities](./11ai/v0/11ai-utils/README.md) | 6 | Markdown compression, README maintenance, reviews, analytics, technical SEO, and web design |
+| [Super](./11ai/v0/11ai-super/README.md) | 5 | Repeatedly auditing and improving metadata, performance, READMEs, security, and UX to a high evidence-based bar |
+| [Utilities](./11ai/v0/11ai-utils/README.md) | 4 | Markdown compression, read-only critique, Vercel analytics, and web design |
 | [Cross-harness](./11ai/v0/11ai-xharness/README.md) | 2 | Delegating work to agents running in other CLI harnesses |
 
 Start with a group's README to choose a skill, then name that skill in your request. Skills provide instructions and examples; they do not install the application dependencies used in those examples by themselves.
@@ -61,7 +62,8 @@ Start with a group's README to choose a skill, then name that skill in your requ
     11ai-cleanup/             5 cleanup skills
     11ai-codebase/            3 codebase skills
     11ai-integrations/        3 integration skills
-    11ai-utils/               5 utility skills
+    11ai-super/               5 iterative audit and improvement skills
+    11ai-utils/               4 utility skills
     11ai-xharness/            2 cross-harness skills
 scripts/                      Root package publishing helper
 www/                          Next.js project site

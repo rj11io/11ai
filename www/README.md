@@ -1,10 +1,10 @@
 # 11ai website
 
-The Next.js 16 application for the 11ai project site at https://ai.rj11.io/. It currently renders the starter page and shared component library that the site will build on.
+The Next.js 16 application for the 11ai project site at https://ai.rj11.io/. It turns the repository's `SKILL.md` files into a searchable catalog with group and skill detail pages.
 
 ## Run locally
 
-Install and run this app from the `www` directory; it has its own package and lockfile.
+The app has its own package and lockfile. From the repository root:
 
 ```bash
 cd www
@@ -12,7 +12,7 @@ npm install
 npm run dev
 ```
 
-No environment variables are currently required. Press `d` outside a form field to switch between light and dark themes.
+No environment variables are currently required. The app reads skill content and the package version directly from the repository, so run it with the sibling `11ai/` directory and root `package.json` present. Press `d` outside a form field to switch between light and dark themes.
 
 ## Commands
 
@@ -25,11 +25,26 @@ No environment variables are currently required. Press `d` outside a form field 
 | `npm run typecheck` | Check TypeScript without emitting files |
 | `npm run format` | Format TypeScript and TSX files with Prettier |
 
+## Routes
+
+| Route | Purpose |
+| --- | --- |
+| `/` | Introduce the collection, installation flow, skill groups, and agent-automation pattern |
+| `/skills` | Search every skill by name, purpose, or group |
+| `/groups/[slug]` | List the skills in one group |
+| `/skills/[slug]` | Render a skill's description, suggested prompt, and full Markdown playbook |
+
+## Content source
+
+`lib/skills.ts` discovers groups under `../11ai/v0`, reads each skill's frontmatter, and exposes the catalog data used by the routes. The current groups have curated display order and taglines; an unconfigured group can also be discovered from its directory and README. `lib/markdown.ts` renders each `SKILL.md` body for its detail page.
+
+Skill and group routes are generated from repository content. Update the source `SKILL.md` and group README files instead of copying catalog data into page components.
+
 ## Layout
 
-- `app/` contains the App Router layout, page, global styles, and favicon.
-- `components/ui/` contains the shadcn component set.
+- `app/` contains the App Router home, catalog, group, skill, and not-found pages plus global styles and metadata.
+- `components/` contains catalog cards, navigation, installation UI, theme controls, and the shared shadcn component set under `components/ui/`.
 - `components/theme-provider.tsx` configures system-aware themes and the `d` hotkey.
-- `hooks/` and `lib/` contain shared client hooks and utilities.
+- `hooks/` and `lib/` contain shared client hooks, Markdown rendering, repository discovery, and utilities.
 
 The app uses the `@/*` import alias for paths relative to this directory.
