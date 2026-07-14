@@ -1,5 +1,7 @@
 # 11ai
 
+Deployed at https://ai.rj11.io/
+
 Reusable AI-agent skills for building AI chat products, integrating application services, improving web interfaces, and maintaining JavaScript projects.
 
 Each skill is a self-contained directory led by a `SKILL.md` file. Some skills also include references, scripts, or agent metadata. Use the whole directory so those supporting files remain available.
