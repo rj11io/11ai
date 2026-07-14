@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Super Bugfixing"
+  short_description: "Continuously find, fix, and verify project bugs"
+  default_prompt: "Use $11ai-super-bugfixing to synchronize this clean repository, continuously find and fix reproducible bugs, and verify the project until it reaches a high-confidence quality bar."
