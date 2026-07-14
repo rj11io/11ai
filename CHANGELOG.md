@@ -1,3 +1,24 @@
+# [1.10.0](https://github.com/rj11io/11ai/compare/v1.9.0...v1.10.0) (2026-07-14)
+
+
+### Bug Fixes
+
+* add readme skill to utils ([9ca5ad9](https://github.com/rj11io/11ai/commit/9ca5ad962dd9ad577fe77c97da97fb933a0a1ec4))
+* update readmes ([c747f1f](https://github.com/rj11io/11ai/commit/c747f1fa0f3918779d6e18e4ccd26616fb674ee3))
+
+
+### Features
+
+* agent fleet automation skills ([f74cc5c](https://github.com/rj11io/11ai/commit/f74cc5c9cc3e827d58955aabe72015e02be0e556))
+* ai chat skill ([dae6b93](https://github.com/rj11io/11ai/commit/dae6b93e6c9b2bd5516b446d5c6bc2c31e6ea1b7))
+* benchmarking skills ([1492453](https://github.com/rj11io/11ai/commit/1492453b83cbf52ea24f1667de7096f3d0400b69))
+* cleanup skills ([096d561](https://github.com/rj11io/11ai/commit/096d5615b958c5567b49fe1aef7f73befac30d1d))
+* codebase skills ([38b941f](https://github.com/rj11io/11ai/commit/38b941ffbc69154379bab3bc828d0e7d084e2195))
+* **codebase:** readme updater ([6628a30](https://github.com/rj11io/11ai/commit/6628a306d7a3446a83c7d6a0709ad6050306a4c2))
+* cross agent harness skills ([239a428](https://github.com/rj11io/11ai/commit/239a428ea5cc2d2f283c604f045afd6a89327a16))
+* integrations skills ([c640f58](https://github.com/rj11io/11ai/commit/c640f58677b2ebd12cab02eddc8e026c0be9575a))
+* utils skills ([7c59e00](https://github.com/rj11io/11ai/commit/7c59e00f5347e8982e43f997cae43beb6c7b8760))
+
 # [1.9.0](https://github.com/rj11io/11ai/compare/v1.8.0...v1.9.0) (2026-07-13)
 
 
