@@ -127,3 +127,71 @@
     @apply font-sans;
     }
 }
+
+/* Rendered SKILL.md content on skill detail pages. */
+@layer components {
+  .prose-skill {
+    @apply text-[0.95rem] leading-relaxed text-foreground/90;
+  }
+  .prose-skill h1,
+  .prose-skill h2,
+  .prose-skill h3,
+  .prose-skill h4 {
+    @apply mt-10 mb-4 scroll-mt-20 font-semibold tracking-tight text-foreground;
+  }
+  .prose-skill h1 {
+    @apply text-2xl;
+  }
+  .prose-skill h2 {
+    @apply border-b border-border/60 pb-2 text-xl;
+  }
+  .prose-skill h3 {
+    @apply text-lg;
+  }
+  .prose-skill h4 {
+    @apply text-base;
+  }
+  .prose-skill p {
+    @apply my-4;
+  }
+  .prose-skill a {
+    @apply font-medium text-foreground underline underline-offset-4 hover:opacity-80;
+  }
+  .prose-skill ul {
+    @apply my-4 list-disc space-y-1.5 pl-6;
+  }
+  .prose-skill ol {
+    @apply my-4 list-decimal space-y-1.5 pl-6;
+  }
+  .prose-skill li > ul,
+  .prose-skill li > ol {
+    @apply my-1.5;
+  }
+  .prose-skill code {
+    @apply rounded bg-muted px-1.5 py-0.5 font-mono text-[0.85em] break-words;
+  }
+  .prose-skill pre {
+    @apply my-5 overflow-x-auto rounded-xl border border-border/80 bg-muted/50 p-4;
+  }
+  .prose-skill pre code {
+    @apply block bg-transparent p-0 text-[0.8rem] leading-relaxed break-normal whitespace-pre;
+  }
+  .prose-skill blockquote {
+    @apply my-5 border-l-2 border-border pl-4 text-muted-foreground italic;
+  }
+  .prose-skill hr {
+    @apply my-8 border-border/60;
+  }
+  .prose-skill table {
+    @apply my-5 block w-full max-w-full overflow-x-auto text-sm;
+  }
+  .prose-skill th {
+    @apply border-b border-border px-3 py-2 text-left font-medium;
+  }
+  .prose-skill td {
+    @apply border-b border-border/60 px-3 py-2 align-top;
+  }
+  .prose-skill img {
+    @apply max-w-full rounded-lg;
+  }
+}
