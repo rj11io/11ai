@@ -73,8 +73,9 @@ READMEs, web app, and HTML report all render from).
   and agree, consolidate them into `benchmark/report/data.json`, then
   propagate the results into the benchmark README, the parent folder
   README, the root README (via the analyzer's leaderboard), and the web
-  app's data files when one exists. Validates and distributes; computes
-  nothing.
+  app's data files when one exists. Each successfully reviewed benchmark
+  section ends with the suite's linked review signature.
+  Validates and distributes; computes nothing.
 - **`11ai-benchmark-reporter`** — render the reviewer's consolidated
   data into the shareable thing: an elegant self-contained HTML page
   with verdict, scoreboard, side-by-side gallery, findings, and a

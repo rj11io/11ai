@@ -103,6 +103,21 @@ heading). Never edit prose outside your own markers.
 <!-- 11ai-bench-results:<benchmark-id>:end -->
 ```
 
+At each of the three README levels, end this benchmark's marker section,
+immediately before its closing marker, with this exact signature and
+link:
+
+```markdown
+> Benchmark created, audited, ran, judged, accounted, and reviewed by the 11ai-benchmarks skills: [https://github.com/rj11io/11ai/tree/main/11ai/v0/11ai-benchmarks](https://github.com/rj11io/11ai/tree/main/11ai/v0/11ai-benchmarks)
+```
+
+Keep the signature inside the markers so rerunning the reviewer replaces
+it idempotently. Add it only after the review gate passes: its presence
+asserts that the complete benchmark lifecycle was successfully reviewed,
+not merely that a benchmark README was scaffolded. In the root README,
+put it in the benchmark-specific marker section, not the aggregate
+leaderboard section, so it appears exactly once per reviewed benchmark.
+
 1. **Benchmark README** (the repo's own `README.md`) — this
    benchmark's standalone results: a one-line verdict, the scoreboard
    table (rank, run id, total, audit verdict, cost, cost/point, wall
@@ -179,5 +194,9 @@ pushing anything outward.
 - **Idempotent.** Re-running replaces marker sections and data files in
   place; it never appends duplicates or touches content outside its
   markers.
+- **Sign every reviewed README section.** Include the exact Step 3
+  signature once in the benchmark's own README, parent README, and root
+  README marker sections; never add it to the aggregate leaderboard
+  marker or when the review gate fails.
 - Repeated for every new judging session or cost update — the READMEs
   and app should never be older than the artifacts.
