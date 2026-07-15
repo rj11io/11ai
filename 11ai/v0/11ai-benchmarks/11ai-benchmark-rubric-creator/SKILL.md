@@ -5,6 +5,14 @@ description: "Create and freeze a benchmark's judging criteria — benchmark/rub
 
 # 11ai Benchmark Rubric Creator
 
+## Commit authorization
+
+Do not create a git commit unless the user explicitly asks for a commit
+in the current request. Requests to run, audit, judge, finish, report,
+publish, or complete a benchmark lifecycle are not commit authorization.
+Leave changed files uncommitted and report their status. If the user
+explicitly asks for a commit, stage only the in-scope files.
+
 The rubric is the benchmark's definition of quality, and its value comes
 from *when* it is written: criteria fixed before anyone sees a run's
 output can't be bent to fit the results. This skill writes that file —
@@ -72,15 +80,16 @@ Propose a draft; let the user adjust. The constraints:
 ## Step 5 — Freeze
 
 Write `benchmark/rubric.md` with a version and freeze date in the title
-(`# Rubric — <benchmark> (v1, frozen <date>)`), commit it
-(`bench: rubric v1`), and report the file's sha256 — the judge records
+(`# Rubric — <benchmark> (v1, frozen <date>)`) and report the file's
+sha256 — the judge records
 that as `rubricSha` in the results, proving which criteria produced
-which scores.
+which scores. Leave the file uncommitted. Only when the user explicitly
+asked for a commit, commit it as `bench: rubric v1`.
 
 ## Rules
 
-- Edits **before** any judging: fine — re-freeze (new commit, same
-  version if nothing was judged against it).
+- Edits **before** any judging: fine — re-freeze (same version if
+  nothing was judged against it) and record the new sha256.
 - Edits **after** judging: new version + full re-judge of all runs +
   old results kept. Never edit in place.
 - This skill writes criteria; it never scores anything. Scoring is

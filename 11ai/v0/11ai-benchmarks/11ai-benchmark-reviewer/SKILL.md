@@ -5,6 +5,14 @@ description: "Review a benchmark's finished artifacts (judging results, audits, 
 
 # 11ai Benchmark Reviewer
 
+## Commit authorization
+
+Do not create a git commit unless the user explicitly asks for a commit
+in the current request. Requests to run, audit, judge, finish, report,
+publish, or complete a benchmark lifecycle are not commit authorization.
+Leave changed files uncommitted and report their status. If the user
+explicitly asks for a commit, stage only the in-scope files.
+
 The judge, auditor, and accountant each leave their own artifact. This
 skill is the checkpoint between those artifacts and anything public: it
 verifies they are complete and agree with each other, merges them into
@@ -170,11 +178,12 @@ The update is **data-driven, never hardcoded into components**:
    `globals.css`) — treat the hub's isolation rules as binding on you
    too.
 
-## Step 5 — Hand off and commit
+## Step 5 — Hand off
 
-Commit everything (`bench: review <benchmark-id> <date>`): data.json,
-README sections, web app data. Then point to (or, if the user asked for
-the full chain, invoke) `$11ai-benchmark-reporter` — it renders
+Leave data.json, README sections, and web app data uncommitted. Only
+when the user explicitly asked for a commit, commit those files as
+`bench: review <benchmark-id> <date>`. Then point to (or, if the user
+asked for the full chain, invoke) `$11ai-benchmark-reporter` — it renders
 `benchmark/report/report.html` from the same data.json, so the README
 links resolve.
 

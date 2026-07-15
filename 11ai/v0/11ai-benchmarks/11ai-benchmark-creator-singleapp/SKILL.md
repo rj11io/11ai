@@ -5,6 +5,14 @@ description: "Scaffold a new single-app AI coding benchmark — one Next.js + sh
 
 # 11ai Single-App Benchmark Creator
 
+## Commit authorization
+
+Do not create a git commit unless the user explicitly asks for a commit
+in the current request. Requests to run, audit, judge, finish, report,
+publish, or complete a benchmark lifecycle are not commit authorization.
+Leave changed files uncommitted and report their status. If the user
+explicitly asks for a commit, stage only the in-scope files.
+
 A "single-app benchmark" is one repo that measures how different AI coding
 agents build the same thing. Every run gets identical inputs, identical
 components, and identical rules; each run builds inside its own folder

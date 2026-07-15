@@ -5,6 +5,14 @@ description: "Turn raw source material (screenshots, documents, existing sites, 
 
 # 11ai Benchmark Content Pack Creator
 
+## Commit authorization
+
+Do not create a git commit unless the user explicitly asks for a commit
+in the current request. Requests to run, audit, judge, finish, report,
+publish, or complete a benchmark lifecycle are not commit authorization.
+Leave changed files uncommitted and report their status. If the user
+explicitly asks for a commit, stage only the in-scope files.
+
 Every run renders the same `content/` files, so those files are the
 benchmark's most load-bearing input: they must exercise the format, they
 must be real, and once the first run starts they must never change. This

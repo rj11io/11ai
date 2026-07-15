@@ -5,6 +5,14 @@ description: "Render a benchmark's results into an elegant, self-contained HTML 
 
 # 11ai Benchmark Reporter
 
+## Commit authorization
+
+Do not create a git commit unless the user explicitly asks for a commit
+in the current request. Requests to run, audit, judge, finish, report,
+publish, or complete a benchmark lifecycle are not commit authorization.
+Leave changed files uncommitted and report their status. If the user
+explicitly asks for a commit, stage only the in-scope files.
+
 The other skills produce data, and `$11ai-benchmark-reviewer` validates
 and consolidates it; this one produces the thing you show someone. It
 never generates new scores or verdicts — if the data is missing, it
@@ -73,6 +81,7 @@ a markdown twin `benchmark/report/report.md` for the repo. Structure:
   captures (the report documents what was scored).
 - Keep the writing plain: name the models, say what happened, skip the
   drama. The screenshots carry the persuasion.
-- Commit the report (`bench: report <date>`). If publishing beyond the
-  repo (artifact link, hosted page), confirm with the user first —
+- Leave the report uncommitted. Only when the user explicitly asked for
+  a commit, use `bench: report <date>`. If publishing beyond the repo
+  (artifact link, hosted page), confirm with the user first —
   results name models and costs, and once shared they're out.

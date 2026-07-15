@@ -5,6 +5,14 @@ description: "Mechanically verify that a finished benchmark run obeyed the hard 
 
 # 11ai Benchmark Compliance Auditor
 
+## Commit authorization
+
+Do not create a git commit unless the user explicitly asks for a commit
+in the current request. Requests to run, audit, judge, finish, report,
+publish, or complete a benchmark lifecycle are not commit authorization.
+Leave changed files uncommitted and report their status. If the user
+explicitly asks for a commit, stage only the in-scope files.
+
 A run that broke the rules must not reach judging — a beautiful page that
 hardcoded its content or edited the shared baseline didn't do the task.
 This skill runs the rule checks as commands and writes a machine-readable
@@ -14,7 +22,7 @@ verdict. It never scores quality; that's `$11ai-benchmark-judge`.
 
 - The run id (folder name under `app/`).
 - Its ledger entry in `benchmark/runs.json` — specifically
-  `baselineCommit`, the commit the run's work is diffed against. If
+  `baselineCommit`, the snapshot the run's work is diffed against. If
   there's no ledger entry, ask the user for the pre-run commit; without
   one, the folder-isolation checks are not possible and the audit must
   say so rather than fake a pass.
@@ -28,20 +36,21 @@ show everything that went wrong.
 folder:
 
 ```bash
-git diff --name-only <baselineCommit>..HEAD -- . | grep -v "^app/<run-id>/"
+git diff --name-only <baselineCommit> -- .
+git ls-files --others --exclude-standard
 ```
 
-Anything printed (plus any untracked files outside the folder from
-`git status --porcelain`) is a violation, with two exceptions: the
-ledger/prompt files the runner itself committed, and the run-closeout
-commit metadata.
+Anything printed outside the run folder is a violation, with exceptions
+for the runner-owned ledger and frozen-prompt files. This form covers
+committed, staged, unstaged, and untracked run output; do not require or
+create a closeout commit just to make the audit possible.
 
 **2. No new dependencies.** `package.json` and the lockfile are
 byte-identical to the baseline:
-`git diff <baselineCommit>..HEAD -- package.json package-lock.json` is
+`git diff <baselineCommit> -- package.json package-lock.json` is
 empty, and `node_modules` gained no packages the lockfile doesn't know.
 
-**3. Content untouched.** `git diff <baselineCommit>..HEAD -- content/`
+**3. Content untouched.** `git diff <baselineCommit> -- content/`
 is empty.
 
 **4. Baseline untouched.** Same empty-diff check for `components/ui/`,
@@ -97,8 +106,9 @@ Write `benchmark/audits/<run-id>.json`:
 }
 ```
 
-`pass` is the AND of all non-warning checks. Commit the report
-(`bench: audit <run-id>`).
+`pass` is the AND of all non-warning checks. Leave the report
+uncommitted. Only when the user explicitly asked for a commit, include
+it in `bench: audit <run-id>`.
 
 ## Reporting to the user
 

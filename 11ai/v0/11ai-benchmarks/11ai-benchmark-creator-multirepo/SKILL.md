@@ -5,6 +5,14 @@ description: "Scaffold an isolated-run AI coding benchmark — a pristine templa
 
 # 11ai Benchmark Creator (multirepo / branch-per-run)
 
+## Commit authorization
+
+Do not create a git commit unless the user explicitly asks for a commit
+in the current request. Requests to run, audit, judge, finish, report,
+publish, or complete a benchmark lifecycle are not commit authorization.
+Leave changed files uncommitted and report their status. If the user
+explicitly asks for a commit, stage only the in-scope files.
+
 The single-app structure (`$11ai-benchmark-creator-singleapp`) trades
 isolation for convenience: every run shares one `package.json`, one root
 layout, one deploy, and later runs can read earlier runs' code. This
@@ -84,7 +92,11 @@ change the rules that isolation makes different:
    branch** (the ledger spans runs, so it can't live on run branches);
    note `baselineRef: template-v1`.
 3. Hand the frozen prompt to the harness on the run branch.
-4. Close out: commit, push the branch, fill in the ledger.
+4. Close out: fill in the ledger and leave the changes uncommitted.
+   Commit only when the user explicitly asked for it, and push only
+   when the user separately asked to push. If branch-per-run isolation
+   cannot continue without recording the branch in a commit, stop and
+   ask instead of inferring authorization.
 
 The sibling skills work here with one substitution — diff against
 `template-v1` instead of a baseline commit, on the run's branch:
@@ -111,7 +123,8 @@ still needs to fill in (content placeholders, prompt slots).
 ## Pitfalls
 
 - **The ledger on run branches** — it forks and the benchmark loses its
-  single source of truth. Ledger commits go to the default branch only.
+  single source of truth. Keep ledger changes on the default branch;
+  when the user authorizes a ledger commit, commit it there only.
 - **Retagging** after fixing a template bug silently splits runs into
   incomparable cohorts. New tag, new cohort, reported separately.
 - **"Free dependency choice" without recording it** — the audit should

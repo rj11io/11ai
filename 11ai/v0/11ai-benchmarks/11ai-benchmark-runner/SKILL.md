@@ -5,6 +5,14 @@ description: "Prepare, launch, and record a single benchmark run in an existing 
 
 # 11ai Benchmark Runner
 
+## Commit authorization
+
+Do not create a git commit unless the user explicitly asks for a commit
+in the current request. Requests to run, audit, judge, finish, report,
+publish, or complete a benchmark lifecycle are not commit authorization.
+Leave changed files uncommitted and report their status. If the user
+explicitly asks for a commit, stage only the in-scope files.
+
 A benchmark result is only comparable if every run started from the same
 state with the same prompt. This skill makes that guarantee mechanical:
 it prepares one run, records exactly what the agent was given, and leaves
@@ -28,7 +36,8 @@ Refuse to start (and tell the user why) unless all of these hold:
 1. The repo is a single-app benchmark: `PROMPT.md` with a `{{RUN_ID}}`
    token, a `content/` folder, and a hub `app/page.tsx` exist.
 2. `git status` is clean. Uncommitted changes mean the run can't be
-   diffed against a known baseline later — commit or stash first.
+   diffed against a known baseline later. Stop and tell the user; do
+   not commit or stash their changes on their behalf.
 3. `npm run typecheck` and `npm run lint` pass. A dirty baseline becomes
    every run's failure.
 4. `content/` has no leftover scaffold placeholders (grep for obvious
@@ -72,8 +81,10 @@ Append to `benchmark/runs.json` (create as `[]` if missing):
 ```
 
 `baselineCommit` is the anchor everything downstream diffs against.
-Commit the ledger + frozen prompt (`bench: prepare <run-id>`) so the
-agent's later diff contains only its own work.
+Leave the ledger and frozen prompt uncommitted. The auditor treats those
+runner-owned paths as workflow metadata and compares committed, staged,
+unstaged, and untracked output against `baselineCommit`. Only when the
+user explicitly asked for a commit, use `bench: prepare <run-id>`.
 
 ## Step 5 — Launch or hand off
 
@@ -93,8 +104,9 @@ Never paraphrase, trim, or "improve" the frozen prompt at handoff.
 When the agent finishes (same session or a later one):
 
 1. Fill in `finishedAt`; leave unknown fields null rather than guessing.
-2. Commit the run's work as `run: <run-id>` — the agent's changes only,
-   nothing else mixed in.
+2. Leave the run's work uncommitted and report the changed paths. Only
+   when the user explicitly asked for a commit, commit the agent's
+   changes only as `run: <run-id>` with nothing else mixed in.
 3. Invoke `$11ai-benchmark-token-accountant` to compute the run's tokens
    and cost from the harness's session transcript — it backfills
    `costUsd` and `wallTimeMinutes` in the ledger. Don't hand-fill those
