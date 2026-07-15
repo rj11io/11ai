@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-benchmarks",
-  "version": "1.14.2",
+  "version": "1.14.3",
   "description": "Create and operate 11ai AI-coding benchmarks: repos where several agent runs (harness + model + effort) build the same objective from the same inputs, so results compare taste and skill alone. Eleven skills covering the full lifecycle: two benchmark creators (single-app folder-per-run, and isolated branch-per-run), a rubric creator that freezes judging criteria before any output exists, a content-pack creator, a run preparer/recorder, a mechanical compliance auditor, an anonymized-panel judge with a structured judgement artifact, a token/cost accountant with session-level granularity and run/operations/unrelated buckets, a reviewer that validates the artifacts and propagates results to READMEs and the web app, a report generator, and a cross-benchmark leaderboard analyzer.",
   "author": {
     "name": "rj11io",
