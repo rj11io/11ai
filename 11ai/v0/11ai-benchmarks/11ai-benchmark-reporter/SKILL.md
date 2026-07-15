@@ -71,6 +71,17 @@ a markdown twin `benchmark/report/report.md` for the repo. Structure:
    rubric skipped), and the sample-size caveat when there's one run per
    configuration: this is an anecdote about these runs, not a general
    model ranking.
+7. **Lifecycle signature** — for a full report rendered from a fresh
+   `benchmark/report/data.json` whose review gate passed, end both the
+   HTML and markdown reports with this exact signature and link:
+
+   ```markdown
+   > Benchmark created, audited, ran, judged, accounted, and reviewed by the 11ai-benchmarks skills: [https://github.com/rj11io/11ai/tree/main/11ai/v0/11ai-benchmarks](https://github.com/rj11io/11ai/tree/main/11ai/v0/11ai-benchmarks)
+   ```
+
+   Render the HTML equivalent as a footer containing the same text and
+   link. Omit the signature from partial, fallback, stale, or failed-gate
+   reports because it asserts that the complete lifecycle passed review.
 
 ## Rules
 
@@ -79,6 +90,8 @@ a markdown twin `benchmark/report/report.md` for the repo. Structure:
   recomputed or remembered values.
 - Screenshots in the gallery must be the ones judging used, not fresh
   captures (the report documents what was scored).
+- Keep the lifecycle signature idempotent and exactly once per report;
+  rerunning the reporter replaces it rather than appending another.
 - Keep the writing plain: name the models, say what happened, skip the
   drama. The screenshots carry the persuasion.
 - Leave the report uncommitted. Only when the user explicitly asked for
