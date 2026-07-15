@@ -1,3 +1,10 @@
+## [1.14.2](https://github.com/rj11io/11ai/compare/v1.14.1...v1.14.2) (2026-07-15)
+
+
+### Bug Fixes
+
+* guardrails to not commit unless explicitly told so ([67aeec9](https://github.com/rj11io/11ai/commit/67aeec99875d1095e0ec43166182cd0b400ff49e))
+
 ## [1.14.1](https://github.com/rj11io/11ai/compare/v1.14.0...v1.14.1) (2026-07-15)
 
 
