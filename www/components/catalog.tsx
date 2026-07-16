@@ -6,29 +6,29 @@ import { Search } from "lucide-react"
 import { SkillCard } from "@/components/skill-card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import type { Skill, SkillGroup } from "@/lib/skills"
+import type { Plugin, Skill } from "@/lib/skills"
 import { cn } from "@/lib/utils"
 
 export function Catalog({
   skills,
-  groups,
-  initialGroup = "all",
+  plugins,
+  initialPlugin = "all",
 }: {
   skills: Skill[]
-  groups: SkillGroup[]
-  initialGroup?: string
+  plugins: Plugin[]
+  initialPlugin?: string
 }) {
   const [query, setQuery] = React.useState("")
-  const [activeGroup, setActiveGroup] = React.useState(initialGroup)
+  const [activePlugin, setActivePlugin] = React.useState(initialPlugin)
 
   const visible = skills.filter((skill) => {
-    if (activeGroup !== "all" && skill.groupSlug !== activeGroup) return false
+    if (activePlugin !== "all" && skill.pluginSlug !== activePlugin) return false
     if (!query) return true
     const q = query.toLowerCase()
     return (
       skill.name.toLowerCase().includes(q) ||
       skill.description.toLowerCase().includes(q) ||
-      skill.groupTitle.toLowerCase().includes(q)
+      skill.pluginTitle.toLowerCase().includes(q)
     )
   })
 
@@ -49,16 +49,16 @@ export function Catalog({
         <FilterChip
           label="All"
           count={skills.length}
-          active={activeGroup === "all"}
-          onClick={() => setActiveGroup("all")}
+          active={activePlugin === "all"}
+          onClick={() => setActivePlugin("all")}
         />
-        {groups.map((group) => (
+        {plugins.map((plugin) => (
           <FilterChip
-            key={group.slug}
-            label={group.title}
-            count={group.skillCount}
-            active={activeGroup === group.slug}
-            onClick={() => setActiveGroup(group.slug)}
+            key={plugin.slug}
+            label={plugin.title}
+            count={plugin.skillCount}
+            active={activePlugin === plugin.slug}
+            onClick={() => setActivePlugin(plugin.slug)}
           />
         ))}
       </div>

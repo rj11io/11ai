@@ -50,11 +50,11 @@ Use the trusted root/system skill validator or generator rather than a repositor
 - Required author, interface, version, policy, or category fields follow the current harness schema rather than another harness's shape.
 - The version policy is coherent. If strict semver is required, compare every plugin version with the release source of truth and verify the release process updates and commits the manifests.
 - Run the installed harness's strict validator when available.
-- Load each plugin or use an equivalent list command and compare actual component names and group counts with the recursive inventory. Schema validation alone may not validate component discovery.
+- Load each plugin or use an equivalent list command and compare actual component names and plugin counts with the recursive inventory. Schema validation alone may not validate component discovery.
 
 ## Discovery and distribution checks
 
-Run the documented list-only installer command. Compare its exact discovered set with the filesystem inventory. Test depth flags when skills use mixed nesting such as both `<group>/<skill>` and `<group>/skills/<skill>`.
+Run the documented list-only installer command. Compare its exact discovered set with the filesystem inventory. Test depth flags when skills use mixed nesting such as both `<plugin>/<skill>` and `<plugin>/skills/<skill>`.
 
 Inspect the package manager's dry-run file list or the built archive. Count at least:
 
@@ -70,12 +70,12 @@ Do not infer package inclusion from Git tracking or repository presence.
 ## Catalog and application checks
 
 - Root total equals the recursive skill inventory.
-- Every group count and skill list matches its directory.
-- New groups appear in curated application configuration where required.
+- Every plugin count and skill list matches its directory.
+- New plugins appear in curated application configuration where required.
 - Installation commands include flags required by the real layout.
 - Application parsers fail on invalid metadata instead of falling back to a lenient parser.
 - Typecheck, targeted lint, and production build pass for changed catalog code.
-- Generated route or page counts account for the updated skill and group inventory.
+- Generated route or page counts account for the updated skill and plugin inventory.
 
 ## Creator and prevention checks
 

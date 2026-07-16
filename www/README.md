@@ -1,6 +1,6 @@
 # 11ai website
 
-The Next.js 16 application for the 11ai project site at https://ai.rj11.io/. It turns the repository's `SKILL.md` files into a searchable catalog with group and skill detail pages.
+The Next.js 16 application for the 11ai project site at https://ai.rj11.io/. It turns the repository's `SKILL.md` files into a searchable catalog with plugin and skill detail pages.
 
 ## Run locally
 
@@ -29,20 +29,21 @@ No environment variables are currently required. The app reads skill content and
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Introduce the collection, installation flow, skill groups, and agent-automation pattern |
-| `/skills` | Search every skill by name, purpose, or group |
-| `/groups/[slug]` | List the skills in one group |
+| `/` | Introduce the collection, installation flow, plugins, and agent-automation pattern |
+| `/skills` | Search every skill by name, purpose, or plugin |
+| `/plugins` | List every plugin (old `/groups` links redirect here) |
+| `/plugins/[slug]` | List the skills in one plugin (old `/groups/[slug]` links redirect here) |
 | `/skills/[slug]` | Render a skill's description, suggested prompt, and full Markdown playbook |
 
 ## Content source
 
-`lib/skills.ts` discovers groups under `../11ai/v0`, reads each skill's frontmatter, and exposes the catalog data used by the routes. The current groups have curated display order and taglines; an unconfigured group can also be discovered from its directory and README. `lib/markdown.ts` renders each `SKILL.md` body for its detail page.
+`lib/skills.ts` discovers plugins under `../11ai/v0`, reads each skill's frontmatter, and exposes the catalog data used by the routes. The current plugins have curated display order and taglines; an unconfigured plugin can also be discovered from its directory and README. `lib/markdown.ts` renders each `SKILL.md` body for its detail page.
 
-Skill and group routes are generated from repository content. Update the source `SKILL.md` and group README files instead of copying catalog data into page components.
+Skill and plugin routes are generated from repository content. Update the source `SKILL.md` and plugin README files instead of copying catalog data into page components.
 
 ## Layout
 
-- `app/` contains the App Router home, catalog, group, skill, and not-found pages plus global styles and metadata.
+- `app/` contains the App Router home, catalog, plugin, skill, and not-found pages plus global styles and metadata.
 - `components/` contains catalog cards, navigation, installation UI, theme controls, and the shared shadcn component set under `components/ui/`.
 - `components/theme-provider.tsx` configures system-aware themes and the `d` hotkey.
 - `hooks/` and `lib/` contain shared client hooks, Markdown rendering, repository discovery, and utilities.

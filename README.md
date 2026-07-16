@@ -14,15 +14,15 @@ Install the collection from GitHub with the [skills CLI](https://skills.sh/docs/
 npx skills add rj11io/11ai --full-depth
 ```
 
-The CLI runs through `npx`, discovers the repository's skills, and configures the skills you select for your agent. `--full-depth` is required because this collection organizes skills into ten workflow groups instead of one top-level `skills/` directory.
+The CLI runs through `npx`, discovers the repository's skills, and configures the skills you select for your agent. `--full-depth` is required because this collection organizes skills into eleven workflow plugins instead of one top-level `skills/` directory.
 
-The repository follows the open Agent Skills format. Every skill also includes Codex UI metadata in `agents/openai.yaml`, and every group is packaged as a Claude Code plugin. To add the Claude marketplace, run:
+The repository follows the open Agent Skills format. Every skill also includes Codex UI metadata in `agents/openai.yaml`, and every plugin is packaged for Claude Code. To add the Claude marketplace, run:
 
 ```text
 /plugin marketplace add rj11io/11ai
 ```
 
-Then install the group plugin you need from the marketplace UI or with `/plugin install <group>@11ai`.
+Then install the plugin you need from the marketplace UI or with `/plugin install <plugin>@11ai`.
 
 After installation, ask your agent to use a skill by name. For example:
 
@@ -42,9 +42,9 @@ The files are installed at `node_modules/@rj11io/11ai/11ai/v0/`. You can also cl
 
 ## Skill catalog
 
-The repository currently contains 67 skills in 11 groups.
+The repository currently contains 67 skills in 11 plugins.
 
-| Group | Skills | Use them for |
+| Plugin | Skills | Use them for |
 | --- | ---: | --- |
 | [Agent automation](./11ai/v0/11ai-agent-automation/README.md) | 8 | Scheduled autonomous work using the Ledger + Conductor + Routine pattern |
 | [AI chat](./11ai/v0/11ai-ai-chat/README.md) | 9 | End-to-end chat, sessions, tools, models, providers, UI, and messaging-platform extensions |
@@ -58,7 +58,7 @@ The repository currently contains 67 skills in 11 groups.
 | [Utilities](./11ai/v0/11ai-utils/README.md) | 8 | Markdown compression, reverse engineering, critique, analytics, UI styling, publication CMS, calls to action, and project sites |
 | [Cross-harness](./11ai/v0/11ai-xharness/README.md) | 2 | Delegating work to agents running in other CLI harnesses |
 
-Start with a group's README to choose a skill, then name that skill in your request. Skills provide instructions and examples; they do not install the application dependencies used in those examples by themselves.
+Start with a plugin's README to choose a skill, then name that skill in your request. Skills provide instructions and examples; they do not install the application dependencies used in those examples by themselves.
 
 ## Repository layout
 

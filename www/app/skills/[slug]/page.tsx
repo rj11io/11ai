@@ -50,10 +50,10 @@ export default async function SkillPage({
         </Link>
         <ChevronRight className="size-3.5" />
         <Link
-          href={`/groups/${skill.groupSlug}`}
+          href={`/plugins/${skill.pluginSlug}`}
           className="hover:text-foreground"
         >
-          {skill.groupTitle}
+          {skill.pluginTitle}
         </Link>
         <ChevronRight className="size-3.5" />
         <span className="font-mono text-foreground">{skill.slug}</span>
@@ -66,7 +66,7 @@ export default async function SkillPage({
             {skill.name}
           </h1>
           <Badge variant="outline" className="font-mono">
-            <Link href={`/groups/${skill.groupSlug}`}>{skill.groupTitle}</Link>
+            <Link href={`/plugins/${skill.pluginSlug}`}>{skill.pluginTitle}</Link>
           </Badge>
         </div>
         <p className="max-w-3xl leading-relaxed text-muted-foreground">
@@ -136,10 +136,10 @@ export default async function SkillPage({
       </div>
 
       <Link
-        href={`/groups/${skill.groupSlug}`}
+        href={`/plugins/${skill.pluginSlug}`}
         className="mt-8 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
       >
-        <ArrowLeft className="size-3.5" /> More {skill.groupTitle} skills
+        <ArrowLeft className="size-3.5" /> More {skill.pluginTitle} skills
       </Link>
     </div>
   )

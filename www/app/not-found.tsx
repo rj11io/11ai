@@ -11,7 +11,7 @@ export default function NotFound() {
         That page doesn&apos;t exist
       </h1>
       <p className="max-w-md text-muted-foreground">
-        The skill or group you&apos;re looking for may have been renamed.
+        The skill or plugin you&apos;re looking for may have been renamed.
         Browse the catalog to find it.
       </p>
       <Link href="/skills" className={cn(buttonVariants())}>

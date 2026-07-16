@@ -15,4 +15,4 @@ Eight general-purpose skills for text compression, reverse engineering, reviews,
 | [`11ai-vercel-analytics`](./11ai-vercel-analytics/SKILL.md) | Adding or verifying Vercel Web Analytics in a web application |
 | [`11ai-www`](./11ai-www/SKILL.md) | Examining a project and building a repo-driven site that displays it, in a `www/` folder or embedded app |
 
-The compression skill includes local scripts for transforming and validating Markdown. The roast skill is read-only. For repeated repository-wide audits of documentation, metadata, performance, security, or UX, use the [`11ai-super`](../11ai-super/README.md) group.
+The compression skill includes local scripts for transforming and validating Markdown. The roast skill is read-only. For repeated repository-wide audits of documentation, metadata, performance, security, or UX, use the [`11ai-super`](../11ai-super/README.md) plugin.

@@ -4,7 +4,7 @@
   "owner": {
     "name": "rj11io"
   },
-  "description": "Reusable AI-agent skills grouped by workflow.",
+  "description": "Reusable AI-agent skills packaged as plugins by workflow.",
   "plugins": [
     {
       "name": "11ai-agent-automation",

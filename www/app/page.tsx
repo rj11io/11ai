@@ -8,22 +8,22 @@ import {
 } from "lucide-react"
 
 import { GithubIcon } from "@/components/github-icon"
-import { GroupCard } from "@/components/group-card"
+import { PluginCard } from "@/components/plugin-card"
 import { TerminalBlock } from "@/components/terminal-block"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import {
   GITHUB_REPO_URL,
   INSTALL_COMMAND,
-  getGroups,
   getPackageVersion,
+  getPlugins,
   getSkill,
   getSkillCount,
 } from "@/lib/skills"
 import { cn } from "@/lib/utils"
 
 export default function Page() {
-  const groups = getGroups()
+  const plugins = getPlugins()
   const skillCount = getSkillCount()
   const version = getPackageVersion()
   const exampleSkill = getSkill("11ai-roast")
@@ -167,32 +167,32 @@ export default function Page() {
         </div>
       </section>
 
-      {/* ── Groups ───────────────────────────────────────────── */}
-      <section id="groups" className="scroll-mt-20 border-t border-border/60 py-20">
+      {/* ── Plugins ──────────────────────────────────────────── */}
+      <section id="plugins" className="scroll-mt-20 border-t border-border/60 py-20">
         <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <div className="space-y-3">
             <p className="font-mono text-xs tracking-widest text-muted-foreground uppercase">
-              Skill groups
+              Plugins
             </p>
             <h2 className="text-3xl font-semibold tracking-tight">
-              {skillCount} skills, {groups.length} groups
+              {skillCount} skills, {plugins.length} plugins
             </h2>
             <p className="max-w-xl leading-relaxed text-muted-foreground">
-              Every skill belongs to a group. Start with the group that matches
-              your job, then drill into the skill you need.
+              Every skill belongs to a plugin. Start with the plugin that
+              matches your job, then drill into the skill you need.
             </p>
           </div>
           <Link
-            href="/skills"
+            href="/plugins"
             className={cn(buttonVariants({ variant: "outline" }))}
           >
-            Browse the full catalog
+            Browse all plugins
             <ArrowRight data-icon="inline-end" />
           </Link>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {groups.map((group) => (
-            <GroupCard key={group.slug} group={group} />
+          {plugins.map((plugin) => (
+            <PluginCard key={plugin.slug} plugin={plugin} />
           ))}
         </div>
       </section>
@@ -207,7 +207,7 @@ export default function Page() {
             Ledger + Conductor + Routine
           </h2>
           <p className="max-w-2xl leading-relaxed text-muted-foreground">
-            The agent-automation group is built on one pattern for autonomous
+            The agent-automation plugin is built on one pattern for autonomous
             agents that ship real, verifiable work on a schedule. Three pieces,
             one loop.
           </p>
@@ -251,7 +251,7 @@ export default function Page() {
             actually use the output.
           </p>
           <Link
-            href="/groups/agent-automation"
+            href="/plugins/agent-automation"
             className="mt-4 inline-flex items-center gap-1 text-sm font-medium hover:underline"
           >
             Explore the agent-automation skills{" "}

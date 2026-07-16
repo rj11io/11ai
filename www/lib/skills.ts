@@ -8,11 +8,11 @@ export const NPM_URL = "https://www.npmjs.com/package/@rj11io/11ai"
 export const INSTALL_COMMAND = "npx skills add rj11io/11ai --full-depth"
 
 /**
- * Curated per-group presentation data. Skills, counts, and descriptions all
+ * Curated per-plugin presentation data. Skills, counts, and descriptions all
  * come from the skill files themselves; only the short taglines and display
  * order live here.
  */
-const GROUP_CONFIG = [
+const PLUGIN_CONFIG = [
   {
     slug: "agent-automation",
     dir: "11ai-agent-automation",
@@ -92,7 +92,7 @@ const GROUP_CONFIG = [
   },
 ] as const
 
-export type SkillGroup = {
+export type Plugin = {
   slug: string
   dir: string
   title: string
@@ -106,8 +106,8 @@ export type Skill = {
   slug: string
   name: string
   description: string
-  groupSlug: string
-  groupTitle: string
+  pluginSlug: string
+  pluginTitle: string
   /** Path from the repo root, e.g. "11ai/v0/11ai-utils/11ai-roast". */
   repoPath: string
   githubUrl: string
@@ -172,11 +172,11 @@ function findSkillDirs(dir: string): string[] {
 }
 
 /**
- * Presentation data for a group directory not yet in GROUP_CONFIG: slug from
+ * Presentation data for a plugin directory not yet in PLUGIN_CONFIG: slug from
  * the directory name, title and tagline from its README. Keeps the repo the
- * single source of truth when a new group lands before this file is updated.
+ * single source of truth when a new plugin lands before this file is updated.
  */
-function deriveGroupConfig(root: string, dir: string) {
+function derivePluginConfig(root: string, dir: string) {
   const slug = dir.replace(/^11ai-/, "")
   let title = slug.replace(/-/g, " ")
   title = title.charAt(0).toUpperCase() + title.slice(1)
@@ -192,22 +192,22 @@ function deriveGroupConfig(root: string, dir: string) {
   return { slug, dir, title, tagline }
 }
 
-function loadAllSkills(): { skills: Skill[]; groups: SkillGroup[] } {
+function loadAllSkills(): { skills: Skill[]; plugins: Plugin[] } {
   const root = resolveSkillsRoot()
   const skills: Skill[] = []
-  const groups: SkillGroup[] = []
+  const plugins: Plugin[] = []
 
-  const configured = new Set<string>(GROUP_CONFIG.map((g) => g.dir))
+  const configured = new Set<string>(PLUGIN_CONFIG.map((g) => g.dir))
   const discovered = fs
     .readdirSync(root, { withFileTypes: true })
     .filter((e) => e.isDirectory() && !configured.has(e.name))
-    .map((e) => deriveGroupConfig(root, e.name))
+    .map((e) => derivePluginConfig(root, e.name))
 
-  for (const group of [...GROUP_CONFIG, ...discovered]) {
-    const groupDir = path.join(root, group.dir)
-    const skillDirs = fs.existsSync(groupDir) ? findSkillDirs(groupDir) : []
+  for (const plugin of [...PLUGIN_CONFIG, ...discovered]) {
+    const pluginDir = path.join(root, plugin.dir)
+    const skillDirs = fs.existsSync(pluginDir) ? findSkillDirs(pluginDir) : []
 
-    // A group with no skills yet (e.g. a placeholder README) stays hidden.
+    // A plugin with no skills yet (e.g. a placeholder README) stays hidden.
     if (skillDirs.length === 0) continue
 
     for (const skillDir of skillDirs) {
@@ -228,47 +228,47 @@ function loadAllSkills(): { skills: Skill[]; groups: SkillGroup[] } {
         slug,
         name: data.name,
         description: data.description.trim(),
-        groupSlug: group.slug,
-        groupTitle: group.title,
+        pluginSlug: plugin.slug,
+        pluginTitle: plugin.title,
         repoPath,
         githubUrl: `${GITHUB_REPO_URL}/tree/main/${repoPath}`,
       })
     }
 
-    groups.push({
-      slug: group.slug,
-      dir: group.dir,
-      title: group.title,
-      tagline: group.tagline,
-      githubUrl: `${GITHUB_REPO_URL}/tree/main/11ai/v0/${group.dir}`,
+    plugins.push({
+      slug: plugin.slug,
+      dir: plugin.dir,
+      title: plugin.title,
+      tagline: plugin.tagline,
+      githubUrl: `${GITHUB_REPO_URL}/tree/main/11ai/v0/${plugin.dir}`,
       skillCount: skillDirs.length,
     })
   }
 
-  return { skills, groups }
+  return { skills, plugins }
 }
 
-let cache: { skills: Skill[]; groups: SkillGroup[] } | null = null
+let cache: { skills: Skill[]; plugins: Plugin[] } | null = null
 
 function loaded() {
   cache ??= loadAllSkills()
   return cache
 }
 
-export function getGroups(): SkillGroup[] {
-  return loaded().groups
+export function getPlugins(): Plugin[] {
+  return loaded().plugins
 }
 
-export function getGroup(slug: string): SkillGroup | undefined {
-  return loaded().groups.find((g) => g.slug === slug)
+export function getPlugin(slug: string): Plugin | undefined {
+  return loaded().plugins.find((g) => g.slug === slug)
 }
 
 export function getSkills(): Skill[] {
   return loaded().skills
 }
 
-export function getSkillsByGroup(groupSlug: string): Skill[] {
-  return loaded().skills.filter((s) => s.groupSlug === groupSlug)
+export function getSkillsByPlugin(pluginSlug: string): Skill[] {
+  return loaded().skills.filter((s) => s.pluginSlug === pluginSlug)
 }
 
 export function getSkill(slug: string): Skill | undefined {

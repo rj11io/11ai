@@ -6,10 +6,10 @@ import type { Skill } from "@/lib/skills"
 
 export function SkillCard({
   skill,
-  showGroup = true,
+  showPlugin = true,
 }: {
   skill: Skill
-  showGroup?: boolean
+  showPlugin?: boolean
 }) {
   return (
     <Link
@@ -25,9 +25,9 @@ export function SkillCard({
       <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
         {skill.description}
       </p>
-      {showGroup ? (
+      {showPlugin ? (
         <Badge variant="outline" className="mt-auto w-fit font-mono">
-          {skill.groupTitle}
+          {skill.pluginTitle}
         </Badge>
       ) : null}
     </Link>

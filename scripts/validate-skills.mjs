@@ -171,7 +171,7 @@ function validateScripts() {
   }
 }
 
-function validateClaude(groups, groupSkills) {
+function validateClaude(plugins, pluginSkills) {
   const packageVersion = readJson(path.join(root, "package.json"))?.version
   const marketplaceFile = path.join(root, ".claude-plugin", "marketplace.json")
   const marketplace = readJson(marketplaceFile)
@@ -185,11 +185,11 @@ function validateClaude(groups, groupSkills) {
     entries.set(entry.name, entry)
   }
 
-  for (const group of groups) {
-    const manifestFile = path.join(skillsRoot, group, ".claude-plugin", "plugin.json")
+  for (const plugin of plugins) {
+    const manifestFile = path.join(skillsRoot, plugin, ".claude-plugin", "plugin.json")
     const manifest = readJson(manifestFile)
     if (!manifest) continue
-    if (manifest.name !== group) fail(manifestFile, `name must be '${group}'`)
+    if (manifest.name !== plugin) fail(manifestFile, `name must be '${plugin}'`)
     if (!/^\d+\.\d+\.\d+$/.test(manifest.version || "")) {
       fail(manifestFile, "version must use strict semver")
     } else if (manifest.version !== packageVersion) {
@@ -199,7 +199,7 @@ function validateClaude(groups, groupSkills) {
     if (paths.some((value) => typeof value !== "string" || !value.startsWith("./"))) {
       fail(manifestFile, "skills must be a './'-relative string or array")
     } else {
-      for (const skill of groupSkills.get(group)) {
+      for (const skill of pluginSkills.get(plugin)) {
         const covered = paths.some((value) => {
           const base = path.resolve(path.dirname(manifestFile), "..", value)
           const relative = path.relative(base, skill.dir)
@@ -209,32 +209,32 @@ function validateClaude(groups, groupSkills) {
       }
     }
 
-    const entry = entries.get(group)
-    const expectedSource = `./11ai/v0/${group}`
-    if (!entry) fail(marketplaceFile, `missing marketplace entry for '${group}'`)
+    const entry = entries.get(plugin)
+    const expectedSource = `./11ai/v0/${plugin}`
+    if (!entry) fail(marketplaceFile, `missing marketplace entry for '${plugin}'`)
     else if (entry.source !== expectedSource) {
-      fail(marketplaceFile, `'${group}' source must be '${expectedSource}'`)
+      fail(marketplaceFile, `'${plugin}' source must be '${expectedSource}'`)
     }
   }
   for (const name of entries.keys()) {
-    if (!groups.includes(name)) fail(marketplaceFile, `unknown plugin entry '${name}'`)
+    if (!plugins.includes(name)) fail(marketplaceFile, `unknown plugin entry '${name}'`)
   }
 }
 
-function validateCatalog(groups, groupSkills, skills) {
+function validateCatalog(plugins, pluginSkills, skills) {
   const rootReadme = fs.readFileSync(path.join(root, "README.md"), "utf8")
-  const countPattern = new RegExp(`${skills.length} skills in ${groups.length} groups`)
+  const countPattern = new RegExp(`${skills.length} skills in ${plugins.length} plugins`)
   if (!countPattern.test(rootReadme)) {
-    fail(path.join(root, "README.md"), `catalog must state ${skills.length} skills in ${groups.length} groups`)
+    fail(path.join(root, "README.md"), `catalog must state ${skills.length} skills in ${plugins.length} plugins`)
   }
-  for (const group of groups) {
-    const readme = path.join(skillsRoot, group, "README.md")
+  for (const plugin of plugins) {
+    const readme = path.join(skillsRoot, plugin, "README.md")
     if (!fs.existsSync(readme)) {
-      fail(readme, "missing group README")
+      fail(readme, "missing plugin README")
       continue
     }
     const contents = fs.readFileSync(readme, "utf8")
-    for (const skill of groupSkills.get(group)) {
+    for (const skill of pluginSkills.get(plugin)) {
       if (!contents.includes(skill.name)) fail(readme, `does not list '${skill.name}'`)
     }
   }
@@ -301,24 +301,24 @@ for (const inventorySkill of inventorySkills) {
   validateLinks(skill)
 }
 
-const groups = fs
+const plugins = fs
   .readdirSync(skillsRoot, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name)
-  .filter((group) =>
-    inventorySkills.some((skill) => skill.dir.startsWith(path.join(skillsRoot, group))),
+  .filter((plugin) =>
+    inventorySkills.some((skill) => skill.dir.startsWith(path.join(skillsRoot, plugin))),
   )
   .sort()
-const groupSkills = new Map(
-  groups.map((group) => [
-    group,
-    inventorySkills.filter((skill) => skill.dir.startsWith(path.join(skillsRoot, group))),
+const pluginSkills = new Map(
+  plugins.map((plugin) => [
+    plugin,
+    inventorySkills.filter((skill) => skill.dir.startsWith(path.join(skillsRoot, plugin))),
   ]),
 )
 
 validateScripts()
-validateClaude(groups, groupSkills)
-validateCatalog(groups, groupSkills, inventorySkills)
+validateClaude(plugins, pluginSkills)
+validateCatalog(plugins, pluginSkills, inventorySkills)
 validatePackageConfiguration()
 
 const trackedArtifacts = spawnSync("git", ["ls-files", "-z"], { encoding: "utf8" })
@@ -333,5 +333,5 @@ if (errors.length > 0) {
 }
 
 console.log(
-  `Validated ${inventorySkills.length} skills across ${groups.length} groups: canonical frontmatter, Codex metadata, Claude packaging, links, scripts, and catalogs.`,
+  `Validated ${inventorySkills.length} skills across ${plugins.length} plugins: canonical frontmatter, Codex metadata, Claude packaging, links, scripts, and catalogs.`,
 )

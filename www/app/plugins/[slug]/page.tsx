@@ -7,11 +7,11 @@ import { GithubIcon } from "@/components/github-icon"
 import { SkillCard } from "@/components/skill-card"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
-import { getGroup, getGroups, getSkillsByGroup } from "@/lib/skills"
+import { getPlugin, getPlugins, getSkillsByPlugin } from "@/lib/skills"
 import { cn } from "@/lib/utils"
 
 export function generateStaticParams() {
-  return getGroups().map((group) => ({ slug: group.slug }))
+  return getPlugins().map((plugin) => ({ slug: plugin.slug }))
 }
 
 export async function generateMetadata({
@@ -20,24 +20,24 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const group = getGroup(slug)
-  if (!group) return {}
+  const plugin = getPlugin(slug)
+  if (!plugin) return {}
   return {
-    title: `${group.title} skills`,
-    description: group.tagline,
+    title: `${plugin.title} skills`,
+    description: plugin.tagline,
   }
 }
 
-export default async function GroupPage({
+export default async function PluginPage({
   params,
 }: {
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const group = getGroup(slug)
-  if (!group) notFound()
+  const plugin = getPlugin(slug)
+  if (!plugin) notFound()
 
-  const skills = getSkillsByGroup(group.slug)
+  const skills = getSkillsByPlugin(plugin.slug)
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
@@ -51,29 +51,29 @@ export default async function GroupPage({
       <div className="mb-10 space-y-4">
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            {group.title}
+            {plugin.title}
           </h1>
           <Badge variant="outline" className="font-mono">
-            {group.skillCount} {group.skillCount === 1 ? "skill" : "skills"}
+            {plugin.skillCount} {plugin.skillCount === 1 ? "skill" : "skills"}
           </Badge>
         </div>
         <p className="max-w-2xl leading-relaxed text-muted-foreground">
-          {group.tagline}
+          {plugin.tagline}
         </p>
         <a
-          href={group.githubUrl}
+          href={plugin.githubUrl}
           target="_blank"
           rel="noreferrer"
           className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
         >
           <GithubIcon data-icon="inline-start" />
-          View this group on GitHub
+          View this plugin on GitHub
         </a>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {skills.map((skill) => (
-          <SkillCard key={skill.slug} skill={skill} showGroup={false} />
+          <SkillCard key={skill.slug} skill={skill} showPlugin={false} />
         ))}
       </div>
     </div>

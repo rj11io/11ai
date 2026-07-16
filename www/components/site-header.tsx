@@ -15,6 +15,15 @@ export function SiteHeader() {
         </Link>
         <nav className="flex items-center gap-1 text-sm">
           <Link
+            href="/plugins"
+            className={cn(
+              buttonVariants({ variant: "ghost", size: "sm" }),
+              "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            Plugins
+          </Link>
+          <Link
             href="/skills"
             className={cn(
               buttonVariants({ variant: "ghost", size: "sm" }),
@@ -22,15 +31,6 @@ export function SiteHeader() {
             )}
           >
             Skills
-          </Link>
-          <Link
-            href="/#groups"
-            className={cn(
-              buttonVariants({ variant: "ghost", size: "sm" }),
-              "text-muted-foreground hover:text-foreground",
-            )}
-          >
-            Groups
           </Link>
         </nav>
         <div className="ml-auto flex items-center gap-1">

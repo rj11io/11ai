@@ -36,8 +36,8 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
-              <Link href="/#groups" className="hover:text-foreground">
-                Skill groups
+              <Link href="/plugins" className="hover:text-foreground">
+                Plugins
               </Link>
             </li>
             <li>

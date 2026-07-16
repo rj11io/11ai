@@ -1,17 +1,17 @@
 import type { Metadata } from "next"
 
 import { Catalog } from "@/components/catalog"
-import { getGroups, getSkills } from "@/lib/skills"
+import { getPlugins, getSkills } from "@/lib/skills"
 
 export const metadata: Metadata = {
   title: "Skill catalog",
   description:
-    "Browse every 11ai skill: search by name or purpose and filter by group.",
+    "Browse every 11ai skill: search by name or purpose and filter by plugin.",
 }
 
 export default function SkillsPage() {
   const skills = getSkills()
-  const groups = getGroups()
+  const plugins = getPlugins()
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
@@ -23,11 +23,11 @@ export default function SkillsPage() {
           All {skills.length} skills
         </h1>
         <p className="max-w-2xl leading-relaxed text-muted-foreground">
-          Search by name or purpose, or filter by group. Every card links to
+          Search by name or purpose, or filter by plugin. Every card links to
           the full playbook and its source on GitHub.
         </p>
       </div>
-      <Catalog skills={skills} groups={groups} />
+      <Catalog skills={skills} plugins={plugins} />
     </div>
   )
 }

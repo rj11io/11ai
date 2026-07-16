@@ -31,9 +31,9 @@ Read [references/skill-qa-playbook.md](references/skill-qa-playbook.md) before a
 Inventory the repository before deciding what is missing:
 
 1. Find every skill recursively and record its directory, parsed name, description, resources, harness metadata, and owning collection or plugin.
-2. Read repository instructions, package manifests, group catalogs, websites, release workflows, validators, and creator templates that publish or discover skills.
+2. Read repository instructions, package manifests, plugin catalogs, websites, release workflows, validators, and creator templates that publish or discover skills.
 3. Identify the compatibility surfaces the repository actually declares: Agent Skills-compatible consumers, Codex metadata, Claude plugins or marketplaces, generic skills installers, npm or archive packaging, and generated catalogs.
-4. Record expected counts by group and by distribution artifact. Distinguish per-skill configuration from group- or repository-level packaging.
+4. Record expected counts by plugin and by distribution artifact. Distinguish per-skill configuration from plugin- or repository-level packaging.
 5. Define explicit exclusions. Unless requested, do not review instructional quality, rewrite descriptions for style, rename valid skills, reorganize directories, or alter routine behavior.
 
 When compatibility expectations are ambiguous, infer them from existing distribution claims and configuration. Ask only when competing choices would create a breaking layout or a new distribution surface.
@@ -74,7 +74,7 @@ Work from the portable core outward. After each batch, run focused validation an
 
 - Test the documented generic installer command against the repository layout. Add required recursive or full-depth flags when mixed nesting would otherwise omit skills.
 - Ensure published package allowlists include all skill resources, harness metadata, plugin manifests, and marketplace files that consumers need.
-- Reconcile root and group catalogs, counts, website group configuration, install commands, and generated pages with the canonical inventory.
+- Reconcile root and plugin catalogs, counts, website plugin configuration, install commands, and generated pages with the canonical inventory.
 - Remove lenient parsing fallbacks that allow a website or catalog build to succeed on metadata rejected by real harnesses.
 
 #### Root causes and prevention
@@ -88,14 +88,14 @@ Work from the portable core outward. After each batch, run focused validation an
 After the first repair pass, rebuild the inventory from disk and run fresh reviews from different evidence surfaces:
 
 1. **Format and semantics pass:** strict parsing, physical YAML form, folder/name equality, duplicate detection, links, scripts, and proof that routine bodies did not drift.
-2. **Harness and discovery pass:** official validators, real list/load commands, per-group component counts, version policy, and documented install commands.
+2. **Harness and discovery pass:** official validators, real list/load commands, per-plugin component counts, version policy, and documented install commands.
 3. **Distribution and prevention pass:** dry-run package contents, catalogs and generated pages, strict application parsing, creator templates, CI, release synchronization, and final change-set ownership.
 
 When a pass finds a material issue, add it to the ledger, repair it, verify it, and restart the clean-pass count. Finish only when:
 
 - every intended skill parses under the portable core policy
 - every declared harness has complete, valid configuration at the correct layer
-- real discovery and loader counts exactly match the recursive inventory and expected group counts
+- real discovery and loader counts exactly match the recursive inventory and expected plugin counts
 - the distributable artifact contains all required skill and harness files and no forbidden artifacts
 - catalogs, documented commands, and generated pages match the inventory
 - creator templates and automated checks no longer reproduce the defect classes found

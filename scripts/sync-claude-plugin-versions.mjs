@@ -5,12 +5,12 @@ import path from "node:path"
 
 const root = process.cwd()
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"))
-const groupsRoot = path.join(root, "11ai", "v0")
+const pluginsRoot = path.join(root, "11ai", "v0")
 let updated = 0
 
-for (const entry of fs.readdirSync(groupsRoot, { withFileTypes: true })) {
+for (const entry of fs.readdirSync(pluginsRoot, { withFileTypes: true })) {
   if (!entry.isDirectory()) continue
-  const file = path.join(groupsRoot, entry.name, ".claude-plugin", "plugin.json")
+  const file = path.join(pluginsRoot, entry.name, ".claude-plugin", "plugin.json")
   if (!fs.existsSync(file)) continue
 
   const manifest = JSON.parse(fs.readFileSync(file, "utf8"))
