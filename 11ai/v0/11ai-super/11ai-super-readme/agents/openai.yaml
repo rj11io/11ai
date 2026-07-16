@@ -1,4 +1,4 @@
 interface:
   display_name: "11ai Super Readme"
-  short_description: "Sync, audit, fix, and iterate repo READMEs"
-  default_prompt: "Use $11ai-super-readme to sync this repository, require a clean tree, bring every README in line with the code, iterate with fresh review passes to a high documentation bar, and summarize the session."
+  short_description: "Audit, fix, and iterate repo READMEs to a high bar"
+  default_prompt: "Use $11ai-super-readme to bring every README in line with the code, iterate with fresh review passes to a high documentation bar, and summarize the session."

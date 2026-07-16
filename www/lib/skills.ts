@@ -56,6 +56,13 @@ const GROUP_CONFIG = [
       "Playwright setup, npm publishing, and fully automated releases for your repositories.",
   },
   {
+    slug: "git-operations",
+    dir: "11ai-git-operations",
+    title: "Git operations",
+    tagline:
+      "Wrap any repository task in a disciplined Git workflow, on the main branch or through a reviewed pull request.",
+  },
+  {
     slug: "integrations",
     dir: "11ai-integrations",
     title: "Integrations",

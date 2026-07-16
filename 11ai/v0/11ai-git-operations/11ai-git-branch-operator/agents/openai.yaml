@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Git Branch Operator"
+  short_description: "Land a task through a branch and reviewed pull request"
+  default_prompt: "Use $11ai-git-branch-operator to run the requested task on a dedicated branch, open a detailed pull request, have two subagents review it, address their comments, and report everything done without merging unless I ask."

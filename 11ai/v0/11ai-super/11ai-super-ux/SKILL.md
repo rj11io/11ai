@@ -1,6 +1,6 @@
 ---
 name: 11ai-super-ux
-description: "Synchronize a clean Git repository from origin, allowing a conflict-free merge of divergent incoming changes when required, then audit, repair, and iteratively improve a project's user interface and user experience using the running product, source code, and objective quality gates. Use when Codex must review UI/UX, fix critical or major usability and accessibility defects, improve responsive behavior, interaction states, information architecture, visual hierarchy, consistency, or polish, and continue validating improvements until the experience meets a high bar. Abort and restore session-owned changes if the work becomes unmanageably dirty or debugging exceeds safe bounds. Apply to web, mobile, and desktop interfaces; commit and push UX changes only when explicitly requested, using conventional commits, and honor audit-only requests by reporting findings without editing."
+description: "Audit, repair, and iteratively improve a project's user interface and user experience using the running product, source code, and objective quality gates. Use when Codex must review UI/UX, fix critical or major usability and accessibility defects, improve responsive behavior, interaction states, information architecture, visual hierarchy, consistency, or polish, and continue validating improvements until the experience meets a high bar. Apply to web, mobile, and desktop interfaces, and honor audit-only requests by reporting findings without editing. Stops and reports when the change set becomes unmanageable or troubleshooting outweighs progress."
 ---
 
 # 11ai Super UX
@@ -14,8 +14,8 @@ Preserve the product's purpose, working behavior, established brand, and intenti
 ## Operating Rules
 
 - Follow repository instructions and existing design-system conventions.
-- Begin with the Git synchronization and clean-tree preflight. Perform no audit, startup, dependency installation, or source edit before it passes.
-- Preserve unrelated and concurrent user changes. Never clean, stash, overwrite, or revert work that was present before the session or whose ownership is uncertain.
+- Preserve unrelated and concurrent user changes. Never clean, overwrite, or revert work that was present before the session or whose ownership is uncertain.
+- Keep a session change manifest — every file this session creates, modifies, or deletes — and reconcile it after every batch.
 - Treat the running interface as the source of truth; do not infer UX quality from source code alone.
 - Use the available browser-control or platform-testing skill for interactive inspection when one exists. Read that skill before using it.
 - Exercise actual journeys by clicking, typing, scrolling, resizing, using the keyboard, and triggering loading, empty, error, success, disabled, and overflow states where practical.
@@ -24,35 +24,10 @@ Preserve the product's purpose, working behavior, established brand, and intenti
 - Keep changes proportional to the existing product. Ask only when a decision would materially change product strategy, brand direction, or data behavior.
 - Do not stop after producing an audit when the request authorizes fixes. Implement, verify, and iterate.
 - If the user explicitly requests a read-only audit, do not edit files; complete the discovery, evidence, severity, and recommendation portions only.
-- Do not commit UX work or push unless the user explicitly instructs you to do so. A conflict-free merge commit created solely to synchronize divergent upstream changes is the only commit exception. Treat commit and push as separate authorization from performing the UX routine.
 
 ## Workflow
 
-### 1. Synchronize and Checkpoint Git
-
-Locate the current repository root. Abort with a session summary if the directory is not a Git repository.
-
-Before fetching or pulling:
-
-1. Check for an in-progress merge, rebase, cherry-pick, revert, or bisect. Abort if any exists.
-2. Require an attached branch with a configured upstream on `origin`. Do not guess or retarget a branch, upstream, or remote.
-3. Run `git status --porcelain=v1 --untracked-files=all` and require empty output.
-4. If the tree is dirty, stop without stashing, deleting, restoring, or modifying anything. Report the dirty paths so the user can resolve them.
-5. Record the pre-synchronization commit as `PRE_SYNC_SHA`.
-
-Then synchronize the current branch:
-
-1. Run `git fetch --prune origin`.
-2. Attempt `git pull --ff-only` from the configured `origin` upstream first. Never rebase during synchronization.
-3. If fast-forward-only pull fails solely because the local and fetched upstream histories have diverged, merge the fetched upstream into the current branch with the repository's default merge strategy and a non-interactive merge message.
-4. Accept the synchronization merge only when Git completes it automatically without conflicts, the index and working tree are clean, and the merged history contains both the prior local tip and fetched upstream tip.
-5. If the merge reports any conflict, requires manual content resolution, leaves a dirty tree, or fails validation, abort the merge immediately, verify `HEAD` has returned to `PRE_SYNC_SHA`, require a clean tree, and stop with a session summary. Do not resolve synchronization conflicts as part of this skill.
-6. Abort if authentication fails, `origin` or the upstream is unavailable, or synchronization cannot complete under these rules.
-7. Record the branch, upstream, synchronization method, and post-sync `BASE_SHA`. This clean commit is the rollback checkpoint for the UX session. When a merge was required, `BASE_SHA` is the resulting local merge commit.
-
-Do not continue unless every preflight condition passes. A successful fetch alone does not satisfy the synchronization requirement.
-
-### 2. Establish the Product and Test Surface
+### 1. Establish the Product and Test Surface
 
 Inspect repository guidance, application structure, routes, design tokens, component library, package scripts, and tests.
 
@@ -66,7 +41,7 @@ Identify:
 
 Start the application when possible. If startup is blocked, exhaust safe local alternatives before relying on static review, and record the limitation.
 
-### 3. Capture a UX Baseline
+### 2. Capture a UX Baseline
 
 Read [references/audit-rubric.md](references/audit-rubric.md) before auditing or scoring.
 
@@ -81,7 +56,7 @@ Walk every core journey on the real interface. Capture concise evidence for prob
 
 Score the baseline with the rubric. Use the score to expose weak dimensions, not to disguise judgment with false precision.
 
-### 4. Triage by User Harm
+### 3. Triage by User Harm
 
 Assign one severity to each reproducible issue:
 
@@ -92,7 +67,7 @@ Assign one severity to each reproducible issue:
 
 Prioritize by severity, journey importance, frequency, reach, and confidence. Do not inflate aesthetic preferences into critical issues.
 
-### 5. Fix Critical and Major Issues
+### 4. Fix Critical and Major Issues
 
 Resolve every confirmed critical issue first, then every confirmed major issue. Work in coherent batches small enough to diagnose regressions.
 
@@ -107,12 +82,11 @@ Prefer changes in this order:
 
 Reuse or improve existing components and tokens. Avoid scattered one-off values when a shared primitive is the real repair surface. Keep semantics, tests, and accessibility intact while changing appearance.
 
-### 6. Verify Each Batch
+### 5. Verify Each Batch
 
 After every meaningful batch:
 
-- inspect `git status --short`, `git diff --stat`, and `git diff --check`
-- account for every modified and untracked path and keep a ledger of files created during this session
+- review the batch's complete set of changes and account for every modified and created path in the session change manifest
 - rerun the affected journeys in the real interface
 - retest the original reproduction at all relevant viewports and input modes
 - check nearby states and shared-component consumers for regressions
@@ -122,32 +96,25 @@ After every meaningful batch:
 
 Do not mark an issue resolved based only on a code diff or successful build.
 
-### 7. Control Scope and Abort Safely
+### 6. Control Scope and Abort Safely
 
 Treat the session as too dirty and abort when any of these conditions occurs:
 
-- the diff contains unexplained or unrelated files, broad generated output, accidental dependency or lockfile churn, secrets, build artifacts, or changes outside the intended repair surface
+- the change set contains unexplained or unrelated files, broad generated output, accidental dependency or lockfile churn, secrets, build artifacts, or changes outside the intended repair surface
 - the change set grows beyond what can be reviewed and verified confidently as one UX-focused session
 - the agent cannot explain why every changed path is necessary
 - the same problem survives three consecutive repair attempts without materially new evidence
 - debugging is dominated by environment, infrastructure, backend, dependency, or product-decision failures outside the UI/UX scope
 - tests or neighboring journeys regress repeatedly and the root cause cannot be isolated safely
-- ownership of a new working-tree change is uncertain
+- ownership of a new change in the project is uncertain
 
-On an abort after the clean checkpoint:
+On abort:
 
-1. Stop processes started by the session.
-2. Capture the failure evidence and current changed-path list for the summary.
-3. Verify that all changes being reverted are session-owned. Preserve uncertain or concurrent work and report that automatic cleanup could not safely complete.
-4. Restore tracked files and the index to `BASE_SHA`.
-5. Remove only untracked files and directories recorded as created by this session. Never use a broad clean command when ownership is uncertain.
-6. If a session commit exists locally but has not been pushed, move the branch back to `BASE_SHA`, then restore the tree. Never rewrite or force-push a remote branch.
-7. Verify that `HEAD` equals `BASE_SHA` and `git status --porcelain=v1 --untracked-files=all` is empty.
-8. Stop the routine and return an aborted-session summary. Do not immediately retry the whole operation.
+1. Stop processes started by the session and capture the failure evidence and abort reason for the summary.
+2. Compare the project's current state with the session change manifest. Preserve any path whose ownership is uncertain.
+3. Stop the routine and return the aborted-session summary, listing exactly which session changes remain in place. Do not immediately restart the entire operation.
 
-Never create intermediate UX commits. The synchronization merge is the sole exception. Commit UX changes only after the completion gate passes, so rollback normally operates on uncommitted session changes. Make push the final repository mutation; perform no further code changes after a successful push.
-
-### 8. Run the Improvement Loop
+### 7. Run the Improvement Loop
 
 Once no critical or major issue remains, improve the highest-impact weakness still visible in the rubric:
 
@@ -160,7 +127,7 @@ Once no critical or major issue remains, improve the highest-impact weakness sti
 
 Repeat across comprehension, efficiency, accessibility, responsiveness, consistency, trust, and delight. Prefer meaningful improvements over ornamental churn. Never redesign merely to keep the loop moving.
 
-### 9. Apply the Completion Gate
+### 8. Apply the Completion Gate
 
 Stop only when all of the following are true:
 
@@ -172,35 +139,20 @@ Stop only when all of the following are true:
 - Loading, empty, error, success, disabled, and destructive states relevant to core journeys are understandable and recoverable.
 - Relevant tests and static checks pass, and the inspected interface has no new actionable console errors.
 - A final saturation pass finds no additional high-confidence change with meaningful user benefit relative to its complexity or regression risk.
-- The final diff contains only intentional, reviewed changes and passes `git diff --check`.
+- The complete change set is intentional, reviewable, and limited to the session manifest.
 
 If a gate cannot be met because of missing credentials, unavailable dependencies, absent product decisions, or another external blocker, do not claim satisfaction. Report the unmet gate, evidence, work completed, and the smallest next action needed.
-
-## Optional Commit and Push
-
-Perform this section only when the user explicitly requested commit or push.
-
-1. Apply the completion gate and review the complete diff before committing.
-2. Do not create an empty commit or include unrelated files.
-3. Follow repository-specific commit rules when present; otherwise use Conventional Commits in the form `<type>(optional-scope): <imperative summary>`.
-4. Prefer `fix(ui): ...` or `fix(ux): ...` for defect repairs and `feat(ui): ...` only for genuine new behavior. Split commits only when each remains coherent and independently valid.
-5. If only commit was requested, stop before pushing.
-6. If push was explicitly requested, push the current branch to its configured upstream without force. Do not create or retarget an upstream unless explicitly instructed.
-7. Verify the final working tree is clean and record the commit SHA and push result.
-
-If commit or push fails, do not improvise history edits. If nothing reached the remote, apply the safe rollback procedure when the operation must be aborted. If the remote changed, preserve remote history and report the exact state.
 
 ## Session Summary
 
 Always end with a concise summary of the complete session, including successful, blocked, audit-only, and aborted runs. Lead with the outcome and include:
 
-- synchronization result, branch, upstream, whether fast-forward or merge was used, and whether the tree passed the clean preflight
 - the core journeys and viewports verified
 - critical and major issues fixed, grouped by user impact
 - the most valuable iterative improvements beyond defect repair
 - validation commands and interactive checks performed
 - final rubric score and any evidence-backed residual limitations
-- final Git state, changed files, and commit or push status
-- for an abort, the trigger, rollback result, restored `BASE_SHA`, and any path that could not safely be cleaned
+- final state of the session's changes: the complete manifest of paths created, modified, or deleted
+- for an abort, the trigger, which session changes remain in place, and any path preserved because its ownership was uncertain
 
 Keep the report concise. Reference changed files directly and distinguish verified facts from judgment.

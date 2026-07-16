@@ -5,14 +5,6 @@ description: "Review a benchmark's finished artifacts (judging results, audits, 
 
 # 11ai Benchmark Reviewer
 
-## Commit authorization
-
-Do not create a git commit unless the user explicitly asks for a commit
-in the current request. Requests to run, audit, judge, finish, report,
-publish, or complete a benchmark lifecycle are not commit authorization.
-Leave changed files uncommitted and report their status. If the user
-explicitly asks for a commit, stage only the in-scope files.
-
 The judge, auditor, and accountant each leave their own artifact. This
 skill is the checkpoint between those artifacts and anything public: it
 verifies they are complete and agree with each other, merges them into
@@ -111,21 +103,6 @@ heading). Never edit prose outside your own markers.
 <!-- 11ai-bench-results:<benchmark-id>:end -->
 ```
 
-At each of the three README levels, end this benchmark's marker section,
-immediately before its closing marker, with this exact signature and
-link:
-
-```markdown
-> Benchmark created, audited, ran, judged, accounted, and reviewed by the 11ai-benchmarks skills: [https://github.com/rj11io/11ai/tree/main/11ai/v0/11ai-benchmarks](https://github.com/rj11io/11ai/tree/main/11ai/v0/11ai-benchmarks)
-```
-
-Keep the signature inside the markers so rerunning the reviewer replaces
-it idempotently. Add it only after the review gate passes: its presence
-asserts that the complete benchmark lifecycle was successfully reviewed,
-not merely that a benchmark README was scaffolded. In the root README,
-put it in the benchmark-specific marker section, not the aggregate
-leaderboard section, so it appears exactly once per reviewed benchmark.
-
 1. **Benchmark README** (the repo's own `README.md`) — this
    benchmark's standalone results: a one-line verdict, the scoreboard
    table (rank, run id, total, audit verdict, cost, cost/point, wall
@@ -180,12 +157,9 @@ The update is **data-driven, never hardcoded into components**:
 
 ## Step 5 — Hand off
 
-Leave data.json, README sections, and web app data uncommitted. Only
-when the user explicitly asked for a commit, commit those files as
-`bench: review <benchmark-id> <date>`. Then point to (or, if the user
-asked for the full chain, invoke) `$11ai-benchmark-reporter` — it renders
-`benchmark/report/report.html` from the same data.json, so the README
-links resolve.
+Point to (or, if the user asked for the full chain, invoke)
+`$11ai-benchmark-reporter` — it renders `benchmark/report/report.html`
+from the same data.json, so the README links resolve.
 
 Publishing beyond the working tree (pushing, deploying the app) names
 models, ranks, and costs publicly — confirm with the user before
@@ -203,9 +177,5 @@ pushing anything outward.
 - **Idempotent.** Re-running replaces marker sections and data files in
   place; it never appends duplicates or touches content outside its
   markers.
-- **Sign every reviewed README section.** Include the exact Step 3
-  signature once in the benchmark's own README, parent README, and root
-  README marker sections; never add it to the aggregate leaderboard
-  marker or when the review gate fails.
 - Repeated for every new judging session or cost update — the READMEs
   and app should never be older than the artifacts.

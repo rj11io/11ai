@@ -1,6 +1,6 @@
 # 11ai
 
-Reusable AI-agent skills for building chat products, editorial blogs, and repo-driven project sites; automating agent work; benchmarking coding models; reverse engineering and maintaining codebases; integrating application services; cleaning up local development environments; and running deep iterative project audits.
+Reusable AI-agent skills for building chat products, editorial blogs, and repo-driven project sites; automating agent work; benchmarking coding models; reverse engineering and maintaining codebases; integrating application services; running repository tasks through disciplined Git workflows; cleaning up local development environments; and running deep iterative project audits.
 
 Project site: https://ai.rj11.io/
 
@@ -42,7 +42,7 @@ The files are installed at `node_modules/@rj11io/11ai/11ai/v0/`. You can also cl
 
 ## Skill catalog
 
-The repository currently contains 65 skills in 10 groups.
+The repository currently contains 67 skills in 11 groups.
 
 | Group | Skills | Use them for |
 | --- | ---: | --- |
@@ -52,6 +52,7 @@ The repository currently contains 65 skills in 10 groups.
 | [Blog builder](./11ai/v0/11ai-blog-builder/README.md) | 8 | Building file-backed editorial blogs with composable CMS, author, Markdown, content, navigation, and UI skills |
 | [Cleanup](./11ai/v0/11ai-cleanup/README.md) | 5 | Safely finding and removing abandoned local resources |
 | [Codebase](./11ai/v0/11ai-codebase/README.md) | 3 | Playwright setup, npm publishing, and automated releases |
+| [Git operations](./11ai/v0/11ai-git-operations/README.md) | 2 | Wrapping any repository task in a disciplined Git workflow, on the main branch or through a reviewed pull request |
 | [Integrations](./11ai/v0/11ai-integrations/README.md) | 3 | Adding Convex, WorkOS AuthKit, or both to Next.js applications |
 | [Super](./11ai/v0/11ai-super/README.md) | 8 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
 | [Utilities](./11ai/v0/11ai-utils/README.md) | 8 | Markdown compression, reverse engineering, critique, analytics, UI styling, publication CMS, calls to action, and project sites |
@@ -71,6 +72,7 @@ Start with a group's README to choose a skill, then name that skill in your requ
     11ai-blog-builder/        8 editorial blog skills
     11ai-cleanup/             5 cleanup skills
     11ai-codebase/            3 codebase skills
+    11ai-git-operations/      2 git workflow skills
     11ai-integrations/        3 integration skills
     11ai-super/               8 iterative task and improvement skills
     11ai-utils/               8 utility skills

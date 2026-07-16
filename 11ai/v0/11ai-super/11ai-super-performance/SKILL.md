@@ -1,6 +1,6 @@
 ---
 name: 11ai-super-performance
-description: "Synchronize a clean Git repository, including a conflict-free merge of incoming upstream changes when needed, then audit, profile, fix, and repeatedly optimize software project speed and resource efficiency with safe rollback and optional explicitly authorized conventional commits. Use when Codex needs to investigate a slow application, API, page, query, build, test suite, startup path, or background job; eliminate critical and major performance problems; improve latency, throughput, responsiveness, bundle size, memory, CPU, network, or database efficiency; validate production-like performance; or continue performance work until the project meets a high evidence-based bar."
+description: "Audit, profile, fix, and repeatedly optimize software project speed and resource efficiency. Use when Codex needs to investigate a slow application, API, page, query, build, test suite, startup path, or background job; eliminate critical and major performance problems; improve latency, throughput, responsiveness, bundle size, memory, CPU, network, or database efficiency; validate production-like performance; or continue performance work until the project meets a high evidence-based bar. Stops and reports when the change set becomes unmanageable or troubleshooting outweighs progress."
 ---
 
 # 11ai Super Performance
@@ -9,74 +9,17 @@ description: "Synchronize a clean Git repository, including a conflict-free merg
 
 Make the project materially faster without sacrificing correctness, security, accessibility, maintainability, or user experience. Measure before changing code, fix critical and major bottlenecks first, and repeat the measure-fix-verify loop until further work has low expected value.
 
-## Git Transaction Boundary
-
-Make Git synchronization and cleanliness the first execution phase. Do not begin the performance routine until this gate passes.
-
-1. Locate the current repository root and confirm it is a Git worktree.
-2. Inspect the complete status, including untracked files. Require a clean tree before fetching or pulling. If it is dirty, abort and report the paths; do not stash, commit, reset, clean, or discard pre-existing work.
-3. Identify the current branch, remote, and configured upstream. If the checkout is detached or has no usable upstream, abort unless the user explicitly supplies the intended branch or remote. Record the current commit as `PRE_SYNC_COMMIT`.
-4. Fetch remote updates and prune stale remote-tracking refs.
-5. Attempt to pull the current upstream with fast-forward only.
-6. If and only if fast-forwarding fails because the local branch and its upstream have diverged, merge the fetched upstream into the current branch. Permit the automatically created merge commit as part of synchronization when the merge completes without conflicts.
-7. If the merge reports any conflict, run `git merge --abort`, verify the tree returned cleanly to `PRE_SYNC_COMMIT`, and abort the entire operation. Do not resolve merge conflicts or begin performance work.
-8. Confirm the tree is clean and record the synchronized commit, including any clean synchronization merge commit, as `START_COMMIT`.
-
-Use the repository's remote and upstream rather than assuming names such as `origin` or `main`. A typical gate is:
-
-```bash
-git status --short --branch --untracked-files=all
-git branch --show-current
-git remote -v
-git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}'
-git rev-parse HEAD
-git fetch --prune
-git pull --ff-only
-# Only when the pull fails specifically because the branches have diverged:
-git merge --no-edit '@{upstream}'
-git status --short --branch --untracked-files=all
-git rev-parse HEAD
-```
-
-Do not fall back to a merge for authentication, network, missing-ref, remote, configuration, or other pull failures. Use the configured upstream, normally an `origin/*` branch, and merge only that fetched upstream. Do not merge an arbitrary remote branch. Never rebase local commits as part of setup.
-
-Maintain a session change inventory after every coherent fix. Track every file created, modified, renamed, or deleted by the session, and distinguish source changes from disposable benchmark, profile, build, coverage, cache, and log artifacts.
-
-Abort the operation when any of these occurs:
-
-- The worktree contains unexpected changes, generated-file sprawl, or changes that cannot be confidently attributed to the session.
-- The diff expands materially beyond the active measured finding or can no longer be reviewed as a small set of coherent fixes.
-- Two focused attempts at the same fix fail to produce a reliable diagnosis or verified improvement.
-- Troubleshooting starts requiring speculative architecture changes, broad dependency churn, or repeated debugging without measurable progress.
-- Correctness, security, accessibility, data integrity, or repository safety becomes uncertain.
-
-On abort, stop project processes and return the repository to `START_COMMIT` using the session inventory:
-
-- Restore only tracked paths changed by this session.
-- Delete only untracked artifacts created by this session.
-- Preserve any concurrent or externally created changes. If ownership is ambiguous, do not use destructive cleanup; report the paths and the reason a fully clean state could not be restored safely.
-- Never use a blanket `git reset --hard`, `git clean -fd`, or equivalent destructive command.
-- Verify the final status against `START_COMMIT` and report the rollback result.
-
-The conflict-free synchronization merge above is the sole automatic commit exception. Do not create performance-work commits or push any commit by default. Only when the user explicitly instructs it:
-
-1. Review the final diff and validation results.
-2. Stage only the intended session changes.
-3. Create a Conventional Commit, normally `perf(<scope>): <summary>`; choose another valid type only when it describes the change more accurately.
-4. Push the current branch to its configured upstream only if pushing was also explicitly requested. Never force-push.
-5. Report the commit hash, branch, upstream, and push result.
-
-Treat commit and push as separate permissions. An instruction to commit does not imply permission to push.
-
 ## Operating Rules
 
-- After the Git gate passes, read repository instructions before editing.
+- Read repository instructions before editing.
 - Treat measurements as evidence, not decoration. Compare the same workload, environment, build mode, data shape, and sampling method before and after a change.
 - Prefer production builds and production-like data paths. Do not infer production performance from a development server when a production build can be exercised locally.
 - Never run disruptive load tests, mutate production data, clear shared caches, or change live infrastructure without explicit authorization.
 - Do not trade away correctness, security, accessibility, visual stability, observability, or important product behavior for a better metric.
 - Keep optimizations simple enough to maintain. Remove obsolete code and dependencies exposed by the fix.
+- Keep a session change manifest — every file this session creates, modifies, renames, or deletes — and reconcile it after every batch, distinguishing source changes from disposable benchmark, profile, build, coverage, cache, and log artifacts.
 - If the user requests only an audit, stop after reporting findings. Otherwise implement safe in-scope fixes and verify them.
+- Always end with the completion report defined below, including when stopping early or aborting.
 
 ## Workflow
 
@@ -142,7 +85,8 @@ For each fix:
 3. Add or update correctness and regression tests where practical.
 4. Run focused validation, then the broader relevant suite.
 5. Re-run the identical benchmark and compare distributions or repeated samples.
-6. Keep the change only when evidence improves the target without material regressions elsewhere.
+6. Review the batch's complete set of changes and update the session change manifest.
+7. Keep the change only when evidence improves the target without material regressions elsewhere.
 
 ### 5. Continue the Improvement Loop
 
@@ -162,8 +106,26 @@ Stop only when all of these are true:
 - Results reproduce across multiple samples and no important adjacent metric regresses materially.
 - A fresh profile reveals no additional high-confidence, high-impact fix with reasonable cost and risk.
 - Remaining opportunities are minor, speculative, externally blocked, or show diminishing returns.
+- The complete change set is intentional, reviewable, and limited to the session manifest.
 
 If a critical or major issue depends on credentials, infrastructure, production data, architecture outside the repository, or a risky product decision, exhaust safe local alternatives and report the blocker precisely. Do not describe the project as fully optimized while such an issue remains.
+
+### 6. Abort When Work Becomes Unsafe
+
+Abort the operation when any of these occurs:
+
+- The project contains unexpected changes, generated-file sprawl, or changes that cannot be confidently attributed to the session.
+- The change set expands materially beyond the active measured finding or can no longer be reviewed as a small set of coherent fixes.
+- Two focused attempts at the same fix fail to produce a reliable diagnosis or verified improvement.
+- Troubleshooting starts requiring speculative architecture changes, broad dependency churn, or repeated debugging without measurable progress.
+- Correctness, security, accessibility, data integrity, or project safety becomes uncertain.
+- Safe completion requires missing authority or an unapproved scope expansion.
+
+On abort:
+
+1. Stop processes started by the session and capture the failure evidence and abort reason for the report.
+2. Compare the project's current state with the session change manifest. Preserve any path whose ownership is uncertain.
+3. Stop the routine and return the required aborted-session report, listing exactly which session changes remain in place. Do not immediately restart the entire operation.
 
 ## Verification Matrix
 
@@ -183,14 +145,13 @@ Never claim an improvement from a single noisy run. If precise tooling is unavai
 
 Always end with a self-contained summary of the session. Lead with the outcome and include:
 
-- Git synchronization result, branch, upstream, `PRE_SYNC_COMMIT`, `START_COMMIT`, whether synchronization fast-forwarded or merged, and final status
 - Critical and major issues fixed, with their root causes
 - Before/after metrics, sample counts, environment, and commands or journeys used
 - Important files or subsystems changed
 - Correctness and regression checks run
 - Remaining lower-priority opportunities or external blockers
 - Any production origin used and whether it was inspected read-only
-- Whether changes were left uncommitted, committed, and/or pushed; include commit and push details when applicable
-- If aborted, the trigger, rollback actions, and whether the repository was restored completely to its clean starting state
+- Final state of the session's changes: the complete manifest of paths created, modified, or deleted
+- If aborted, the trigger, which session changes remain in place, and any path preserved because its ownership was uncertain
 
 Distinguish measured improvements from expected improvements. Never invent benchmark results.

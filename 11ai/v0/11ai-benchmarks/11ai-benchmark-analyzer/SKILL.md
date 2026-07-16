@@ -5,14 +5,6 @@ description: "Aggregate results across multiple 11ai benchmark repos into a cros
 
 # 11ai Benchmark Analyzer
 
-## Commit authorization
-
-Do not create a git commit unless the user explicitly asks for a commit
-in the current request. Requests to run, audit, judge, finish, report,
-publish, or complete a benchmark lifecycle are not commit authorization.
-Leave changed files uncommitted and report their status. If the user
-explicitly asks for a commit, stage only the in-scope files.
-
 One benchmark says who designed the better page that day. Several
 benchmarks start to say something about the models. This skill reads
 every benchmark repo's data and produces the cross-benchmark view — and

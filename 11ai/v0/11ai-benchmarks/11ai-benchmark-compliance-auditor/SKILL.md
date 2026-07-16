@@ -5,14 +5,6 @@ description: "Mechanically verify that a finished benchmark run obeyed the hard 
 
 # 11ai Benchmark Compliance Auditor
 
-## Commit authorization
-
-Do not create a git commit unless the user explicitly asks for a commit
-in the current request. Requests to run, audit, judge, finish, report,
-publish, or complete a benchmark lifecycle are not commit authorization.
-Leave changed files uncommitted and report their status. If the user
-explicitly asks for a commit, stage only the in-scope files.
-
 A run that broke the rules must not reach judging — a beautiful page that
 hardcoded its content or edited the shared baseline didn't do the task.
 This skill runs the rule checks as commands and writes a machine-readable
@@ -106,9 +98,7 @@ Write `benchmark/audits/<run-id>.json`:
 }
 ```
 
-`pass` is the AND of all non-warning checks. Leave the report
-uncommitted. Only when the user explicitly asked for a commit, include
-it in `bench: audit <run-id>`.
+`pass` is the AND of all non-warning checks.
 
 ## Reporting to the user
 

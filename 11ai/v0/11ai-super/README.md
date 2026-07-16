@@ -1,6 +1,6 @@
 # 11ai Super
 
-Eight long-running skills that synchronize a clean repository, perform a project task repeatedly, verify the result, and stop when material issues are resolved or clearly documented.
+Eight long-running skills that perform a project task repeatedly, verify the result, and stop when material issues are resolved or clearly documented.
 
 ## Choose a skill
 
@@ -17,6 +17,6 @@ Eight long-running skills that synchronize a clean repository, perform a project
 
 ## Shared workflow
 
-Run these skills from the Git repository you want to improve. Each one requires a clean worktree, synchronizes the current branch, records a rollback point, and uses repeated implementation, audit, and verification passes instead of stopping after the first fix. They may create a conflict-free merge commit when a branch has diverged from upstream and cannot fast-forward; they abort and report any conflicted merge.
+Run these skills from the repository you want to improve. Each one uses repeated implementation, audit, and verification passes instead of stopping after the first fix, keeps a manifest of every file it changes, and stops with a full report when the change set becomes unmanageable or troubleshooting outweighs progress.
 
-The skills preserve unrelated work and do not commit or push unless the user explicitly requests it. `11ai-super-creator` applies the shared workflow to a user-specified task, `11ai-super-bugfixing` applies it to evidence-backed software defects, `11ai-super-skill-qa` repairs skill packaging without rewriting skill routines, `11ai-super-readme` is documentation-only, and the other specialist super skills update the project areas named in their playbooks.
+The skills preserve unrelated work. `11ai-super-creator` applies the shared workflow to a user-specified task, `11ai-super-bugfixing` applies it to evidence-backed software defects, `11ai-super-skill-qa` repairs skill packaging without rewriting skill routines, `11ai-super-readme` is documentation-only, and the other specialist super skills update the project areas named in their playbooks.

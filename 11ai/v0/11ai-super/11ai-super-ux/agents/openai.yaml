@@ -1,4 +1,4 @@
 interface:
   display_name: "11ai Super UX"
-  short_description: "Sync, audit, fix, and continuously improve UX"
-  default_prompt: "Use $11ai-super-ux to sync this clean repository from origin, merge incoming changes cleanly if required, and iteratively fix and verify its UI/UX."
+  short_description: "Audit, fix, and continuously improve a product's UX"
+  default_prompt: "Use $11ai-super-ux to audit this project's UI/UX, then iteratively fix and verify improvements until the experience meets a high bar."

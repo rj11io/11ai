@@ -5,14 +5,6 @@ description: "Prepare, launch, and record a single benchmark run in an existing 
 
 # 11ai Benchmark Runner
 
-## Commit authorization
-
-Do not create a git commit unless the user explicitly asks for a commit
-in the current request. Requests to run, audit, judge, finish, report,
-publish, or complete a benchmark lifecycle are not commit authorization.
-Leave changed files uncommitted and report their status. If the user
-explicitly asks for a commit, stage only the in-scope files.
-
 A benchmark result is only comparable if every run started from the same
 state with the same prompt. This skill makes that guarantee mechanical:
 it prepares one run, records exactly what the agent was given, and leaves
@@ -81,10 +73,9 @@ Append to `benchmark/runs.json` (create as `[]` if missing):
 ```
 
 `baselineCommit` is the anchor everything downstream diffs against.
-Leave the ledger and frozen prompt uncommitted. The auditor treats those
-runner-owned paths as workflow metadata and compares committed, staged,
-unstaged, and untracked output against `baselineCommit`. Only when the
-user explicitly asked for a commit, use `bench: prepare <run-id>`.
+The auditor treats the ledger and frozen prompt as runner-owned workflow
+metadata and compares committed, staged, unstaged, and untracked output
+against `baselineCommit`.
 
 ## Step 5 — Launch or hand off
 

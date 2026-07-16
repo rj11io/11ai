@@ -31,6 +31,10 @@
       "source": "./11ai/v0/11ai-codebase"
     },
     {
+      "name": "11ai-git-operations",
+      "source": "./11ai/v0/11ai-git-operations"
+    },
+    {
       "name": "11ai-integrations",
       "source": "./11ai/v0/11ai-integrations"
     },

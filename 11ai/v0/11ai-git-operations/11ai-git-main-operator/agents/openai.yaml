@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Git Main Operator"
+  short_description: "Run a task safely on the main branch with Git discipline"
+  default_prompt: "Use $11ai-git-main-operator to synchronize this repository's main branch, perform the requested task, quality-check it, and report everything done without committing unless I ask."

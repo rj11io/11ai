@@ -5,14 +5,6 @@ description: "Score audited benchmark runs on quality — capture screenshots of
 
 # 11ai Benchmark Judge
 
-## Commit authorization
-
-Do not create a git commit unless the user explicitly asks for a commit
-in the current request. Requests to run, audit, judge, finish, report,
-publish, or complete a benchmark lifecycle are not commit authorization.
-Leave changed files uncommitted and report their status. If the user
-explicitly asks for a commit, stage only the in-scope files.
-
 Judging is where benchmarks usually go soft: unpinned criteria, judges
 who know which model made what, scores that drift between sessions. This
 skill keeps it honest with three mechanisms: a rubric frozen before
@@ -125,9 +117,6 @@ none of these fields are optional:
   ]
 }
 ```
-
-Leave the judging artifacts uncommitted. Only when the user explicitly
-asked for a commit, commit them as `bench: judge <n> runs`.
 
 ## Step 6 — Report to the user
 

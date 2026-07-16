@@ -1,4 +1,4 @@
 interface:
   display_name: "11ai Super Performance"
-  short_description: "Sync, audit, fix, and optimize performance"
-  default_prompt: "Use $11ai-super-performance to sync a clean repository, fix its critical and major performance problems, and summarize the verified results."
+  short_description: "Audit, fix, and optimize project performance"
+  default_prompt: "Use $11ai-super-performance to fix the project's critical and major performance problems, and summarize the verified results."

@@ -57,16 +57,3 @@ Duplication is the main failure mode: two READMEs describing the same thing will
 - Behavior: confirm from the code, a config file, or a CI workflow — not from an older README.
 
 If you can't verify a claim, leave it out and record it in the session summary as an open question.
-
-## Conventional Commits for documentation changes
-
-Use the `docs` type. Scope is optional — use it when the change is confined to one area.
-
-```
-docs: update readmes across packages with current scripts
-docs(www): add readme for the website app
-docs(skills): document the codebase skills group
-docs: fix stale setup steps in root readme
-```
-
-One commit for the whole pass is fine. Split into several only when the changes serve clearly different areas and a reviewer would benefit from seeing them apart.

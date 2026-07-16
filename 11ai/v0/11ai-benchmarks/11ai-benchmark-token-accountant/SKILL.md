@@ -5,14 +5,6 @@ description: "Compute the tokens spent and dollar cost of benchmark work by pars
 
 # 11ai Benchmark Token Accountant
 
-## Commit authorization
-
-Do not create a git commit unless the user explicitly asks for a commit
-in the current request. Requests to run, audit, judge, finish, report,
-publish, or complete a benchmark lifecycle are not commit authorization.
-Leave changed files uncommitted and report their status. If the user
-explicitly asks for a commit, stage only the in-scope files.
-
 A benchmark result without its cost is half a result. This skill turns
 "how much did that run spend" into data: token counts extracted from the
 harness's own session files (never estimated), priced with rates that are
@@ -204,9 +196,6 @@ includes unrelated. The reviewer copies this block verbatim into
   the price"). Never invent scores — no results file, no quality joins.
 - **Benchmark-wide**: spend per provider, cheapest and most expensive
   run, most cache-efficient harness.
-
-Leave all cost artifacts uncommitted. Only when the user explicitly
-asked for a commit, commit them as `bench: costs <run-ids>`.
 
 ## Step 5 — Report
 

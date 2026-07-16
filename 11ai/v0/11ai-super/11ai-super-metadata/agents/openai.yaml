@@ -1,4 +1,4 @@
 interface:
   display_name: "11ai Super Metadata"
   short_description: "Audit, fix, and improve project SEO metadata"
-  default_prompt: "Use $11ai-super-metadata to sync a clean repository from origin, cleanly merge incoming changes when necessary, audit and fix its metadata and SEO, generate needed OG images, and iterate to a verified high-quality result."
+  default_prompt: "Use $11ai-super-metadata to audit and fix the project's metadata and SEO, generate needed OG images, and iterate to a verified high-quality result."
