@@ -1,3 +1,19 @@
+# [1.15.0](https://github.com/rj11io/11ai/compare/v1.14.3...v1.15.0) (2026-07-17)
+
+
+### Bug Fixes
+
+* improve benchmarks ([d7453f3](https://github.com/rj11io/11ai/commit/d7453f336a098aab1914a65aaf52f4bc1e8bdefc))
+* refactor skill groups into plugins ([7472881](https://github.com/rj11io/11ai/commit/7472881798bbbbaf22873d7d04c5ebaf47496671))
+* update workflow ([7583bfb](https://github.com/rj11io/11ai/commit/7583bfbdf064eed2542a76763a5fd6bd6c33af84))
+* validate skills ([65941dd](https://github.com/rj11io/11ai/commit/65941dde2bc3f94ded101d270241cf79c3f5cbb7))
+
+
+### Features
+
+* git operations skills ([5b1e3d1](https://github.com/rj11io/11ai/commit/5b1e3d120a47c24f9f2f053ede55067c57e0f559))
+* init benchmark www ([447c3f3](https://github.com/rj11io/11ai/commit/447c3f3ec65cdd179ed4db1695e6e44e52b4dfbd))
+
 ## [1.14.3](https://github.com/rj11io/11ai/compare/v1.14.2...v1.14.3) (2026-07-15)
 
 

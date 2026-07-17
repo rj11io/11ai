@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-benchmarks",
-  "version": "1.14.3",
+  "version": "1.15.0",
   "description": "Create and operate reproducible AI-coding benchmarks through immutable async cycles: mode-aware creators and runner, frozen machine-readable rubrics, opt-in static content, mechanical audits, sequential blind AI and human judges with deterministic aggregation, exhaustive granular token/cost accounting across benchmark, judge, identified, unidentified, and total scopes, reviewed reports, cross-benchmark analysis, and recursive data-rich benchmark websites.",
   "author": {
     "name": "rj11io",
