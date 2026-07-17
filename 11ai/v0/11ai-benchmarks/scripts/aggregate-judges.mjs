@@ -59,32 +59,58 @@ const anonymized = [...new Set(judges.flatMap((j) => j.runs.map((r) => r.anonymi
 const runs = anonymized.map((runId) => {
   const dimensionScores = {}
   const dispersion = {}
+  let availableWeight = 0
+  let availableDimensionCount = 0
   for (const dimension of dimensions) {
-    const values = judges.map((j) => j.runs.find((r) => r.anonymizedAs === runId)?.dimensions?.[dimension.id]?.score)
-    if (values.some((v) => !Number.isFinite(v))) throw new Error(`missing ${dimension.id} score for ${runId}`)
+    const values = judges
+      .map((j) => j.runs.find((r) => r.anonymizedAs === runId)?.dimensions?.[dimension.id]?.score)
+      .filter(Number.isFinite)
+    if (!values.length) {
+      dimensionScores[dimension.id] = null
+      dispersion[dimension.id] = { min: null, max: null, range: null, count: 0 }
+      continue
+    }
     dimensionScores[dimension.id] = median(values)
     dispersion[dimension.id] = {
-      min: Math.min(...values), max: Math.max(...values), range: Math.max(...values) - Math.min(...values),
+      min: Math.min(...values), max: Math.max(...values), range: Math.max(...values) - Math.min(...values), count: values.length,
     }
+    availableWeight += dimension.weight
+    availableDimensionCount += 1
   }
-  const ranks = judges.map((j) => j.overallRanking.indexOf(runId) + 1)
-  if (ranks.some((rank) => rank < 1)) throw new Error(`missing holistic rank for ${runId}`)
-  const total = dimensions.reduce((sum, d) => sum + dimensionScores[d.id] * d.weight / 100, 0)
-  const borda = ranks.reduce((sum, rank) => sum + (anonymized.length - rank), 0)
-  return { anonymizedAs: runId, dimensions: dimensionScores, total, holisticMedianRank: median(ranks), holisticBorda: borda, dispersion }
+  const ranks = judges.map((j) => j.overallRanking.indexOf(runId) + 1).filter((rank) => rank > 0)
+  const total = availableWeight
+    ? dimensions.reduce((sum, d) => sum + (Number.isFinite(dimensionScores[d.id]) ? dimensionScores[d.id] * d.weight : 0), 0) / availableWeight
+    : null
+  const maxRanked = Math.max(0, ...judges.map((j) => j.overallRanking.length))
+  const borda = ranks.length ? ranks.reduce((sum, rank) => sum + (maxRanked - rank), 0) : null
+  return {
+    anonymizedAs: runId,
+    dimensions: dimensionScores,
+    total,
+    scoreCoverage: availableWeight,
+    dimensionCoverage: `${availableDimensionCount}/${dimensions.length}`,
+    rankable: availableDimensionCount > 0,
+    holisticMedianRank: ranks.length ? median(ranks) : null,
+    holisticBorda: borda,
+    dispersion,
+  }
 })
 
 const heaviest = [...dimensions].sort((a, b) => b.weight - a.weight)[0].id
-runs.sort((a, b) => b.total - a.total || a.holisticMedianRank - b.holisticMedianRank || b.dimensions[heaviest] - a.dimensions[heaviest])
+const rankableRuns = runs.filter((run) => run.rankable)
+const unrankableRuns = runs.filter((run) => !run.rankable)
+rankableRuns.sort((a, b) => b.total - a.total || (a.holisticMedianRank ?? Number.POSITIVE_INFINITY) - (b.holisticMedianRank ?? Number.POSITIVE_INFINITY) || (b.dimensions[heaviest] ?? -1) - (a.dimensions[heaviest] ?? -1))
 let prior = null
 let rank = 0
-runs.forEach((run, index) => {
+rankableRuns.forEach((run, index) => {
   const key = `${run.total}|${run.holisticMedianRank}|${run.dimensions[heaviest]}`
   if (key !== prior) rank = index + 1
   run.rank = rank
-  run.scoreHolisticDisagreement = Math.abs(rank - run.holisticMedianRank)
+  run.scoreHolisticDisagreement = run.holisticMedianRank == null ? null : Math.abs(rank - run.holisticMedianRank)
   prior = key
 })
+unrankableRuns.forEach((run) => { run.rank = null; run.scoreHolisticDisagreement = null })
+runs.splice(0, runs.length, ...rankableRuns, ...unrankableRuns)
 
 const output = {
   schemaVersion: 2,
@@ -95,7 +121,7 @@ const output = {
   cycleId: judges[0].cycleId,
   rubricSha,
   evidenceSha,
-  algorithmVersion: "median-weighted+borda-v1",
+  algorithmVersion: "median-weighted+borda-v2-partial-aware",
   judgeIds: ids.sort(),
   judgeCounts: {
     total: judges.length,

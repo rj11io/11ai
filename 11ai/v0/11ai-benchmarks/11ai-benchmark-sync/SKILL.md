@@ -50,10 +50,14 @@ Use the deterministic detector rather than guessing from a nearby directory:
 node <plugin>/scripts/detect-next-apps.mjs <benchmark-tree-root>
 ```
 
-Benchmark WWW must update existing data, routes, code, components, design,
-content, filters, charts, and hierarchy indexes from the latest reviewed and
-analyzed artifacts. Preserve unrelated user code and use data adapters or
-owned sections instead of hardcoding results.
+Benchmark WWW must update only non-run exploration websites and their
+website-owned generated data—catalog, benchmark, and cycle UI, routes,
+components, design, content, filters, charts, and hierarchy indexes—from the
+latest reviewed and analyzed artifacts. It may read run metadata, but must
+never modify benchmark run applications, run folders, prompts, evidence,
+screenshots, cost/review/cycle artifacts, or `current.json`. Preserve unrelated
+user code and use data adapters or owned sections instead of hardcoding
+results. Run `scripts/verify-www-scope.mjs` on the final changed paths.
 
 ## Publication and idempotency
 

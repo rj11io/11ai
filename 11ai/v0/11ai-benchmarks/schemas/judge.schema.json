@@ -17,6 +17,8 @@
     "judgePromptTemplateSha": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
     "judgePromptInstanceSha": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
     "judgePromptVariables": { "type": "object", "additionalProperties": { "type": "string" } },
+    "partialEvidence": { "type": "boolean" },
+    "unrankedRuns": { "type": "array", "items": { "type": "object", "required": ["anonymizedAs", "reason"], "properties": { "anonymizedAs": { "type": "string" }, "reason": { "type": "string", "minLength": 1 } }, "additionalProperties": true } },
     "identityBlinded": { "type": "boolean" },
     "runs": {
       "type": "array",
@@ -26,7 +28,10 @@
         "required": ["anonymizedAs", "dimensions"],
         "properties": {
           "anonymizedAs": { "type": "string" },
-          "dimensions": { "type": "object", "additionalProperties": { "type": "object", "required": ["score", "justification"], "properties": { "score": { "type": "number", "minimum": 1, "maximum": 10 }, "justification": { "type": "string", "minLength": 1 } }, "additionalProperties": true } }
+          "judgingStatus": { "enum": ["scored", "partially-scored", "unscorable"] },
+          "unscoredDimensions": { "type": "array", "items": { "type": "string" } },
+          "evidenceLimits": { "type": "array", "items": { "type": "string" } },
+          "dimensions": { "type": "object", "additionalProperties": { "type": "object", "required": ["score", "justification"], "properties": { "score": { "type": ["number", "null"], "minimum": 1, "maximum": 10 }, "justification": { "type": "string", "minLength": 1 }, "availability": { "enum": ["scored", "unavailable"] } }, "additionalProperties": true } }
         },
         "additionalProperties": true
       }

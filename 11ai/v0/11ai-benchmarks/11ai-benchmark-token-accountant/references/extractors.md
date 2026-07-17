@@ -19,8 +19,9 @@ the working directory with `/` replaced by `-` (e.g.
 `-Users-alice-repos-mybench`). One file per session; a repo can have
 many sessions.
 
-**Shape**: one JSON object per line. Token data lives on lines with
-`type: "assistant"` under `message.usage`:
+**Shape**: one JSON object per line. Depending on the Claude Code release,
+token data lives on `type: "assistant"` lines under either `usage` (current)
+or `message.usage` (older):
 
 ```json
 "message": {
@@ -37,8 +38,10 @@ many sessions.
 
 Rules:
 
-- **Dedupe by `message.id`.** Streaming writes the same message (same id,
-  same usage) on multiple lines; keep one per id (the last).
+- **Dedupe by message id when present.** Streaming writes the same message
+  (same id, same usage) on multiple lines; keep one per id (the last). Older
+  exports may omit an id; dedupe the exact model+usage payload instead of
+  counting every repeated streaming line.
 - The four usage fields are **disjoint**: `input_tokens` here is the
   *uncached* remainder — total prompt = input + cache_creation +
   cache_read. Sum each field separately.
@@ -69,8 +72,9 @@ silently calling it 5-minute usage.
 **Location**: `~/.codex/sessions/<yyyy>/<mm>/<dd>/rollout-<timestamp>-<uuid>.jsonl`.
 
 **Shape**: first line is `type: "session_meta"` with `payload.cwd` (the
-repo match) and CLI version. Token data arrives as `type: "token_count"`
-events:
+repo match) and CLI version. Model and effort arrive on
+`type: "turn_context"` under `payload.model` and `payload.effort`. Token
+data arrives as `type: "token_count"` events:
 
 ```json
 "info": {
@@ -93,9 +97,8 @@ Rules:
   is *included in* `input_tokens`, and `reasoning_output_tokens` is
   included in `output_tokens` (`total = input + output`). Billable
   uncached input = `input - cached`.
-- Model id: grep the file for `"model":"..."` (it appears in
-  turn-context entries; `session_meta` has `model_provider`). A single
-  rollout normally uses one model.
+- Read the last `turn_context.payload.model` and `.effort`; do not look only
+  at top-level fields. A single rollout normally uses one model and effort.
 - A run interrupted and resumed produces multiple rollout files with the
   same cwd — match by cwd + the ledger's time window and sum the *final*
   totals of each file.
@@ -127,3 +130,18 @@ delta (there's nothing independent to compare against).
 3. Ambiguity (two runs in the same repo overlapping in time) is a stop for run
    attribution: ask the user rather than guessing. Still retain the thread in
    canonical accounting as `unidentified` so total discovery reconciles.
+
+## Deterministic smoke test
+
+Before accepting a complete accounting, run the bundled extractor against the
+benchmark repository:
+
+```bash
+node ../scripts/account-transcripts.mjs <benchmark-repo>
+```
+
+If usage-bearing transcripts are discovered but no priced run has a numeric
+`totalUsd`, stop the publication gate and report the parser or pricing
+problem. A reconciliation can pass with nulls for genuinely unavailable
+transcripts, but it must not call a measured transcript set complete while
+silently dropping its costs.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Benchmark Troubleshooter"
+  short_description: "Diagnose and repair benchmark lifecycle regressions"
+  default_prompt: "Use $11ai-benchmark-troubleshooter to diagnose and safely repair this benchmark regression."

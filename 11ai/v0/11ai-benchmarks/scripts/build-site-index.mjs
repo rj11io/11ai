@@ -28,6 +28,7 @@ walk(root)
 reviewFiles.sort()
 
 const digest = createHash("sha256")
+digest.update("site-index-generator:v2-run-id-normalization")
 const reviews = reviewFiles.flatMap((file) => {
   const bytes = readFileSync(file)
   digest.update(relative(root, file)).update(Buffer.from([0])).update(bytes).update(Buffer.from([0]))
@@ -81,8 +82,12 @@ for (const { file, data } of reviews) {
   nodes.push(cycle)
   benchmark.children.push(cycleNodeId)
   for (const run of data.runs ?? []) {
-    const runNodeId = `${cycleNodeId}/run:${run.id}`
-    const node = { nodeId: runNodeId, nodeType: "run", title: run.id, parentId: cycleNodeId, children: [], summary: run, metadataCoverage: run.metadataCoverage ?? {} }
+    // v2 reviews may wrap the reviewed run under `run` and expose its stable
+    // key as `runId`; legacy reviews put `id` at the top level.
+    const runId = run.id ?? run.runId ?? run.run?.id
+    if (!runId) continue
+    const runNodeId = `${cycleNodeId}/run:${runId}`
+    const node = { nodeId: runNodeId, nodeType: "run", title: runId, parentId: cycleNodeId, children: [], summary: run, metadataCoverage: run.metadataCoverage ?? {} }
     byId.set(runNodeId, node)
     nodes.push(node)
     cycle.children.push(runNodeId)

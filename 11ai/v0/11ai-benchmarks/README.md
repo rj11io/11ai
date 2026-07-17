@@ -85,6 +85,9 @@ threads found.
   criteria/evidence/artifact schema.
 - `11ai-benchmark-token-accountant` — exhaustive granular transcript, token,
   metadata, price, scope, efficiency, and cost-quality accounting.
+- `11ai-benchmark-troubleshooter` — evidence-first diagnosis and repair of
+  transcript, accounting, lifecycle, review, report, index, and non-run UI
+  regressions without modifying benchmark run artifacts.
 
 ### Review, report, and publish
 

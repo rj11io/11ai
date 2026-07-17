@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-www
-description: "Build, upgrade, or synchronize repository-driven benchmark websites across every discovered root, parent, benchmark, cycle, and run level, updating existing code, design, content, routes, and visualizations from the newest reviewed artifacts. Use specifically for benchmark collection/result websites, lifecycle coverage, searchable/filterable/sortable catalogs, and interactive shadcn views of scores, judges, audits, tokens, costs, scopes, metadata, and history; do not use for general project sites."
+description: "Build, upgrade, or synchronize repository-driven benchmark exploration websites at root, parent, benchmark, and cycle levels, updating non-run UI from the newest reviewed artifacts. Use specifically for benchmark collection/result websites, lifecycle coverage, searchable/filterable/sortable catalogs, and interactive shadcn views of scores, judges, audits, tokens, costs, scopes, metadata, and history. Never modify benchmark run applications, run folders, prompts, evidence, screenshots, or run-owned artifacts; do not use for general project sites."
 ---
 
 # 11ai Benchmark WWW
@@ -9,6 +9,31 @@ Build the public exploration layer for an 11ai benchmark tree. Focus on the
 benchmark catalog, progressively reveal every reviewed datum, and keep all
 levels synchronized across async cycles. This skill is distinct from the
 general `$11ai-www` project-site skill; never edit or invoke that skill here.
+
+## Non-negotiable scope boundary
+
+This skill owns only non-run exploration UI: the root/parent/benchmark/cycle
+catalog, its routes, components, styles, charts, navigation, and generated
+website data such as `site-index.json`. It may read reviewed run metadata to
+display or link to it, but it must never modify the benchmark's run
+applications or run-owned artifacts.
+
+Treat these paths as read-only inputs:
+
+- benchmark run apps such as `app/<run-id>/` or any directory whose name is a
+  known run ID from `runs.json`;
+- `benchmark/runs/`, cycle `runs/`, prompts, generated candidate artifacts,
+  run outputs, and run manifests;
+- judging/evidence directories, including screenshots and interaction traces;
+- benchmark-owned token/cost ledgers, review data, reports, cycle state, and
+  `current.json`.
+
+The skill must not “fix” a run app, regenerate evidence, refresh screenshots,
+rewrite benchmark results, or patch benchmark data to make the website render.
+If source data is malformed, preserve the source and render an explicit
+missing/invalid state in the exploration UI. Run
+`scripts/verify-www-scope.mjs` against the planned changed paths before
+finishing; a protected-path violation is a hard stop.
 
 Read [artifact contracts](../references/artifact-contracts.md) and
 [the website matrix](../references/website-data-and-visualizations.md). Apply
@@ -26,8 +51,9 @@ Walk from the user-named root and discover:
   URLs;
 - run plans, lifecycle state, current pointers, interim/final release sequence,
   coverage waivers, and time-gated targets;
-- application stack, package manager, shadcn components, chart dependency,
-  theme, fonts, deployment config, and repo guidance at every level.
+- website application stack, package manager, shadcn components, chart
+  dependency, theme, fonts, deployment config, and repo guidance at every
+  non-run website level. Do not treat a benchmark run app as a website target.
 
 Do not stop at the first `www/`. Cover every root, parent, and child app found.
 Record ambiguous hierarchy before editing; prefer existing repository grouping.
@@ -58,11 +84,16 @@ Use the bundled deterministic scanner as the baseline implementation:
 node <plugin>/scripts/build-site-index.mjs <benchmark-tree-root> <app-data>/site-index.json
 ```
 
+The `run` nodes above are read-only catalog records. They are not permission
+to edit run-level applications or artifacts. The scanner may read all reviewed
+inputs, but its only write target is the website-owned index file.
+
 ## 3. Information architecture and density
 
-Every level supports breadcrumbs, up/down navigation, latest reviewed state,
-cycle history, source/report links, and drill-down into the exact underlying
-metadata.
+Every non-run level supports breadcrumbs, up/down navigation, latest reviewed
+state, cycle history, source/report links, and drill-down into the exact
+underlying metadata. Run records may be linked or displayed as read-only
+detail, but the skill does not update the run's application UI.
 
 - **Root website:** retain the spacious 11ai editorial rhythm and overview.
 - **All non-root websites/pages:** use a compact analytical mode—smaller hero,
@@ -70,8 +101,8 @@ metadata.
   more information above the fold while preserving readability.
 - **Benchmark list:** primary content at root and parent levels, not a secondary
   marketing section.
-- **Benchmark/cycle/run:** progressive detail from summary to raw provenance;
-  never hide missing or unavailable metadata.
+- **Benchmark/cycle:** progressive detail from summary to raw provenance;
+  never hide missing or unavailable metadata. Run records are read-only.
 
 Prefer one shared component/data vocabulary across separate apps without
 forcing a monorepo or copying static result prose.
@@ -152,16 +183,19 @@ Adding a benchmark, parent, reviewed cycle, run, judge, scope, or metadata field
 must appear after the next build without component edits. Historical cycle URLs
 remain valid. The latest pointer changes only after review.
 
-When an app exists, synchronize its data adapters, routes, components, copy,
-filters, charts, design tokens, and navigation with the latest review/analyzer
-contracts. Preserve unrelated user code and local conventions; replace stable
-owned sections or generated data by ID rather than recreating the app. Show
+When a non-run website app exists, synchronize its data adapters, routes,
+components, copy, filters, charts, design tokens, and navigation with the
+latest review/analyzer contracts. Preserve unrelated user code and local
+conventions; replace stable owned sections or generated data by ID rather than
+recreating the app. Show
 interim/final badges, publication history, completed versus desired coverage,
 time-gated targets, exclusions, waivers, and campaign-open state.
 
 ## 10. Verify
 
 - Validate indexes and every reviewed input.
+- Run `node scripts/verify-www-scope.mjs <tree-root> <changed-path>...` and
+  confirm every changed path is website-owned or generated website data.
 - Typecheck, lint, test, and production-build every modified app.
 - Verify generated route counts at all levels.
 - Test root plus one parent, benchmark, cycle, and run page.
@@ -182,4 +216,9 @@ time-gated targets, exclusions, waivers, and campaign-open state.
 - Dropping unrecognized metadata instead of preserving it.
 - Hiding judge, unidentified, identified-other, or total accounting scopes.
 - Recomputing owned benchmark metrics in UI code.
+- Modifying any benchmark run application, run folder, prompt, evidence,
+  screenshot, run manifest, cost ledger, review artifact, report, cycle state,
+  or `current.json`.
+- Using a benchmark run app as the target website when a non-run exploration
+  website is available.
 - Duplicate nodes or marker sections after a resumed or next-day cycle.

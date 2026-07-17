@@ -9,7 +9,9 @@ Account for every discovered thread, not merely successful benchmark runs. Use
 measured transcript counters, web-verified prices, explicit provenance, and
 reconciled scopes. Read [the shared contracts](../references/artifact-contracts.md),
 [extractor rules](references/extractors.md), and
-[pricing data](references/pricing.json) before parsing.
+[pricing data](references/pricing.json) before parsing. Use the bundled
+`../scripts/account-transcripts.mjs` smoke test before declaring the result
+complete; it handles both current and legacy transcript shapes.
 
 ## Current normalized metrics
 
@@ -29,7 +31,9 @@ At the finest available session → model level, collect:
 Provider counters differ: Codex cached input is a subset of input and reasoning
 is a subset of output; Claude input/cache-write/cache-read are disjoint. Preserve
 provider-native `rawUsage`, then normalize. Use `null` when a class is not
-available—never misrepresent missing as zero.
+available—never misrepresent missing as zero. Do not publish an all-null cost
+result when measured usage-bearing transcripts were found: fix the extractor
+or model-price match, or explicitly stop as blocked.
 
 ## Discover all threads
 
@@ -116,8 +120,12 @@ Use stable IDs and source digests. On resume, merge by `threadId` and rebuild al
 rollups from the canonical thread list; never append totals or duplicate a
 resumed thread. Backfill ledger run cost and timing only from canonical values.
 
-After extraction/classification, write the normalized thread array and rebuild
-scope totals with the bundled deterministic reconciler:
+After extraction/classification, run the deterministic extractor and write the
+normalized thread array, then rebuild scope totals with the bundled reconciler:
+
+```bash
+node <plugin>/scripts/account-transcripts.mjs <benchmark-repo>
+```
 
 ```bash
 node <plugin>/scripts/reconcile-accounting.mjs \

@@ -31,9 +31,15 @@ Report all failures together:
    hashes agree; every judge prompt template/instance hash resolves.
 5. Every aggregate judge ID resolves to one complete AI or human artifact;
    drafts and duplicates are excluded.
-6. Screenshots and other evidence referenced by the cycle exist and match.
+6. Screenshots and other evidence referenced by the cycle exist and match when
+   present. Missing or failed evidence is a recorded coverage limitation when
+   the judge artifact marks the affected dimensions unavailable; it is not a
+   reason to discard otherwise defensible judgments.
 7. Canonical accounting includes every discovered thread, all required scopes,
-   verified pricing/provenance, and a passing reconciliation to total.
+   verified pricing/provenance, and a passing reconciliation to total. If
+   usage-bearing transcripts are present, matched benchmark-run threads must
+   have numeric token and cost totals; an all-null measured cost set is a gate
+   failure owned by the token accountant.
 8. Ledger/cost/audit/judging values agree with their owning artifacts.
 9. Required publication metadata and canonical URLs are present or explicitly
    unavailable.
@@ -44,9 +50,12 @@ Report all failures together:
     optional fields, label lifecycle coverage unknown/legacy, and never invent
     prompt hashes or mutate their frozen cohort.
 
-Missing optional cost fields may publish as unavailable. Missing runs, audits,
-judge inputs, non-reconciling totals, or hash mismatches fail the gate. Point
-each failure to its owning skill.
+Missing optional cost fields may publish as unavailable only when the source
+transcript genuinely lacks that class or pricing. Missing runs, missing judge
+inputs, non-reconciling totals, broken hashes, or evidence-integrity failures
+fail the gate. Missing evidence itself is a warning when partial judging
+records its limitation and preserves the affected dimensions as unavailable.
+Point each failure to its owning skill.
 
 ## Consolidate all reviewed data
 
