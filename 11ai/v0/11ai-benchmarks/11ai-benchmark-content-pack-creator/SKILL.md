@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-content-pack-creator
-description: "Turn raw source material (screenshots, documents, existing sites, product specs, profile exports) into a benchmark's pinned content/ pack — markdown files in the loader format, verified against the repo's parser, with gaps flagged as placeholders instead of invented. Use when the user wants to fill or update a benchmark's content folder from real material. Content edits between runs break comparability — this skill warns when runs already exist."
+description: "Turn user-supplied raw sources into a benchmark's pinned static content/ pack, verified against the repo's parser, with gaps flagged instead of invented. Invoke only when the user explicitly asks for static or pinned content, static markdown fixtures, or conversion of documents/screenshots/sites into a content pack. Do not invoke by default while creating, running, reviewing, or publishing a benchmark merely because content or placeholders exist."
 ---
 
 # 11ai Benchmark Content Pack Creator
@@ -8,7 +8,9 @@ description: "Turn raw source material (screenshots, documents, existing sites, 
 Every run renders the same `content/` files, so those files are the
 benchmark's most load-bearing input: they must exercise the format, they
 must be real, and once the first run starts they must never change. This
-skill converts raw sources into that pack.
+skill converts raw sources into that pack. It is opt-in: never select it
+unless the user explicitly requested static content. A creator may scaffold
+placeholder plumbing without invoking this skill.
 
 ## Step 1 — Check the freeze
 
@@ -74,3 +76,9 @@ List per file: what went in, what was merged or dropped (and why), and
 every placeholder still standing with what the user needs to supply.
 Close with the reminder that the pack should be final before the first
 run — after that it's frozen.
+
+Also record source identities, source hashes when available, extraction method,
+transformation decisions, ordering, placeholders, parser counts, validation
+results, timestamps, and unavailable metadata in a machine-readable content
+manifest. Preserve provenance so reviewers and websites can display how the
+static input was assembled without re-reading prose.

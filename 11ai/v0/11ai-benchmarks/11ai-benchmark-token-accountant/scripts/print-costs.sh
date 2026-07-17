@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
-# print-costs.sh — print every benchmark cost breakdown and judging result
-# found under the current directory (or a directory passed as $1).
-#
-# Scans for benchmark/costs/*.json (written by 11ai-benchmark-token-accountant)
-# and benchmark/results.json (written by 11ai-benchmark-judge), groups them by
-# benchmark repo, and prints readable tables. Read-only; needs bash + python3.
+# Print canonical v2 accounting when present, with a legacy-summary fallback.
 set -euo pipefail
 
 ROOT="${1:-.}"
@@ -13,91 +8,72 @@ trap 'rm -f "$LIST"' EXIT
 
 find "$ROOT" \
   \( -name node_modules -o -name .git -o -name .next \) -prune -o \
-  -type f \( -path "*/benchmark/costs/*.json" -o -path "*/benchmark/results.json" \) -print \
+  -type f \( -path "*/benchmark/costs/accounting.json" -o -path "*/benchmark/costs/summary.json" \) -print \
   | sort > "$LIST"
 
 FILE_LIST="$LIST" python3 <<'PY'
 import json, os, sys
 from collections import defaultdict
 
-paths = [p.strip() for p in open(os.environ["FILE_LIST"]) if p.strip()]
+paths = [line.strip() for line in open(os.environ["FILE_LIST"]) if line.strip()]
 if not paths:
-    print("No benchmark cost or result files found under this directory.")
-    print("Expected: <repo>/benchmark/costs/*.json (token accountant) "
-          "or <repo>/benchmark/results.json (judge).")
+    print("No benchmark accounting files found.")
     sys.exit(0)
 
-repos = defaultdict(lambda: {"costs": [], "summary": None, "results": None})
+repos = defaultdict(dict)
 for path in paths:
     repo = os.path.abspath(path.split("/benchmark/")[0])
     try:
         data = json.load(open(path))
-    except Exception as err:
-        print(f"!! unreadable {path}: {err}")
+    except Exception as error:
+        print(f"!! unreadable {path}: {error}")
         continue
-    if path.endswith("/benchmark/results.json"):
-        repos[repo]["results"] = data
-    elif path.endswith("summary.json"):
-        repos[repo]["summary"] = data
-    else:
-        repos[repo]["costs"].append(data)
+    repos[repo]["accounting" if path.endswith("accounting.json") else "legacy"] = data
 
-def usd(x): return f"${x:,.2f}"
-def tok(n): return f"{n/1_000_000:.2f}M" if n >= 1_000_000 else f"{n/1000:.0f}k"
-def pct(x): return f"{x*100:.0f}%"
+def usd(value):
+    return "n/a" if value is None else f"${value:,.4f}"
+
+def tokens(value):
+    if value is None: return "n/a"
+    if value >= 1_000_000: return f"{value/1_000_000:.2f}M"
+    if value >= 1_000: return f"{value/1_000:.0f}k"
+    return str(value)
+
+def rollup(label, value):
+    value = value or {}
+    print(f"  {label:<30} threads={value.get('threadCount', 0):>4}  tokens={tokens(value.get('tokens')):>8}  cost={usd(value.get('costUsd')):>12}")
 
 for repo, bundle in sorted(repos.items()):
-    print()
-    print("=" * 78)
-    print(f"BENCHMARK: {os.path.basename(repo) or repo}   ({repo})")
-    print("=" * 78)
+    print(f"\n{'=' * 88}\nBENCHMARK: {os.path.basename(repo)}  ({repo})\n{'=' * 88}")
+    accounting = bundle.get("accounting")
+    if accounting:
+        scopes = accounting.get("scopes", {})
+        print("SCOPES")
+        rollup("benchmark", scopes.get("benchmarkScope"))
+        rollup("judge", scopes.get("judgeScope"))
+        for label, value in sorted(scopes.get("identifiedScopes", {}).items()):
+            rollup(f"identified:{label}", value)
+        rollup("unidentified", scopes.get("nonIdentifiedScope"))
+        rollup("benchmark + judge", scopes.get("benchmarkAndJudgeScope"))
+        rollup("TOTAL (all threads)", accounting.get("total"))
+        check = accounting.get("reconciliation", {})
+        print(f"  reconciliation: {'PASS' if check.get('pass') else 'FAIL'}  classified={check.get('classifiedThreadCount', '?')}/{check.get('threadCount', '?')}")
 
-    rows = sorted(bundle["costs"], key=lambda d: -d.get("totals", {}).get("costUsd", 0))
-    if rows:
-        print(f"{'RUN':<30} {'KIND':<17} {'TOKENS':>7} {'CACHE':>6} {'WALL':>7} {'COST':>8}  METHOD")
-        print("-" * 78)
-        total = 0.0
-        for d in rows:
-            t = d.get("totals", {})
-            total += t.get("costUsd", 0)
-            wall_min = d.get("wallTimeMinutes")
-            wall = f"{wall_min:>6.1f}m" if isinstance(wall_min, (int, float)) else f"{'n/a':>7}"
-            label = d.get("runId") or d.get("kind") or "?"
-            print(f"{label:<30} {d.get('kind', 'run'):<17} "
-                  f"{tok(t.get('tokens', 0)):>7} {pct(d.get('cacheHitRate', 0)):>6} "
-                  f"{wall} {usd(t.get('costUsd', 0)):>8}  {d.get('method', '?')}")
-            for model, m in d.get("byModel", {}).items():
-                parts = [f"in={tok(m.get('input', 0))}"]
-                if m.get("cacheWrite"):  parts.append(f"cacheWrite={tok(m['cacheWrite'])}")
-                if m.get("cacheRead"):   parts.append(f"cacheRead={tok(m['cacheRead'])}")
-                if m.get("cachedInput"): parts.append(f"cached={tok(m['cachedInput'])}")
-                parts.append(f"out={tok(m.get('output', 0))}")
-                print(f"    - {model}: {' '.join(parts)} -> {usd(m.get('costUsd', 0))}")
-        print("-" * 78)
-        print(f"{'MEASURED TOTAL':<63} {usd(total):>8}")
-
-    summary = bundle["summary"]
-    if summary and summary.get("buckets"):
-        b = summary["buckets"]
-        print(f"\nBUCKETS  runs={usd(b.get('runsUsd', 0))}  "
-              f"operations={usd(b.get('operationsUsd', 0))}  "
-              f"benchmark={usd(b.get('benchmarkUsd', 0))}  "
-              f"non-benchmark={usd(b.get('nonBenchmarkUsd', 0))}  "
-              f"grand total={usd(b.get('grandTotalUsd', 0))}")
-    if summary and summary.get("unmeasured", {}).get("runs"):
-        un = summary["unmeasured"]
-        print(f"\nUnmeasured runs ({len(un['runs'])}): {', '.join(un['runs'])}")
-        print(f"  reason: {un.get('reason', '')}")
-
-    results = bundle["results"]
-    if results:
-        print(f"\nJUDGING RESULTS  (judges: {results.get('judges', '?')})")
-        costs_by_run = {d.get("runId"): d.get("totals", {}).get("costUsd") for d in rows}
-        for r in sorted(results.get("runs", []), key=lambda r: r.get("rank", 99)):
-            cost = costs_by_run.get(r.get("id"))
-            per_point = f"  ({usd(cost / r['total'])}/pt)" if cost and r.get("total") else ""
-            print(f"  #{r.get('rank', '?')} {r.get('id', '?'):<30} total={r.get('total', '?')}{per_point}")
+        print("\nTHREADS")
+        print(f"  {'THREAD':<28} {'SCOPE':<30} {'TOKENS':>8} {'COST':>12}  METHOD")
+        for thread in sorted(accounting.get("threads", []), key=lambda t: (t.get("classification", ""), t.get("threadId", ""))):
+            usage = thread.get("tokens", {})
+            cost = thread.get("cost", {})
+            total_tokens = usage.get("providerTotal")
+            if total_tokens is None:
+                total_tokens = sum(v for k, v in usage.items() if k in ("inputUncached", "cachedInputRead", "cacheWrite5m", "cacheWrite1h", "outputTotal") and isinstance(v, (int, float)))
+            print(f"  {thread.get('threadId', '?')[:28]:<28} {thread.get('classification', '?'):<30} {tokens(total_tokens):>8} {usd(cost.get('totalUsd')):>12}  {thread.get('method', '?')}")
     else:
-        print("\nNo judging results yet (benchmark/results.json absent).")
+        legacy = bundle.get("legacy", {})
+        print("LEGACY SUMMARY (run the accountant to migrate to reconciled v2 scopes)")
+        for run_id, run in sorted(legacy.get("runs", {}).items()):
+            print(f"  {run_id:<32} {tokens(run.get('tokens')):>8} {usd(run.get('costUsd')):>12}  {run.get('kind', '?')}")
+        totals = legacy.get("totals", {})
+        print(f"  {'legacy total':<32} {tokens(totals.get('tokens')):>8} {usd(totals.get('costUsd')):>12}")
 print()
 PY

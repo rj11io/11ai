@@ -81,7 +81,7 @@ const PLUGIN_CONFIG = [
     dir: "11ai-utils",
     title: "Utilities",
     tagline:
-      "Markdown compression, reverse engineering, reviews, analytics, web design, UI styling, publication CMS, calls to action, and project sites.",
+      "Markdown compression, reverse engineering, reviews, analytics, publication CMS, calls to action, and project sites.",
   },
   {
     slug: "xharness",
@@ -89,6 +89,13 @@ const PLUGIN_CONFIG = [
     title: "Cross-harness",
     tagline:
       "Delegate work to agents running in other CLI harnesses and coordinate between them.",
+  },
+  {
+    slug: "web-design",
+    dir: "11ai-web-design",
+    title: "Web design",
+    tagline:
+      "The 11ai visual language and deliberate content-led styling for accessible, compact, and data-rich interfaces.",
   },
 ] as const
 

@@ -1,146 +1,173 @@
 ---
-name: 11ai-www
-description: "Examine a project, decide what its public site should display, choose a design direction, and build an elegant frontend that presents the project — either in a dedicated www/ folder or embedded in an existing app. The site treats the repository as its single source of truth: real project files are scanned at build time, so content, counts, and catalog pages update automatically when the project changes. Use when the user asks for a project site, a landing page for a repo, a catalog or docs browser over repository content, \"build a www for this\", or \"display the concept of the project\" — and follow through from content inventory to a verified, statically generated build."
+name: 11ai-benchmark-www
+description: "Build or upgrade repository-driven benchmark websites across every discovered root, parent, benchmark, cycle, and run level, using reviewed artifacts as the source of truth, compact non-root layouts, searchable/filterable/sortable benchmark catalogs, and extensive interactive shadcn visualizations of scores, judges, audits, tokens, costs, scopes, metadata, and history. Use specifically for benchmark collection/result websites; do not use for general project sites."
 ---
 
-# 11ai WWW
+# 11ai Benchmark WWW
 
-## Overview
+Build the public exploration layer for an 11ai benchmark tree. Focus on the
+benchmark catalog, progressively reveal every reviewed datum, and keep all
+levels synchronized across async cycles. This skill is distinct from the
+general `$11ai-www` project-site skill; never edit or invoke that skill here.
 
-Turn a repository into a public-facing site in four phases: examine, decide
-content, decide design, execute. The output is a small, fast, statically
-generated frontend whose pages are derived from the project's own files —
-never hand-copied prose that can drift.
+Read [artifact contracts](../references/artifact-contracts.md) and
+[the website matrix](../references/website-data-and-visualizations.md). Apply
+`$11ai-design-styleguides` to every site.
 
-Fully standalone: it carries its own content, design, and execution process
-and needs no other skill. Works in a dedicated `www/` folder or as routes
-embedded in an existing app.
+## 1. Inventory the complete tree
 
-## Phase 1 — Examine the project
+Walk from the user-named root and discover:
 
-Read before building anything:
+- root collection and existing root website;
+- parent/version/family directories and their websites;
+- benchmark repos through `benchmark/benchmark.json`, legacy ledgers, or
+  reviewed cycle data;
+- all reviewed cycles, reports, runs, evidence, analyzer outputs, and canonical
+  URLs;
+- application stack, package manager, shadcn components, chart dependency,
+  theme, fonts, deployment config, and repo guidance at every level.
 
-- root README, LICENSE, CHANGELOG, package manifests (name, version, repo URL)
-- directory layout: what are the project's units of content (skills, packages,
-  posts, recipes, plugins) and how are they grouped
-- the install or getting-started command a new user runs first
-- the project's one distinctive idea worth a dedicated explainer
-- any existing `www/` scaffold: framework, styling stack, theme setup — reuse
-  it, don't replace it
+Do not stop at the first `www/`. Cover every root, parent, and child app found.
+Record ambiguous hierarchy before editing; prefer existing repository grouping.
 
-Write down: elevator pitch (one sentence), unit + group model, primary
-command, canonical URLs (GitHub repo, package registry, project domain).
+## 2. Build one recursive data model
 
-## Phase 2 — Decide what to display
+Generate stable hierarchy nodes for `root → parent → benchmark → cycle → run`
+using `../schemas/site-index.schema.json`. Each node contains parent/children,
+canonical/source URLs, compact summary, complete reviewed payload reference,
+metadata coverage, freshness, and source digest.
 
-Default content inventory, in order:
+Consume, in order:
 
-1. **Hero** — pitch line, then the install/primary command in a
-   terminal-styled block with a copy button. For developer projects the
-   command is the call to action. Add a stats badge (version, unit count,
-   license) computed from the repo.
-2. **"What is it" explainer** — show, don't describe: render a real file or
-   artifact from the repo next to a 3-step story (install → invoke → result).
-3. **Catalog** — searchable, filterable grid over all units, generated from
-   the filesystem at build time.
-4. **Concept spotlight** — one section for the project's most distinctive
-   idea, with a simple diagram or formula.
-5. **Compatibility strip** — quiet row of supported tools/platforms, if
-   relevant.
-6. **Final CTA + footer** — repeat the install command; link GitHub, package
-   registry, changelog, license.
+1. cycle `review/data.json`;
+2. analyzer `leaderboard.json` for cross-benchmark facts;
+3. accountant-owned cost/efficiency metrics already copied into review data;
+4. legacy reviewed `benchmark/report/data.json` only as a compatibility path.
 
-Drill-down information architecture:
+Never calculate scores, prices, cost/point, normalized ranks, or reconciliation
+inside UI components. It is fine to transform owned arrays for chart libraries.
 
-- `/` overview → `/groups/[slug]` group page → `/items/[slug]` item page
-- item pages render the item's source file (markdown or equivalent) in full,
-  with breadcrumbs back up the hierarchy
-- every level carries a CTA deep-linking to that exact path in the source
-  repository, not just the repo root
+Rebuild indexes from all sources and replace entries by stable ID. Never append
+on each build. If source digest is unchanged, produce no data-file diff.
+Use the bundled deterministic scanner as the baseline implementation:
 
-Cut anything the repo cannot back with a real file. No invented
-testimonials, fake logos, or placeholder metrics.
+```bash
+node <plugin>/scripts/build-site-index.mjs <benchmark-tree-root> <app-data>/site-index.json
+```
 
-## Phase 3 — Decide design and style
+## 3. Information architecture and density
 
-Read the audience from the content, then commit to one direction in a
-sentence before styling anything:
+Every level supports breadcrumbs, up/down navigation, latest reviewed state,
+cycle history, source/report links, and drill-down into the exact underlying
+metadata.
 
-- CLI and developer tools: terminal/monospace accents, window-dot code
-  blocks, `$`-prefixed commands, uppercase mono section kickers.
-- Consumer or editorial products: one dominant mood (minimal, editorial,
-  playful, industrial) chosen from the product's own voice — never a generic
-  SaaS template look.
+- **Root website:** retain the spacious 11ai editorial rhythm and overview.
+- **All non-root websites/pages:** use a compact analytical mode—smaller hero,
+  reduced vertical padding, tighter cards, compact filters, dense tables, and
+  more information above the fold while preserving readability.
+- **Benchmark list:** primary content at root and parent levels, not a secondary
+  marketing section.
+- **Benchmark/cycle/run:** progressive detail from summary to raw provenance;
+  never hide missing or unavailable metadata.
 
-Then apply the same rules regardless of direction:
+Prefer one shared component/data vocabulary across separate apps without
+forcing a monorepo or copying static result prose.
 
-- Inventory the existing stack first — framework, CSS system, component
-  library, theme tokens, fonts, dark-mode wiring — and reuse it. Never add a
-  parallel styling system beside one that already works.
-- Style with the scaffold's semantic tokens (background, card, muted,
-  border) instead of raw color values, so light and dark both work without
-  per-component fixes.
-- One accent color; keep everything else neutral. Mono for names,
-  identifiers, and metadata rows; sans for prose.
-- Build hierarchy with type, not decoration: small uppercase mono kickers
-  above sections, tight-tracked semibold headings, generous whitespace, thin
-  borders between sections.
-- Motion restraint: hover transitions and small translates only.
-- Support light and dark from day one; wire into the existing theme toggle
-  if the scaffold has one.
-- Responsive by default; verify mobile before calling it done.
-- Write copy in plain language: short words, active voice, concrete examples
-  before abstractions.
+## 4. Benchmark catalog
 
-## Phase 4 — Execute
+Display at least objective, skill under test, freshness, cycle/run counts,
+winner/score, benchmark cost, judge AI/human composition, value pick, audit
+state, evidence surfaces, and metadata coverage.
 
-Data layer first, pages second:
+Search benchmark, objective, skill, provider, model, harness, run, and metadata.
+Filter group/objective/skill/provider/harness/model/effort/cycle/date/review,
+audit, judge type/count, surface, score, cost, cost/point, wall time, cache rate,
+scope, and field availability. Sort newest/name/score/cost/value/runs/judges,
+cache efficiency, coverage, or completeness. Persist all state in URL params.
 
-- One server-only module scans the repo at build time and exposes typed
-  accessors (`getGroups()`, `getItems()`, `getItem(slug)`).
-- Resolve the content root defensively (try `../` and `./` candidates) so
-  builds work from both the site folder and the repo root.
-- Parse strictly, fall back leniently: one malformed source file must never
-  break the build. Log or flag it; fix the file separately.
-- Auto-discover new groups and units so content added later appears without
-  code changes. Hide empty groups until they have content.
-- Never hardcode counts, versions, or unit names in copy or metadata —
-  compute them.
+Provide column selection, compact/card view where useful, keyboard operation,
+empty states, result counts, and reset controls. On narrow screens prioritize
+identity, status, winner, score, and cost with expandable metadata.
 
-Then:
+## 5. Visualize every useful dimension
 
-- statically generate every page (`generateStaticParams` or equivalent)
-- add per-page titles and descriptions from the scanned data
-- reuse the scaffold's component library; add only small focused components
-  (copy button, terminal block, item card, catalog with search + filter chips)
+Prefer the existing shadcn chart component. If absent, the target uses a
+compatible React/Tailwind/shadcn stack, and installation is authorized, install
+the official shadcn chart component and required dependency. Do not install a
+parallel chart system beside one already present.
 
-## Verification
+Implement the full applicable matrix from the website reference: quality,
+dimensions, disagreement, AI/human judging, audit failures, token composition,
+per-class cost, cache/reasoning efficiency, wall time, cost/point, accounting
+scopes, identified-other labels, unidentified work, total discovered work,
+coverage, pairwise performance, model/harness/provider patterns, operations
+overhead, metadata availability, and cycle timelines.
 
-All of these before reporting done:
+Link list/filter state to charts. Use exact-value tooltips, stable configuration
+colors, accessible controls, table fallbacks, sample size, provenance, missing
+states, responsive layouts, and reduced motion. Prefer honest bars, lines,
+scatterplots, matrices, and small multiples over decorative charts.
 
-- typecheck, lint, and production build pass
-- page count in the build output matches the expected units + groups + fixed
-  pages
-- open the real site in a browser: home, one group, one item page with heavy
-  markdown (code fences, tables), and the catalog search
-- check both themes and a mobile viewport
-- click one GitHub deep link per level and confirm the path exists
+## 6. Preserve all metadata
 
-## Hard fails
+Give every reviewed field a display path. High-value facts appear in summaries;
+secondary metadata appears in expandable panels; full provenance appears on
+run/cycle detail pages. Include raw/normalized token semantics, field
+provenance, unavailable values, rates, thread/session/tool metadata, errors,
+evidence, audit commands, judges, disagreement, scopes, cycle/source hashes,
+and publication freshness.
 
-- content hand-copied from the repo instead of read from it
-- a build that breaks when someone adds or renames a unit
-- hardcoded unit counts anywhere
-- item pages that summarize the source file instead of rendering it
-- GitHub CTAs that all point at the repo root
-- dark-only or light-only styling
-- placeholder copy, fake stats, or invented social proof
+Do not overload the initial list. Progressive disclosure is not omission.
 
-## Litmus checks
+## 7. Copy and calls to action
 
-- If a new unit lands in the repo, does the next build show it with zero code
-  changes?
-- Can a visitor go pitch → group → item → exact source file on GitHub in
-  four clicks?
-- Does the first screen tell a stranger what the project is and give them one
-  command to act on?
+Use plain, evidence-backed copy. Preserve the successful CTA quantity and
+placement from the 11bench pattern while distinguishing:
+
+- **Run it yourself** — reproduce/open the benchmark being viewed, using its
+  source/deployment instructions.
+- **Run your own** — create a benchmark with the plugin, linking to
+  `https://ai.rj11.io/plugins/benchmarks`.
+
+Use both meanings consistently at root, parent, benchmark, and cycle levels.
+
+## 8. Apply the 11ai design language
+
+Follow `$11ai-design-styleguides`: neutral semantic OKLCH tokens, Inter/sans
+prose plus Geist-style mono metadata, thin borders, restrained radii/shadows,
+type-led hierarchy, uppercase mono kickers, one quiet accent, light/dark parity,
+subtle hover motion, and high information clarity. Reuse the target's semantic
+tokens and components. Non-root compactness must not become cramped.
+
+## 9. Static generation and async updates
+
+Scan source artifacts at build time, generate every hierarchy route, and keep
+malformed/partial benchmarks from breaking the whole tree. Label stale/draft
+data and publish only reviewed facts as final.
+
+Adding a benchmark, parent, reviewed cycle, run, judge, scope, or metadata field
+must appear after the next build without component edits. Historical cycle URLs
+remain valid. The latest pointer changes only after review.
+
+## 10. Verify
+
+- Validate indexes and every reviewed input.
+- Typecheck, lint, test, and production-build every modified app.
+- Verify generated route counts at all levels.
+- Test root plus one parent, benchmark, cycle, and run page.
+- Test search/filter/sort/URL persistence and chart/list linkage.
+- Reconcile displayed accounting totals and token classes to source artifacts.
+- Test light/dark, desktop/mobile, keyboard, reduced motion, and missing data.
+- Check both CTA destinations and one exact source deep link per level.
+- Build twice; the second build must not duplicate data or create a content diff.
+
+## Hard failures
+
+- Using the general project-site skill instead of this benchmark skill.
+- Covering only the root website while parent/child apps exist.
+- A spacious marketing layout on dense non-root analytical pages.
+- Hardcoded benchmark lists, counts, results, or chart data.
+- Dropping unrecognized metadata instead of preserving it.
+- Hiding judge, unidentified, identified-other, or total accounting scopes.
+- Recomputing owned benchmark metrics in UI code.
+- Duplicate nodes or marker sections after a resumed or next-day cycle.

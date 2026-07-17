@@ -42,6 +42,11 @@ input content, output surfaces, done criteria. Two extra decisions:
   an allowlist, or still frozen. Whatever it is, it goes in the prompt
   verbatim and the audit checks it.
 
+Also capture the full benchmark metadata envelope: stable ID, objective and
+tags, canonical repository/deployment/source URLs, stack and versions,
+environment constraints, owner/license, creation time, and unavailable fields.
+These become the base of every review, report, filter, and visualization.
+
 ## Step 2 — Build the template
 
 A complete, minimal app skeleton on the default branch:
@@ -55,6 +60,10 @@ A complete, minimal app skeleton on the default branch:
   shipped loader is the floor, not a constraint.)
 - `PROMPT.md` with `{{RUN_ID}}`, `AGENTS.md`, `README.md`.
 - No hub page — the template IS the app each run reshapes.
+- `benchmark/benchmark.json` with `mode: "isolated"`, the selected
+  `runStrategy`, `baselineRef`, dependency/content policies, protected inputs,
+  evidence surfaces, and canonical URLs, plus version-2 ledger/cycle scaffolding
+  from [the shared contracts](../references/artifact-contracts.md).
 
 Tag it: `git tag template-v1`. The tag is the benchmark's identity;
 every run branches from it and every audit diffs against it. Template
@@ -79,15 +88,17 @@ change the rules that isolation makes different:
 ## Step 4 — Run workflow (document in README.md)
 
 1. `git checkout template-v1 && git checkout -b run/<harness>-<model>-<effort>`
-2. Freeze the prompt to `benchmark/prompts/<run-id>.md` on the branch;
+2. Freeze the prompt to `benchmark/prompts/<run-id>.md`; record both the
+   template hash and exact instance hash, then
    record the ledger entry in `benchmark/runs.json` **on the default
    branch** (the ledger spans runs, so it can't live on run branches);
    note `baselineRef: template-v1`.
 3. Hand the frozen prompt to the harness on the run branch.
 4. Close out: fill in the ledger.
 
-The sibling skills work here with one substitution — diff against
-`template-v1` instead of a baseline commit, on the run's branch:
+The mode-aware runner and auditor read `benchmark/benchmark.json` and diff
+against `template-v1` (or the configured baseline ref) instead of assuming an
+`app/<run-id>` folder:
 `$11ai-benchmark-rubric-creator` (freeze the criteria before the first
 run), `$11ai-benchmark-compliance-auditor` (skip folder-isolation; check
 content-untouched, dependency policy, build-from-clean, render, and the

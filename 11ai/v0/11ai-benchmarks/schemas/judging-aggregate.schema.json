@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.rj11.io/schemas/judging-aggregate.schema.json",
+  "title": "11ai judging aggregate",
+  "type": "object",
+  "required": ["schemaVersion", "artifactId", "status", "sourceDigest", "cycleId", "algorithmVersion", "judgeIds", "judgeCounts", "runs"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "artifactId": { "type": "string" },
+    "status": { "const": "complete" },
+    "sourceDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "cycleId": { "type": "string" },
+    "algorithmVersion": { "type": "string" },
+    "judgeIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } },
+    "judgeCounts": { "type": "object", "required": ["total", "ai", "human"], "properties": { "total": { "type": "integer" }, "ai": { "type": "integer" }, "human": { "type": "integer" } } },
+    "runs": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["anonymizedAs", "dimensions", "total", "rank", "holisticMedianRank", "dispersion"], "additionalProperties": true } }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Design Styleguides"
+  short_description: "Apply the 11ai web design language"
+  default_prompt: "Use $11ai-design-styleguides to design this interface in the 11ai visual language."

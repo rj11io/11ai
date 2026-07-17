@@ -12,6 +12,11 @@ handles.
   PROMPT.md              # frozen task, {{RUN_ID}} token (see prompt-template.md)
   AGENTS.md              # template rules + benchmark section (below)
   README.md              # what it measures, folder map, run workflow, judging
+  benchmark/
+    benchmark.json       # mode, policies, evidence surfaces, canonical URLs
+    runs.json            # version-2 run ledger object
+    cycles/              # immutable judging/review/report cohorts
+    current.json         # latest reviewed-cycle pointer
   content/
     README.md            # format spec, read-only warning
     <section>.md         # one file per content section, placeholder-filled

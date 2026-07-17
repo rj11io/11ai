@@ -1,0 +1,4 @@
+interface:
+  display_name: "Human Benchmark Judge"
+  short_description: "Guide human scoring and update aggregates"
+  default_prompt: "Use $11ai-benchmark-human-judge to guide me through scoring this benchmark."

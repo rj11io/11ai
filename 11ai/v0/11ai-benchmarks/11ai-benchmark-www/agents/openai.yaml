@@ -1,4 +1,4 @@
 interface:
-  display_name: "Project Website"
-  short_description: "Build a repository-driven project website"
-  default_prompt: "Use $11ai-www to apply the Project Website workflow to this task."
+  display_name: "Benchmark Website"
+  short_description: "Build data-rich benchmark result websites"
+  default_prompt: "Use $11ai-benchmark-www to build or upgrade this benchmark website hierarchy."

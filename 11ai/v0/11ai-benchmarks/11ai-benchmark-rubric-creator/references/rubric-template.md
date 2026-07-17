@@ -10,12 +10,18 @@ look like — written so a judge can point at a screenshot and say which
 one applies. Vague anchors ("good typography") reintroduce the vibes
 this file exists to remove.
 
+Also write `benchmark/rubric.json` with the same version, freeze date,
+`rubricSha`, and a `dimensions` array. Give every dimension a stable lowercase
+hyphen ID, display name, integer weight, definition, applicable surfaces, and
+`anchors` object with keys `1`, `5`, and `10`. The deterministic judge
+aggregator reads the JSON; the Markdown remains the human source.
+
 ```markdown
 # Rubric — <benchmark name> (v1, frozen <date>)
 
 Judged from screenshots at the defined surfaces. Scores are 1–10 per
 dimension. This file must not change while a judging panel is open; a
-changed rubric is a new version and a new results file.
+changed rubric is a new version and a new judging cycle.
 
 ## 1. Information hierarchy (weight: 30)
 

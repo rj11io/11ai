@@ -5,6 +5,13 @@ session files. Verified against real transcripts on 2026-07-13; if a
 parse comes up empty, inspect one file by hand before assuming the
 format — harness updates move fields.
 
+Normalize without discarding provider-native fields. For every normalized
+field, record whether it was measured, derived, inferred, reported, or
+unavailable. Also extract stable session/conversation/turn/message IDs,
+timestamps, harness/model/version, effort, cwd/ref, parent/subagent links, tool
+calls by type, files touched, errors/retries, compactions, interruption/resume
+events, and exit state whenever the transcript exposes them.
+
 ## Claude Code
 
 **Location**: `~/.claude/projects/<cwd-slug>/*.jsonl`, where the slug is
@@ -51,6 +58,12 @@ Rules:
 **Billing** (Anthropic): `input×rate + cacheWrite×writeRate +
 cacheRead×readRate + output×outputRate`.
 
+Normalized mapping: `inputUncached=input_tokens`,
+`cachedInputRead=cache_read_input_tokens`, cache creation splits into
+`cacheWrite5m`/`cacheWrite1h`, and `inputTotal` is their sum. Preserve an
+unknown TTL as raw cache creation plus an explicit inference rather than
+silently calling it 5-minute usage.
+
 ## Codex
 
 **Location**: `~/.codex/sessions/<yyyy>/<mm>/<dd>/rollout-<timestamp>-<uuid>.jsonl`.
@@ -91,6 +104,12 @@ Rules:
 output×outputRate`. Reasoning tokens are already inside output — do not
 add them again. There is no cache-write charge.
 
+Normalized mapping: `inputTotal=input_tokens`,
+`inputUncached=input_tokens-cached_input_tokens`,
+`cachedInputRead=cached_input_tokens`, `outputTotal=output_tokens`, and
+`reasoningOutput=reasoning_output_tokens`; derive `nonReasoningOutput` only
+when both output counters are available.
+
 ## Reported totals (fallback)
 
 When transcripts aren't on this machine (cloud runs, another laptop),
@@ -105,5 +124,6 @@ delta (there's nothing independent to compare against).
    slug and per-entry `cwd`; Codex: `session_meta.payload.cwd`).
 2. Intersect with the ledger entry's `[startedAt, finishedAt]` window
    (file timestamps or first/last event timestamps).
-3. Ambiguity (two runs in the same repo overlapping in time) is a stop:
-   ask the user rather than guessing an attribution.
+3. Ambiguity (two runs in the same repo overlapping in time) is a stop for run
+   attribution: ask the user rather than guessing. Still retain the thread in
+   canonical accounting as `unidentified` so total discovery reconciles.

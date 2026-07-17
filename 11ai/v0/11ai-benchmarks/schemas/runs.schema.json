@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.rj11.io/schemas/runs.schema.json",
+  "title": "11ai run ledger",
+  "type": "object",
+  "required": ["schemaVersion", "artifactId", "status", "runs"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "artifactId": { "type": "string" },
+    "status": { "type": "string" },
+    "runs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "harness", "model", "promptTemplateSha", "promptInstanceSha", "promptVariables", "contentSha", "startedAt"],
+        "properties": {
+          "id": { "type": "string" },
+          "harness": { "type": "string" },
+          "harnessVersion": { "type": ["string", "null"] },
+          "model": { "type": "string" },
+          "provider": { "type": ["string", "null"] },
+          "effort": { "type": ["string", "null"] },
+          "baselineRef": { "type": ["string", "null"] },
+          "runRef": { "type": ["string", "null"] },
+          "promptTemplateSha": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "promptInstanceSha": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "promptVariables": { "type": "object", "additionalProperties": { "type": "string" } },
+          "contentSha": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "startedAt": { "type": "string" },
+          "finishedAt": { "type": ["string", "null"] },
+          "metadata": { "type": "object", "additionalProperties": true }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

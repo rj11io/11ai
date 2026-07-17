@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.rj11.io/schemas/audit.schema.json",
+  "title": "11ai compliance audit",
+  "type": "object",
+  "required": ["schemaVersion", "artifactId", "status", "sourceDigest", "runId", "pass", "checks", "environment"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "artifactId": { "type": "string" },
+    "status": { "enum": ["draft", "complete", "stale", "superseded"] },
+    "sourceDigest": { "type": "string" },
+    "runId": { "type": "string" },
+    "pass": { "type": "boolean" },
+    "checks": { "type": "array", "items": { "type": "object", "required": ["name", "status", "required", "detail", "evidence"], "properties": { "name": { "type": "string" }, "status": { "enum": ["pass", "fail", "warning", "inconclusive", "not-applicable"] }, "required": { "type": "boolean" }, "detail": { "type": "string" }, "evidence": { "type": "array" } }, "additionalProperties": true } },
+    "environment": { "type": "object" },
+    "runtime": { "type": "object" },
+    "metadataCoverage": { "type": "object" }
+  },
+  "additionalProperties": true
+}

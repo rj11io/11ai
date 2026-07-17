@@ -1,140 +1,108 @@
 ---
 name: 11ai-benchmark-judge
-description: "Score audited benchmark runs on quality — capture screenshots of every run at every output surface, have a panel of model judges score anonymized runs against the frozen rubric, and leave a complete judgement artifact (per-judge scores with justifications, mapping, aggregated benchmark/results.json). Use when the user asks to judge, score, rank, or compare finished runs. Requires passed compliance audits (auditor skill) and an existing frozen benchmark/rubric.md (rubric-creator skill — this skill never writes criteria); the reviewer skill validates and publishes what this produces."
+description: "Run one or more independent AI judges over audited benchmark runs using frozen criteria and identical anonymized evidence, save one immutable artifact per judge, and rebuild the cycle's aggregate after every completed judge. Use when the user asks to judge, score, rank, compare, add an AI judge, or resume AI judging. Requires passed audits, a frozen rubric, and a benchmark cycle; use 11ai-benchmark-human-judge for a human operator."
 ---
 
 # 11ai Benchmark Judge
 
-Judging is where benchmarks usually go soft: unpinned criteria, judges
-who know which model made what, scores that drift between sessions. This
-skill keeps it honest with three mechanisms: a rubric frozen before
-scoring, anonymized runs, and a panel of independent judges whose scores
-are aggregated rather than negotiated.
+Score quality without leaking model identity or letting later judges anchor on
+earlier scores. Treat each judge as an independent observation and rebuild the
+aggregate from all completed judges after every addition.
+
+Read [the shared contracts](../references/artifact-contracts.md) before writing
+artifacts. Use `../schemas/judge.schema.json` and
+`../schemas/judging-aggregate.schema.json`.
 
 ## Preconditions
 
-- At least two runs to compare (judging one run alone produces a number
-  with nothing to anchor it — warn the user).
-- Every run to be judged has a passing report in `benchmark/audits/`.
-  Refuse to judge unaudited or failed runs; list them and point to
-  `$11ai-benchmark-compliance-auditor`.
+- Require at least two eligible runs and passing audit artifacts.
+- Require frozen `benchmark/rubric.md` plus machine-readable
+  `benchmark/rubric.json`; verify its hash.
+- Select or create `benchmark/cycles/<cycle-id>/cycle.json`. Freeze its run
+  membership, prompt-template/content/rubric hashes, and evidence surfaces.
+- Resume a draft cycle when inputs match. Create a new cycle when membership,
+  rubric, evidence requirements, or other frozen inputs changed.
 
-## Step 1 — Require the frozen rubric
+## Capture a complete evidence bundle
 
-`benchmark/rubric.md` must already exist. Use it unchanged — record its
-sha256 (it becomes `rubricSha` in the results) and never edit it here;
-mid-benchmark rubric edits invalidate earlier scores. If the file is
-missing, stop and point to `$11ai-benchmark-rubric-creator`: criteria
-must be written before anyone studies run output, and writing them
-inside a judging session is exactly the fitted-to-results failure that
-skill exists to prevent.
+Capture every run with identical settings and write cycle-scoped screenshots
+plus `judging/evidence.json`. At minimum record:
 
-## Step 2 — Capture evidence
+- mobile 375×812 and desktop 1440×900 full-page screenshots;
+- every extra defined surface: print pages, dark mode, states, interactions;
+- viewport, media, route, timestamp, browser, OS/runtime, and capture hashes;
+- console messages, page errors, failed requests, HTTP status, and timings;
+- accessibility, performance, interaction, or visual-diff probes when the
+  benchmark requested them;
+- missing, failed, or unavailable evidence explicitly.
 
-Boot the dev server once. For each run, capture every output surface the
-benchmark defines, using whatever browser automation is available (e.g.
-Playwright via `npx playwright`):
+Capture as much defensible metadata as tools expose. Do not infer a pass from
+missing evidence. Runtime errors that violate hard rules belong in the audit;
+non-blocking errors remain visible to judges under the rubric's craft dimension.
 
-- **mobile** — 375×812 viewport, full-page screenshot
-- **desktop** — 1440×900 viewport, full-page screenshot
-- **print** (if the benchmark has a print surface) — render with print
-  media emulation, or export via the browser's PDF printing, one image
-  per page
+## Anonymize once per cycle
 
-Save to `benchmark/screenshots/<run-id>/<surface>.png`. Same viewport
-sizes, same pages, same order for every run — judges must compare like
-with like. Also record per run: any console errors on load (they feed
-the craft dimension).
+Shuffle runs once, write the private mapping to `judging/mapping.json`, and use
+stable labels for the entire cycle. The judge-visible evidence must remove run
+IDs, paths, model/provider/harness names, code authorship, and cost. Record the
+shuffle seed and anonymization method privately.
 
-## Step 3 — Anonymize
+## Run judges sequentially or as an explicit panel
 
-Assign each run a letter (Run A, Run B, ...) by shuffled order and write
-the mapping to `benchmark/judging/<session>/mapping.json`. Judges see
-letters and screenshots only — never run ids, folder names, or code
-authorship hints. This matters most when the judges are models: a judge
-must not be able to favor its own family.
+Default to three judges; use five for consequential comparisons. A user may add
+judges later. For each judge:
 
-## Step 4 — Panel scoring
+1. Allocate a stable `judgeId`; never reuse or overwrite a completed ID.
+2. Give only the frozen rubric, anonymized evidence for all runs, and scoring
+   instructions. Do not reveal previous judge files or the aggregate.
+3. Score every dimension 1–10 against its concrete anchors. Require a concise
+   visible-evidence justification for every score.
+4. Collect an independent holistic `overallRanking` after dimension scoring.
+5. Record judge model/provider/harness/version, effort, timing, prompt hash,
+   evidence/rubric hashes, errors, retries, and token-accounting thread IDs.
+6. Validate and write
+   `judging/judges/<judge-id>.json` with `judgeType: "ai"`.
+7. Before starting the next judge, rebuild the aggregate from every complete
+   judge file using:
 
-Spawn 3 independent judge subagents (5 for a high-stakes comparison).
-Each judge gets: the rubric, the anonymized screenshot sets for ALL
-runs, and instructions to:
+   ```bash
+   node <plugin>/scripts/aggregate-judges.mjs \
+     benchmark/cycles/<cycle-id>/judging/judges \
+     benchmark/rubric.json \
+     benchmark/cycles/<cycle-id>/judging/aggregate.json
+   ```
 
-- score every run on every dimension, 1–10, using the rubric anchors;
-- justify each score in one or two sentences pointing at something
-  visible ("Run C's desktop hierarchy buries the section headings");
-- rank the runs overall at the end, independent of the arithmetic.
+Rebuilding from raw judge files makes retries and next-day resumes idempotent.
 
-Judges must not see each other's scores. Collect each judge's output as
-`benchmark/judging/<session>/judge-<n>.json` in this pinned shape — the
-per-judge files, `mapping.json`, and `results.json` together are the
-judgement artifact that `$11ai-benchmark-reviewer` later validates, so
-none of these fields are optional:
+## Aggregate and interpret
 
-```json
-{
-  "judge": 1,
-  "judgeModel": "<model id that did the scoring>",
-  "scoredAt": "<ISO timestamp>",
-  "runs": [
-    {
-      "anonymizedAs": "A",
-      "dimensions": {
-        "hierarchy": { "score": 8, "justification": "one or two sentences pointing at something visible" }
-      }
-    }
-  ],
-  "overallRanking": ["C", "A", "B"]
-}
-```
+The script computes dimension medians, weighted totals, dispersion, holistic
+median rank, Borda signal, AI/human counts, deterministic ties, and
+score-versus-holistic disagreement. Weighted rubric total remains official.
 
-## Step 5 — Aggregate
+Flag rather than hide:
 
-- Per run per dimension: the **median** across judges (robust to one
-  eccentric judge).
-- Per run total: weighted sum of dimension medians, per the rubric
-  weights.
-- Flag any dimension where judges disagree by 4+ points — quote the
-  conflicting justifications in the results notes instead of silently
-  averaging the disagreement away.
-- De-anonymize and write `benchmark/results.json`:
+- any dimension range of 4+ points;
+- rubric rank versus holistic rank disagreement of 2+ places;
+- human versus AI distribution differences when both exist;
+- incomplete metadata, failed evidence, or a judge exposed to identities;
+- a judge produced by the same session that built a run.
 
-```json
-{
-  "rubricSha": "<sha256 of benchmark/rubric.md>",
-  "judgedAt": "<ISO timestamp>",
-  "session": "benchmark/judging/<session>/",
-  "judges": 3,
-  "runs": [
-    {
-      "id": "codex-gpt5.5-high",
-      "anonymizedAs": "B",
-      "dimensions": { "hierarchy": 8, "typography": 7, "responsiveness": 9, "craft": 6 },
-      "total": 7.6,
-      "rank": 1,
-      "notes": "Judges split 4 vs 8 on typography: ..."
-    }
-  ]
-}
-```
+The next judge must not see these flags until after submitting its own artifact.
 
-## Step 6 — Report to the user
+## Publish handoff
 
-The ranking with totals, the biggest per-dimension gaps between runs,
-any judge disagreements worth a human look, and the next step:
-`$11ai-benchmark-reviewer` validates this judgement artifact together
-with the audits and costs and propagates the results (READMEs, web
-app), and `$11ai-benchmark-reporter` renders the shareable page from
-what the reviewer consolidates. State clearly what was and wasn't
-judged (e.g. "screenshots only — interaction feel was not scored").
+De-anonymize only in reviewed/public artifacts. Report current rank, totals,
+judge composition, disagreements, missing evidence, and exactly what was not
+scored. Scores compare this cohort under this rubric; they are not absolute
+model grades. Hand off to the token accountant, reviewer, and reporter.
 
-## Rules
+## Rejudging and async safety
 
-- Never let the same session both build a run and judge it against
-  others without saying so in the results notes.
-- Re-judging after adding new runs: reuse the frozen rubric, capture the
-  new runs the same way, and re-run the full panel over ALL runs (old
-  scores don't transfer across panels); keep prior results files, don't
-  overwrite them.
-- Scores are for comparison within this benchmark, not absolute grades —
-  say so whenever reporting them.
+- Adding a judge to the same frozen cycle appends one judge artifact and rebuilds
+  the aggregate.
+- Adding runs or changing frozen inputs creates a new cycle; never overwrite the
+  prior aggregate or report.
+- A draft judge may resume under the same ID. A completed judge is immutable;
+  corrections create a superseding ID with an explicit reference.
+- Re-running aggregation with unchanged inputs must produce no file change.

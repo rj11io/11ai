@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.rj11.io/schemas/evidence.schema.json",
+  "title": "11ai anonymized judging evidence",
+  "type": "object",
+  "required": ["schemaVersion", "artifactId", "status", "sourceDigest", "cycleId", "runs", "captureEnvironment"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "artifactId": { "type": "string" },
+    "status": { "enum": ["draft", "complete", "stale"] },
+    "sourceDigest": { "type": "string" },
+    "cycleId": { "type": "string" },
+    "runs": { "type": "array", "items": { "type": "object", "required": ["anonymizedAs", "surfaces", "runtime"], "properties": { "anonymizedAs": { "type": "string" }, "surfaces": { "type": "object" }, "runtime": { "type": "object" }, "metadataCoverage": { "type": "object" } }, "additionalProperties": true } },
+    "captureEnvironment": { "type": "object" }
+  },
+  "additionalProperties": true
+}

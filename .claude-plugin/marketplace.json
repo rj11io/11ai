@@ -47,6 +47,10 @@
       "source": "./11ai/v0/11ai-utils"
     },
     {
+      "name": "11ai-web-design",
+      "source": "./11ai/v0/11ai-web-design"
+    },
+    {
       "name": "11ai-xharness",
       "source": "./11ai/v0/11ai-xharness"
     }

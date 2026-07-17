@@ -86,7 +86,24 @@ function parseOpenAiConfig(skill) {
     "brand_color",
   ])
   const values = new Map()
+  let section = "interface"
+  let implicitInvocation
   for (const line of lines.slice(1)) {
+    if (line === "") continue
+    if (line === "policy:") {
+      section = "policy"
+      continue
+    }
+    if (section === "policy") {
+      const policyMatch = line.match(/^  allow_implicit_invocation: (true|false)$/)
+      if (!policyMatch) {
+        fail(file, `non-canonical policy line: ${line}`)
+        continue
+      }
+      if (implicitInvocation !== undefined) fail(file, "duplicate policy.allow_implicit_invocation")
+      implicitInvocation = policyMatch[1] === "true"
+      continue
+    }
     const match = line.match(/^  ([a-z_]+): ("(?:\\.|[^"\\])*")$/)
     if (!match) {
       fail(file, `non-canonical or unquoted interface line: ${line}`)

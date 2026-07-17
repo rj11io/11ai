@@ -1,181 +1,88 @@
 ---
 name: 11ai-benchmark-reviewer
-description: "Review a benchmark's finished artifacts (judging results, audits, costs) for completeness and consistency, consolidate them into one canonical benchmark/report/data.json, and propagate the results outward — into the benchmark's README, the parent folder's README, the root README, and the web app's data files when one exists. Use when the user asks to review, publish, sync, or propagate benchmark results, or to update the READMEs or site with results. Runs after the judge and token accountant, before the reporter; it validates and distributes but never computes a score or a cost itself."
+description: "Validate one benchmark cycle's configuration, runs, audits, AI/human judging aggregate, exhaustive scope accounting, evidence, and metadata for completeness and consistency; consolidate them without recomputing facts; and idempotently propagate reviewed data to README and website targets. Use to review, approve, sync, publish, refresh, or resume benchmark results."
 ---
 
 # 11ai Benchmark Reviewer
 
-The judge, auditor, and accountant each leave their own artifact. This
-skill is the checkpoint between those artifacts and anything public: it
-verifies they are complete and agree with each other, merges them into
-one canonical data file, and only then propagates the results into the
-READMEs and the web app. If the gate fails, nothing propagates.
+Act as the publication gate. Read
+[the shared contracts](../references/artifact-contracts.md) and validate output
+against `../schemas/review.schema.json`. Copy owned metrics; never recreate them.
 
-It computes nothing new. Every number it writes is copied from an
-artifact under `benchmark/`; a missing number is reported as missing,
-never derived on the spot.
+## Select the cycle
 
-## Step 1 — The review gate
+Select `benchmark/cycles/<cycle-id>/cycle.json`. Resume the latest draft only
+when its frozen run membership and hashes still match. Never fold new runs or a
+changed rubric into an already reviewed cycle. Preserve historical cycles.
 
-Run every check; report all failures together, not just the first:
+## Run the complete gate
 
-1. **Results exist and are anchored** — `benchmark/results.json` exists
-   and its `rubricSha` equals the sha256 of the current
-   `benchmark/rubric.md`. A mismatch means the rubric changed after
-   judging: stop, this needs a re-judge, not a publish.
-2. **Every judged run has a passing audit** in `benchmark/audits/`.
-   Failed-audit runs may appear in results only as disqualified; a
-   judged run with *no* audit file is a gate failure.
-3. **Every judged run has a ledger entry** in `benchmark/runs.json`
-   with `finishedAt` filled, and one `promptSha`/`contentSha` shared by
-   all runs (differing shas mean the runs did different tasks — stop).
-4. **Costs are present and labeled** — each judged run has
-   `benchmark/costs/<run-id>.json` with `method` set (`measured` or
-   `reported`). Missing cost files are a warning, not a failure: the
-   run publishes with its cost marked "not measured", never with a
-   guessed number.
-5. **No artifact disagrees with another** — the ledger's `costUsd`
-   matches the cost file's total; the runs in results, audits, and
-   ledger are the same set; screenshots referenced by the judging
-   session exist on disk.
-6. **Judgement artifact is complete** — the judging session folder has
-   `mapping.json` and one `judge-<n>.json` per judge (see the judge
-   skill's schema).
+Report all failures together:
 
-On failure: list what's wrong, point at the skill that owns the fix
-(`$11ai-benchmark-judge`, `$11ai-benchmark-compliance-auditor`,
-`$11ai-benchmark-token-accountant`), and stop. Do not propagate a
-partial picture.
+1. Configuration and cycle validate; benchmark/cycle/run IDs are unique.
+2. Included runs share template/content/config hashes and each exact prompt
+   instance hash resolves to its frozen file.
+3. Every included run is finished and has the required audit state.
+4. Rubric markdown, rubric JSON, judging evidence, judge files, and aggregate
+   hashes agree.
+5. Every aggregate judge ID resolves to one complete AI or human artifact;
+   drafts and duplicates are excluded.
+6. Screenshots and other evidence referenced by the cycle exist and match.
+7. Canonical accounting includes every discovered thread, all required scopes,
+   verified pricing/provenance, and a passing reconciliation to total.
+8. Ledger/cost/audit/judging values agree with their owning artifacts.
+9. Required publication metadata and canonical URLs are present or explicitly
+   unavailable.
+10. No owned output is newer than or inconsistent with its source digest.
 
-## Step 2 — Consolidate into data.json
+Missing optional cost fields may publish as unavailable. Missing runs, audits,
+judge inputs, non-reconciling totals, or hash mismatches fail the gate. Point
+each failure to its owning skill.
 
-Write `benchmark/report/data.json` — the single source everything
-downstream (READMEs, web app, the reporter's HTML) renders from:
+## Consolidate all reviewed data
 
-```json
-{
-  "benchmark": {
-    "id": "<repo folder name>",
-    "objective": "<from PROMPT.md>",
-    "skillUnderTest": "<from PROMPT.md>",
-    "promptSha": "…", "contentSha": "…", "rubricSha": "…",
-    "generatedAt": "<ISO timestamp>"
-  },
-  "gate": { "pass": true, "checks": [ { "name": "…", "pass": true, "detail": "" } ] },
-  "runs": [
-    {
-      "id": "codex-gpt5.5-high",
-      "harness": "codex", "model": "gpt-5.5", "effort": "high",
-      "rank": 1, "total": 7.6,
-      "dimensions": { "hierarchy": 8, "typography": 7 },
-      "audit": { "pass": true, "failedChecks": [] },
-      "disqualified": false,
-      "cost": { "usd": 1.87, "method": "measured", "tokens": 412000,
-                "cacheHitRate": 0.91, "costPerPoint": 0.25 },
-      "wallTimeMinutes": 42,
-      "screenshots": { "mobile": "benchmark/screenshots/…/mobile.png" },
-      "notes": "<judge disagreement notes worth surfacing>"
-    }
-  ],
-  "costs": { "runsUsd": 0, "operationsUsd": 0, "benchmarkUsd": 0,
-             "nonBenchmarkUsd": 0, "grandTotalUsd": 0 },
-  "judging": { "judges": 3, "session": "benchmark/judging/<session>/" },
-  "publishTargets": { "benchmarkReadme": "…", "parentReadme": "…",
-                      "rootReadme": "…", "webApp": "…" }
-}
-```
+Write `benchmark/cycles/<cycle-id>/review/data.json`. Preserve the full detail
+needed for drill-down and visualization:
 
-The `costs` block is copied from the accountant's
-`benchmark/costs/summary.json` buckets. `publishTargets` records where
-Step 3–4 wrote, so re-runs hit the same places without re-asking.
+- benchmark/config/cycle identity, objectives, skills, policies, hashes, refs;
+- every run's harness/provider/model/effort/version/environment/timing metadata;
+- audits, commands, warnings, errors, evidence surfaces and availability;
+- weighted/dimension scores, ranks, holistic signals, judge composition,
+  dispersion, disagreement, blinding, and judge metadata;
+- normalized token classes, raw/provider usage, per-class costs, rates,
+  efficiency, tooling/session metadata, and cost-quality metrics;
+- benchmark, judge, each identified-other, unidentified, benchmark+judge, and
+  total accounting scopes;
+- metadata coverage, unavailable fields, stale/inferred/reported markers;
+- source/report/deployment URLs and publication targets.
 
-## Step 3 — Propagate to the READMEs
+The reviewer may reshape owned fields into display-friendly arrays but may not
+derive new score, cost, or cross-benchmark facts. Record a `sourceDigest`; if an
+existing complete data file has the same digest, do not rewrite it.
 
-Three levels, all updated the same way: a **marker-delimited section**
-this skill owns and replaces wholesale, leaving everything outside the
-markers untouched. If the markers don't exist yet, append the section
-(benchmark README: after the intro; parent/root: at a `## Results`
-heading). Never edit prose outside your own markers.
+## Propagate idempotently
 
-```
-<!-- 11ai-bench-results:<benchmark-id>:start -->
-…generated section…
-<!-- 11ai-bench-results:<benchmark-id>:end -->
-```
+Update only marker-delimited sections owned by this skill in benchmark, parent,
+and root READMEs. Key markers by benchmark and cycle or by stable leaderboard
+identity; replace matching sections wholesale and never append duplicates.
 
-1. **Benchmark README** (the repo's own `README.md`) — this
-   benchmark's standalone results: a one-line verdict, the scoreboard
-   table (rank, run id, total, audit verdict, cost, cost/point, wall
-   time), disqualified runs struck through, the shas, and a link to
-   `benchmark/report/report.html` (the path is deterministic; the
-   reporter fills it).
-2. **Parent folder README** — the directory that groups this benchmark
-   with its siblings (repeats, versions, or cohorts of the same
-   objective). Update only this benchmark's marker section, so each
-   benchmark's results sit alongside the others': one compact table per
-   benchmark (top 3 + run count + date + link to the full repo README).
-3. **Root README** — the top of the benchmarks tree: this benchmark's
-   summary alongside **all** benchmarks. When two or more benchmarks
-   have results, do not aggregate here yourself — run or refresh
-   `$11ai-benchmark-analyzer` and render its `leaderboard.json`
-   (standings, mean rank, relative score, N printed next to every
-   aggregate) inside a `<!-- 11ai-bench-results:leaderboard:… -->` section,
-   plus one marker section per benchmark. With a single benchmark,
-   render just its table and say the leaderboard starts at two.
+At one benchmark, show verdict, runs, score/audit/judge summary, all accounting
+scope totals, cost/point, freshness, caveats, and report link. At parent/root
+levels use analyzer-owned aggregates and compact summaries with sample size.
 
-Finding the levels: benchmark repo is where `benchmark/` lives; the
-parent is the nearest ancestor directory containing sibling benchmark
-repos (a folder counts when it has `benchmark/runs.json`); the root is
-the top of that tree (usually the git root of the collection, or the
-directory the user names). If the layout is ambiguous — e.g. parent and
-root are the same directory — ask once, write both sections to that one
-README, and record the answer in `publishTargets`.
+For websites, copy reviewed cycle data to the existing data convention and
+refresh hierarchy indexes through `$11ai-benchmark-www`. Never hardcode values
+into components. Do not touch the general `$11ai-www` skill.
 
-## Step 4 — Propagate to the web app
+After a successful gate, update `benchmark/current.json` atomically to the
+cycle ID. Publishing externally still requires user confirmation.
 
-Look for an app in this order: the benchmark repo itself when it's a
-single-app benchmark (the hub), a `www/` folder in the benchmark repo,
-a `www/` folder at the parent, a `www/` folder at the root. If none
-exists, skip and say so.
+## Async rules
 
-The update is **data-driven, never hardcoded into components**:
-
-1. Copy `benchmark/report/data.json` to the app's data convention —
-   `<app>/data/benchmarks/<benchmark-id>.json` (create the folder on
-   first use; for a Next.js app that reads at build time, `public/` or
-   a server-read `data/` folder both work — follow whatever the app
-   already does).
-2. If the app already renders that folder, done — the new file shows
-   up.
-3. If the app has no results page yet, propose adding one minimal page
-   that lists every `data/benchmarks/*.json` and renders each file's
-   scoreboard — and get the user's OK before adding pages to their app.
-   In a single-app benchmark repo, that page must live outside `app/`
-   run folders and must not touch the shared baseline (`lib/`,
-   `globals.css`) — treat the hub's isolation rules as binding on you
-   too.
-
-## Step 5 — Hand off
-
-Point to (or, if the user asked for the full chain, invoke)
-`$11ai-benchmark-reporter` — it renders `benchmark/report/report.html`
-from the same data.json, so the README links resolve.
-
-Publishing beyond the working tree (pushing, deploying the app) names
-models, ranks, and costs publicly — confirm with the user before
-pushing anything outward.
-
-## Rules
-
-- **Gate first, always.** No propagation on a failed gate, and no
-  "publish what we have" override without the user explicitly accepting
-  the listed gaps.
-- **Copy, never compute.** Scores come from results.json, costs from
-  the accountant's files, cross-benchmark aggregates from the
-  analyzer's leaderboard.json. If a number isn't in an artifact, the
-  output says so.
-- **Idempotent.** Re-running replaces marker sections and data files in
-  place; it never appends duplicates or touches content outside its
-  markers.
-- Repeated for every new judging session or cost update — the READMEs
-  and app should never be older than the artifacts.
+- Raw run/audit/judge/accounting artifacts are never overwritten by review.
+- A changed source digest makes the review stale; regenerate the same draft
+  cycle or create a new cycle according to frozen-input rules.
+- Historical reviewed cycles remain addressable.
+- Re-running with unchanged inputs produces zero duplicate sections and ideally
+  a zero diff.
+- Reporter and websites consume this exact file, keeping all surfaces aligned.

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.rj11.io/schemas/review.schema.json",
+  "title": "11ai reviewed cycle data",
+  "type": "object",
+  "required": ["schemaVersion", "artifactId", "status", "sourceDigest", "benchmark", "cycle", "gate", "runs", "judging", "accounting", "metadataCoverage", "publishTargets"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "artifactId": { "type": "string" },
+    "status": { "enum": ["complete", "stale", "superseded"] },
+    "sourceDigest": { "type": "string" },
+    "benchmark": { "type": "object" },
+    "cycle": { "type": "object" },
+    "gate": { "type": "object", "required": ["pass", "checks"] },
+    "runs": { "type": "array" },
+    "judging": { "type": "object" },
+    "accounting": { "type": "object" },
+    "metadataCoverage": { "type": "object" },
+    "publishTargets": { "type": "object" }
+  },
+  "additionalProperties": true
+}

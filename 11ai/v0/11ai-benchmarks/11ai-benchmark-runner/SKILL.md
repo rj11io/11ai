@@ -1,118 +1,81 @@
 ---
 name: 11ai-benchmark-runner
-description: "Prepare, launch, and record a single benchmark run in an existing single-app benchmark repo — pick the run id, freeze the exact prompt given to the agent, write the run ledger entry (benchmark/runs.json), and hand off or launch the harness. Use when the user says to start, kick off, or register a benchmark run for a given harness + model + effort. Not for creating a benchmark (use the creator skills) or checking a finished run (use the compliance auditor)."
+description: "Prepare, launch, resume, and record one run in a configured single-app or isolated benchmark: allocate the run ID, freeze the exact prompt, record template/instance/content hashes and refs, capture available harness and environment metadata, and hand off or launch the harness idempotently. Use when starting, registering, resuming, or closing a benchmark run; not for creating or judging a benchmark."
 ---
 
 # 11ai Benchmark Runner
 
-A benchmark result is only comparable if every run started from the same
-state with the same prompt. This skill makes that guarantee mechanical:
-it prepares one run, records exactly what the agent was given, and leaves
-a ledger entry that the auditor, judge, and reporter build on.
+Guarantee that each run starts from known inputs and remains traceable. Read
+[the shared contracts](../references/artifact-contracts.md) and validate the
+ledger against `../schemas/runs.schema.json`.
 
-Vocabulary: a **harness** is the agent CLI (codex, claude code, ...), a
-**run** is one attempt by one harness + model + effort combination, and
-the **baseline** is the shared repo state runs must not edit.
+## Discover configuration
 
-## Inputs to collect
+Require `benchmark/benchmark.json`. For legacy repos, infer once and propose the
+file without silently changing execution semantics:
 
-- Harness, model, and effort (e.g. `codex`, `gpt-5.5`, `high`), plus the
-  harness version if discoverable (`<harness> --version`).
-- Whether to launch the harness headless from here or just prepare the
-  handoff (ask if unclear; default to prepare-only).
+- single-app/folder: run target `app/<run-id>/`, shared app baseline;
+- isolated/branch, worktree, or repository: full-app target with `baselineRef`;
+- dependency/content/evidence policies come from configuration.
 
-## Step 1 — Pre-flight checks
+This skill deliberately does not prescribe a sequential commit, worktree, or
+archive policy. Obey the repo/operator policy when one exists.
 
-Refuse to start (and tell the user why) unless all of these hold:
+## Preflight
 
-1. The repo is a single-app benchmark: `PROMPT.md` with a `{{RUN_ID}}`
-   token, a `content/` folder, and a hub `app/page.tsx` exist.
-2. `git status` is clean. Uncommitted changes mean the run can't be
-   diffed against a known baseline later. Stop and tell the user; do
-   not commit or stash their changes on their behalf.
-3. `npm run typecheck` and `npm run lint` pass. A dirty baseline becomes
-   every run's failure.
-4. `content/` has no leftover scaffold placeholders (grep for obvious
-   markers like `example.com`, `Placeholder`, `Your Name`). Warn and ask
-   before proceeding if any remain — content edits after the first run
-   invalidate comparisons.
+- Require frozen `PROMPT.md` with `{{RUN_ID}}`, benchmark configuration, and
+  required inputs for the configured content mode.
+- Require a known baseline ref and healthy baseline checks appropriate to mode.
+- Stop on unrelated working-tree changes that make attribution ambiguous. Do
+  not commit, stash, reset, or delete user work.
+- If static placeholders remain, warn and ask whether to proceed. Do not invoke
+  the content-pack creator unless the user explicitly requests static content.
+- Discover harness/model/provider/effort/version, environment, git ref, and
+  whether the user wants prepare-only or headless launch.
 
-## Step 2 — Pick the run id
+## Allocate and freeze
 
-Default `{harness}-{model}-{effort}` with dots kept (`codex-gpt5.5-high`).
-If `app/<id>/` already exists, this is a repeat: append `-r2`, `-r3`, ...
-Never delete or overwrite an existing run folder.
+Default run ID to `{harness}-{model}-{effort}`; append `-r2`, `-r3`, and so on
+for repeats. Never overwrite an ID or artifact.
 
-## Step 3 — Freeze the prompt
+1. Hash frozen `PROMPT.md` with `{{RUN_ID}}` intact as `promptTemplateSha`.
+2. Substitute variables and write `benchmark/prompts/<run-id>.md`.
+3. Hash that exact file as `promptInstanceSha`.
+4. Hash configured static inputs with canonical path/length delimiters as
+   `contentSha`; for external/dynamic content record the pinned snapshot or
+   manifest hash, not an invented file hash.
+5. Record `promptVariables`, baseline/run refs, target, timestamps, harness and
+   environment metadata in the version-2 ledger.
 
-Replace every `{{RUN_ID}}` in `PROMPT.md` and save the result to
-`benchmark/prompts/<run-id>.md`. That file — not `PROMPT.md` — is what
-the agent receives, and it is the permanent record of what this run was
-asked to do.
+Use `../scripts/hash-inputs.mjs --root <benchmark-root> ...`; do not concatenate
+files ambiguously or include clone/worktree-specific absolute paths.
+Comparable runs require the same template/content/config hashes. Instance
+hashes normally differ because the run ID differs.
 
-## Step 4 — Write the ledger entry
+## Launch or hand off
 
-Append to `benchmark/runs.json` (create as `[]` if missing):
+- Prepare-only by default: hand the harness the frozen instance verbatim.
+- Launch headlessly only when requested and supported. Record command shape,
+  process/session/thread identity, start time, and output target without storing
+  secrets.
+- Never paraphrase or improve the frozen instance at handoff.
 
-```json
-{
-  "id": "codex-gpt5.5-high",
-  "harness": "codex",
-  "harnessVersion": "1.2.3",
-  "model": "gpt-5.5",
-  "effort": "high",
-  "baselineCommit": "<git rev-parse HEAD before the agent starts>",
-  "promptSha": "<sha256 of benchmark/prompts/<run-id>.md>",
-  "contentSha": "<sha256 of all content/*.md concatenated in name order>",
-  "startedAt": "<ISO timestamp>",
-  "finishedAt": null,
-  "wallTimeMinutes": null,
-  "costUsd": null,
-  "notes": ""
-}
-```
+## Resume safely
 
-`baselineCommit` is the anchor everything downstream diffs against.
-The auditor treats the ledger and frozen prompt as runner-owned workflow
-metadata and compares committed, staged, unstaged, and untracked output
-against `baselineCommit`.
+Search by run ID and source digest before creating anything. If a prepared or
+running entry exists with matching hashes, resume it. If a complete run exists,
+create a repeat ID. If inputs differ, stop and require a new run/cycle decision.
 
-## Step 5 — Launch or hand off
+## Close out
 
-- **Prepare-only (default)**: tell the user the run is ready and print
-  the exact handoff: open the harness in this repo and give it the
-  contents of `benchmark/prompts/<run-id>.md` as the task.
-- **Headless launch (only if the user asked and the harness CLI is
-  available)**: run it non-interactively in this repo with the frozen
-  prompt as the task (e.g. `codex exec` / `claude -p` style invocation,
-  in the background), and note in the ledger that the run was launched
-  headless.
+Record finish time, exit state, changed paths, run ref when known, console/build
+status, and every available harness/session ID. Leave unknown data null. Do not
+hand-fill tokens, cost, or derived duration: invoke the token accountant, then
+the compliance auditor. A run is eligible for a cycle only after audit passes.
 
-Never paraphrase, trim, or "improve" the frozen prompt at handoff.
+## Idempotency
 
-## Step 6 — Close out the run
-
-When the agent finishes (same session or a later one):
-
-1. Fill in `finishedAt`; leave unknown fields null rather than guessing.
-2. Leave the run's work uncommitted and report the changed paths. Only
-   when the user explicitly asked for a commit, commit the agent's
-   changes only as `run: <run-id>` with nothing else mixed in.
-3. Invoke `$11ai-benchmark-token-accountant` to compute the run's tokens
-   and cost from the harness's session transcript — it backfills
-   `costUsd` and `wallTimeMinutes` in the ledger. Don't hand-fill those
-   fields.
-4. Invoke `$11ai-benchmark-compliance-auditor` for this run id. A run is
-   not eligible for judging until its audit passes.
-
-## Rules
-
-- One run at a time per repo clone: two agents in the same working tree
-  contaminate each other's diffs.
-- Repeats are new runs with new ids (`-r2`), new ledger entries, and the
-  same frozen prompt content — never reuse a ledger entry.
-- If `promptSha` or `contentSha` differs from earlier entries in the
-  ledger, the prompt or content changed between runs. Stop and tell the
-  user: results across that change are not comparable, and the honest
-  options are reverting the change or treating this as a new benchmark
-  version.
+- Merge ledger entries by run ID; never append duplicates.
+- Preserve unknown fields and completed artifacts.
+- Re-running preparation with identical inputs produces no change.
+- Corrections record supersession/provenance rather than erasing history.

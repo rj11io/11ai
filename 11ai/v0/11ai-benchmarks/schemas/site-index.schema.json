@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.rj11.io/schemas/site-index.schema.json",
+  "title": "11ai benchmark website hierarchy index",
+  "type": "object",
+  "required": ["schemaVersion", "artifactId", "status", "sourceDigest", "rootId", "nodes", "sourceCount"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "artifactId": { "type": "string" },
+    "status": { "enum": ["complete", "stale"] },
+    "sourceDigest": { "type": "string" },
+    "rootId": { "type": "string" },
+    "sourceCount": { "type": "integer", "minimum": 0 },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["nodeId", "nodeType", "title", "children", "summary", "metadataCoverage"],
+        "properties": {
+          "nodeId": { "type": "string" },
+          "nodeType": { "enum": ["root", "parent", "benchmark", "cycle", "run"] },
+          "title": { "type": "string" },
+          "parentId": { "type": ["string", "null"] },
+          "children": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+          "summary": { "type": "object" },
+          "metadataCoverage": { "type": "object" },
+          "canonicalUrl": { "type": ["string", "null"] },
+          "sourceUrl": { "type": ["string", "null"] }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

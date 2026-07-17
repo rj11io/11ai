@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.rj11.io/schemas/rubric.schema.json",
+  "title": "11ai machine-readable rubric",
+  "type": "object",
+  "required": ["schemaVersion", "artifactId", "status", "version", "frozenAt", "rubricSha", "dimensions"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "artifactId": { "type": "string" },
+    "status": { "const": "complete" },
+    "version": { "type": ["string", "number"] },
+    "frozenAt": { "type": "string" },
+    "rubricSha": { "type": "string" },
+    "dimensions": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "weight", "definition", "anchors", "surfaces"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "name": { "type": "string" },
+          "weight": { "type": "integer", "minimum": 1, "maximum": 100 },
+          "definition": { "type": "string" },
+          "anchors": { "type": "object", "required": ["1", "5", "10"], "properties": { "1": { "type": "string" }, "5": { "type": "string" }, "10": { "type": "string" } } },
+          "surfaces": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -35,6 +35,15 @@ defaults for the rest.
    specific interactions when the objective calls for them.
 5. **Run naming** — default `app/{harness}-{model}-{effort}`, e.g.
    `app/codex-gpt5.5-high`.
+6. **Content mode** — default `static` only when the objective explicitly uses
+   pinned files; otherwise record `fixtures`, `dynamic`, `external`, or
+   `user-managed`. Do not invoke the content-pack skill unless the user
+   explicitly asks for static content.
+7. **Benchmark metadata** — stable benchmark ID, title, objective/category,
+   skill tags, repository/deployment/source URLs, stack and versions, owner,
+   license, creation time, and every known evaluation/environment constraint.
+   Record unavailable values explicitly so review and websites can expose
+   metadata coverage.
 
 ## Step 2 — Scaffold the baseline app
 
@@ -113,6 +122,12 @@ non-negotiable sections:
   start a run (fill content → replace `{{RUN_ID}}` → hand the prompt to
   the agent), and how runs are judged.
 
+Create `benchmark/benchmark.json` using the plugin's version-2 config schema:
+`mode: "single-app"`, `runStrategy: "folder"`, frozen dependency/content
+policies, required evidence surfaces, protected paths, and canonical URLs.
+Create a version-2 empty ledger object, cycle directory, and `current.json`
+pointer. Read [the shared artifact contracts](../references/artifact-contracts.md).
+
 ## Step 7 — Verify before handing over
 
 All four, every time:
@@ -151,8 +166,9 @@ concrete objective, is in
 
 The sibling skills operate what this one creates: freeze the judging
 criteria with `$11ai-benchmark-rubric-creator` (best done now, before
-any run output exists), fill `content/` from real sources with
-`$11ai-benchmark-content-pack-creator`, start each run with
+any run output exists), optionally fill static `content/` from real sources
+with `$11ai-benchmark-content-pack-creator` only when the user asks for static
+content, start each run with
 `$11ai-benchmark-runner`, gate it with
 `$11ai-benchmark-compliance-auditor`, score with `$11ai-benchmark-judge`,
 cost it with `$11ai-benchmark-token-accountant`, validate and propagate

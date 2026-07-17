@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.rj11.io/schemas/cycle.schema.json",
+  "title": "11ai benchmark cycle",
+  "type": "object",
+  "required": ["schemaVersion", "artifactId", "status", "cycleId", "benchmarkId", "runIds", "promptTemplateSha", "contentSha", "rubricSha", "evidenceSurfaces"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "artifactId": { "type": "string" },
+    "status": { "enum": ["draft", "collecting", "judging", "reviewed", "published", "superseded"] },
+    "cycleId": { "type": "string" },
+    "benchmarkId": { "type": "string" },
+    "runIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } },
+    "promptTemplateSha": { "type": "string" },
+    "contentSha": { "type": "string" },
+    "rubricSha": { "type": "string" },
+    "rubricVersion": { "type": ["string", "number"] },
+    "evidenceSurfaces": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "createdAt": { "type": "string" },
+    "reviewedAt": { "type": ["string", "null"] },
+    "publishedAt": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

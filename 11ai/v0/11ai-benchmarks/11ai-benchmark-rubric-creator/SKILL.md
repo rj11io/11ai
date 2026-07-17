@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-rubric-creator
-description: "Create and freeze a benchmark's judging criteria — benchmark/rubric.md, with 4–6 weighted dimensions and concrete 1/5/10 anchors matched to the skill under test — before any run output is seen. Use when the user wants to define, create, or edit judging criteria or a rubric for a benchmark, and right after scaffolding a new benchmark. The judge skill requires this file and never creates it; editing a rubric after judging has happened means a new version and a full re-judge."
+description: "Create and freeze a benchmark's human-readable rubric.md and machine-readable rubric.json, with 4–6 weighted dimensions, stable IDs, applicable surfaces, and concrete 1/5/10 anchors matched to the skill under test before output is judged. Use to define, create, version, or edit benchmark criteria; post-judging edits require a new version and cycle."
 ---
 
 # 11ai Benchmark Rubric Creator
@@ -19,12 +19,12 @@ first judging panel.
 
 Look at what already exists, in order:
 
-1. **Judging happened** (`benchmark/results.json` or files under
-   `benchmark/judging/` exist) — the current rubric is locked. Editing
+1. **Judging happened** (complete judge or aggregate files exist under any
+   `benchmark/cycles/*/judging/`) — the current rubric is locked. Editing
    it now silently invalidates the scores it produced. The only honest
    path is a new version (`rubric-v2.md` or a versioned heading), a full
    re-judge of every run under the new rubric, and keeping the old
-   results files. Say this and get explicit agreement before touching
+   cycle, aggregate, and report artifacts. Say this and get explicit agreement before touching
    anything.
 2. **Runs exist but nothing is judged** — creating the rubric is still
    fine *if the author hasn't studied the outputs*. Warn about the fit
@@ -77,12 +77,19 @@ sha256 — the judge records
 that as `rubricSha` in the results, proving which criteria produced
 which scores.
 
+Also write `benchmark/rubric.json`: stable dimension IDs, display names,
+definitions, integer weights summing to 100, 1/5/10 anchors, applicable
+surfaces, version, freeze date, and the markdown `rubricSha`. AI and human
+judges plus the deterministic aggregator consume this file. Capture every
+criterion metadata field that can support filtering, disagreement analysis,
+and visualization later.
+
 ## Rules
 
 - Edits **before** any judging: fine — re-freeze (same version if
   nothing was judged against it) and record the new sha256.
-- Edits **after** judging: new version + full re-judge of all runs +
-  old results kept. Never edit in place.
+- Edits **after** judging: new version + new judging cycle + full re-judge of
+  the selected cohort; keep old rubric, judge, aggregate, and report artifacts.
 - This skill writes criteria; it never scores anything. Scoring is
   `$11ai-benchmark-judge`, and only after `$11ai-benchmark-compliance-auditor`
   has passed the runs.

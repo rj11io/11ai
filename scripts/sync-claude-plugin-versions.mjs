@@ -10,22 +10,24 @@ let updated = 0
 
 for (const entry of fs.readdirSync(pluginsRoot, { withFileTypes: true })) {
   if (!entry.isDirectory()) continue
-  const file = path.join(pluginsRoot, entry.name, ".claude-plugin", "plugin.json")
-  if (!fs.existsSync(file)) continue
+  for (const manifestDir of [".claude-plugin", ".codex-plugin"]) {
+    const file = path.join(pluginsRoot, entry.name, manifestDir, "plugin.json")
+    if (!fs.existsSync(file)) continue
 
-  const manifest = JSON.parse(fs.readFileSync(file, "utf8"))
-  const normalized = {}
-  for (const [key, value] of Object.entries(manifest)) {
-    if (key === "version") continue
-    normalized[key] = value
-    if (key === "name") normalized.version = packageJson.version
+    const manifest = JSON.parse(fs.readFileSync(file, "utf8"))
+    const normalized = {}
+    for (const [key, value] of Object.entries(manifest)) {
+      if (key === "version") continue
+      normalized[key] = value
+      if (key === "name") normalized.version = packageJson.version
+    }
+    if (!("name" in normalized)) {
+      throw new Error(`${path.relative(root, file)} is missing its plugin name`)
+    }
+    fs.writeFileSync(file, `${JSON.stringify(normalized, null, 2)}\n`)
+    updated += 1
   }
-  if (!("name" in normalized)) {
-    throw new Error(`${path.relative(root, file)} is missing its plugin name`)
-  }
-  fs.writeFileSync(file, `${JSON.stringify(normalized, null, 2)}\n`)
-  updated += 1
 }
 
-if (updated === 0) throw new Error("No Claude plugin manifests found")
-console.log(`Synchronized ${updated} Claude plugin versions to ${packageJson.version}.`)
+if (updated === 0) throw new Error("No plugin manifests found")
+console.log(`Synchronized ${updated} plugin manifests to ${packageJson.version}.`)

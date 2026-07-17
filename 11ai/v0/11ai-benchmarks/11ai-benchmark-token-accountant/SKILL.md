@@ -1,229 +1,145 @@
 ---
 name: 11ai-benchmark-token-accountant
-description: "Compute the tokens spent and dollar cost of benchmark work by parsing the harness's own session transcripts (Claude Code, Codex, or reported totals), pricing them against a maintained per-model rate file (web-verified, never from memory), and writing structured cost artifacts to benchmark/costs/ at session-level granularity — every thread classified as a run, benchmark operations (judging, audits, scaffolding), or unrelated, with per-bucket and grand totals. Use when the user asks what a run or benchmark cost, how many tokens were spent, what the benchmark cost beyond the runs, or for cost analytics across runs and models."
+description: "Inventory every harness thread found for a benchmark repository, extract the finest available token, cache, output, reasoning, timing, tool, model, and cost metadata from transcripts, classify each thread into benchmark, judge, identified-other, or unidentified scope, reconcile all scopes to a total, and write reproducible cost artifacts with verified pricing. Use for run cost, judging cost, benchmark overhead, complete repo-thread accounting, efficiency analysis, or cost-quality metrics."
 ---
 
 # 11ai Benchmark Token Accountant
 
-A benchmark result without its cost is half a result. This skill turns
-"how much did that run spend" into data: token counts extracted from the
-harness's own session files (never estimated), priced with rates that are
-web-verified (never recalled from memory), computed by a script (never
-mental math).
+Account for every discovered thread, not merely successful benchmark runs. Use
+measured transcript counters, web-verified prices, explicit provenance, and
+reconciled scopes. Read [the shared contracts](../references/artifact-contracts.md),
+[extractor rules](references/extractors.md), and
+[pricing data](references/pricing.json) before parsing.
 
-## Inputs
+## Current normalized metrics
 
-- One run id, several, or "the whole benchmark". Each should have a
-  ledger entry in `benchmark/runs.json` (`startedAt`, `finishedAt`,
-  harness, model) — that's how sessions get matched to runs. Without a
-  ledger, ask the user which session file belongs to which run.
-- The benchmark repo path (for writing `benchmark/costs/`).
+At the finest available session → model level, collect:
 
-## Step 1 — Locate and parse the threads
+- total, uncached, cached-read, 5-minute cache-write, and 1-hour cache-write
+  input tokens;
+- total output, reasoning output, and non-reasoning output tokens;
+- per-token-class cost and total cost;
+- session/thread start, end, active/wall duration, messages, turns, models,
+  provider, harness/version, and source files;
+- cache hit rate, output/input ratio, reasoning share, cost/minute, cost/turn,
+  and transcript-versus-harness cost delta;
+- pricing rates, effective/verified dates, source URL, subscription versus API
+  billing caveat, and stale-pricing state.
 
-Session transcripts live on disk per harness; the exact file formats,
-field meanings, and traps (dedupe rules, cumulative counters, cache-token
-semantics) are documented in
-[references/extractors.md](references/extractors.md) — read it before
-parsing anything.
+Provider counters differ: Codex cached input is a subset of input and reasoning
+is a subset of output; Claude input/cache-write/cache-read are disjoint. Preserve
+provider-native `rawUsage`, then normalize. Use `null` when a class is not
+available—never misrepresent missing as zero.
 
-- **Claude Code**: `~/.claude/projects/<cwd-slug>/*.jsonl` — per-message
-  `usage` blocks, deduped by message id, summed per model.
-- **Codex**: `~/.codex/sessions/<yyyy>/<mm>/<dd>/rollout-*.jsonl` —
-  cumulative `token_count` events; take the last one's
-  `total_token_usage`.
-- **Fallback**: harness-reported totals pasted by the user. Record
-  `method: "reported"` instead of `"measured"` — never present the two
-  as equally solid.
+## Discover all threads
 
-Match sessions to runs by working directory (both harnesses record the
-cwd) plus time window from the ledger. A run may span several sessions
-(resumed work) — sum them all, and list every source file in the output.
-One thread may also contain **several models** (subagents, judge panels):
-always report per model, never blended.
+Search every relevant harness transcript location, historical repository slug,
+renamed path, resumed session, sidechain, and sibling subagent file. Filter by
+recorded cwd/path/ref and a deliberately broad time window. Do not drop open,
+ambiguous, unrelated, unpriced, empty, or failed threads.
 
-**Classify every thread into one of three kinds** — the buckets the
-whole accounting is built on:
+Deduplicate according to the harness format. Give every logical thread a stable
+`threadId`, list every source file, and record resume/parent/subagent relations.
+If attribution remains ambiguous, keep the thread and classify it unidentified.
 
-- **`run`** — a thread counts as a benchmark run only if BOTH hold: its
-  kickoff message is the benchmark's frozen prompt (not a chat like
-  "review the output"), AND it actually wrote files into that run's
-  folder (Claude Code: `Write`/`Edit` tool calls with the run path;
-  Codex: patches/writes into it).
-- **`operations`** — benchmark work that isn't a run: scaffolding the
-  repo, building the content pack, preparing runs, auditing, judging
-  panels, reviewing, reporting. These burn real tokens and belong in
-  the benchmark's price tag, just not in any run's.
-- **`unrelated`** — threads in the same repo/time window that are
-  neither (side chats, other work). Costed so the totals reconcile,
-  reported separately, never mixed into benchmark figures.
+## Capture maximum metadata
 
-Threads that merely *mention* run folders are not runs. Record the
-evidence for each classification in a `verification` field in the cost
-file. Two more traps: **renamed repos** split a run's sessions across
-two project slugs (search the old name's slug too), and **resumed
-sessions** duplicate history into new files (dedupe by message id
-across all files, both slugs).
+Extract when present or defensibly inferable:
 
-## Step 2 — Resolve prices
+- session, conversation, turn, message, request, parent, and subagent IDs;
+- harness/provider/model names and versions, effort, service tier, context size;
+- cwd, repository identity, branch, commit, baseline/run ref, and environment;
+- kickoff hash/match, cycle/run/judge IDs, files read/touched/written;
+- tool calls by type, edits/patches, commands, web calls, errors, retries,
+  compactions, interruptions, resumes, and exit state;
+- timestamps, active gaps, duration, time/turn, tokens/turn, tokens/minute;
+- every raw and normalized token class, per-class cost, cache efficiency;
+- classification evidence, confidence, field provenance, and unavailable fields.
 
-The source of truth is [references/pricing.json](references/pricing.json)
-in this skill: per-model rate entries with `match` patterns, four rate
-dimensions per 1M tokens, an `effectiveDate`, `verifiedAt`, and a
-`sourceUrl` pointing at the provider's official pricing page.
+Label every value `measured`, `derived`, `inferred`, `reported`, or
+`unavailable`. Never infer facts merely because a filename resembles a run ID.
 
-Rules, in order:
+## Classify into mutually exclusive leaf scopes
 
-1. Match the model id against the entries' `match` globs.
-2. **Missing model, or `verifiedAt` older than 30 days → verify on the
-   web** before computing: fetch the provider's official pricing page
-   (OpenAI: developers.openai.com/api/docs/pricing; Anthropic:
-   platform.claude.com/docs/en/pricing), update or add the entry with
-   the new `verifiedAt` and `sourceUrl`. For Anthropic models, the
-   claude-api skill's model table is an acceptable primary source when
-   it is fresher than the pricing file.
-3. **Never fill a rate from memory.** If the web is unreachable and the
-   entry is stale, compute anyway but mark the output
-   `pricingStale: true` and say so.
-4. Cache tokens are not optional. Anthropic bills cache writes at a
-   premium (1.25× input for 5-minute TTL, 2× for 1-hour) and cache reads
-   at 0.1× input; OpenAI bills cached input at ~0.1× with no write
-   charge. A calculation that prices all input tokens at the base rate
-   can be wrong by 5–10× on cache-heavy agent sessions.
+Assign every thread to exactly one leaf:
 
-## Step 3 — Compute (script, not arithmetic)
+1. `benchmark-run` — kickoff matches the frozen prompt and writes into the
+   registered run target.
+2. `benchmark-operation` — scaffold, content preparation, run preparation,
+   audit, accounting, review, report, website, or analysis work; judging is
+   excluded so it remains independently visible.
+3. `judge` — an AI judge or a thread assisting a human judging session. Record
+   cycle ID and judge ID when known.
+4. `identified-other:<label>` — positively identified activity outside those
+   scopes. Preserve arbitrary labels such as `product-work`, `repo-maintenance`,
+   or `documentation`; do not collapse them to generic unrelated work.
+5. `unidentified` — discovered but not attributable with defensible evidence.
 
-Write a small script (run with `npx tsx` or `node`) that reads the
-session file(s) and the pricing entries and emits
-`benchmark/costs/<run-id>.json`. Granularity is not optional: every
-file breaks down to **session → model → token class**, so any total can
-be traced back to the transcript lines that produced it.
+Roll up:
 
-```json
-{
-  "runId": "codex-gpt5.6-sol-high",
-  "kind": "run",
-  "computedAt": "<ISO>",
-  "method": "measured",
-  "wallTimeMinutes": 42.5,
-  "cacheHitRate": 0.91,
-  "sources": ["~/.codex/sessions/2026/07/09/rollout-....jsonl"],
-  "verification": { "kickoffMatchesFrozenPrompt": true, "wroteIntoRunFolder": true, "evidence": "..." },
-  "sessions": [
-    {
-      "source": "~/.codex/sessions/2026/07/09/rollout-....jsonl",
-      "harness": "codex",
-      "startedAt": "<ISO>", "endedAt": "<ISO>",
-      "messages": 214,
-      "byModel": {
-        "gpt-5.6-sol": {
-          "input": 0, "cachedInput": 0, "cacheWrite": 0, "output": 0,
-          "reasoningOutput": 0, "costUsd": 0
-        }
-      }
-    }
-  ],
-  "byModel": {
-    "gpt-5.6-sol": {
-      "input": 0, "cachedInput": 0, "cacheWrite": 0, "output": 0,
-      "reasoningOutput": 0,
-      "costUsd": 0,
-      "ratesUsed": { "per1M": { "input": 5.0, "cachedInput": 0.5, "output": 30.0 }, "sourceUrl": "...", "verifiedAt": "..." }
-    }
-  },
-  "totals": { "tokens": 0, "costUsd": 0 },
-  "checks": { "harnessReportedUsd": null, "deltaPct": null }
-}
+- `benchmarkScope` = benchmark runs + benchmark operations;
+- `judgeScope` = all judge threads;
+- `identifiedScopes` = one rollup for every other label;
+- `nonIdentifiedScope` = unidentified threads;
+- `benchmarkAndJudgeScope` = benchmarkScope + judgeScope;
+- `total` = every discovered thread regardless of benchmark relevance.
+
+Assert leaf counts/tokens/costs reconcile exactly to `total`. Display all scopes
+in summaries and websites. Never use overlapping buckets.
+
+## Resolve prices
+
+Match exact provider model IDs against `pricing.json`. When missing or older
+than 30 days, verify against the provider's official pricing source and update
+the entry. Never recall prices from memory. If verification is unavailable,
+retain the stale rate only with `pricingStale: true`.
+
+Price each class independently. Embed rates in every output so historical files
+remain reproducible after prices change. State that subscription usage is an
+API-equivalent value, not necessarily the user's bill.
+
+## Write artifacts
+
+Write one canonical `benchmark/costs/accounting.json` following
+`../schemas/cost.schema.json`, with full thread records and scope rollups. Also
+write compact derived views without losing the canonical source:
+
+- `benchmark/costs/runs/<run-id>.json`;
+- `benchmark/costs/judges/<judge-id>.json`;
+- `benchmark/costs/identified/<label>.json`;
+- `benchmark/costs/unidentified.json`;
+- `benchmark/costs/summary.json` and `COSTS.md`.
+
+Use stable IDs and source digests. On resume, merge by `threadId` and rebuild all
+rollups from the canonical thread list; never append totals or duplicate a
+resumed thread. Backfill ledger run cost and timing only from canonical values.
+
+After extraction/classification, write the normalized thread array and rebuild
+scope totals with the bundled deterministic reconciler:
+
+```bash
+node <plugin>/scripts/reconcile-accounting.mjs \
+  benchmark/costs/threads.json benchmark/costs/accounting.json
 ```
 
-(`byModel` at the top level is the sum of the per-session blocks; the
-per-session detail is what makes a resumed or multi-model run
-auditable. On request, go one level deeper — a per-turn timeline within
-a session — but don't emit that by default; it makes the files huge for
-little decision value.)
+## Derived metrics owned here
 
-The other two buckets get the same treatment:
+Compute when inputs exist, otherwise write null plus a reason:
 
-- **`benchmark/costs/operations.json`** — `kind: "operations"`, one
-  `threads` array (each entry: label like `judging-panel` /
-  `scaffold` / `audit`, its sessions, byModel, cost), same totals
-  block. This is what operating the benchmark cost on top of the runs.
-- **`benchmark/costs/non-benchmark.json`** — `kind: "unrelated"`, same
-  shape. Exists so the grand total reconciles against everything the
-  transcripts show for this repo; its number never joins benchmark
-  figures.
+- per run/configuration/provider/model/harness/scope token and cost totals;
+- input composition, cache hit/write rates, output/input and reasoning shares;
+- cost/minute, cost/turn, tokens/turn, tokens/minute, and operational overhead;
+- mean/median/spread across repeats;
+- cost per rubric point and cost per normalized score;
+- cost-quality frontier inputs and value flags;
+- pricing and metadata coverage, missing-data counts, and reconciliation deltas.
 
-Non-negotiables:
+The reviewer copies these fields; it does not recompute them.
 
-- **Embed `ratesUsed` in every file.** Prices change; the file must stay
-  reproducible after they do.
-- **Backfill the ledger**: set `costUsd` (and `wallTimeMinutes` if the
-  session timestamps give it) on the run's entry in
-  `benchmark/runs.json`.
-- **Sanity check**: when the harness reported its own cost (Claude
-  Code's `/cost`, Codex's summary), compare; flag a delta over 5% in
-  `checks` and in your report.
+## Report
 
-## Step 4 — Aggregate
-
-Whenever more than one cost file exists, also write
-`benchmark/costs/summary.json` and a readable `benchmark/costs/COSTS.md`.
-The summary's spine is the **bucket block** — the three kinds rolled up
-so "what did this benchmark cost" has one authoritative answer:
-
-```json
-"buckets": {
-  "runsUsd": 0,
-  "operationsUsd": 0,
-  "benchmarkUsd": 0,
-  "nonBenchmarkUsd": 0,
-  "grandTotalUsd": 0
-}
-```
-
-(`benchmarkUsd` = runs + operations; `grandTotalUsd` additionally
-includes unrelated. The reviewer copies this block verbatim into
-`benchmark/report/data.json`.) Around it:
-
-- **Per run**: total cost, tokens in/out, **cache hit rate**
-  (cached-or-read input ÷ total input — a real efficiency differentiator
-  between harnesses), cost per minute of wall time.
-- **Per configuration** across repeats (`-r2`, ...): mean and spread.
-- **Per operations thread**: what judging, auditing, and scaffolding
-  each cost — operating overhead is a real number worth watching.
-- **Joined with `benchmark/results.json`** when it exists: cost per
-  rubric point, and the cost-vs-score framing ("2nd place at a fifth of
-  the price"). Never invent scores — no results file, no quality joins.
-- **Benchmark-wide**: spend per provider, cheapest and most expensive
-  run, most cache-efficient harness.
-
-## Step 5 — Report
-
-For a quick console view of everything already computed, run
-[scripts/print-costs.sh](scripts/print-costs.sh) — it scans the current
-directory (or `$1`) for `benchmark/costs/*.json` and
-`benchmark/results.json` across any number of benchmark repos and prints
-per-run tables, per-model breakdowns, unmeasured-run notes, and
-cost-per-point when judging results exist. It only prints existing data;
-it never computes or prices anything.
-
-When writing your own summary, lead with the buckets — benchmark cost
-(runs + operations), unrelated cost, grand total — then one line per
-run. Then the comparisons that change decisions (cost per point, cache
-efficiency, operations overhead, outliers). State the method per run —
-measured from which transcripts, or reported — and any stale-pricing or
-delta flags. Costs are exact for
-API-billed harnesses; for subscription-billed usage (a Claude/ChatGPT
-plan), say clearly that the dollar figure is the *API-equivalent* value,
-not what the user was billed.
-
-## Integration with sibling skills
-
-- `$11ai-benchmark-runner` close-out calls this instead of hand-filling
-  `costUsd`.
-- `$11ai-benchmark-reviewer` validates the cost files, copies the
-  bucket block into `benchmark/report/data.json`, and propagates the
-  numbers to the READMEs and web app; `$11ai-benchmark-reporter`
-  renders from that consolidated file.
-- `$11ai-benchmark-analyzer` consumes `costs/summary.json` per repo for
-  the cross-benchmark cost-quality frontier.
+Lead with all-scope reconciliation: benchmark, judge, every identified-other
+label, unidentified, benchmark+judge, and total. Then show run, judge, session,
+model, and token-class breakdowns. Surface missing metadata, uncertain
+classification, stale pricing, open threads, and cost deltas. Make every chart
+or claim traceable to thread IDs and rates.

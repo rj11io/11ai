@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.rj11.io/schemas/cost.schema.json",
+  "title": "11ai token and cost accounting",
+  "type": "object",
+  "required": ["schemaVersion", "artifactId", "status", "threads", "scopes", "total", "reconciliation"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "artifactId": { "type": "string" },
+    "status": { "enum": ["draft", "complete", "stale"] },
+    "threads": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["threadId", "classification", "method", "tokens", "cost", "sources", "fieldProvenance"],
+        "properties": {
+          "threadId": { "type": "string" },
+          "classification": { "type": "string", "pattern": "^(benchmark-run|benchmark-operation|judge|unidentified|identified-other:.+)$" },
+          "method": { "enum": ["measured", "reported", "mixed"] },
+          "tokens": { "$ref": "#/$defs/tokens" },
+          "cost": { "$ref": "#/$defs/cost" },
+          "rawUsage": { "type": "object" },
+          "sources": { "type": "array" },
+          "fieldProvenance": { "type": "object", "additionalProperties": { "enum": ["measured", "derived", "inferred", "reported", "unavailable"] } },
+          "metadata": { "type": "object" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "scopes": {
+      "type": "object",
+      "required": ["benchmarkScope", "judgeScope", "identifiedScopes", "nonIdentifiedScope", "benchmarkAndJudgeScope"],
+      "properties": {
+        "benchmarkScope": { "$ref": "#/$defs/rollup" },
+        "judgeScope": { "$ref": "#/$defs/rollup" },
+        "identifiedScopes": { "type": "object", "additionalProperties": { "$ref": "#/$defs/rollup" } },
+        "nonIdentifiedScope": { "$ref": "#/$defs/rollup" },
+        "benchmarkAndJudgeScope": { "$ref": "#/$defs/rollup" }
+      }
+    },
+    "total": { "$ref": "#/$defs/rollup" },
+    "reconciliation": { "type": "object", "required": ["threadCount", "classifiedThreadCount", "tokensDelta", "costDeltaUsd", "pass"], "additionalProperties": true }
+  },
+  "$defs": {
+    "tokens": {
+      "type": "object",
+      "required": ["inputTotal", "inputUncached", "cachedInputRead", "cacheWrite5m", "cacheWrite1h", "outputTotal", "reasoningOutput", "nonReasoningOutput", "providerTotal"],
+      "properties": {
+        "inputTotal": { "type": ["number", "null"] },
+        "inputUncached": { "type": ["number", "null"] },
+        "cachedInputRead": { "type": ["number", "null"] },
+        "cacheWrite5m": { "type": ["number", "null"] },
+        "cacheWrite1h": { "type": ["number", "null"] },
+        "outputTotal": { "type": ["number", "null"] },
+        "reasoningOutput": { "type": ["number", "null"] },
+        "nonReasoningOutput": { "type": ["number", "null"] },
+        "providerTotal": { "type": ["number", "null"] }
+      },
+      "additionalProperties": true
+    },
+    "cost": {
+      "type": "object",
+      "required": ["inputUncachedUsd", "cachedInputReadUsd", "cacheWrite5mUsd", "cacheWrite1hUsd", "outputUsd", "totalUsd"],
+      "properties": {
+        "inputUncachedUsd": { "type": ["number", "null"] },
+        "cachedInputReadUsd": { "type": ["number", "null"] },
+        "cacheWrite5mUsd": { "type": ["number", "null"] },
+        "cacheWrite1hUsd": { "type": ["number", "null"] },
+        "outputUsd": { "type": ["number", "null"] },
+        "totalUsd": { "type": ["number", "null"] }
+      },
+      "additionalProperties": true
+    },
+    "rollup": {
+      "type": "object",
+      "required": ["threadCount", "tokens", "costUsd"],
+      "properties": { "threadCount": { "type": "integer" }, "tokens": { "type": ["number", "null"] }, "costUsd": { "type": ["number", "null"] } },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
