@@ -1,6 +1,15 @@
-# Package publishing script
+# Root package scripts
 
-This directory contains the root npm package's manual publishing helper.
+This directory contains the root npm package's validation, release-version
+synchronization, and manual publishing helpers.
+
+## Scripts
+
+| File | How it is used |
+| --- | --- |
+| `validate-skills.mjs` | Run through `npm run validate-skills` to check skill frontmatter, Codex metadata, plugin packaging, links, scripts, and catalogs. |
+| `sync-claude-plugin-versions.mjs` | Run automatically by the root package's `postversion` hook to copy the package version into Claude plugin manifests. |
+| `publish-public-w-local-token.cjs` | Run through `npm run publish-public-local` for a real public npm publish using `NPM_TOKEN` from `.env`. |
 
 ## Publish with a local token
 

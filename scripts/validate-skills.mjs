@@ -288,6 +288,17 @@ function validatePackageConfiguration() {
   if (!siteCatalog.includes("must use canonical skill frontmatter")) {
     fail(path.join(root, "www", "lib", "skills.ts"), "site skill parser must reject non-canonical frontmatter")
   }
+
+  const releaseWorkflow = path.join(root, ".github", "workflows", "release.yml")
+  if (!fs.existsSync(releaseWorkflow)) {
+    fail(releaseWorkflow, "missing release workflow")
+  } else if (
+    !/^\s*- name: Validate skills and harness metadata\s*\n\s*run: npm run validate-skills\s*$/m.test(
+      fs.readFileSync(releaseWorkflow, "utf8"),
+    )
+  ) {
+    fail(releaseWorkflow, "release workflow must run npm run validate-skills before releasing")
+  }
 }
 
 if (!fs.existsSync(skillsRoot)) {

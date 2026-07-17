@@ -79,7 +79,7 @@ Start with a plugin's README to choose a skill, then name that skill in your req
     11ai-utils/               7 utility skills
     11ai-web-design/          2 web design skills
     11ai-xharness/            2 cross-harness skills
-scripts/                      Root package publishing helper
+scripts/                      Root package validation, release, and publishing helpers
 www/                          Next.js project site
 ```
 
