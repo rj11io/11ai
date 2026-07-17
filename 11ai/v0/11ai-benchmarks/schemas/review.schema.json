@@ -11,6 +11,7 @@
     "sourceDigest": { "type": "string" },
     "benchmark": { "type": "object" },
     "cycle": { "type": "object" },
+    "lifecycle": { "type": "object" },
     "gate": { "type": "object", "required": ["pass", "checks"] },
     "runs": { "type": "array" },
     "judging": { "type": "object" },

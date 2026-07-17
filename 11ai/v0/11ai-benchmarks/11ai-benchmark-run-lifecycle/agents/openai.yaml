@@ -1,0 +1,4 @@
+interface:
+  display_name: "Benchmark Run Lifecycle"
+  short_description: "Run or resume the complete benchmark lifecycle"
+  default_prompt: "Use $11ai-benchmark-run-lifecycle to resume this benchmark and publish the next valid lifecycle result."

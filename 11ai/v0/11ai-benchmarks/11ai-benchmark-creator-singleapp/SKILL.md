@@ -113,11 +113,20 @@ non-negotiable sections:
   surface, and a content-edit test (add an entry to a content file → it
   appears with no code change).
 
+## Step 5b — Write JUDGE.md
+
+Create root `JUDGE.md` from
+`../references/judge-prompt-template.md`. Preserve `{{CYCLE_ID}}`,
+`{{JUDGE_ID}}`, and `{{JUDGE_TYPE}}`. It must route AI and human operators to
+the matching judging skill, enforce blindness to identities, cost, private
+mapping, prior judges, and aggregate, and require aggregation after completion.
+
 ## Step 6 — Wire the repo docs
 
 - **`AGENTS.md`** — add a short benchmark section: if you were pointed at
   a folder under `app/`, `PROMPT.md` is your task spec and its rules win;
-  write only inside your run folder.
+  write only inside your run folder. If pointed at a judging cycle, JUDGE.md
+  and the selected judging skill govern.
 - **`README.md`** — what the benchmark measures, the folder map, how to
   start a run (fill content → replace `{{RUN_ID}}` → hand the prompt to
   the agent), and how runs are judged.
@@ -125,8 +134,12 @@ non-negotiable sections:
 Create `benchmark/benchmark.json` using the plugin's version-2 config schema:
 `mode: "single-app"`, `runStrategy: "folder"`, frozen dependency/content
 policies, required evidence surfaces, protected paths, and canonical URLs.
-Create a version-2 empty ledger object, cycle directory, and `current.json`
-pointer. Read [the shared artifact contracts](../references/artifact-contracts.md).
+Create a version-2 empty ledger and cycle directory. Do not create a real cycle
+or `current.json` pointer before a reviewed cohort exists. When the operator
+names desired configurations, add `benchmark/run-plan.json` with availability
+and time-gate state. Read
+[the shared artifact contracts](../references/artifact-contracts.md) and
+[lifecycle contract](../references/lifecycle-contract.md).
 
 ## Step 7 — Verify before handing over
 
@@ -164,7 +177,9 @@ concrete objective, is in
 
 ## After the scaffold
 
-The sibling skills operate what this one creates: freeze the judging
+Prefer `$11ai-benchmark-initialize` to orchestrate this creator, the rubric,
+JUDGE.md, run plan, and lifecycle readiness. The sibling skills operate what
+this one creates: freeze the judging
 criteria with `$11ai-benchmark-rubric-creator` (best done now, before
 any run output exists), optionally fill static `content/` from real sources
 with `$11ai-benchmark-content-pack-creator` only when the user asks for static
@@ -173,6 +188,7 @@ content, start each run with
 `$11ai-benchmark-compliance-auditor`, score with `$11ai-benchmark-judge`,
 cost it with `$11ai-benchmark-token-accountant`, validate and propagate
 the results with `$11ai-benchmark-reviewer`, and share with
-`$11ai-benchmark-reporter`. If the objective needs per-run dependencies
+`$11ai-benchmark-reporter`, or resume the campaign with
+`$11ai-benchmark-run-lifecycle`. If the objective needs per-run dependencies
 or full-app control, use `$11ai-benchmark-creator-multirepo` instead of
 this skill.

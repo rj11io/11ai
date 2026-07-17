@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.rj11.io/schemas/current.schema.json",
+  "title": "11ai current reviewed cycle pointer",
+  "type": "object",
+  "required": ["schemaVersion", "artifactId", "status", "benchmarkId", "cycleId", "releaseType", "publicationSequence", "reviewSourceDigest"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "artifactId": { "type": "string" },
+    "status": { "const": "complete" },
+    "benchmarkId": { "type": "string" },
+    "cycleId": { "type": "string" },
+    "releaseType": { "enum": ["interim", "final"] },
+    "publicationSequence": { "type": "integer", "minimum": 1 },
+    "reviewSourceDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "updatedAt": { "type": "string" }
+  },
+  "additionalProperties": true
+}

@@ -58,12 +58,17 @@ A complete, minimal app skeleton on the default branch:
   skill's scaffold guide: runs compete on the objective, not on parsing.
   (With installs allowed, agents MAY swap in a library parser — the
   shipped loader is the floor, not a constraint.)
-- `PROMPT.md` with `{{RUN_ID}}`, `AGENTS.md`, `README.md`.
+- `PROMPT.md` with `{{RUN_ID}}`, root `JUDGE.md` created from
+  `../references/judge-prompt-template.md` with its cycle/judge/type variables,
+  `AGENTS.md`, and `README.md`.
 - No hub page — the template IS the app each run reshapes.
 - `benchmark/benchmark.json` with `mode: "isolated"`, the selected
   `runStrategy`, `baselineRef`, dependency/content policies, protected inputs,
   evidence surfaces, and canonical URLs, plus version-2 ledger/cycle scaffolding
-  from [the shared contracts](../references/artifact-contracts.md).
+  from [the shared contracts](../references/artifact-contracts.md). Do not
+  create a real cycle/current pointer before review. Add optional
+  `benchmark/run-plan.json` for desired and time-gated configurations using the
+  [lifecycle contract](../references/lifecycle-contract.md).
 
 Tag it: `git tag template-v1`. The tag is the benchmark's identity;
 every run branches from it and every audit diffs against it. Template
@@ -118,6 +123,10 @@ deploy each branch to capture screenshots),
 
 Report the file map, the tag name, the run workflow, and what the user
 still needs to fill in (content placeholders, prompt slots).
+
+Prefer `$11ai-benchmark-initialize` to orchestrate creator selection, rubric,
+PROMPT/JUDGE templates, run plan, and lifecycle readiness. Use
+`$11ai-benchmark-run-lifecycle` for interim releases, resume, and hard close.
 
 ## Pitfalls
 

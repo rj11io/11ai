@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-reporter
-description: "Render one reviewed benchmark cycle into a self-contained HTML and Markdown report containing the fullest available scores, judges, evidence, audits, token classes, cost scopes, metadata, provenance, caveats, and visualizations. Use for a benchmark report, comparison write-up, shareable results artifact, or refreshing a stale report. It presents reviewed data and never scores or prices."
+description: "Render or synchronize one or every stale reviewed benchmark cycle into self-contained HTML and Markdown reports containing the fullest available scores, judges, evidence, audits, token classes, cost scopes, lifecycle coverage, metadata, provenance, caveats, and visualizations. Use for a benchmark report, comparison write-up, shareable results artifact, or refreshing report code and content from newer canonical review data. It presents reviewed data and never scores or prices."
 ---
 
 # 11ai Benchmark Reporter
@@ -8,6 +8,10 @@ description: "Render one reviewed benchmark cycle into a self-contained HTML and
 Render the reviewer's cycle-scoped `review/data.json`. If it is missing or
 stale, run the reviewer first. Raw-artifact fallback is allowed only when the
 user explicitly accepts a prominently labeled unreviewed/partial report.
+
+In sync mode, discover every expected report in scope, compare its embedded
+review source digest, and rerender only missing or stale outputs. A newer cycle
+never overwrites an older immutable report path.
 
 ## Output
 
@@ -17,7 +21,8 @@ include the data source digest. Do not overwrite historical cycle reports.
 
 ## Information hierarchy
 
-1. Verdict, cohort, date, freshness, hashes, and what was/was not measured.
+1. Verdict, interim/final state, publication sequence, campaign coverage and
+   time-gated targets, cohort, date, freshness, hashes, and measurement limits.
 2. Sortable scoreboard: identity/configuration, rank/score/dimensions, audit,
    judge count/composition, wall time, tokens, cost, and cost/point.
 3. Same-surface evidence gallery with errors and unavailable states.
@@ -49,4 +54,6 @@ metrics the owning artifact did not provide.
 - Use judging evidence, never fresh screenshots.
 - Treat one run per configuration as an anecdote, not a general model ranking.
 - Re-rendering the same source digest produces no content change.
+- Refresh existing report structure, copy, charts, and metadata appendix when
+  the canonical review contract evolves; do not update only a hidden data blob.
 - Confirm before publishing outside the working tree.

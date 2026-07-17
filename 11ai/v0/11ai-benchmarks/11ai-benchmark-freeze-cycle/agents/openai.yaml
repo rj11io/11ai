@@ -1,0 +1,4 @@
+interface:
+  display_name: "Benchmark Freeze Cycle"
+  short_description: "Freeze completed runs for blind judging"
+  default_prompt: "Use $11ai-benchmark-freeze-cycle to freeze eligible completed runs into a judging-ready cumulative cycle."

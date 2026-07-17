@@ -7,7 +7,8 @@ description: "Prepare, launch, resume, and record one run in a configured single
 
 Guarantee that each run starts from known inputs and remains traceable. Read
 [the shared contracts](../references/artifact-contracts.md) and validate the
-ledger against `../schemas/runs.schema.json`.
+ledger against `../schemas/runs.schema.json`. Read the optional run plan and
+[lifecycle contract](../references/lifecycle-contract.md).
 
 ## Discover configuration
 
@@ -46,6 +47,8 @@ for repeats. Never overwrite an ID or artifact.
    manifest hash, not an invented file hash.
 5. Record `promptVariables`, baseline/run refs, target, timestamps, harness and
    environment metadata in the version-2 ledger.
+6. When this run matches a run-plan target, change only that target to running
+   and attach the run ID. Never infer availability or alter unrelated targets.
 
 Use `../scripts/hash-inputs.mjs --root <benchmark-root> ...`; do not concatenate
 files ambiguously or include clone/worktree-specific absolute paths.
@@ -71,7 +74,9 @@ create a repeat ID. If inputs differ, stop and require a new run/cycle decision.
 Record finish time, exit state, changed paths, run ref when known, console/build
 status, and every available harness/session ID. Leave unknown data null. Do not
 hand-fill tokens, cost, or derived duration: invoke the token accountant, then
-the compliance auditor. A run is eligible for a cycle only after audit passes.
+the compliance auditor. Mark a matching run-plan target complete only after the
+run finishes; audit pass independently controls cycle eligibility. Regenerate
+lifecycle state. A run is eligible for a cycle only after audit passes.
 
 ## Idempotency
 
@@ -79,3 +84,5 @@ the compliance auditor. A run is eligible for a cycle only after audit passes.
 - Preserve unknown fields and completed artifacts.
 - Re-running preparation with identical inputs produces no change.
 - Corrections record supersession/provenance rather than erasing history.
+- Later interim/final cycles reuse a completed run; never repeat it merely
+  because publication advances.

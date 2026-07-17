@@ -1,0 +1,4 @@
+interface:
+  display_name: "Benchmark Publish Cycle"
+  short_description: "Publish reviewed interim or final results"
+  default_prompt: "Use $11ai-benchmark-publish-cycle to review, synchronize, and publish a judging-complete benchmark cycle."

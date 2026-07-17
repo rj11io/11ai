@@ -69,14 +69,14 @@ for (const { file, data } of reviews) {
   const benchmarkNodeId = `benchmark:${benchmarkKey}`
   let benchmark = byId.get(benchmarkNodeId)
   if (!benchmark) {
-    benchmark = { nodeId: benchmarkNodeId, nodeType: "benchmark", benchmarkId, title: data.benchmark?.title ?? benchmarkId, parentId: parent.nodeId, children: [], summary: data.summary ?? {}, metadataCoverage: data.metadataCoverage ?? {}, sourcePath: relative(root, benchmarkDir) }
+    benchmark = { nodeId: benchmarkNodeId, nodeType: "benchmark", benchmarkId, title: data.benchmark?.title ?? benchmarkId, parentId: parent.nodeId, children: [], summary: { ...(data.summary ?? {}), lifecycle: data.lifecycle ?? {}, currentCycle: data.cycle ?? {} }, metadataCoverage: data.metadataCoverage ?? {}, sourcePath: relative(root, benchmarkDir) }
     byId.set(benchmarkNodeId, benchmark)
     nodes.push(benchmark)
     parent.children.push(benchmarkNodeId)
   }
   const cycleNodeId = `${benchmarkNodeId}/cycle:${cycleId}`
   if (byId.has(cycleNodeId)) continue
-  const cycle = { nodeId: cycleNodeId, nodeType: "cycle", title: cycleId, parentId: benchmarkNodeId, children: [], summary: { judging: data.judging, accounting: data.accounting }, metadataCoverage: data.metadataCoverage ?? {}, dataPath: relative(root, file) }
+  const cycle = { nodeId: cycleNodeId, nodeType: "cycle", title: cycleId, parentId: benchmarkNodeId, children: [], summary: { cycle: data.cycle, lifecycle: data.lifecycle, judging: data.judging, accounting: data.accounting }, metadataCoverage: data.metadataCoverage ?? {}, dataPath: relative(root, file) }
   byId.set(cycleNodeId, cycle)
   nodes.push(cycle)
   benchmark.children.push(cycleNodeId)

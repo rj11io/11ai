@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.rj11.io/schemas/judge-prompt.schema.json",
+  "title": "11ai frozen judge prompt instance",
+  "type": "object",
+  "required": ["schemaVersion", "artifactId", "status", "sourceDigest", "cycleId", "judgeId", "judgeType", "judgePromptTemplateSha", "judgePromptInstanceSha", "judgePromptVariables", "promptPath", "provenance"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "artifactId": { "type": "string" },
+    "status": { "const": "complete" },
+    "sourceDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "cycleId": { "type": "string" },
+    "judgeId": { "type": "string" },
+    "judgeType": { "enum": ["ai", "human"] },
+    "judgePromptTemplateSha": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "judgePromptInstanceSha": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "judgePromptVariables": { "type": "object", "additionalProperties": { "type": "string" } },
+    "promptPath": { "type": "string" },
+    "provenance": { "type": "object", "additionalProperties": true }
+  },
+  "additionalProperties": true
+}

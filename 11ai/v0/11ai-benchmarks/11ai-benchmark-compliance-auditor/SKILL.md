@@ -61,4 +61,6 @@ judges can see non-blocking craft issues without learning run identity.
 - Re-running with the same source digest produces no duplicate or timestamp-only
   rewrite.
 - Lead the user report with verdict, failures, warnings, missing evidence, and
-  the exact next owner: runner, creator, accountant, or judge.
+  the exact next owner: runner, creator, accountant, or
+  `$11ai-benchmark-freeze-cycle`. Regenerate lifecycle state so a newly eligible
+  run can trigger an interim or final cumulative cycle.

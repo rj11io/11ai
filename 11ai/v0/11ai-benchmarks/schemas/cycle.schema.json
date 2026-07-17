@@ -10,12 +10,30 @@
     "status": { "enum": ["draft", "collecting", "judging", "reviewed", "published", "superseded"] },
     "cycleId": { "type": "string" },
     "benchmarkId": { "type": "string" },
+    "releaseType": { "enum": ["interim", "final"] },
+    "publicationSequence": { "type": "integer", "minimum": 1 },
+    "previousCycleId": { "type": ["string", "null"] },
     "runIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } },
     "promptTemplateSha": { "type": "string" },
     "contentSha": { "type": "string" },
     "rubricSha": { "type": "string" },
     "rubricVersion": { "type": ["string", "number"] },
     "evidenceSurfaces": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "coverageSnapshot": {
+      "type": "object",
+      "required": ["planned", "complete", "timeGated", "failed", "excluded", "includedRunIds"],
+      "properties": {
+        "planned": { "type": "integer", "minimum": 0 },
+        "complete": { "type": "integer", "minimum": 0 },
+        "timeGated": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 },
+        "excluded": { "type": "integer", "minimum": 0 },
+        "includedRunIds": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "targetIds": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "waiver": { "type": ["object", "null"], "additionalProperties": true }
+      },
+      "additionalProperties": true
+    },
     "createdAt": { "type": "string" },
     "reviewedAt": { "type": ["string", "null"] },
     "publishedAt": { "type": ["string", "null"] }

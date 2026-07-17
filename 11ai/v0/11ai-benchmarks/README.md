@@ -1,20 +1,27 @@
 # 11ai-benchmarks
 
-Thirteen skills for creating, operating, judging, accounting, reviewing,
-reporting, analyzing, and publishing reproducible AI-coding benchmarks.
+Eighteen skills for lifecycle orchestration, creating, operating, judging,
+accounting, reviewing, reporting, analyzing, synchronizing, and publishing
+reproducible AI-coding benchmarks.
 
 The system freezes inputs, records exact run provenance, gates rule compliance,
 supports independent sequential AI and human judges, accounts for every thread
 found, and publishes immutable reviewed cycles. Re-running or returning the next
 day resumes by stable ID and source digest instead of duplicating work.
 
+A benchmark campaign can stay open for weeks while models are time-gated. A
+soft lifecycle publishes fully reviewed interim cumulative cycles; a hard
+lifecycle publishes a final cycle only after explicit closure. Older cycles
+never change.
+
 ## Lifecycle
 
 ```text
-create → freeze rubric → run → audit → open cycle → capture evidence
-       → AI/human judges (aggregate after each) → account every thread
-       → review → report → hierarchical websites
-       → analyze across reviewed benchmarks
+initialize → run/audit available targets → freeze cumulative cycle
+           → AI/human judges (aggregate after each) → publish cycle
+         → account → review → analyze → report → sync websites
+         → interim-published-open ↺ new time-gated targets
+         → final cycle → hard-closed
 ```
 
 Static content-pack conversion is optional and runs only when explicitly
@@ -27,20 +34,39 @@ The version-2 contracts live in `references/artifact-contracts.md` with JSON
 schemas under `schemas/` and deterministic helpers under `scripts/`.
 
 - `benchmark/benchmark.json` — mode, policies, content/evidence configuration.
+- `benchmark/run-plan.json` — optional desired/available/time-gated targets and
+  manual or target-set closure policy.
+- `benchmark/lifecycle-state.json` — deterministic derived stage and blockers.
 - `benchmark/runs.json` — exact run ledger with template and instance hashes.
 - `benchmark/prompts/` — exact prompt instance per run.
+- root `JUDGE.md` plus cycle `judging/prompts/` — frozen operator template and
+  exact AI/human judge instances with template/instance hashes.
 - `benchmark/rubric.md` + `rubric.json` — human and machine-readable criteria.
 - `benchmark/audits/` — mechanical compliance and runtime evidence.
 - `benchmark/costs/` — every discovered thread, normalized tokens/costs/scopes.
 - `benchmark/cycles/<id>/` — immutable cohort, evidence, judges, aggregate,
   review, and report.
-- `benchmark/current.json` — latest reviewed-cycle pointer.
+- `benchmark/current.json` — latest reviewed-cycle pointer, release type,
+  publication sequence, and review digest.
 
 Accounting exposes benchmark scope, judge scope, every identified-other scope,
 unidentified scope, benchmark+judge scope, and a reconciled total across all
 threads found.
 
 ## Skills
+
+### Orchestrate the lifecycle
+
+- `11ai-benchmark-run-lifecycle` — soft, hard, resume, from, and through modes
+  across the entire campaign.
+- `11ai-benchmark-initialize` — initialize through ready-for-runs without
+  running a model.
+- `11ai-benchmark-freeze-cycle` — freeze, audit, and evidence a cumulative
+  cohort through ready-for-judging without running a judge.
+- `11ai-benchmark-publish-cycle` — turn judging into accounting, review,
+  reports, sync, and an interim-open or final hard-close state.
+- `11ai-benchmark-sync` — refresh every stale derived domain without running a
+  benchmark or judge.
 
 ### Create and configure
 
@@ -71,4 +97,5 @@ threads found.
 ### Across benchmarks
 
 - `11ai-benchmark-analyzer` — coverage-aware normalized leaderboard, pairwise,
-  cost-quality, compliance, judging, token, metadata, and trend analysis.
+  cost-quality, compliance, judging, token, lifecycle, metadata, and trend
+  analysis.

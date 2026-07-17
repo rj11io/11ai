@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.rj11.io/schemas/run-plan.schema.json",
+  "title": "11ai benchmark run plan",
+  "type": "object",
+  "required": ["schemaVersion", "artifactId", "status", "benchmarkId", "campaignStatus", "closurePolicy", "targets"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "artifactId": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["complete", "stale", "superseded"] },
+    "benchmarkId": { "type": "string", "minLength": 1 },
+    "campaignStatus": { "enum": ["open", "hard-closed"] },
+    "closurePolicy": { "enum": ["manual", "target-set"] },
+    "campaignRevision": { "type": "integer", "minimum": 1 },
+    "targets": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["targetId", "harness", "model", "status"],
+        "properties": {
+          "targetId": { "type": "string", "minLength": 1 },
+          "harness": { "type": "string", "minLength": 1 },
+          "model": { "type": "string", "minLength": 1 },
+          "provider": { "type": ["string", "null"] },
+          "effort": { "type": ["string", "null"] },
+          "status": { "enum": ["planned", "available", "running", "complete", "time-gated", "failed", "excluded"] },
+          "runIds": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+          "notBefore": { "type": ["string", "null"] },
+          "reason": { "type": ["string", "null"] },
+          "metadata": { "type": "object", "additionalProperties": true }
+        },
+        "additionalProperties": true
+      }
+    },
+    "latestInterimCycleId": { "type": ["string", "null"] },
+    "finalCycleId": { "type": ["string", "null"] },
+    "hardClosedAt": { "type": ["string", "null"] },
+    "hardCloseWaiver": { "type": ["object", "null"], "additionalProperties": true },
+    "provenance": { "type": "object", "additionalProperties": true }
+  },
+  "additionalProperties": true
+}

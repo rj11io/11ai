@@ -32,7 +32,7 @@ const PLUGIN_CONFIG = [
     dir: "11ai-benchmarks",
     title: "Benchmarks",
     tagline:
-      "Create, run, audit, judge, cost, review, and report benchmarks that compare AI coding models.",
+      "Run resumable soft or final benchmark lifecycles across time-gated models, judging, accounting, reports, and websites.",
   },
   {
     slug: "blog-builder",

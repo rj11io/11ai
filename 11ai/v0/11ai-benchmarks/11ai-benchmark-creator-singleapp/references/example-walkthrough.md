@@ -54,6 +54,11 @@ From the template. The slots filled for this objective:
   links scroll to their sections; CTA links point at the URLs from the
   content files.
 
+Root `JUDGE.md` comes from the plugin's canonical judge-prompt template and
+keeps `{{CYCLE_ID}}`, `{{JUDGE_ID}}`, and `{{JUDGE_TYPE}}` literal until a
+judge is allocated. A run plan records currently available and time-gated model
+targets without requiring them all before an interim release.
+
 ## Step 6 — Docs
 
 `AGENTS.md` benchmark section and a README describing the folder map,
@@ -72,3 +77,7 @@ Open two runs side by side at each surface; then run the content
 regression: add a pricing tier to `content/pricing.md` and confirm every
 run shows it with zero code changes. Runs that hardcoded copy fail
 immediately — that is the point of the test.
+
+The first available cohort may publish as an immutable interim cycle while the
+campaign remains open. Later eligible runs create a new cumulative cycle; hard
+close happens only after the desired target set is complete or waived.

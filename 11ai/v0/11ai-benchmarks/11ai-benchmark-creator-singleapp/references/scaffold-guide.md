@@ -10,13 +10,16 @@ handles.
 ```
 <benchmark-repo>/
   PROMPT.md              # frozen task, {{RUN_ID}} token (see prompt-template.md)
+  JUDGE.md               # frozen operator template, cycle/judge/type tokens
   AGENTS.md              # template rules + benchmark section (below)
   README.md              # what it measures, folder map, run workflow, judging
   benchmark/
     benchmark.json       # mode, policies, evidence surfaces, canonical URLs
+    run-plan.json        # optional desired/time-gated configuration plan
     runs.json            # version-2 run ledger object
+    lifecycle-state.json # deterministic derived stage; never authoritative
     cycles/              # immutable judging/review/report cohorts
-    current.json         # latest reviewed-cycle pointer
+    current.json         # created after review; latest cycle/release/digest
   content/
     README.md            # format spec, read-only warning
     <section>.md         # one file per content section, placeholder-filled

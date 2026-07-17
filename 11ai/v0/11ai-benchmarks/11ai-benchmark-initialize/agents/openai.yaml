@@ -1,0 +1,4 @@
+interface:
+  display_name: "Benchmark Initialize"
+  short_description: "Initialize a benchmark campaign safely"
+  default_prompt: "Use $11ai-benchmark-initialize to initialize this benchmark campaign without launching any model runs."

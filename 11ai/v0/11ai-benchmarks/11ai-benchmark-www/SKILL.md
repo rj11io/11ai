@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-www
-description: "Build or upgrade repository-driven benchmark websites across every discovered root, parent, benchmark, cycle, and run level, using reviewed artifacts as the source of truth, compact non-root layouts, searchable/filterable/sortable benchmark catalogs, and extensive interactive shadcn visualizations of scores, judges, audits, tokens, costs, scopes, metadata, and history. Use specifically for benchmark collection/result websites; do not use for general project sites."
+description: "Build, upgrade, or synchronize repository-driven benchmark websites across every discovered root, parent, benchmark, cycle, and run level, updating existing code, design, content, routes, and visualizations from the newest reviewed artifacts. Use specifically for benchmark collection/result websites, lifecycle coverage, searchable/filterable/sortable catalogs, and interactive shadcn views of scores, judges, audits, tokens, costs, scopes, metadata, and history; do not use for general project sites."
 ---
 
 # 11ai Benchmark WWW
@@ -24,6 +24,8 @@ Walk from the user-named root and discover:
   reviewed cycle data;
 - all reviewed cycles, reports, runs, evidence, analyzer outputs, and canonical
   URLs;
+- run plans, lifecycle state, current pointers, interim/final release sequence,
+  coverage waivers, and time-gated targets;
 - application stack, package manager, shadcn components, chart dependency,
   theme, fonts, deployment config, and repo guidance at every level.
 
@@ -42,7 +44,8 @@ Consume, in order:
 1. cycle `review/data.json`;
 2. analyzer `leaderboard.json` for cross-benchmark facts;
 3. accountant-owned cost/efficiency metrics already copied into review data;
-4. legacy reviewed `benchmark/report/data.json` only as a compatibility path.
+4. lifecycle/run-plan fields copied into reviewed data;
+5. legacy reviewed `benchmark/report/data.json` only as a compatibility path.
 
 Never calculate scores, prices, cost/point, normalized ranks, or reconciliation
 inside UI components. It is fine to transform owned arrays for chart libraries.
@@ -149,6 +152,13 @@ Adding a benchmark, parent, reviewed cycle, run, judge, scope, or metadata field
 must appear after the next build without component edits. Historical cycle URLs
 remain valid. The latest pointer changes only after review.
 
+When an app exists, synchronize its data adapters, routes, components, copy,
+filters, charts, design tokens, and navigation with the latest review/analyzer
+contracts. Preserve unrelated user code and local conventions; replace stable
+owned sections or generated data by ID rather than recreating the app. Show
+interim/final badges, publication history, completed versus desired coverage,
+time-gated targets, exclusions, waivers, and campaign-open state.
+
 ## 10. Verify
 
 - Validate indexes and every reviewed input.
@@ -160,6 +170,8 @@ remain valid. The latest pointer changes only after review.
 - Test light/dark, desktop/mobile, keyboard, reduced motion, and missing data.
 - Check both CTA destinations and one exact source deep link per level.
 - Build twice; the second build must not duplicate data or create a content diff.
+- Verify an existing-app upgrade, not only greenfield generation, and confirm
+  stale copy, design, and chart surfaces were refreshed from canonical data.
 
 ## Hard failures
 

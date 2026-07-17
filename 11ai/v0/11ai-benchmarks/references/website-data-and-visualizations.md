@@ -19,7 +19,8 @@ denser controls, compact cards, and tables as the default representation.
 
 Show objective, skill under test, freshness, run count, winner, score, total
 benchmark cost, value pick, judge composition, audit status, available
-surfaces, and cycle count. Search benchmark/model/harness/provider/objective.
+surfaces, cycle count, interim/final state, completed versus desired targets,
+time-gated targets, and campaign-open state. Search benchmark/model/harness/provider/objective.
 Persist search, filters, sorting, columns, and view in URL parameters.
 
 Support filters for group, objective, skill, provider, harness, model, effort,
@@ -48,6 +49,8 @@ same filter state as the list.
 - Harness/model/provider participation and disqualification rates.
 - Benchmark coverage, pairwise results, normalized rank, and relative score.
 - Cycle timeline showing new runs, judges, score movement, cost, and freshness.
+- Lifecycle coverage showing planned, complete, available, time-gated, failed,
+  and excluded targets across interim publication sequences through final close.
 - Operations overhead, pricing changes, missing/unavailable metadata.
 
 Every chart needs exact-value tooltips, legend, stable configuration colors,

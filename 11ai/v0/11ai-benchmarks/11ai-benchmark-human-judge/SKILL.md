@@ -9,6 +9,21 @@ Drive a human through the same evidence and criteria as an AI judge without
 changing the rubric or exposing previous scores. Read
 [the shared contracts](../references/artifact-contracts.md) first.
 
+## Freeze the operator prompt
+
+Require root `JUDGE.md`. If it is missing, create it from
+`../references/judge-prompt-template.md`. After allocating the human judge ID,
+freeze its exact instance:
+
+```bash
+node <plugin>/scripts/create-judge-prompt.mjs \
+  <benchmark-root> <cycle-id> <judge-id> human
+```
+
+Guide the operator from that instance without paraphrasing it. Record both
+judge-prompt hashes and variables in drafts and the completed artifact; refuse
+resume when they differ.
+
 ## Prepare
 
 1. Select a cycle with passing audits, frozen `rubric.md`/`rubric.json`, private
@@ -37,7 +52,8 @@ until submission is complete.
 ## Checkpoint and resume
 
 Write drafts only to `judging/judges/<judge-id>.json` with `status: "draft"`,
-completed fields, timestamps, rubric/evidence hashes, and resume position.
+completed fields, timestamps, rubric/evidence and both judge-prompt hashes,
+prompt variables, and resume position.
 Resume only when hashes match. Never count drafts in aggregation.
 
 ## Complete and aggregate
@@ -57,7 +73,9 @@ node <plugin>/scripts/aggregate-judges.mjs \
 ```
 
 Only after the artifact and aggregate are saved may the operator see models,
-costs, prior scores, disagreements, and the updated ranking.
+costs, prior scores, disagreements, and the updated ranking. Regenerate
+lifecycle state; hand off to `$11ai-benchmark-publish-cycle` when the panel is
+complete.
 
 ## Rules
 

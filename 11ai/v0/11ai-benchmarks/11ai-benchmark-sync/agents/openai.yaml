@@ -1,0 +1,4 @@
+interface:
+  display_name: "Benchmark Sync"
+  short_description: "Refresh all stale benchmark projections"
+  default_prompt: "Use $11ai-benchmark-sync to refresh every stale benchmark review, report, analysis, README, and website projection."

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai.rj11.io/schemas/lifecycle-state.schema.json",
+  "title": "11ai derived benchmark lifecycle state",
+  "type": "object",
+  "required": ["schemaVersion", "artifactId", "status", "sourceDigest", "benchmarkId", "campaignStatus", "stage", "counts", "blockers", "nextActions", "provenance"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "artifactId": { "type": "string" },
+    "status": { "const": "complete" },
+    "sourceDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "benchmarkId": { "type": ["string", "null"] },
+    "campaignStatus": { "enum": ["draft", "open", "hard-closed"] },
+    "stage": { "enum": ["initialization-required", "ready-for-runs", "waiting-for-runs", "ready-for-interim-cycle", "preparing-judging", "waiting-for-judges", "ready-to-publish", "ready-to-sync", "interim-published-open", "ready-for-final-cycle", "hard-closed", "blocked"] },
+    "latestCycleId": { "type": ["string", "null"] },
+    "latestReleaseType": { "enum": ["interim", "final", null] },
+    "counts": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+    "coverage": { "type": "object", "additionalProperties": true },
+    "blockers": { "type": "array", "items": { "type": "object", "required": ["code", "detail"], "additionalProperties": true } },
+    "nextActions": { "type": "array", "items": { "type": "string" } },
+    "provenance": { "type": "object", "additionalProperties": true }
+  },
+  "additionalProperties": true
+}

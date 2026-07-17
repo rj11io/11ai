@@ -14,6 +14,9 @@
     "cycleId": { "type": "string" },
     "rubricSha": { "type": "string" },
     "evidenceSha": { "type": "string" },
+    "judgePromptTemplateSha": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "judgePromptInstanceSha": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "judgePromptVariables": { "type": "object", "additionalProperties": { "type": "string" } },
     "identityBlinded": { "type": "boolean" },
     "runs": {
       "type": "array",

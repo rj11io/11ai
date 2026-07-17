@@ -42,13 +42,13 @@ The files are installed at `node_modules/@rj11io/11ai/11ai/v0/`. You can also cl
 
 ## Skill catalog
 
-The repository currently contains 70 skills in 12 plugins.
+The repository currently contains 75 skills in 12 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
 | [Agent automation](./11ai/v0/11ai-agent-automation/README.md) | 8 | Scheduled autonomous work using the Ledger + Conductor + Routine pattern |
 | [AI chat](./11ai/v0/11ai-ai-chat/README.md) | 9 | End-to-end chat, sessions, tools, models, providers, UI, and messaging-platform extensions |
-| [Benchmarks](./11ai/v0/11ai-benchmarks/README.md) | 13 | Creating, running, auditing, AI/human judging, exhaustive accounting, reviewing, reporting, analyzing, and publishing AI-coding benchmarks |
+| [Benchmarks](./11ai/v0/11ai-benchmarks/README.md) | 18 | Running resumable soft/final lifecycles; creating, auditing, AI/human judging, accounting, reviewing, synchronizing, and publishing benchmarks |
 | [Blog builder](./11ai/v0/11ai-blog-builder/README.md) | 8 | Building file-backed editorial blogs with composable CMS, author, Markdown, content, navigation, and UI skills |
 | [Cleanup](./11ai/v0/11ai-cleanup/README.md) | 5 | Safely finding and removing abandoned local resources |
 | [Codebase](./11ai/v0/11ai-codebase/README.md) | 3 | Playwright setup, npm publishing, and automated releases |
@@ -69,7 +69,7 @@ Start with a plugin's README to choose a skill, then name that skill in your req
   v0/
     11ai-agent-automation/    8 automation skills
     11ai-ai-chat/             9 AI chat skills
-    11ai-benchmarks/          13 benchmark skills
+    11ai-benchmarks/          18 benchmark skills
     11ai-blog-builder/        8 editorial blog skills
     11ai-cleanup/             5 cleanup skills
     11ai-codebase/            3 codebase skills

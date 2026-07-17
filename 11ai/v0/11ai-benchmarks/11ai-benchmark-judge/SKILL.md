@@ -13,6 +13,21 @@ Read [the shared contracts](../references/artifact-contracts.md) before writing
 artifacts. Use `../schemas/judge.schema.json` and
 `../schemas/judging-aggregate.schema.json`.
 
+## Freeze the operator prompt
+
+Require root `JUDGE.md`. If it is missing, create it from
+`../references/judge-prompt-template.md`; never reconstruct instructions from
+existing scores. Allocate the judge ID and freeze the exact instance:
+
+```bash
+node <plugin>/scripts/create-judge-prompt.mjs \
+  <benchmark-root> <cycle-id> <judge-id> ai
+```
+
+Give the operator and judge this instance verbatim. Record
+`judgePromptTemplateSha`, `judgePromptInstanceSha`, and
+`judgePromptVariables`. Refuse to resume the judge ID when they differ.
+
 ## Preconditions
 
 - Require at least two eligible runs and passing audit artifacts.
@@ -53,13 +68,14 @@ Default to three judges; use five for consequential comparisons. A user may add
 judges later. For each judge:
 
 1. Allocate a stable `judgeId`; never reuse or overwrite a completed ID.
-2. Give only the frozen rubric, anonymized evidence for all runs, and scoring
-   instructions. Do not reveal previous judge files or the aggregate.
+2. Give only the frozen rubric, anonymized evidence for all runs, and its exact
+   frozen JUDGE.md instance. Do not reveal previous judge files or aggregate.
 3. Score every dimension 1–10 against its concrete anchors. Require a concise
    visible-evidence justification for every score.
 4. Collect an independent holistic `overallRanking` after dimension scoring.
-5. Record judge model/provider/harness/version, effort, timing, prompt hash,
-   evidence/rubric hashes, errors, retries, and token-accounting thread IDs.
+5. Record judge model/provider/harness/version, effort, timing, both judge
+   prompt hashes/variables, evidence/rubric hashes, errors, retries, and
+   token-accounting thread IDs.
 6. Validate and write
    `judging/judges/<judge-id>.json` with `judgeType: "ai"`.
 7. Before starting the next judge, rebuild the aggregate from every complete
@@ -95,7 +111,8 @@ The next judge must not see these flags until after submitting its own artifact.
 De-anonymize only in reviewed/public artifacts. Report current rank, totals,
 judge composition, disagreements, missing evidence, and exactly what was not
 scored. Scores compare this cohort under this rubric; they are not absolute
-model grades. Hand off to the token accountant, reviewer, and reporter.
+model grades. Regenerate lifecycle state, then hand off to
+`$11ai-benchmark-publish-cycle` when the required panel is complete.
 
 ## Rejudging and async safety
 

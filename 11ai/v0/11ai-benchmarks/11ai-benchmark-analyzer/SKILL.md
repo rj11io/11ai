@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmark-analyzer
-description: "Aggregate reviewed cycles across multiple benchmark repositories into coverage-aware model, harness, provider, effort, cost, compliance, judge, token, metadata, and trend analysis. Use for cross-benchmark leaderboards, normalized comparisons, cost-quality frontiers, recurring patterns, or historical trends. Requires at least two reviewed benchmarks and never edits their source artifacts."
+description: "Aggregate or synchronize reviewed cycles across multiple benchmark repositories into coverage-aware model, harness, provider, effort, cost, compliance, judge, token, metadata, lifecycle, and trend analysis. Use for cross-benchmark leaderboards, normalized comparisons, cost-quality frontiers, recurring patterns, historical trends, or refreshing stale analyzer output after reviewed data changes. Requires at least two reviewed benchmarks and never edits their source artifacts."
 ---
 
 # 11ai Benchmark Analyzer
@@ -8,6 +8,11 @@ description: "Aggregate reviewed cycles across multiple benchmark repositories i
 Analyze reviewed cycle data, not mutable raw results. Read
 [the shared contracts](../references/artifact-contracts.md). Report discovered,
 skipped, stale, failed, and partially covered benchmarks before ranking.
+
+In sync mode, discover all reviewed inputs under the requested parent and
+rebuild only when their set or bytes change. Keep interim cycles in history but
+use each benchmark's `current.json` cycle for the current leaderboard unless a
+historical snapshot is requested. Label interim/final coverage explicitly.
 
 ## Normalize fairly
 
@@ -33,6 +38,8 @@ Per configuration/provider/model/harness/effort include:
   wall time, cost/point, and efficient-frontier membership;
 - audit failure rate, judge count/type, disagreement, metadata coverage;
 - trends across cycles, harness/model versions, pricing, and time.
+- planned, complete, time-gated, failed, and excluded lifecycle coverage,
+  release sequence/type, campaign state, and time-to-coverage.
 
 Preserve all useful metadata for filtering and visualization. Avoid a direct
 claim between configurations with weak common-benchmark overlap; show them in

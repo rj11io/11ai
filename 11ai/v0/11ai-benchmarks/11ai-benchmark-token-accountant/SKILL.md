@@ -50,6 +50,8 @@ Extract when present or defensibly inferable:
 - harness/provider/model names and versions, effort, service tier, context size;
 - cwd, repository identity, branch, commit, baseline/run ref, and environment;
 - kickoff hash/match, cycle/run/judge IDs, files read/touched/written;
+- lifecycle mode/stage, target ID and availability state, campaign revision,
+  release type/sequence, interim/final cycle, and publication/sync operation IDs;
 - tool calls by type, edits/patches, commands, web calls, errors, retries,
   compactions, interruptions, resumes, and exit state;
 - timestamps, active gaps, duration, time/turn, tokens/turn, tokens/minute;
@@ -65,7 +67,7 @@ Assign every thread to exactly one leaf:
 
 1. `benchmark-run` — kickoff matches the frozen prompt and writes into the
    registered run target.
-2. `benchmark-operation` — scaffold, content preparation, run preparation,
+2. `benchmark-operation` — initialization, content preparation, run preparation,
    audit, accounting, review, report, website, or analysis work; judging is
    excluded so it remains independently visible.
 3. `judge` — an AI judge or a thread assisting a human judging session. Record
@@ -130,6 +132,8 @@ Compute when inputs exist, otherwise write null plus a reason:
 - input composition, cache hit/write rates, output/input and reasoning shares;
 - cost/minute, cost/turn, tokens/turn, tokens/minute, and operational overhead;
 - mean/median/spread across repeats;
+- per interim/final publication sequence and campaign revision totals, including
+  the incremental cost of each soft lifecycle and cumulative cost to coverage;
 - cost per rubric point and cost per normalized score;
 - cost-quality frontier inputs and value flags;
 - pricing and metadata coverage, missing-data counts, and reconciliation deltas.
