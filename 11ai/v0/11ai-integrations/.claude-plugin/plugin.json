@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-integrations",
-  "version": "1.15.0",
+  "version": "1.16.0",
   "description": "Add Convex, WorkOS AuthKit, or both to Next.js applications.",
   "author": {
     "name": "rj11io"
