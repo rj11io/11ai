@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/rj11io/11ai/compare/v1.15.0...v1.16.0) (2026-07-17)
+
+
+### Features
+
+* benchmark skills optimization ([235cfc3](https://github.com/rj11io/11ai/commit/235cfc3dcc2bc38b505237f291d4a568c3e34ac9))
+
 # [1.15.0](https://github.com/rj11io/11ai/compare/v1.14.3...v1.15.0) (2026-07-17)
 
 
