@@ -91,6 +91,13 @@ const PLUGIN_CONFIG = [
       "Add Convex, WorkOS AuthKit, or both to Next.js applications the right way.",
   },
   {
+    slug: "llm-costs",
+    dir: "11ai-llm-costs",
+    title: "LLM costs",
+    tagline:
+      "Project-scoped and machine-wide LLM usage and cost reporting across local coding harnesses.",
+  },
+  {
     slug: "mongodb-operations",
     dir: "11ai-mongodb-operations",
     title: "MongoDB operations",

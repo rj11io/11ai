@@ -238,6 +238,37 @@ function validateClaude(plugins, pluginSkills) {
   }
 }
 
+function validateCodexPlugins(plugins, pluginSkills) {
+  const packageVersion = readJson(path.join(root, "package.json"))?.version
+  for (const plugin of plugins) {
+    const manifestFile = path.join(skillsRoot, plugin, ".codex-plugin", "plugin.json")
+    if (!fs.existsSync(manifestFile)) continue
+
+    const manifest = readJson(manifestFile)
+    if (!manifest) continue
+    if (manifest.name !== plugin) fail(manifestFile, `name must be '${plugin}'`)
+    if (!/^\d+\.\d+\.\d+$/.test(manifest.version || "")) {
+      fail(manifestFile, "version must use strict semver")
+    } else if (manifest.version !== packageVersion) {
+      fail(manifestFile, `version must match package.json (${packageVersion})`)
+    }
+
+    const paths = Array.isArray(manifest.skills) ? manifest.skills : [manifest.skills]
+    if (paths.some((value) => typeof value !== "string" || !value.startsWith("./"))) {
+      fail(manifestFile, "skills must be a './'-relative string or array")
+      continue
+    }
+    for (const skill of pluginSkills.get(plugin) || []) {
+      const covered = paths.some((value) => {
+        const base = path.resolve(path.dirname(manifestFile), "..", value)
+        const relative = path.relative(base, skill.dir)
+        return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative))
+      })
+      if (!covered) fail(manifestFile, `skills paths do not cover '${skill.name}'`)
+    }
+  }
+}
+
 function validateCatalog(plugins, pluginSkills, skills) {
   const rootReadme = fs.readFileSync(path.join(root, "README.md"), "utf8")
   const countPattern = new RegExp(`${skills.length} skills in ${plugins.length} plugins`)
@@ -359,6 +390,7 @@ const pluginSkills = new Map(
 
 validateScripts()
 validateClaude(plugins, pluginSkills)
+validateCodexPlugins(plugins, pluginSkills)
 validateCatalog(plugins, pluginSkills, inventorySkills)
 validatePackageConfiguration()
 

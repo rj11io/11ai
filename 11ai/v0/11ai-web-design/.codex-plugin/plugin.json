@@ -1,6 +1,6 @@
 {
   "name": "11ai-web-design",
-  "version": "1.14.3",
+  "version": "1.18.3",
   "description": "Apply the 11ai visual language or a deliberate content-led direction to elegant, accessible web interfaces.",
   "author": {
     "name": "rj11io",
@@ -10,7 +10,14 @@
   "homepage": "https://ai.rj11.io",
   "repository": "https://github.com/rj11io/11ai",
   "license": "Apache-2.0",
-  "keywords": ["web-design", "ui-styling", "styleguide", "shadcn", "data-visualization", "accessibility"],
+  "keywords": [
+    "web-design",
+    "ui-styling",
+    "styleguide",
+    "shadcn",
+    "data-visualization",
+    "accessibility"
+  ],
   "skills": "./skills/",
   "interface": {
     "displayName": "11ai Web Design",
@@ -18,7 +25,10 @@
     "longDescription": "A visual design toolkit for applying the standard extracted from 11ai/www or giving an existing interface a deliberate direction using its own content, components, and theme system.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": ["Design", "Write"],
+    "capabilities": [
+      "Design",
+      "Write"
+    ],
     "websiteURL": "https://ai.rj11.io",
     "defaultPrompt": [
       "Apply the 11ai style to this interface.",

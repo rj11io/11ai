@@ -1,13 +1,19 @@
 {
   "name": "11ai-jest-operations",
-  "version": "1.16.0",
+  "version": "1.18.3",
   "description": "Modular, standalone skills for common Jest testing operations.",
   "author": {
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
   "license": "Apache-2.0",
-  "keywords": ["jest", "testing", "javascript", "typescript", "ci"],
+  "keywords": [
+    "jest",
+    "testing",
+    "javascript",
+    "typescript",
+    "ci"
+  ],
   "skills": "./skills/",
   "interface": {
     "displayName": "11ai Jest Operations",

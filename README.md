@@ -14,7 +14,7 @@ Install the collection from GitHub with the [skills CLI](https://skills.sh/docs/
 npx skills add rj11io/11ai --full-depth
 ```
 
-The CLI runs through `npx`, discovers the repository's skills, and configures the skills you select for your agent. `--full-depth` is required because this collection organizes skills into nineteen workflow plugins instead of one top-level `skills/` directory.
+The CLI runs through `npx`, discovers the repository's skills, and configures the skills you select for your agent. `--full-depth` is required because this collection organizes skills into twenty workflow plugins instead of one top-level `skills/` directory.
 
 The repository follows the open Agent Skills format. Every skill also includes Codex UI metadata in `agents/openai.yaml`, and every plugin is packaged for Claude Code. To add the Claude marketplace, run:
 
@@ -42,7 +42,7 @@ The files are installed at `node_modules/@rj11io/11ai/11ai/v0/`. You can also cl
 
 ## Skill catalog
 
-The repository currently contains 151 skills in 19 plugins.
+The repository currently contains 152 skills in 20 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
@@ -58,11 +58,12 @@ The repository currently contains 151 skills in 19 plugins.
 | [Git operations](./11ai/v0/11ai-git-operations/README.md) | 11 | Modular, safety-first skills for common Git operations, repository workflows, learning, and troubleshooting |
 | [Integrations](./11ai/v0/11ai-integrations/README.md) | 3 | Adding Convex, WorkOS AuthKit, or both to Next.js applications |
 | [Jest operations](./11ai/v0/11ai-jest-operations/README.md) | 12 | Inspecting, running, configuring, and troubleshooting common Jest operations |
+| [LLM costs](./11ai/v0/11ai-llm-costs/README.md) | 2 | Project-scoped and machine-wide LLM usage and cost reporting across local coding harnesses |
 | [MongoDB operations](./11ai/v0/11ai-mongodb-operations/README.md) | 10 | Common MongoDB Shell and Database Tools work with read-first safety checks |
 | [Node.js API operations](./11ai/v0/11ai-nodejs-api-operations/README.md) | 10 | Inspecting, changing, testing, and troubleshooting Node.js APIs across common frameworks |
 | [Super](./11ai/v0/11ai-super/README.md) | 8 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
 | [Security](./11ai/v0/11ai-security/README.md) | 1 | Read-only dependency vulnerability and supply-chain auditing with critical host-harm triage |
-| [Utilities](./11ai/v0/11ai-utils/README.md) | 9 | Code-quality review and improvement, Markdown compression, reverse engineering, critique, LLM cost analysis, analytics, publication CMS, calls to action, and project sites |
+| [Utilities](./11ai/v0/11ai-utils/README.md) | 8 | Code-quality review and improvement, Markdown compression, reverse engineering, critique, analytics, publication CMS, calls to action, and project sites |
 | [Web design](./11ai/v0/11ai-web-design/README.md) | 2 | The 11ai visual language and deliberate content-led styling for accessible web interfaces |
 | [Cross-harness](./11ai/v0/11ai-xharness/README.md) | 2 | Delegating work to agents running in other CLI harnesses |
 
@@ -86,11 +87,12 @@ Start with a plugin's README to choose a skill, then name that skill in your req
     11ai-git-operations/      11 Git operation and workflow skills
     11ai-integrations/        3 integration skills
     11ai-jest-operations/     12 Jest operation skills
+    11ai-llm-costs/           2 LLM cost reporting skills
     11ai-mongodb-operations/  10 MongoDB operation skills
     11ai-nodejs-api-operations/ 10 Node.js API operation skills
     11ai-super/               8 iterative task and improvement skills
     11ai-security/            1 dependency security audit skill
-    11ai-utils/               9 utility skills
+    11ai-utils/               8 utility skills
     11ai-web-design/          2 web design skills
     11ai-xharness/            2 cross-harness skills
 scripts/                      Root package validation, release, and publishing helpers

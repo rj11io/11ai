@@ -79,6 +79,10 @@
       "source": "./11ai/v0/11ai-jest-operations"
     },
     {
+      "name": "11ai-llm-costs",
+      "source": "./11ai/v0/11ai-llm-costs"
+    },
+    {
       "name": "11ai-mongodb-operations",
       "source": "./11ai/v0/11ai-mongodb-operations"
     }

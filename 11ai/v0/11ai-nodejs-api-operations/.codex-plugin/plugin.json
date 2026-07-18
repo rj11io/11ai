@@ -1,13 +1,21 @@
 {
   "name": "11ai-nodejs-api-operations",
-  "version": "1.16.0",
+  "version": "1.18.3",
   "description": "Modular, evidence-first skills for common Node.js API development and operations.",
   "author": {
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
   "license": "Apache-2.0",
-  "keywords": ["nodejs", "node", "api", "rest", "express", "fastify", "testing"],
+  "keywords": [
+    "nodejs",
+    "node",
+    "api",
+    "rest",
+    "express",
+    "fastify",
+    "testing"
+  ],
   "skills": "./",
   "interface": {
     "displayName": "11ai Node.js API Operations",

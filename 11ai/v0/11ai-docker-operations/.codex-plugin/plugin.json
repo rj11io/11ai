@@ -1,13 +1,18 @@
 {
   "name": "11ai-docker-operations",
-  "version": "1.16.0",
+  "version": "1.18.3",
   "description": "Modular, safety-first skills for common Docker CLI and Compose operations.",
   "author": {
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
   "license": "Apache-2.0",
-  "keywords": ["docker", "containers", "compose", "devops"],
+  "keywords": [
+    "docker",
+    "containers",
+    "compose",
+    "devops"
+  ],
   "skills": "./",
   "interface": {
     "displayName": "11ai Docker Operations",
