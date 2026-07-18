@@ -240,6 +240,23 @@ finding without a lockfile or installed-version match.
 
 ### 8. Produce the report
 
+Always write the final report as UTF-8 Markdown in the root folder of the
+project scan boundary established in step 1. Use this filename:
+
+```text
+11ai-security-dep-scan-report-YYYYMMDDTHHMMSSZ.md
+```
+
+Generate the datetime in UTC at write time; for example,
+`11ai-security-dep-scan-report-20260718T143052Z.md`. Resolve the project root
+explicitly instead of assuming the current working directory or the skill
+directory is the root. Never overwrite an existing report. If a same-second
+name collision occurs, obtain a fresh timestamp or append `-2`, `-3`, and so on
+before `.md`. Do not write raw audit responses, secrets, tokens, or private
+registry credentials into the project report. Keep raw evidence in the ignored
+temporary location described above and include sanitized summaries and source
+references in the report.
+
 Lead with the answer and include:
 
 - scope, timestamp, tools/versions, commands, and files scanned;
@@ -266,3 +283,8 @@ version or replacement only after that candidate receives the same complete
 checks, whether to isolate/stop execution, and whether secrets or persistence
 should be investigated. If no critical issue is confirmed, explicitly say what
 was checked, the scan timestamp, and what remains unverified.
+
+Before finishing, verify that the report exists at the intended project-root
+path, is non-empty, contains the scan timestamp and coverage reconciliation, and
+does not expose credentials. Return the report's absolute path as a clickable
+file link in the final response.
