@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-jest-operations",
-  "version": "1.18.1",
+  "version": "1.18.2",
   "description": "Modular, standalone skills for common Jest testing operations.",
   "author": {
     "name": "rj11io"
