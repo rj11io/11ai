@@ -1,3 +1,10 @@
+## [1.18.3](https://github.com/rj11io/11ai/compare/v1.18.2...v1.18.3) (2026-07-18)
+
+
+### Bug Fixes
+
+* fix thread discovery ([5b41538](https://github.com/rj11io/11ai/commit/5b41538befe297b897b2677aa1ffb5192b9c416d))
+
 ## [1.18.2](https://github.com/rj11io/11ai/compare/v1.18.1...v1.18.2) (2026-07-18)
 
 
