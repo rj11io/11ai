@@ -1,8 +1,8 @@
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs"
+import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
-import { dirname, join } from "node:path"
+import { basename, dirname, join } from "node:path"
 import { spawnSync } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import { DatabaseSync } from "node:sqlite"
@@ -16,14 +16,15 @@ function writeJsonl(file, records) {
   writeFileSync(file, `${records.map((record) => JSON.stringify(record)).join("\n")}\n`)
 }
 
-function run(args) {
-  const result = spawnSync(process.execPath, [analyzer, ...args], { encoding: "utf8" })
+function run(args, cwd) {
+  const result = spawnSync(process.execPath, [analyzer, ...args], { encoding: "utf8", cwd })
   assert.equal(result.status, 0, result.stderr)
   return JSON.parse(result.stdout)
 }
 
 try {
   const project = join(fixtureRoot, "project")
+  const threadRoot = join(fixtureRoot, "thread-root")
   const codexHome = join(fixtureRoot, "codex")
   const claudeHome = join(fixtureRoot, "claude")
   const geminiHome = join(fixtureRoot, "gemini")
@@ -32,6 +33,7 @@ try {
   const opencodeDb = join(fixtureRoot, "opencode.db")
   const report = join(fixtureRoot, "report.md")
   mkdirSync(project, { recursive: true })
+  mkdirSync(threadRoot, { recursive: true })
 
   writeFileSync(join(project, "other-harness.json"), JSON.stringify({
     id: "generic-1",
@@ -75,6 +77,9 @@ try {
 
   const harnessArgs = ["--codex-home", codexHome, "--claude-home", claudeHome, "--gemini-home", geminiHome, "--cline-tasks", clineTasks, "--roo-tasks", rooTasks, "--opencode-db", opencodeDb]
   const summary = run([project, ...harnessArgs, "--output", report])
+  assert.equal(summary.output, report)
+  assert.equal(summary.markdownReport, report)
+  assert.equal(summary.htmlReport, join(fixtureRoot, "report.html"))
   assert.equal(summary.nativeFilesMetadataChecked, 7)
   assert.equal(summary.nativeSessionsMatched, 6)
   assert.equal(summary.codexSessions, 1)
@@ -88,6 +93,7 @@ try {
   assert.equal(summary.knownCosts, 6)
 
   const markdown = readFileSync(report, "utf8")
+  const html = readFileSync(summary.htmlReport, "utf8")
   assert.match(markdown, /^## Totals$/m)
   assert.match(markdown, /^## Cost by harness$/m)
   assert.match(markdown, /\| Harness \| Threads \| Known tokens \| Known cost \| Reported-cost sum \|/)
@@ -102,11 +108,37 @@ try {
   assert.ok(markdown.endsWith("_LLM token cost analysis by [11ai-llm-cost](https://ai.rj11.io/skills/11ai-llm-cost)._\n"))
   assert.doesNotMatch(markdown, /unrelated\.jsonl/)
   assert.doesNotMatch(markdown, new RegExp(fixtureRoot.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")))
+  const htmlSections = html.match(/<details class="report-section level-[23]">/g) ?? []
+  assert.equal(htmlSections.length, (markdown.match(/^#{2,3} /gm) ?? []).length)
+  assert.equal((html.match(/<\/details>/g) ?? []).length, htmlSections.length)
+  assert.match(html, /<summary><span class="section-title">Totals<\/span><\/summary>/)
+  assert.match(html, /<summary><span class="section-title">Pricing catalog match detail<\/span><\/summary>/)
+  assert.doesNotMatch(html, /<details\b[^>]*\bopen\b[^>]*>/)
+  assert.match(html, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost">11ai-llm-cost<\/a>/)
+  assert.match(html, /<p class="signature"><em>LLM token cost analysis by /)
+  assert.ok(html.indexOf("<h1>") < html.indexOf('<details class="report-section'))
+  assert.ok(html.lastIndexOf("</details>") < html.indexOf('<p class="signature">'))
+  assert.doesNotMatch(html, /unrelated\.jsonl/)
+  assert.doesNotMatch(html, new RegExp(fixtureRoot.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")))
 
   const localOnly = run([project, ...harnessArgs, "--project-only", "--output", join(fixtureRoot, "project-only.md")])
   assert.equal(localOnly.nativeFilesMetadataChecked, 0)
   assert.equal(localOnly.nativeSessionsMatched, 0)
   assert.equal(localOnly.threads, 1)
+
+  const defaultSummary = run([project, ...harnessArgs, "--project-only"], threadRoot)
+  const resolvedThreadRoot = realpathSync(threadRoot)
+  const reportsRoot = join(resolvedThreadRoot, "11ai-llm-cost-reports")
+  const defaultReportDir = dirname(defaultSummary.markdownReport)
+  assert.equal(defaultSummary.root, project)
+  assert.equal(defaultSummary.threadRoot, resolvedThreadRoot)
+  assert.equal(defaultSummary.outputDirectory, defaultReportDir)
+  assert.equal(dirname(defaultReportDir), reportsRoot)
+  assert.match(basename(defaultReportDir), /^11ai-llm-cost-reports-\d{4}-\d{2}-\d{2}T/)
+  assert.equal(dirname(defaultSummary.markdownReport), defaultReportDir)
+  assert.equal(dirname(defaultSummary.htmlReport), defaultReportDir)
+  assert.match(basename(defaultSummary.markdownReport), /^11ai-llm-cost-\d{4}-\d{2}-\d{2}T.*\.md$/)
+  assert.equal(basename(defaultSummary.htmlReport), `${basename(defaultSummary.markdownReport, ".md")}.html`)
 } finally {
   rmSync(fixtureRoot, { recursive: true, force: true })
 }

@@ -6,5 +6,7 @@ Two standalone skills for project-scoped and machine-wide LLM usage and cost rep
 
 | Skill | Use it for |
 | --- | --- |
-| [`11ai-global-llm-cost`](./skills/11ai-global-llm-cost/SKILL.md) | Reporting project-attributed and machine-wide LLM usage across Codex, Claude Code, Gemini CLI, Cline, Roo Code, OpenCode, and exported records |
-| [`11ai-llm-cost`](./skills/11ai-llm-cost/SKILL.md) | Analyzing project LLM usage and writing a timestamped cost report from local harness records |
+| [`11ai-global-llm-cost`](./skills/11ai-global-llm-cost/SKILL.md) | Reporting machine-wide LLM usage under `~/Desktop/11ai-global-llm-cost-reports/11ai-global-llm-cost-reports-{datetime}` |
+| [`11ai-llm-cost`](./skills/11ai-llm-cost/SKILL.md) | Analyzing project-attributed LLM usage and writing matching reports under `<current-thread-folder>/11ai-llm-cost-reports/11ai-llm-cost-reports-{datetime}` |
+
+Both standalone HTML reports use native disclosure controls. Every report section is collapsed by default, while the report title and linked skill signature remain visible.

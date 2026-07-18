@@ -18,11 +18,16 @@ if (argv.includes("--help")) {
   process.exit(0)
 }
 
-const root = resolve(positional ?? ".")
+const threadRoot = resolve(process.cwd())
+const root = resolve(positional ?? threadRoot)
 const generatedAt = new Date().toISOString()
 const filenameTimestamp = generatedAt.replaceAll(":", "-").replaceAll(".", "-")
+const reportName = `11ai-llm-cost-${filenameTimestamp}`
+const reportPackageName = `11ai-llm-cost-reports-${filenameTimestamp}`
 const explicitOutput = option("--output")
-const output = resolve(explicitOutput ?? join(root, `11ai-llm-cost-${filenameTimestamp}.md`))
+const markdownOutput = resolve(explicitOutput ?? join(threadRoot, "11ai-llm-cost-reports", reportPackageName, `${reportName}.md`))
+const htmlOutput = markdownOutput.toLowerCase().endsWith(".md") ? `${markdownOutput.slice(0, -3)}.html` : `${markdownOutput}.html`
+const output = markdownOutput
 if (!existsSync(root) || !statSync(root).isDirectory()) throw new Error(`root folder does not exist or is not a directory: ${root}`)
 
 const skillRoot = fileURLToPath(new URL("..", import.meta.url))
@@ -926,6 +931,164 @@ function report({ threads, stats, malformed, duplicateIds }) {
   return lines.join("\n")
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;")
+}
+
+function inlineHtml(value) {
+  let html = escapeHtml(value)
+  html = html.replace(/`([^`]+)`/g, "<code>$1</code>")
+  html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2">$1</a>')
+  html = html.replace(/^_([\s\S]+)_$/, "<em>$1</em>")
+  return html
+}
+
+function markdownCells(line) {
+  const cells = []
+  let cell = ""
+  let escaped = false
+  for (const char of line.slice(1, -1)) {
+    if (escaped) {
+      cell += char
+      escaped = false
+    } else if (char === "\\") {
+      escaped = true
+    } else if (char === "|") {
+      cells.push(cell.trim())
+      cell = ""
+    } else {
+      cell += char
+    }
+  }
+  cells.push(cell.trim())
+  return cells
+}
+
+function htmlReport(markdown) {
+  const lines = markdown.split(/\r?\n/)
+  const body = []
+  const sectionLevels = []
+  const closeSection = () => {
+    body.push("</div></details>")
+    sectionLevels.pop()
+  }
+  const closeSectionsThrough = (level) => {
+    while (sectionLevels.length && sectionLevels.at(-1) >= level) closeSection()
+  }
+  const closeAllSections = () => {
+    while (sectionLevels.length) closeSection()
+  }
+  for (let index = 0; index < lines.length;) {
+    const line = lines[index]
+    if (!line.trim()) {
+      index += 1
+      continue
+    }
+    const heading = /^(#{1,3})\s+(.+)$/.exec(line)
+    if (heading) {
+      const level = heading[1].length
+      if (level === 1) {
+        closeAllSections()
+        body.push(`<h1>${inlineHtml(heading[2])}</h1>`)
+      } else {
+        closeSectionsThrough(level)
+        body.push(`<details class="report-section level-${level}"><summary><span class="section-title">${inlineHtml(heading[2])}</span></summary><div class="section-body">`)
+        sectionLevels.push(level)
+      }
+      index += 1
+      continue
+    }
+    const signature = line === "_LLM token cost analysis by [11ai-llm-cost](https://ai.rj11.io/skills/11ai-llm-cost)._"
+    if (signature) {
+      closeAllSections()
+      body.push(`<p class="signature">${inlineHtml(line)}</p>`)
+      index += 1
+      continue
+    }
+    if (line.startsWith("> ")) {
+      body.push(`<blockquote>${inlineHtml(line.slice(2))}</blockquote>`)
+      index += 1
+      continue
+    }
+    if (line.startsWith("| ") && /^\|(?:\s*---\s*\|)+$/.test(lines[index + 1] ?? "")) {
+      const headers = markdownCells(line)
+      index += 2
+      const rows = []
+      while (index < lines.length && lines[index].startsWith("| ")) {
+        rows.push(markdownCells(lines[index]))
+        index += 1
+      }
+      body.push('<div class="table-wrap"><table><thead><tr>')
+      body.push(headers.map((cell) => `<th>${inlineHtml(cell)}</th>`).join(""))
+      body.push("</tr></thead><tbody>")
+      for (const row of rows) body.push(`<tr>${row.map((cell) => `<td>${inlineHtml(cell)}</td>`).join("")}</tr>`)
+      body.push("</tbody></table></div>")
+      continue
+    }
+    if (line.startsWith("- ")) {
+      const items = []
+      while (index < lines.length && lines[index].startsWith("- ")) {
+        items.push(`<li>${inlineHtml(lines[index].slice(2))}</li>`)
+        index += 1
+      }
+      body.push(`<ul>${items.join("")}</ul>`)
+      continue
+    }
+    body.push(`<p>${inlineHtml(line)}</p>`)
+    index += 1
+  }
+  closeAllSections()
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLM Cost Report</title>
+  <style>
+    :root { color-scheme: light dark; --bg: #f6f7fb; --card: #fff; --text: #172033; --muted: #5d6678; --line: #dce1ea; --accent: #3157d5; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #10131a; --card: #181d27; --text: #edf1f7; --muted: #aab3c3; --line: #303848; --accent: #8da8ff; } }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    main { width: min(1180px, calc(100% - 32px)); margin: 32px auto; padding: 40px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 12px 36px rgba(0,0,0,.08); }
+    h1 { margin-top: 0; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -.035em; }
+    .report-section { margin: 1rem 0; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: color-mix(in srgb, var(--card) 96%, var(--accent)); }
+    .report-section.level-2 { margin-top: 1.5rem; }
+    .report-section.level-3 { margin: .85rem 0; }
+    summary { display: flex; align-items: center; gap: .7rem; padding: 1rem 1.2rem; cursor: pointer; color: var(--text); font-weight: 750; list-style: none; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▸"; flex: 0 0 auto; color: var(--accent); transition: transform .15s ease; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    .level-2 > summary { font-size: 1.3rem; }
+    .level-3 > summary { font-size: 1.05rem; }
+    .section-body { padding: 0 1.2rem 1.2rem; border-top: 1px solid var(--line); }
+    p, li { color: var(--muted); }
+    blockquote { margin: 1.5rem 0; padding: 1rem 1.25rem; border-left: 4px solid var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); color: var(--muted); }
+    .table-wrap { margin: 1rem 0 1.75rem; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    th, td { padding: .7rem .8rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    th { background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--text); }
+    tr:last-child td { border-bottom: 0; }
+    code { padding: .1rem .3rem; border-radius: 4px; background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--text); }
+    a { color: var(--accent); }
+    .signature { margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+    @media (max-width: 700px) { main { width: 100%; margin: 0; padding: 24px 16px; border: 0; border-radius: 0; } }
+  </style>
+</head>
+<body>
+<main>
+${body.join("\n")}
+</main>
+</body>
+</html>
+`
+}
+
 const projectFiles = walk(root)
 const nativeFiles = discoverNativeSessions()
 const files = [...new Set([...projectFiles, ...nativeFiles].map((file) => resolve(file)))]
@@ -962,7 +1125,7 @@ stats.nativeSessionsMatched = discovery.nativeSessionsMatched
 stats.opencodeSessions = discovery.opencodeSessions
 for (const file of files) {
   stats.filesVisited += 1
-  if (resolve(file) === output) continue
+  if (resolve(file) === markdownOutput || resolve(file) === htmlOutput) continue
   const parsed = readRecords(file)
   malformed = malformed.concat(parsed.malformed)
   if (!parsed.records.length) continue
@@ -987,11 +1150,17 @@ const duplicateIds = [...logicalSources.entries()]
   .filter(([, sources]) => new Set(sources).size > 1)
   .map(([id]) => id)
 const markdown = report({ threads, stats, malformed, duplicateIds })
-mkdirSync(dirname(output), { recursive: true })
-writeFileSync(output, markdown, { flag: explicitOutput ? "w" : "wx" })
+const html = htmlReport(markdown)
+mkdirSync(dirname(markdownOutput), { recursive: true })
+writeFileSync(markdownOutput, markdown, { flag: explicitOutput ? "w" : "wx" })
+writeFileSync(htmlOutput, html, { flag: explicitOutput ? "w" : "wx" })
 console.log(JSON.stringify({
   root,
+  threadRoot,
   output,
+  outputDirectory: dirname(markdownOutput),
+  markdownReport: markdownOutput,
+  htmlReport: htmlOutput,
   filesInspected: stats.candidateFiles,
   projectFilesInspected: stats.projectCandidateFiles,
   nativeFilesMetadataChecked: stats.nativeFilesConsidered,

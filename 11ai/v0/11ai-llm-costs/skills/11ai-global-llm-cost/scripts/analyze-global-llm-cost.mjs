@@ -30,9 +30,10 @@ const generatedAt = new Date().toISOString()
 const generatedTime = new Date(generatedAt)
 const filenameTimestamp = generatedAt.replaceAll(":", "-").replaceAll(".", "-")
 const reportName = `11ai-global-llm-cost-${filenameTimestamp}`
+const reportPackageName = `11ai-global-llm-cost-reports-${filenameTimestamp}`
 const explicitOutputDir = option("--output-dir") ?? option("--output")
 if (option("--output-dir") && option("--output")) throw new Error("use either --output or --output-dir, not both")
-const outputDir = resolve(explicitOutputDir ?? join(homedir(), "Desktop", reportName))
+const outputDir = resolve(explicitOutputDir ?? join(homedir(), "Desktop", "11ai-global-llm-cost-reports", reportPackageName))
 const markdownOutput = join(outputDir, `${reportName}.md`)
 const htmlOutput = join(outputDir, `${reportName}.html`)
 
@@ -1077,6 +1078,17 @@ function markdownCells(line) {
 function htmlReport(markdown) {
   const lines = markdown.split(/\r?\n/)
   const body = []
+  const sectionLevels = []
+  const closeSection = () => {
+    body.push("</div></details>")
+    sectionLevels.pop()
+  }
+  const closeSectionsThrough = (level) => {
+    while (sectionLevels.length && sectionLevels.at(-1) >= level) closeSection()
+  }
+  const closeAllSections = () => {
+    while (sectionLevels.length) closeSection()
+  }
   for (let index = 0; index < lines.length;) {
     const line = lines[index]
     if (!line.trim()) {
@@ -1086,7 +1098,21 @@ function htmlReport(markdown) {
     const heading = /^(#{1,3})\s+(.+)$/.exec(line)
     if (heading) {
       const level = heading[1].length
-      body.push(`<h${level}>${inlineHtml(heading[2])}</h${level}>`)
+      if (level === 1) {
+        closeAllSections()
+        body.push(`<h1>${inlineHtml(heading[2])}</h1>`)
+      } else {
+        closeSectionsThrough(level)
+        body.push(`<details class="report-section level-${level}"><summary><span class="section-title">${inlineHtml(heading[2])}</span></summary><div class="section-body">`)
+        sectionLevels.push(level)
+      }
+      index += 1
+      continue
+    }
+    const signature = line === "_LLM token cost analysis by [11ai-global-llm-cost](https://ai.rj11.io/skills/11ai-global-llm-cost)._"
+    if (signature) {
+      closeAllSections()
+      body.push(`<p class="signature">${inlineHtml(line)}</p>`)
       index += 1
       continue
     }
@@ -1119,10 +1145,10 @@ function htmlReport(markdown) {
       body.push(`<ul>${items.join("")}</ul>`)
       continue
     }
-    const signature = line === "_LLM token cost analysis by [11ai-global-llm-cost](https://ai.rj11.io/skills/11ai-global-llm-cost)._"
-    body.push(`<p${signature ? ' class="signature"' : ""}>${inlineHtml(line)}</p>`)
+    body.push(`<p>${inlineHtml(line)}</p>`)
     index += 1
   }
+  closeAllSections()
 
   return `<!doctype html>
 <html lang="en">
@@ -1137,8 +1163,16 @@ function htmlReport(markdown) {
     body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     main { width: min(1180px, calc(100% - 32px)); margin: 32px auto; padding: 40px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 12px 36px rgba(0,0,0,.08); }
     h1 { margin-top: 0; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -.035em; }
-    h2 { margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--line); font-size: 1.7rem; }
-    h3 { margin-top: 2rem; font-size: 1.15rem; }
+    .report-section { margin: 1rem 0; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: color-mix(in srgb, var(--card) 96%, var(--accent)); }
+    .report-section.level-2 { margin-top: 1.5rem; }
+    .report-section.level-3 { margin: .85rem 0; }
+    summary { display: flex; align-items: center; gap: .7rem; padding: 1rem 1.2rem; cursor: pointer; color: var(--text); font-weight: 750; list-style: none; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▸"; flex: 0 0 auto; color: var(--accent); transition: transform .15s ease; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    .level-2 > summary { font-size: 1.3rem; }
+    .level-3 > summary { font-size: 1.05rem; }
+    .section-body { padding: 0 1.2rem 1.2rem; border-top: 1px solid var(--line); }
     p, li { color: var(--muted); }
     blockquote { margin: 1.5rem 0; padding: 1rem 1.25rem; border-left: 4px solid var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); color: var(--muted); }
     .table-wrap { margin: 1rem 0 1.75rem; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
@@ -1228,7 +1262,7 @@ const duplicateIds = [...logicalSources.entries()]
   .map(([id]) => id)
 const markdown = report({ threads, stats, malformed, duplicateIds })
 const html = htmlReport(markdown)
-mkdirSync(outputDir, { recursive: Boolean(explicitOutputDir) })
+mkdirSync(outputDir, { recursive: true })
 writeFileSync(markdownOutput, markdown, { flag: explicitOutputDir ? "w" : "wx" })
 writeFileSync(htmlOutput, html, { flag: explicitOutputDir ? "w" : "wx" })
 console.log(JSON.stringify({

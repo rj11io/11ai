@@ -1,24 +1,33 @@
 ---
 name: 11ai-llm-cost
-description: "Inspect a repository plus its project-attributed Codex, Claude Code, Gemini CLI, Cline, Roo Code, and OpenCode records; normalize provider token counters, calculate attributable USD costs, and write a timestamped root-level Markdown report. Use for project LLM spend, token usage, model cost, thread cost, AI activity, or recursive cost analysis."
+description: "Inspect a repository plus its project-attributed Codex, Claude Code, Gemini CLI, Cline, Roo Code, and OpenCode records; normalize provider token counters, calculate attributable USD costs, and write matching timestamped Markdown and HTML reports under the current thread folder's 11ai-llm-cost-reports directory. Use for project LLM spend, token usage, model cost, thread cost, AI activity, or recursive cost analysis."
 ---
 
 # 11ai LLM Cost
 
-Analyze local LLM activity without depending on a benchmark repository, benchmark schema, or external service. Write each default report as a new timestamped Markdown file at the scanned root; keep source transcripts and input files read-only.
+Analyze local LLM activity without depending on a benchmark repository, benchmark schema, or external service. Write every default report package beneath the persistent `11ai-llm-cost-reports` folder at the current thread's working-directory root; keep source transcripts and input files read-only.
 
 ## Contract
 
-Run the bundled analyzer from the target root:
+Run the bundled analyzer from the current thread's folder root. The optional positional folder is the project to analyze and does not change the default report destination:
 
 ```bash
 node <skill>/scripts/analyze-llm-cost.mjs <root-folder>
 ```
 
-The command writes `<root-folder>/11ai-llm-cost-{datetime}.md`, where `{datetime}` is the UTC ISO timestamp for the run with colons and the decimal point replaced by hyphens (for example, `11ai-llm-cost-2026-07-18T14-30-45-123Z.md`). The default write is exclusive so it never overwrites an existing report. It accepts:
+The command treats `process.cwd()` as the current thread folder and creates this structure if needed. `{datetime}` is the UTC ISO timestamp for the run with colons and the decimal point replaced by hyphens:
+
+```text
+<thread-folder>/11ai-llm-cost-reports/
+└── 11ai-llm-cost-reports-{datetime}/
+    ├── 11ai-llm-cost-{datetime}.md
+    └── 11ai-llm-cost-{datetime}.html
+```
+
+Generate both files from the same analysis. The HTML must be self-contained with embedded styling and no network dependency. The timestamped default package uses exclusive file creation so it never overwrites existing reports. It accepts:
 
 - `--pricing <file>` to use a repository-specific pricing catalog;
-- `--output <file>` only when the user explicitly requests a different report path;
+- `--output <file>` only when the user explicitly requests a different Markdown report path; the analyzer writes the matching HTML sibling automatically;
 - `--codex-home <dir>` or `CODEX_HOME` to override the native Codex data directory;
 - `--claude-home <dir>` or `CLAUDE_CONFIG_DIR` to override the native Claude Code data directory;
 - `--gemini-home <dir>` or `GEMINI_CLI_HOME` to override Gemini CLI discovery (`--gemini-home` points directly to `.gemini`);
@@ -32,9 +41,9 @@ Read [references/harnesses.md](references/harnesses.md) when native discovery, v
 
 ## Workflow
 
-1. Establish the exact root, resolve native transcript homes from CLI options, harness environment variables, or the current user's home directory, and confirm the output path is inside the root unless the user asked otherwise.
+1. Establish both the current thread folder (`process.cwd()`) and the project root to analyze. Resolve native transcript homes from CLI options, harness environment variables, or the current user's home directory, and use `<thread-folder>/11ai-llm-cost-reports/11ai-llm-cost-reports-{datetime}` unless the user explicitly requested another output path.
 2. Run the analyzer. Preserve malformed, ambiguous, unpriced, and reported-only records in the report's coverage and limitations sections rather than silently dropping them.
-3. Review the generated `11ai-llm-cost-{datetime}.md` for explicit totals, provider/model/harness aggregates, root-versus-child-folder aggregates, token-class detail, per-thread table, pricing coverage, anomalies, and methodology.
+3. Review both generated files for explicit totals, provider/model/harness aggregates, root-versus-child-folder aggregates, token-class detail, per-thread table, pricing coverage, anomalies, and methodology. Confirm every HTML report section is a native collapsed disclosure control on first load.
 4. If a model is unmatched or pricing is older than 30 days, verify the provider's official pricing page. Prefer a repository-local `llm-pricing.json` or `.llm-cost/pricing.json` override so the report remains reproducible; never invent a rate from memory.
 5. Rerun the analyzer after pricing or input changes. It is idempotent and does not edit transcripts.
 
@@ -62,13 +71,17 @@ Provider-native raw usage is retained in the analyzer's in-memory record and nor
 
 ## Report requirements
 
-The report must display explicit grand totals for threads, token classes, measured/provider tokens, known cost, and cost coverage. It must aggregate by provider, model, harness, and root/child folder; include a `Total` row in every aggregate table; and show average tokens per thread plus average known cost per priced thread in the harness aggregate. Distinguish measured token usage, derived cost, harness-reported cost, and unavailable cost. State that computed subscription usage is an API-equivalent estimate, not necessarily an invoice. Include source-relative paths and timestamps where available, but do not copy prompts, message content, secrets, or full transcripts into the report.
+Both reports must display explicit grand totals for threads, token classes, measured/provider tokens, known cost, and cost coverage. They must aggregate by provider, model, harness, and root/child folder; include a `Total` row in every aggregate table; and show average tokens per thread plus average known cost per priced thread in the harness aggregate. Distinguish measured token usage, derived cost, harness-reported cost, and unavailable cost. State that computed subscription usage is an API-equivalent estimate, not necessarily an invoice. Include source-relative paths and timestamps where available, but do not copy prompts, message content, secrets, or full transcripts into the report.
+
+In HTML, render every level-two and level-three report section as a native `<details>` element with a `<summary>`, omit the `open` attribute so all sections are collapsed by default, and keep the report title and signature outside those disclosures.
 
 End every Markdown report with this exact linked signature:
 
 ```markdown
 _LLM token cost analysis by [11ai-llm-cost](https://ai.rj11.io/skills/11ai-llm-cost)._
 ```
+
+End the HTML report with the same visible signature and a clickable link whose `href` is exactly `https://ai.rj11.io/skills/11ai-llm-cost`.
 
 If this skill extends an existing report, preserve its prior skill attribution
 and keep all skill signatures together at the end of the combined report.
@@ -91,7 +104,8 @@ Rates are USD per one million tokens. Every priced thread must show the matched 
 Before reporting completion:
 
 - confirm the analyzer exits successfully;
-- confirm a new `11ai-llm-cost-{datetime}.md` exists at the requested root;
-- confirm the report displays totals, provider/model/harness/folder aggregates with grand-total rows, scanned files, recognized threads, known and unknown costs, pricing coverage, limitations, and the exact linked signature above;
-- rerun once with unchanged inputs, confirm it creates a second timestamped report, and ensure report content is stable apart from its generated timestamp;
-- report the exact output path and any model/pricing gaps.
+- confirm `<thread-folder>/11ai-llm-cost-reports/11ai-llm-cost-reports-{datetime}` exists and contains matching `11ai-llm-cost-{datetime}.md` and `.html` files;
+- confirm both reports display totals, provider/model/harness/folder aggregates with grand-total rows, scanned files, recognized threads, known and unknown costs, pricing coverage, limitations, and the exact linked signature above;
+- confirm every HTML level-two and level-three report section is a `<details>` disclosure without an `open` attribute, so all sections load collapsed;
+- rerun once with unchanged inputs, confirm it creates a second timestamped report pair, and ensure report content is stable apart from its generated timestamp;
+- report the exact output paths and any model/pricing gaps.

@@ -1,4 +1,4 @@
 interface:
   display_name: "11ai LLM Cost"
   short_description: "Analyze project LLM costs across harnesses"
-  default_prompt: "Use $11ai-llm-cost to analyze project-attributed Codex, Claude Code, Gemini CLI, Cline, Roo Code, OpenCode, and exported usage, then write a timestamped Markdown report with explicit totals and provider, model, harness, and folder aggregates."
+  default_prompt: "Use $11ai-llm-cost to analyze project-attributed Codex, Claude Code, Gemini CLI, Cline, Roo Code, OpenCode, and exported usage, then write matching Markdown and HTML reports in a timestamped 11ai-llm-cost-reports-{datetime} package under the current thread folder's 11ai-llm-cost-reports directory; include explicit totals and provider, model, harness, and folder aggregates, and make every HTML section collapsed by default."
