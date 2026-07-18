@@ -61,6 +61,7 @@ try {
   assert.match(markdown, /codex-session\/sessions\/2026\/07\/18\/matching\.jsonl/)
   assert.match(markdown, /claude-session\/projects\/fixture\/matching\.jsonl/)
   assert.match(markdown, /other-harness\.json/)
+  assert.ok(markdown.endsWith("_LLM token cost analysis by [11ai-llm-cost](https://ai.rj11.io/skills/11ai-llm-cost)._\n"))
   assert.doesNotMatch(markdown, /unrelated\.jsonl/)
   assert.doesNotMatch(markdown, new RegExp(fixtureRoot.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")))
 

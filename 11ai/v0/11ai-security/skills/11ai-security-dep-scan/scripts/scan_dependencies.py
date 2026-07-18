@@ -528,6 +528,12 @@ def markdown_report(report: dict[str, Any]) -> str:
     if report["warnings"]:
         lines.extend(["", "## Scan warnings", ""])
         lines.extend(f"- {warning}" for warning in report["warnings"])
+    lines.extend(
+        [
+            "",
+            "_Security scan by [11ai-security-dep-scan](https://ai.rj11.io/skills/11ai-security-dep-scan)._",
+        ]
+    )
     return "\n".join(lines) + "\n"
 
 

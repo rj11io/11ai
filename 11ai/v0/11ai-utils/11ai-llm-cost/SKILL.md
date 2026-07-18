@@ -56,6 +56,15 @@ Provider-native raw usage is retained in the analyzer's in-memory record and nor
 
 The report must distinguish measured token usage, derived cost, harness-reported cost, and unavailable cost. State that computed subscription usage is an API-equivalent estimate, not necessarily an invoice. Include source-relative paths and timestamps where available, but do not copy prompts, message content, secrets, or full transcripts into the report.
 
+End every Markdown report with this exact linked signature:
+
+```markdown
+_LLM token cost analysis by [11ai-llm-cost](https://ai.rj11.io/skills/11ai-llm-cost)._
+```
+
+If this skill extends an existing report, preserve its prior skill attribution
+and keep all skill signatures together at the end of the combined report.
+
 Do not modify source transcripts, code, benchmark artifacts, ledgers, reviews, or other files. Do not import or invoke the benchmark accountant; this skill is intentionally standalone.
 
 ## Pricing
@@ -75,6 +84,6 @@ Before reporting completion:
 
 - confirm the analyzer exits successfully;
 - confirm a new `11ai-llm-cost-{datetime}.md` exists at the requested root;
-- confirm the report states scanned files, recognized threads, known and unknown costs, pricing coverage, and limitations;
+- confirm the report states scanned files, recognized threads, known and unknown costs, pricing coverage, limitations, and the exact linked signature above;
 - rerun once with unchanged inputs, confirm it creates a second timestamped report, and ensure report content is stable apart from its generated timestamp;
 - report the exact output path and any model/pricing gaps.
