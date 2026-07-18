@@ -1006,7 +1006,11 @@ function htmlReport(markdown) {
     const signature = line === "_LLM token cost analysis by [11ai-llm-cost](https://ai.rj11.io/skills/11ai-llm-cost)._"
     if (signature) {
       closeAllSections()
-      body.push(`<p class="signature">${inlineHtml(line)}</p>`)
+      const signatureHtml = inlineHtml(line).replace(
+        '<a href="https://ai.rj11.io/skills/11ai-llm-cost">',
+        '<a href="https://ai.rj11.io/skills/11ai-llm-cost" target="_blank" rel="noopener noreferrer">',
+      )
+      body.push(`<p class="signature">${signatureHtml}</p>`)
       index += 1
       continue
     }

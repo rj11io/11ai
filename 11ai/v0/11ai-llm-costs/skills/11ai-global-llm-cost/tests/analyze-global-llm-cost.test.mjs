@@ -129,7 +129,7 @@ try {
   assert.ok(html.indexOf('class="section-title">All time</span>') < html.indexOf('class="section-title">Year to date</span>'))
   assert.ok(html.indexOf('class="section-title">Year to date</span>') < html.indexOf('class="section-title">Month to date</span>'))
   assert.ok(html.indexOf('class="section-title">Month to date</span>') < html.indexOf('class="section-title">Past 7 days</span>'))
-  assert.match(html, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-global-llm-cost">11ai-global-llm-cost<\/a>/)
+  assert.match(html, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-global-llm-cost" target="_blank" rel="noopener noreferrer">11ai-global-llm-cost<\/a>/)
   assert.match(html, /<p class="signature"><em>LLM token cost analysis by /)
   assert.ok(html.indexOf("<h1>") < html.indexOf('<details class="report-section'))
   assert.ok(html.lastIndexOf("</details>") < html.indexOf('<p class="signature">'))

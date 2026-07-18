@@ -114,7 +114,7 @@ try {
   assert.match(html, /<summary><span class="section-title">Totals<\/span><\/summary>/)
   assert.match(html, /<summary><span class="section-title">Pricing catalog match detail<\/span><\/summary>/)
   assert.doesNotMatch(html, /<details\b[^>]*\bopen\b[^>]*>/)
-  assert.match(html, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost">11ai-llm-cost<\/a>/)
+  assert.match(html, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost" target="_blank" rel="noopener noreferrer">11ai-llm-cost<\/a>/)
   assert.match(html, /<p class="signature"><em>LLM token cost analysis by /)
   assert.ok(html.indexOf("<h1>") < html.indexOf('<details class="report-section'))
   assert.ok(html.lastIndexOf("</details>") < html.indexOf('<p class="signature">'))
