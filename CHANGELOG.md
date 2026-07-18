@@ -1,3 +1,17 @@
+# [1.19.0](https://github.com/rj11io/11ai/compare/v1.18.4...v1.19.0) (2026-07-18)
+
+
+### Bug Fixes
+
+* improve reports ([bbc1e64](https://github.com/rj11io/11ai/commit/bbc1e640c5c69ec5bc9733c4e6e3877283e7eef4))
+* plugin qa ([7c720cd](https://github.com/rj11io/11ai/commit/7c720cd3843ef0dc8b9db96db08e7109a18d256a))
+* skill qa ([392091f](https://github.com/rj11io/11ai/commit/392091fc0664313db67845038949be22e37fe797))
+
+
+### Features
+
+* llm costs plugin ([7054d99](https://github.com/rj11io/11ai/commit/7054d995025013be9429b80b98d0eb3e597d67e9))
+
 ## [1.18.4](https://github.com/rj11io/11ai/compare/v1.18.3...v1.18.4) (2026-07-18)
 
 
