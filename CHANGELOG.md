@@ -1,3 +1,10 @@
+## [1.18.2](https://github.com/rj11io/11ai/compare/v1.18.1...v1.18.2) (2026-07-18)
+
+
+### Bug Fixes
+
+* update report file name ([7a8ba01](https://github.com/rj11io/11ai/commit/7a8ba01e6587006ae41f3821a17ec71013e5906c))
+
 ## [1.18.1](https://github.com/rj11io/11ai/compare/v1.18.0...v1.18.1) (2026-07-18)
 
 
