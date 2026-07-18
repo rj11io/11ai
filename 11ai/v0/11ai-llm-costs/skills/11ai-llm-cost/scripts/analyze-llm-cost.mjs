@@ -14,7 +14,7 @@ const option = (name) => {
 }
 
 if (argv.includes("--help")) {
-  console.log("usage: node analyze-llm-cost.mjs [root-folder] [--pricing pricing.json] [--output report.md] [--codex-home dir] [--claude-home dir] [--project-only]")
+  console.log("usage: node analyze-llm-cost.mjs [root-folder] [--pricing pricing.json] [--output report.md] [--codex-home dir] [--claude-home dir] [--gemini-home dir] [--cline-tasks dir] [--roo-tasks dir] [--opencode-db file] [--project-only]")
   process.exit(0)
 }
 
@@ -41,9 +41,9 @@ const SKIP_DIRS = new Set([
   "coverage", "dist", "build", "out", "vendor", ".venv", "venv", "__pycache__",
 ])
 const JSON_EXTENSIONS = new Set([".json", ".jsonl", ".ndjson"])
-const SESSION_EXTENSIONS = new Set([".jsonl", ".ndjson"])
+const SESSION_EXTENSIONS = new Set([".json", ".jsonl", ".ndjson"])
 const externalSessions = new Map()
-const discovery = { nativeFilesConsidered: 0, nativeSessionsMatched: 0, codexSessions: 0, claudeSessions: 0 }
+const discovery = { nativeFilesConsidered: 0, nativeSessionsMatched: 0, codexSessions: 0, claudeSessions: 0, geminiSessions: 0, clineSessions: 0, rooSessions: 0, opencodeSessions: 0, limitations: [] }
 const finite = (value) => typeof value === "number" && Number.isFinite(value)
 const number = (value) => {
   if (finite(value)) return value
@@ -138,27 +138,92 @@ function nativeSessionMetadata(file) {
   return null
 }
 
+function geminiSessionMetadata(file) {
+  const lines = readPrefix(file).split(/\r?\n/)
+  for (const line of lines) {
+    if (!line.trim()) continue
+    let record
+    try { record = JSON.parse(line) } catch { continue }
+    if (!record?.sessionId && !record?.projectHash && !Array.isArray(record?.directories)) continue
+    return {
+      id: record.sessionId ?? null,
+      projectHash: record.projectHash ?? null,
+      directories: Array.isArray(record.directories) ? record.directories.filter((value) => typeof value === "string").map((value) => resolve(value)) : [],
+    }
+  }
+  return null
+}
+
+function taskWorkspace(file) {
+  for (const name of ["task_metadata.json", "history_item.json"]) {
+    const metadataFile = join(dirname(file), name)
+    if (!existsSync(metadataFile)) continue
+    try {
+      const metadata = JSON.parse(readFileSync(metadataFile, "utf8"))
+      const cwd = firstValue(metadata?.cwdOnTaskInitialization, metadata?.cwd, metadata?.workspace, metadata?.workspacePath)
+      if (typeof cwd === "string") return resolve(cwd)
+    } catch { /* ignored and reported only if the usage file is selected */ }
+  }
+  return null
+}
+
+function vscodeTaskRoots(userHome, extensionId) {
+  return [
+    join(userHome, "Library", "Application Support", "Code", "User", "globalStorage", extensionId, "tasks"),
+    join(userHome, ".config", "Code", "User", "globalStorage", extensionId, "tasks"),
+    join(userHome, ".vscode-server", "data", "User", "globalStorage", extensionId, "tasks"),
+  ]
+}
+
 function discoverNativeSessions() {
   if (argv.includes("--project-only")) return []
   const codexHome = resolve(option("--codex-home") ?? process.env.CODEX_HOME ?? join(homedir(), ".codex"))
   const claudeHome = resolve(option("--claude-home") ?? process.env.CLAUDE_CONFIG_DIR ?? join(homedir(), ".claude"))
+  const geminiHome = resolve(option("--gemini-home") ?? (process.env.GEMINI_CLI_HOME ? join(process.env.GEMINI_CLI_HOME, ".gemini") : join(homedir(), ".gemini")))
+  const clineRoots = option("--cline-tasks")
+    ? [resolve(option("--cline-tasks"))]
+    : [join(homedir(), ".cline", "data", "tasks"), ...vscodeTaskRoots(homedir(), "saoudrizwan.claude-dev")]
+  const rooRoots = option("--roo-tasks")
+    ? [resolve(option("--roo-tasks"))]
+    : vscodeTaskRoots(homedir(), "rooveterinaryinc.roo-cline")
   const sources = [
     { harness: "codex", home: codexHome, roots: [join(codexHome, "sessions"), join(codexHome, "archived_sessions")] },
     { harness: "claude", home: claudeHome, roots: [join(claudeHome, "projects")] },
+    { harness: "gemini", home: geminiHome, roots: [join(geminiHome, "tmp")] },
+    { harness: "cline", home: dirname(clineRoots[0]), roots: clineRoots },
+    { harness: "roo", home: dirname(rooRoots[0]), roots: rooRoots },
   ]
   const matched = []
   for (const source of sources) {
     for (const sessionRoot of source.roots) {
       for (const file of walkSessionFiles(sessionRoot)) {
+        if ((source.harness === "cline" || source.harness === "roo") && basename(file) !== "ui_messages.json") continue
+        if (source.harness === "gemini" && !file.replaceAll("\\", "/").includes("/chats/")) continue
         discovery.nativeFilesConsidered += 1
-        const metadata = nativeSessionMetadata(file)
-        if (!metadata || !isWithin(root, metadata.cwd)) continue
+        let metadata
+        let matches = false
+        if (source.harness === "gemini") {
+          metadata = geminiSessionMetadata(file)
+          matches = Boolean(metadata && (metadata.projectHash === sha(root) || metadata.directories.some((directory) => isWithin(root, directory))))
+          if (metadata && !metadata.cwd) metadata.cwd = root
+        } else if (source.harness === "cline" || source.harness === "roo") {
+          const cwd = taskWorkspace(file)
+          metadata = cwd ? { cwd, id: basename(dirname(file)) } : null
+          matches = Boolean(cwd && isWithin(root, cwd))
+        } else {
+          metadata = nativeSessionMetadata(file)
+          matches = Boolean(metadata && isWithin(root, metadata.cwd))
+        }
+        if (!matches) continue
         const rel = relative(source.home, file).replaceAll("\\", "/") || basename(file)
         externalSessions.set(resolve(file), { ...metadata, harness: source.harness, label: rel })
         matched.push(resolve(file))
         discovery.nativeSessionsMatched += 1
         if (source.harness === "codex") discovery.codexSessions += 1
         if (source.harness === "claude") discovery.claudeSessions += 1
+        if (source.harness === "gemini") discovery.geminiSessions += 1
+        if (source.harness === "cline") discovery.clineSessions += 1
+        if (source.harness === "roo") discovery.rooSessions += 1
       }
     }
   }
@@ -171,7 +236,10 @@ function readRecords(file) {
   if (extname(file).toLowerCase() === ".json") {
     try {
       const value = JSON.parse(text)
-      return { records: Array.isArray(value) ? value : [value], malformed }
+      const nested = value && !Array.isArray(value) && typeof value === "object"
+        ? ["messages", "records", "events", "items"].flatMap((key) => Array.isArray(value[key]) ? value[key] : [])
+        : []
+      return { records: Array.isArray(value) ? value : [value, ...nested], malformed }
     } catch (error) {
       malformed.push(`${sourceLabel(file)}: ${error.message}`)
       return { records: [], malformed }
@@ -200,19 +268,21 @@ function usageObject(record) {
     record.response?.usage,
     record.result?.usage,
     record.metrics?.usage,
+    record.info?.tokens,
   ]
   return candidates.find(looksLikeUsage) ?? null
 }
 
 function modelFrom(record, usage) {
-  return firstValue(record?.model, record?.message?.model, record?.response?.model, record?.payload?.model, usage?.model) ?? "unknown"
+  return firstValue(record?.model, record?.modelID, record?.modelId, record?.info?.modelID, record?.info?.modelId, record?.message?.model, record?.response?.model, record?.payload?.model, usage?.model) ?? "unknown"
 }
 
 function providerFrom(record, usage, model = modelFrom(record, usage)) {
-  const explicit = firstValue(record?.provider, record?.payload?.provider, usage?.provider)
+  const explicit = firstValue(record?.provider, record?.providerID, record?.providerId, record?.info?.providerID, record?.info?.providerId, record?.payload?.provider, usage?.provider)
   if (explicit) return String(explicit).toLowerCase()
   if (String(model).toLowerCase().startsWith("claude")) return "anthropic"
   if (/^(gpt|o[1-9]|chatgpt)/i.test(String(model))) return "openai"
+  if (/^gemini/i.test(String(model))) return "google"
   if (usage && ("cache_creation_input_tokens" in usage || "cache_read_input_tokens" in usage)) return "anthropic"
   return "unknown"
 }
@@ -222,7 +292,7 @@ function effortFrom(record) {
 }
 
 function timeFrom(record) {
-  return iso(firstValue(record?.timestamp, record?.created_at, record?.createdAt, record?.created, record?.time, record?.payload?.timestamp))
+  return iso(firstValue(record?.timestamp, record?.created_at, record?.createdAt, record?.created, record?.time?.completed, record?.time?.created, record?.time, record?.info?.time?.completed, record?.info?.time?.created, record?.payload?.timestamp))
 }
 
 function logicalIdFrom(record) {
@@ -236,6 +306,7 @@ function logicalIdFrom(record) {
     record?.payload?.session_id,
     record?.payload?.sessionId,
     record?.payload?.id,
+    record?.info?.sessionID,
   )
 }
 
@@ -252,6 +323,7 @@ function reportedCostFrom(record, usage) {
     usage?.cost_usd,
     usage?.total_cost,
     usage?.total_cost_usd,
+    record?.info?.cost,
   )
 }
 
@@ -259,10 +331,12 @@ function normalizeUsage(usage, provider) {
   const input = firstFinite(usage?.input_tokens, usage?.prompt_tokens, usage?.input)
   const output = firstFinite(usage?.output_tokens, usage?.completion_tokens, usage?.output)
   const total = firstFinite(usage?.total_tokens)
-  const reasoning = firstFinite(usage?.reasoning_output_tokens, usage?.output_tokens_details?.reasoning_tokens, usage?.completion_tokens_details?.reasoning_tokens)
+  const reasoning = firstFinite(usage?.reasoning_output_tokens, usage?.reasoning, usage?.output_tokens_details?.reasoning_tokens, usage?.completion_tokens_details?.reasoning_tokens)
+  const separateReasoning = usage?.reasoning !== undefined
+  const outputTotal = finite(output) && finite(reasoning) && separateReasoning ? output + reasoning : output
   const cached = firstFinite(usage?.cached_input_tokens, usage?.input_tokens_details?.cached_tokens, usage?.prompt_tokens_details?.cached_tokens)
-  const cacheRead = firstFinite(usage?.cache_read_input_tokens)
-  const cacheWrite5m = firstFinite(usage?.cache_creation?.ephemeral_5m_input_tokens)
+  const cacheRead = firstFinite(usage?.cache_read_input_tokens, usage?.cache?.read)
+  const cacheWrite5m = firstFinite(usage?.cache_creation?.ephemeral_5m_input_tokens, usage?.cache?.write)
   const cacheWrite1h = firstFinite(usage?.cache_creation?.ephemeral_1h_input_tokens)
   const cacheWriteCombined = firstFinite(usage?.cache_creation_input_tokens)
   const isAnthropic = provider === "anthropic" || cacheRead !== null || cacheWrite5m !== null || cacheWrite1h !== null || cacheWriteCombined !== null
@@ -278,10 +352,10 @@ function normalizeUsage(usage, provider) {
       cachedInputRead: read,
       cacheWrite5m: write5m,
       cacheWrite1h: write1h,
-      outputTotal: output,
+      outputTotal,
       reasoningOutput: reasoning,
-      nonReasoningOutput: finite(output) && finite(reasoning) ? output - reasoning : null,
-      providerTotal: firstFinite(total, finite(inputTotal) && finite(output) ? inputTotal + output : null),
+      nonReasoningOutput: separateReasoning ? output : finite(output) && finite(reasoning) ? output - reasoning : null,
+      providerTotal: firstFinite(total, finite(inputTotal) && finite(outputTotal) ? inputTotal + outputTotal : null),
     }
   }
 
@@ -294,10 +368,10 @@ function normalizeUsage(usage, provider) {
       cachedInputRead,
       cacheWrite5m: 0,
       cacheWrite1h: 0,
-      outputTotal: output,
+      outputTotal,
       reasoningOutput: reasoning,
-      nonReasoningOutput: finite(output) && finite(reasoning) ? output - reasoning : null,
-      providerTotal: firstFinite(total, finite(input) && finite(output) ? input + output : null),
+      nonReasoningOutput: separateReasoning ? output : finite(output) && finite(reasoning) ? output - reasoning : null,
+      providerTotal: firstFinite(total, finite(input) && finite(outputTotal) ? input + outputTotal : null),
     }
   }
 
@@ -307,10 +381,10 @@ function normalizeUsage(usage, provider) {
     cachedInputRead: cached,
     cacheWrite5m: cacheWrite5m ?? cacheWriteCombined,
     cacheWrite1h,
-    outputTotal: output,
+    outputTotal,
     reasoningOutput: reasoning,
-    nonReasoningOutput: finite(output) && finite(reasoning) ? output - reasoning : null,
-    providerTotal: firstFinite(total, finite(input) && finite(output) ? input + output : null),
+    nonReasoningOutput: separateReasoning ? output : finite(output) && finite(reasoning) ? output - reasoning : null,
+    providerTotal: firstFinite(total, finite(input) && finite(outputTotal) ? input + outputTotal : null),
   }
 }
 
@@ -394,6 +468,154 @@ function parseClaude(file, records) {
   })
 }
 
+function parseGemini(file, records) {
+  const metadata = records.find((record) => record?.sessionId || record?.projectHash)
+  const groups = new Map()
+  for (const record of records) {
+    if (record?.type !== "gemini" || !record?.tokens) continue
+    const usage = record.tokens
+    const model = record.model ?? "unknown"
+    const cached = firstFinite(usage.cached, 0)
+    const input = firstFinite(usage.input)
+    const output = firstFinite(usage.output)
+    const thoughts = firstFinite(usage.thoughts, 0)
+    const tool = firstFinite(usage.tool, 0)
+    const normalized = {
+      inputTotal: finite(input) ? input + tool : null,
+      inputUncached: finite(input) ? Math.max(0, input - cached) + tool : null,
+      cachedInputRead: cached,
+      cacheWrite5m: 0,
+      cacheWrite1h: 0,
+      outputTotal: finite(output) ? output + thoughts : null,
+      reasoningOutput: thoughts,
+      nonReasoningOutput: output,
+      providerTotal: firstFinite(usage.total, finite(input) && finite(output) ? input + tool + output + thoughts : null),
+    }
+    const group = groups.get(model) ?? { records: [], usages: [], tokens: [] }
+    group.records.push(record)
+    group.usages.push(usage)
+    group.tokens.push(normalized)
+    groups.set(model, group)
+  }
+  return [...groups.entries()].map(([model, group], index) => baseThread(file, index, "google", "gemini", model, addTokens(group.tokens), group.records, group.usages, null, metadata?.sessionId))
+}
+
+function parseClineFamily(file, records, harness) {
+  const entries = []
+  for (const record of records) {
+    if (record?.type !== "say" || !["api_req_started", "deleted_api_reqs", "subagent_usage"].includes(record?.say)) continue
+    let usage
+    try { usage = typeof record.text === "string" ? JSON.parse(record.text) : record.text } catch { continue }
+    if (!usage || [usage.tokensIn, usage.tokensOut, usage.cacheWrites, usage.cacheReads, usage.cost].every((value) => number(value) === null)) continue
+    const model = firstValue(usage.model, usage.modelId, usage.modelID, record.model) ?? "unknown"
+    const provider = providerFrom({ provider: firstValue(usage.provider, usage.apiProtocol), model }, usage, model)
+    const tokensIn = firstFinite(usage.tokensIn, 0)
+    const tokensOut = firstFinite(usage.tokensOut, 0)
+    const cacheWrites = firstFinite(usage.cacheWrites, 0)
+    const cacheReads = firstFinite(usage.cacheReads, 0)
+    entries.push({
+      record: { ...record, timestamp: record.ts ?? record.timestamp },
+      usage,
+      model,
+      provider,
+      cost: firstFinite(usage.cost),
+      tokens: {
+        inputTotal: tokensIn + cacheWrites + cacheReads,
+        inputUncached: tokensIn,
+        cachedInputRead: cacheReads,
+        cacheWrite5m: cacheWrites,
+        cacheWrite1h: 0,
+        outputTotal: tokensOut,
+        reasoningOutput: null,
+        nonReasoningOutput: tokensOut,
+        providerTotal: tokensIn + cacheWrites + cacheReads + tokensOut,
+      },
+    })
+  }
+  const groups = new Map()
+  for (const entry of entries) {
+    const key = `${entry.provider}|${entry.model}`
+    groups.set(key, [...(groups.get(key) ?? []), entry])
+  }
+  return [...groups.values()].map((group, index) => baseThread(
+    file,
+    index,
+    group[0].provider,
+    harness,
+    group[0].model,
+    addTokens(group.map((entry) => entry.tokens)),
+    group.map((entry) => entry.record),
+    group.map((entry) => entry.usage),
+    sumReported(group.map((entry) => entry.cost)),
+    externalSessions.get(resolve(file))?.id,
+  ))
+}
+
+async function parseOpenCodeDatabase(file) {
+  let DatabaseSync
+  try { ({ DatabaseSync } = await import("node:sqlite")) } catch {
+    discovery.limitations.push("OpenCode SQLite discovery requires a Node.js runtime with node:sqlite support; exported JSON can still be supplied inside the project.")
+    return []
+  }
+  let database
+  try {
+    database = new DatabaseSync(file, { readOnly: true })
+    const rows = database.prepare("SELECT id, directory, cost, tokens_input, tokens_output, tokens_reasoning, tokens_cache_read, tokens_cache_write, model, time_created, time_updated FROM session").all()
+    const result = []
+    for (const row of rows) {
+      if (typeof row.directory !== "string" || !isWithin(root, row.directory)) continue
+      let modelInfo = {}
+      try { modelInfo = typeof row.model === "string" ? JSON.parse(row.model) : (row.model ?? {}) } catch { modelInfo = {} }
+      const model = firstValue(modelInfo.id, modelInfo.modelID, modelInfo.modelId) ?? "unknown"
+      const provider = String(firstValue(modelInfo.providerID, modelInfo.providerId, modelInfo.provider, providerFrom({ model }, {}, model))).toLowerCase()
+      const input = firstFinite(row.tokens_input, 0)
+      const output = firstFinite(row.tokens_output, 0)
+      const reasoning = firstFinite(row.tokens_reasoning, 0)
+      const cacheRead = firstFinite(row.tokens_cache_read, 0)
+      const cacheWrite = firstFinite(row.tokens_cache_write, 0)
+      const record = { timestamp: row.time_created, created_at: row.time_created }
+      const thread = baseThread(file, result.length, provider, "opencode", model, {
+        inputTotal: input + cacheRead + cacheWrite,
+        inputUncached: input,
+        cachedInputRead: cacheRead,
+        cacheWrite5m: cacheWrite,
+        cacheWrite1h: 0,
+        outputTotal: output + reasoning,
+        reasoningOutput: reasoning,
+        nonReasoningOutput: output,
+        providerTotal: input + cacheRead + cacheWrite + output + reasoning,
+      }, [record, { timestamp: row.time_updated }], [{ input, output, reasoning, cacheRead, cacheWrite }], firstFinite(row.cost), row.id)
+      thread.sourceFile = `opencode-session/${basename(file)}/${row.id}`
+      const rel = relative(root, resolve(row.directory)).replaceAll("\\", "/")
+      thread.folder = !rel || rel === "." ? "." : rel.split("/")[0]
+      result.push(thread)
+    }
+    discovery.opencodeSessions += result.length
+    discovery.nativeSessionsMatched += result.length
+    return result
+  } catch (error) {
+    discovery.limitations.push(`OpenCode database ${basename(file)} could not be read: ${error.message}`)
+    return []
+  } finally {
+    try { database?.close() } catch { /* no-op */ }
+  }
+}
+
+function opencodeDatabaseCandidates() {
+  if (argv.includes("--project-only")) return []
+  const explicit = option("--opencode-db")
+  if (explicit) return [resolve(explicit)]
+  const dataHome = process.env.XDG_DATA_HOME ? resolve(process.env.XDG_DATA_HOME) : join(homedir(), ".local", "share")
+  const dirs = [join(dataHome, "opencode"), join(homedir(), "Library", "Application Support", "opencode")]
+  const files = []
+  for (const dir of dirs) {
+    let entries = []
+    try { entries = readdirSync(dir, { withFileTypes: true }) } catch { continue }
+    for (const entry of entries) if (entry.isFile() && /^opencode.*\.db$/i.test(entry.name)) files.push(join(dir, entry.name))
+  }
+  return files
+}
+
 function parseGeneric(file, records) {
   const byKey = new Map()
   for (const record of records) {
@@ -420,9 +642,9 @@ function parseGeneric(file, records) {
   })
 }
 
-function priceFor(model) {
+function priceFor(model, provider) {
   const entries = Array.isArray(pricing.models) ? pricing.models : []
-  return entries.find((entry) => (entry.match ?? []).some((pattern) => globRegex(pattern).test(model ?? ""))) ?? null
+  return entries.find((entry) => (!entry.provider || entry.provider === provider) && (entry.match ?? []).some((pattern) => globRegex(pattern).test(model ?? ""))) ?? null
 }
 
 function pricingAgeDays(entry) {
@@ -438,7 +660,7 @@ function costPart(tokens, rate) {
 }
 
 function priceThread(thread) {
-  const rate = priceFor(thread.model)
+  const rate = priceFor(thread.model, thread.provider)
   if (!rate) {
     return {
       cost: { inputUncachedUsd: null, cachedInputReadUsd: null, cacheWrite5mUsd: null, cacheWrite1hUsd: null, outputUsd: null, totalUsd: finite(thread.reportedCostUsd) ? thread.reportedCostUsd : null },
@@ -458,6 +680,15 @@ function priceThread(thread) {
   }
   const parts = Object.values(cost)
   cost.totalUsd = parts.every((value) => finite(value)) ? parts.reduce((sum, value) => sum + value, 0) : null
+  if (cost.totalUsd === null && finite(thread.reportedCostUsd)) {
+    cost.totalUsd = thread.reportedCostUsd
+    return {
+      cost,
+      pricing: { provider: rate.provider ?? thread.provider, match: rate.match, per1M: p, effectiveDate: rate.effectiveDate ?? null, sourceUrl: rate.sourceUrl ?? null, verifiedAt: rate.verifiedAt ?? null, ageDays: pricingAgeDays(rate) },
+      pricingStatus: "reported",
+      costMethod: "reported",
+    }
+  }
   const age = pricingAgeDays(rate)
   return {
     cost,
@@ -523,6 +754,8 @@ function report({ threads, stats, malformed, duplicateIds }) {
   const unknown = threads.filter((thread) => !finite(thread.cost.totalUsd))
   const providers = [...groupBy(threads, (thread) => thread.provider).entries()]
     .sort((a, b) => rollup(b[1]).costUsd - rollup(a[1]).costUsd)
+  const harnesses = [...groupBy(threads, (thread) => thread.harness).entries()]
+    .sort((a, b) => rollup(b[1]).costUsd - rollup(a[1]).costUsd)
   const models = [...groupBy(threads, (thread) => `${thread.provider} / ${thread.model}`).entries()]
     .sort((a, b) => rollup(b[1]).costUsd - rollup(a[1]).costUsd)
   const folders = [...groupBy(threads, (thread) => thread.folder).entries()]
@@ -542,6 +775,8 @@ function report({ threads, stats, malformed, duplicateIds }) {
     if (thread.model === "unknown") anomalies.push(`${thread.sourceFile}: model is unavailable`)
     if (thread.provider === "unknown") anomalies.push(`${thread.sourceFile}: provider is unavailable`)
     if (!thread.startedAt || !thread.finishedAt) anomalies.push(`${thread.sourceFile}: timestamps are incomplete`)
+    if (thread.pricingStatus === "unmatched") anomalies.push(`${thread.sourceFile}: no pricing catalog match for ${thread.provider} / ${thread.model}`)
+    if (thread.pricingStatus === "partial") anomalies.push(`${thread.sourceFile}: pricing is incomplete for one or more observed token classes`)
     if (thread.reportedCostUsd !== null && thread.costMethod === "derived" && Math.abs(thread.reportedCostUsd - thread.cost.totalUsd) > 0.01) anomalies.push(`${thread.sourceFile}: reported ${fmtUsd(thread.reportedCostUsd)} differs from derived ${fmtUsd(thread.cost.totalUsd)}`)
   }
   for (const file of malformed) anomalies.push(`malformed JSON ignored: ${file}`)
@@ -552,7 +787,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "",
     `> Generated ${generatedAt} · Root: \`.\` · Prices are USD per 1M tokens unless noted`,
     "",
-    "## Executive summary",
+    "## Totals",
     "",
     table(["Metric", "Value"], [
       ["Threads recognized", fmtInt(total.threadCount)],
@@ -581,6 +816,10 @@ function report({ threads, stats, malformed, duplicateIds }) {
       ["Project-associated native sessions", fmtInt(stats.nativeSessionsMatched)],
       ["Codex sessions", fmtInt(stats.codexSessions)],
       ["Claude sessions", fmtInt(stats.claudeSessions)],
+      ["Gemini CLI sessions", fmtInt(stats.geminiSessions)],
+      ["Cline tasks", fmtInt(stats.clineSessions)],
+      ["Roo Code tasks", fmtInt(stats.rooSessions)],
+      ["OpenCode sessions", fmtInt(stats.opencodeSessions)],
       ["Files containing usage records", fmtInt(stats.recognizedFiles)],
       ["Malformed records", fmtInt(malformed.length)],
       ["Pricing catalog", pricingPath ? (pricingPath.startsWith(root) ? sourceLabel(pricingPath) : "bundled default") : "none"],
@@ -590,14 +829,21 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "",
     "## Cost by provider",
     "",
-    table(["Provider", "Threads", "Known tokens", "Known cost", "Priced", "Unpriced"], providers.map(([key, items]) => {
+    table(["Provider", "Threads", "Known tokens", "Known cost", "Priced", "Unpriced"], [...providers.map(([key, items]) => {
       const r = rollup(items)
       return [key, fmtInt(r.threadCount), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
-    })),
+    }), ["Total", fmtInt(total.threadCount), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
+    "",
+    "## Cost by harness",
+    "",
+    table(["Harness", "Threads", "Known tokens", "Known cost", "Reported-cost sum", "Average tokens / thread", "Average known cost / priced thread"], [...harnesses.map(([key, items]) => {
+      const r = rollup(items)
+      return [key, fmtInt(r.threadCount), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount ? r.tokens / r.threadCount : null), fmtUsd(r.knownCostThreads ? r.costUsd / r.knownCostThreads : null)]
+    }), ["Total", fmtInt(total.threadCount), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtUsd(sumReported(threads.map((item) => item.reportedCostUsd))), fmtInt(total.threadCount ? total.tokens / total.threadCount : null), fmtUsd(total.knownCostThreads ? total.costUsd / total.knownCostThreads : null)]]),
     "",
     "## Cost by model",
     "",
-    table(["Provider / model", "Threads", "Input", "Cached", "Output", "Tokens", "Cost"], models.map(([key, items]) => [
+    table(["Provider / model", "Threads", "Input", "Cached", "Output", "Tokens", "Cost"], [...models.map(([key, items]) => [
       key,
       fmtInt(items.length),
       fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))),
@@ -605,16 +851,16 @@ function report({ threads, stats, malformed, duplicateIds }) {
       fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))),
       fmtInt(rollup(items).tokens),
       fmtUsd(rollup(items).costUsd),
-    ])),
+    ]), ["Total", fmtInt(total.threadCount), fmtInt(inputTotal), fmtInt(cachedInput), fmtInt(outputTotal), fmtInt(total.tokens), fmtUsd(total.costUsd)]]),
     "",
     "## Cost by root and child folder",
     "",
     "The folder is the direct child of the scanned root; files directly in the root are grouped as `.`.",
     "",
-    table(["Folder", "Threads", "Tokens", "Known cost", "Priced", "Unpriced"], folders.map(([key, items]) => {
+    table(["Folder", "Threads", "Tokens", "Known cost", "Priced", "Unpriced"], [...folders.map(([key, items]) => {
       const r = rollup(items)
       return [key, fmtInt(r.threadCount), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
-    })),
+    }), ["Total", fmtInt(total.threadCount), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
     "## Token composition",
     "",
@@ -629,12 +875,13 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "",
     "## Thread detail",
     "",
-    table(["Thread", "Source", "Provider / model", "Tokens", "Cost", "Method", "Duration"], sortedThreads.map((thread) => [
+    table(["Thread", "Source", "Provider / model", "Tokens", "Selected cost", "Harness reported", "Method", "Duration"], sortedThreads.map((thread) => [
       thread.threadId,
       thread.sourceFile,
       `${thread.provider} / ${thread.model}${thread.effort ? ` / ${thread.effort}` : ""}`,
       fmtInt(thread.tokens.providerTotal),
       fmtUsd(thread.cost.totalUsd),
+      fmtUsd(thread.reportedCostUsd),
       thread.costMethod === "derived" ? `derived${thread.pricingStatus === "matched-stale" ? " (stale rate)" : ""}` : thread.costMethod,
       fmtDuration(thread.startedAt, thread.finishedAt),
     ])),
@@ -650,25 +897,25 @@ function report({ threads, stats, malformed, duplicateIds }) {
     ]),
     "",
     "",
-    "### Matched pricing detail",
+    "### Pricing catalog match detail",
     "",
-    pricingRows.length ? table(["Provider / model", "Match", "Rates per 1M", "Verified", "Source"], pricingRows.map(([key, items]) => {
+    pricingRows.length ? table(["Provider / model", "Match", "Rates per 1M", "Effective", "Verified", "Source"], pricingRows.map(([key, items]) => {
       const pricing = items[0].pricing
       const rates = Object.entries(pricing.per1M ?? {}).map(([name, value]) => `${name}=${value === null ? "n/a" : value}`).join(", ")
-      return [key, (pricing.match ?? []).join(", "), rates, pricing.verifiedAt ?? "n/a", pricing.sourceUrl ?? "n/a"]
+      return [key, (pricing.match ?? []).join(", "), rates, pricing.effectiveDate ?? "n/a", pricing.verifiedAt ?? "n/a", pricing.sourceUrl ?? "n/a"]
     })) : "No model matched the available pricing catalogs.",
     "",
     "Update the pricing override and rerun when rates are stale or unmatched.",
     "",
     "## Anomalies and limitations",
     "",
-    anomalies.length ? anomalies.map((item) => `- ${item}`).join("\n") : "- None detected by the analyzer.",
+    [...anomalies, ...discovery.limitations].length ? [...anomalies, ...discovery.limitations].map((item) => `- ${item}`).join("\n") : "- None detected by the analyzer.",
     "",
     "## Methodology",
     "",
     "- Recursively inspect JSON, JSONL, and NDJSON files below the requested root, excluding dependency, VCS, cache, virtual-environment, and build directories.",
-    "- Discover Codex and Claude Code transcripts directly from their native session directories. Read only a bounded metadata prefix while filtering, then parse the complete transcript only when its recorded working directory equals or is inside the requested root.",
-    "- Use the last cumulative Codex token-count event; deduplicate Claude streaming records by message ID or exact model/usage payload; aggregate generic usage records by provider and model.",
+    "- Discover Codex, Claude Code, Gemini CLI, Cline, Roo Code, and OpenCode usage from their native local stores. Include only sessions whose recorded project directory or project hash belongs to the requested root.",
+    "- Use the last cumulative Codex token-count event; deduplicate Claude streaming records; aggregate Gemini per-message counters and Cline/Roo API request metrics; read OpenCode's session ledger in read-only mode; aggregate generic usage records by provider and model.",
     "- Preserve provider-native usage semantics: OpenAI cached input is a subset of input, while Anthropic cache buckets are disjoint. Reasoning tokens are a subset of output.",
     "- Treat missing values as unavailable. Sum known totals for overview coverage, but surface every incomplete or unpriced thread in the detail and limitations sections.",
     "- Do not include prompts, message text, secrets, or raw transcripts in this report. Source-relative paths are the traceability boundary.",
@@ -690,18 +937,40 @@ const stats = {
   nativeSessionsMatched: discovery.nativeSessionsMatched,
   codexSessions: discovery.codexSessions,
   claudeSessions: discovery.claudeSessions,
+  geminiSessions: discovery.geminiSessions,
+  clineSessions: discovery.clineSessions,
+  rooSessions: discovery.rooSessions,
+  opencodeSessions: 0,
   recognizedFiles: 0,
 }
 let malformed = []
 const threads = []
 const logicalSources = new Map()
+for (const database of opencodeDatabaseCandidates()) {
+  discovery.nativeFilesConsidered += 1
+  const databaseThreads = await parseOpenCodeDatabase(database)
+  if (databaseThreads.length) stats.recognizedFiles += 1
+  for (const thread of databaseThreads) {
+    const priced = priceThread(thread)
+    Object.assign(thread, priced)
+    threads.push(thread)
+    if (thread.logicalId) logicalSources.set(thread.logicalId, [...(logicalSources.get(thread.logicalId) ?? []), thread.sourceFile])
+  }
+}
+stats.nativeFilesConsidered = discovery.nativeFilesConsidered
+stats.nativeSessionsMatched = discovery.nativeSessionsMatched
+stats.opencodeSessions = discovery.opencodeSessions
 for (const file of files) {
   stats.filesVisited += 1
   if (resolve(file) === output) continue
   const parsed = readRecords(file)
   malformed = malformed.concat(parsed.malformed)
   if (!parsed.records.length) continue
-  let parsedThreads = parseCodex(file, parsed.records)
+  const harness = externalSessions.get(resolve(file))?.harness
+  let parsedThreads = harness === "gemini" ? parseGemini(file, parsed.records) : []
+  if (!parsedThreads.length && harness === "cline") parsedThreads = parseClineFamily(file, parsed.records, "cline")
+  if (!parsedThreads.length && harness === "roo") parsedThreads = parseClineFamily(file, parsed.records, "roo")
+  if (!parsedThreads.length) parsedThreads = parseCodex(file, parsed.records)
   if (!parsedThreads.length) parsedThreads = parseClaude(file, parsed.records)
   if (!parsedThreads.length) parsedThreads = parseGeneric(file, parsed.records)
   if (!parsedThreads.length) continue
@@ -729,6 +998,10 @@ console.log(JSON.stringify({
   nativeSessionsMatched: stats.nativeSessionsMatched,
   codexSessions: stats.codexSessions,
   claudeSessions: stats.claudeSessions,
+  geminiSessions: stats.geminiSessions,
+  clineSessions: stats.clineSessions,
+  rooSessions: stats.rooSessions,
+  opencodeSessions: stats.opencodeSessions,
   recognizedFiles: stats.recognizedFiles,
   threads: threads.length,
   knownTokens: threads.filter((thread) => finite(thread.tokens.providerTotal)).length,

@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "updatedAt": "2026-07-13",
+  "comment": "Rates are USD per 1M tokens. Replace or override this catalog with provider-verified rates for models found in machine-wide session records. OpenAI cached input is a subset of input; Anthropic input, cache writes, and cache reads are disjoint.",
+  "models": [
+    {
+      "match": ["claude-fable-5", "claude-mythos-5"],
+      "provider": "anthropic",
+      "per1M": { "input": 10, "output": 50, "cacheWrite5m": 12.5, "cacheWrite1h": 20, "cacheRead": 1 },
+      "effectiveDate": "2026-06-24",
+      "sourceUrl": "https://platform.claude.com/docs/en/pricing",
+      "verifiedAt": "2026-07-13"
+    },
+    {
+      "match": ["claude-opus-4-8*", "claude-opus-4-7*", "claude-opus-4-6*"],
+      "provider": "anthropic",
+      "per1M": { "input": 5, "output": 25, "cacheWrite5m": 6.25, "cacheWrite1h": 10, "cacheRead": 0.5 },
+      "effectiveDate": "2026-06-24",
+      "sourceUrl": "https://platform.claude.com/docs/en/pricing",
+      "verifiedAt": "2026-07-13"
+    },
+    {
+      "match": ["claude-sonnet-5*", "claude-sonnet-4-6*"],
+      "provider": "anthropic",
+      "per1M": { "input": 3, "output": 15, "cacheWrite5m": 3.75, "cacheWrite1h": 6, "cacheRead": 0.3 },
+      "effectiveDate": "2026-06-24",
+      "sourceUrl": "https://platform.claude.com/docs/en/pricing",
+      "verifiedAt": "2026-07-13",
+      "notes": "Claude Sonnet 5 may have introductory pricing through 2026-08-31; verify the applicable rate before relying on this fallback entry."
+    },
+    {
+      "match": ["claude-haiku-4-5*"],
+      "provider": "anthropic",
+      "per1M": { "input": 1, "output": 5, "cacheWrite5m": 1.25, "cacheWrite1h": 2, "cacheRead": 0.1 },
+      "effectiveDate": "2026-06-24",
+      "sourceUrl": "https://platform.claude.com/docs/en/pricing",
+      "verifiedAt": "2026-07-13"
+    },
+    {
+      "match": ["gpt-5.6-sol*"],
+      "provider": "openai",
+      "per1M": { "input": 5, "cachedInput": 0.5, "output": 30 },
+      "effectiveDate": "2026-07-09",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-07-13"
+    },
+    {
+      "match": ["gpt-5.6-terra*"],
+      "provider": "openai",
+      "per1M": { "input": 2.5, "cachedInput": 0.25, "output": 15 },
+      "effectiveDate": "2026-07-09",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-07-13"
+    },
+    {
+      "match": ["gpt-5.6-luna*"],
+      "provider": "openai",
+      "per1M": { "input": 1, "cachedInput": 0.1, "output": 6 },
+      "effectiveDate": "2026-07-09",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-07-13"
+    },
+    {
+      "match": ["gpt-5.5-pro*"],
+      "provider": "openai",
+      "per1M": { "input": 30, "cachedInput": null, "output": 180 },
+      "effectiveDate": "2026-07-09",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-07-13"
+    },
+    {
+      "match": ["gpt-5.5*"],
+      "provider": "openai",
+      "per1M": { "input": 5, "cachedInput": 0.5, "output": 30 },
+      "effectiveDate": "2026-07-09",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-07-13"
+    },
+    {
+      "match": ["gpt-5.4-mini*"],
+      "provider": "openai",
+      "per1M": { "input": 0.75, "cachedInput": 0.075, "output": 4.5 },
+      "effectiveDate": "2026-07-09",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-07-13"
+    },
+    {
+      "match": ["gpt-5.4-nano*"],
+      "provider": "openai",
+      "per1M": { "input": 0.2, "cachedInput": 0.02, "output": 1.25 },
+      "effectiveDate": "2026-07-09",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-07-13"
+    },
+    {
+      "match": ["gpt-5.4*"],
+      "provider": "openai",
+      "per1M": { "input": 2.5, "cachedInput": 0.25, "output": 15 },
+      "effectiveDate": "2026-07-09",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-07-13"
+    }
+  ]
+}

@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai LLM Cost"
-  short_description: "Analyze recursive LLM thread costs"
-  default_prompt: "Use $11ai-llm-cost to analyze recursive LLM thread usage and write a new timestamped 11ai-llm-cost-{datetime}.md report at the project root."

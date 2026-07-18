@@ -1,0 +1,53 @@
+# Native harness stores
+
+The analyzer reads these stores without modifying them. Layouts are implementation details and may change; use the corresponding CLI override when a harness is configured elsewhere.
+
+## Codex
+
+- Default data root: `~/.codex`; `CODEX_HOME` replaces that root.
+- Active rollouts: `$CODEX_HOME/sessions/YYYY/MM/DD/rollout-*.jsonl`; archived rollouts: `$CODEX_HOME/archived_sessions/*.jsonl`.
+- Workspace labels come from `session_meta.payload.cwd`; machine-wide discovery does not filter by that value.
+- Counters: use the last cumulative `event_msg` whose payload type is `token_count`, specifically `info.total_token_usage`. Input includes cached input; reasoning is a subset of output and is not added twice.
+- Model and effort: use the latest `turn_context` record. Sessions run with ephemeral persistence or without a cumulative token event cannot be reconstructed from the native store.
+- Sources: the official Codex repository's [rollout discovery tests](https://github.com/openai/codex/blob/main/codex-rs/core/tests/suite/rollout_list_find.rs), [token-usage protocol](https://github.com/openai/codex/blob/main/codex-rs/protocol/src/protocol.rs), and [CLI reference](https://developers.openai.com/codex/cli/reference).
+
+## Claude Code
+
+- Default data root: `~/.claude`; `CLAUDE_CONFIG_DIR` replaces that root.
+- Project transcripts: `$CLAUDE_CONFIG_DIR/projects/<encoded-project-path>/<session-id>.jsonl`, with subagent transcripts potentially nested below the parent session.
+- Workspace labels use the transcript's recorded `cwd`; machine-wide discovery does not filter by it.
+- Counters: assistant `message.usage` supplies uncached `input_tokens`, `output_tokens`, `cache_creation_input_tokens`, and `cache_read_input_tokens`. Where present, split cache creation into its 5-minute and 1-hour buckets.
+- Deduplication: retain one usage record per assistant message ID because a transcript can contain repeated or streaming representations. Claude Code's internal transcript line schema is not a documented stable API, so ignore unknown record types and keep parsing tolerant.
+- Sources: official Claude Code [hook transcript fields](https://code.claude.com/docs/en/hooks), [status-line usage and cost fields](https://code.claude.com/docs/en/statusline), [session resume CLI](https://docs.anthropic.com/en/docs/claude-code/cli-usage), and [prompt-caching accounting](https://platform.claude.com/docs/en/build-with-claude/prompt-caching).
+
+## Gemini CLI
+
+- Default data root: `~/.gemini`; with `GEMINI_CLI_HOME`, the root is `$GEMINI_CLI_HOME/.gemini`.
+- Sessions: `.gemini/tmp/<project-hash>/chats/*.jsonl` (older JSON sessions are accepted).
+- Counters: `input`, `output`, `cached`, `thoughts`, `tool`, and `total`. Cached input is a subset of input; tool-use prompt tokens are input; thoughts are reasoning output and are not counted twice.
+- Sources: [session management](https://geminicli.com/docs/cli/session-management/), [recording schema](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/services/chatRecordingTypes.ts), and [telemetry token categories](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/telemetry.md).
+
+## Cline
+
+- Current task root: `~/.cline/data/tasks/<task-id>/`.
+- Legacy VS Code root: the platform's `Code/User/globalStorage/saoudrizwan.claude-dev/tasks/` directory.
+- Usage file: `ui_messages.json`; workspace labels come from sibling `task_metadata.json` or `history_item.json` when available.
+- Count only `say` records named `api_req_started`, `deleted_api_reqs`, or `subagent_usage`. Their JSON `text` contains `tokensIn`, `tokensOut`, `cacheWrites`, `cacheReads`, and `cost`.
+- Sources: [task storage documentation](https://docs.cline.bot/enterprise-solutions/monitoring/prompt-storage), [metric consolidation](https://github.com/cline/cline/blob/main/apps/vscode/src/shared/getApiMetrics.ts), and [disk filenames](https://github.com/cline/cline/blob/main/apps/vscode/src/core/storage/disk.ts).
+
+## Roo Code
+
+- VS Code task root: the platform's `Code/User/globalStorage/rooveterinaryinc.roo-cline/tasks/` directory; VS Code Server uses `.vscode-server/data/User/globalStorage/...`.
+- Usage and task metadata use the same accounting shape as Cline.
+- Sources: Roo Code's official [extension manifest](https://github.com/RooCodeInc/Roo-Code/blob/main/src/package.json) and [task persistence implementation](https://github.com/RooCodeInc/Roo-Code/tree/main/src/core/task-persistence).
+
+## OpenCode
+
+- Current database: `opencode*.db` under the XDG data directory's `opencode/` folder (normally `~/.local/share/opencode/`); a macOS Application Support fallback is also checked.
+- The `session` ledger supplies directory, timestamps, cost, model/provider JSON, and disjoint input, output, reasoning, cache-read, and cache-write counters.
+- Databases are opened read-only. Native database support requires a Node.js runtime providing `node:sqlite`; exported JSON can still be supplied with `--include`.
+- Sources: [CLI export/stats commands](https://opencode.ai/docs/cli/), the official [database location code](https://github.com/anomalyco/opencode/blob/dev/packages/core/src/database/database.ts), and [session ledger schema](https://github.com/anomalyco/opencode/blob/dev/packages/core/src/session/sql.ts).
+
+## Provider pricing
+
+Native counters do not guarantee an invoice-equivalent price. Harness-reported cost is retained, while locally derived cost uses the selected pricing catalog. Gemini CLI use may be free, subscription-backed, or API-billed, so unmatched Google models remain visibly unpriced until an exact official rate is supplied; consult [Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing).
