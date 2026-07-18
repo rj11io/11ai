@@ -8,7 +8,7 @@ Nine general-purpose skills for code quality, text compression, reverse engineer
 | --- | --- |
 | [`11ai-code-quality`](./11ai-code-quality/SKILL.md) | Reviewing and safely improving code clarity, structure, comments, maintainability, and regression coverage |
 | [`11ai-compression`](./11ai-compression/SKILL.md) | Shortening Markdown guidance locally while preserving its technical structure |
-| [`11ai-llm-cost`](./11ai-llm-cost/SKILL.md) | Recursively analyzing LLM thread usage and writing a detailed root-level `LLM_COST.md` |
+| [`11ai-llm-cost`](./11ai-llm-cost/SKILL.md) | Recursively analyzing LLM thread usage and writing a timestamped root-level `11ai-llm-cost-{datetime}.md` report |
 | [`11ai-platform-cta`](./11ai-platform-cta/SKILL.md) | Adding context-aware platform calls to action with measurable conversion events |
 | [`11ai-publications-cms`](./11ai-publications-cms/SKILL.md) | Building a file-backed publications CMS with validated content and routes |
 | [`11ai-reverse-engineering`](./11ai-reverse-engineering/SKILL.md) | Producing a sanitized blueprint for rebuilding and modernizing a locally cloned repository |

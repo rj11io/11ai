@@ -1,11 +1,11 @@
 ---
 name: 11ai-llm-cost
-description: "Recursively inspect a repository's root and child folders for LLM thread, session, transcript, rollout, and usage records, normalize provider token counters, calculate attributable USD costs, and write a detailed root-level LLM_COST.md report. Use when the user asks for LLM spend, token usage, model cost, thread-cost, AI activity, or recursive cost analysis."
+description: "Recursively inspect a repository's root and child folders for LLM thread, session, transcript, rollout, and usage records, normalize provider token counters, calculate attributable USD costs, and write a detailed timestamped root-level 11ai-llm-cost-{datetime}.md report. Use when the user asks for LLM spend, token usage, model cost, thread-cost, AI activity, or recursive cost analysis."
 ---
 
 # 11ai LLM Cost
 
-Analyze local LLM activity without depending on a benchmark repository, benchmark schema, or external service. The default output is one reproducible `LLM_COST.md` at the scanned root; source transcripts and input files are read-only.
+Analyze local LLM activity without depending on a benchmark repository, benchmark schema, or external service. Write each default report as a new timestamped Markdown file at the scanned root; keep source transcripts and input files read-only.
 
 ## Contract
 
@@ -15,7 +15,7 @@ Run the bundled analyzer from the target root:
 node <skill>/scripts/analyze-llm-cost.mjs <root-folder>
 ```
 
-The command writes `<root-folder>/LLM_COST.md`. It accepts:
+The command writes `<root-folder>/11ai-llm-cost-{datetime}.md`, where `{datetime}` is the UTC ISO timestamp for the run with colons and the decimal point replaced by hyphens (for example, `11ai-llm-cost-2026-07-18T14-30-45-123Z.md`). The default write is exclusive so it never overwrites an existing report. It accepts:
 
 - `--pricing <file>` to use a repository-specific pricing catalog;
 - `--output <file>` only when the user explicitly requests a different report path.
@@ -26,7 +26,7 @@ The analyzer reads JSON, JSONL, and NDJSON files recursively, while skipping dep
 
 1. Establish the exact root and confirm the output path is inside it unless the user asked otherwise.
 2. Run the analyzer. Preserve malformed, ambiguous, unpriced, and reported-only records in the report's coverage and limitations sections rather than silently dropping them.
-3. Review the generated `LLM_COST.md` for the executive summary, provider/model rollups, root-versus-child-folder rollups, token-class detail, per-thread table, pricing coverage, anomalies, and methodology.
+3. Review the generated `11ai-llm-cost-{datetime}.md` for the executive summary, provider/model rollups, root-versus-child-folder rollups, token-class detail, per-thread table, pricing coverage, anomalies, and methodology.
 4. If a model is unmatched or pricing is older than 30 days, verify the provider's official pricing page. Prefer a repository-local `llm-pricing.json` or `.llm-cost/pricing.json` override so the report remains reproducible; never invent a rate from memory.
 5. Rerun the analyzer after pricing or input changes. It is idempotent and does not edit transcripts.
 
@@ -69,7 +69,7 @@ Rates are USD per one million tokens. Every priced thread must show the matched 
 Before reporting completion:
 
 - confirm the analyzer exits successfully;
-- confirm `LLM_COST.md` exists at the requested root;
+- confirm a new `11ai-llm-cost-{datetime}.md` exists at the requested root;
 - confirm the report states scanned files, recognized threads, known and unknown costs, pricing coverage, and limitations;
-- rerun once with unchanged inputs and ensure the report is stable apart from its generated timestamp;
+- rerun once with unchanged inputs, confirm it creates a second timestamped report, and ensure report content is stable apart from its generated timestamp;
 - report the exact output path and any model/pricing gaps.

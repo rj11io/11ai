@@ -13,12 +13,15 @@ const option = (name) => {
 }
 
 if (argv.includes("--help")) {
-  console.log("usage: node analyze-llm-cost.mjs [root-folder] [--pricing pricing.json] [--output LLM_COST.md]")
+  console.log("usage: node analyze-llm-cost.mjs [root-folder] [--pricing pricing.json] [--output report.md]")
   process.exit(0)
 }
 
 const root = resolve(positional ?? ".")
-const output = resolve(option("--output") ?? join(root, "LLM_COST.md"))
+const generatedAt = new Date().toISOString()
+const filenameTimestamp = generatedAt.replaceAll(":", "-").replaceAll(".", "-")
+const explicitOutput = option("--output")
+const output = resolve(explicitOutput ?? join(root, `11ai-llm-cost-${filenameTimestamp}.md`))
 if (!existsSync(root) || !statSync(root).isDirectory()) throw new Error(`root folder does not exist or is not a directory: ${root}`)
 
 const skillRoot = fileURLToPath(new URL("..", import.meta.url))
@@ -437,7 +440,6 @@ function report({ threads, stats, malformed, duplicateIds }) {
   const priced = threads.filter((thread) => thread.costMethod === "derived")
   const reported = threads.filter((thread) => thread.costMethod === "reported")
   const unknown = threads.filter((thread) => !finite(thread.cost.totalUsd))
-  const generatedAt = new Date().toISOString()
   const providers = [...groupBy(threads, (thread) => thread.provider).entries()]
     .sort((a, b) => rollup(b[1]).costUsd - rollup(a[1]).costUsd)
   const models = [...groupBy(threads, (thread) => `${thread.provider} / ${thread.model}`).entries()]
@@ -619,7 +621,7 @@ const duplicateIds = [...logicalSources.entries()]
   .map(([id]) => id)
 const markdown = report({ threads, stats, malformed, duplicateIds })
 mkdirSync(dirname(output), { recursive: true })
-writeFileSync(output, markdown)
+writeFileSync(output, markdown, { flag: explicitOutput ? "w" : "wx" })
 console.log(JSON.stringify({
   root,
   output,
