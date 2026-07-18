@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-web-design",
-  "version": "1.16.0",
+  "version": "1.17.0",
   "description": "Apply the 11ai visual language or a deliberate content-led direction to elegant, accessible web interfaces.",
   "author": {
     "name": "rj11io",

@@ -1,3 +1,11 @@
+# [1.17.0](https://github.com/rj11io/11ai/compare/v1.16.0...v1.17.0) (2026-07-18)
+
+
+### Features
+
+* benchmark trouble shooting skill ([c2f5526](https://github.com/rj11io/11ai/commit/c2f5526019179710c95b75816af399f191eb530e))
+* new skills ([56b43ff](https://github.com/rj11io/11ai/commit/56b43ff547c38d215a4c4935e20b3b14dc0ef508))
+
 # [1.16.0](https://github.com/rj11io/11ai/compare/v1.15.0...v1.16.0) (2026-07-17)
 
 
