@@ -1,6 +1,6 @@
 {
   "name": "11ai-nodejs-api-operations",
-  "version": "1.18.3",
+  "version": "1.18.4",
   "description": "Modular, evidence-first skills for common Node.js API development and operations.",
   "author": {
     "name": "rj11io"

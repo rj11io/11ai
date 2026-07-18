@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-llm-costs",
-  "version": "1.18.3",
+  "version": "1.18.4",
   "description": "Project-scoped and machine-wide LLM usage and cost reporting across local coding harnesses.",
   "author": {
     "name": "rj11io"
