@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/rj11io/11ai/compare/v1.17.0...v1.18.0) (2026-07-18)
+
+
+### Features
+
+* improve security scan skill ([d58853b](https://github.com/rj11io/11ai/commit/d58853be5ee6c0da35b3fb7c179533590e1c6417))
+
 # [1.17.0](https://github.com/rj11io/11ai/compare/v1.16.0...v1.17.0) (2026-07-18)
 
 
