@@ -42,7 +42,7 @@ The files are installed at `node_modules/@rj11io/11ai/11ai/v0/`. You can also cl
 
 ## Skill catalog
 
-The repository currently contains 150 skills in 19 plugins.
+The repository currently contains 151 skills in 19 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
@@ -62,7 +62,7 @@ The repository currently contains 150 skills in 19 plugins.
 | [Node.js API operations](./11ai/v0/11ai-nodejs-api-operations/README.md) | 10 | Inspecting, changing, testing, and troubleshooting Node.js APIs across common frameworks |
 | [Super](./11ai/v0/11ai-super/README.md) | 8 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
 | [Security](./11ai/v0/11ai-security/README.md) | 1 | Read-only dependency vulnerability and supply-chain auditing with critical host-harm triage |
-| [Utilities](./11ai/v0/11ai-utils/README.md) | 8 | Markdown compression, reverse engineering, critique, LLM cost analysis, analytics, publication CMS, calls to action, and project sites |
+| [Utilities](./11ai/v0/11ai-utils/README.md) | 9 | Code-quality review and improvement, Markdown compression, reverse engineering, critique, LLM cost analysis, analytics, publication CMS, calls to action, and project sites |
 | [Web design](./11ai/v0/11ai-web-design/README.md) | 2 | The 11ai visual language and deliberate content-led styling for accessible web interfaces |
 | [Cross-harness](./11ai/v0/11ai-xharness/README.md) | 2 | Delegating work to agents running in other CLI harnesses |
 
@@ -90,7 +90,7 @@ Start with a plugin's README to choose a skill, then name that skill in your req
     11ai-nodejs-api-operations/ 10 Node.js API operation skills
     11ai-super/               8 iterative task and improvement skills
     11ai-security/            1 dependency security audit skill
-    11ai-utils/               8 utility skills
+    11ai-utils/               9 utility skills
     11ai-web-design/          2 web design skills
     11ai-xharness/            2 cross-harness skills
 scripts/                      Root package validation, release, and publishing helpers

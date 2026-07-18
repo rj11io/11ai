@@ -116,7 +116,7 @@ const PLUGIN_CONFIG = [
     dir: "11ai-utils",
     title: "Utilities",
     tagline:
-      "Markdown compression, reverse engineering, reviews, analytics, publication CMS, calls to action, and project sites.",
+      "Code-quality improvement, Markdown compression, reverse engineering, reviews, analytics, publication CMS, calls to action, and project sites.",
   },
   {
     slug: "xharness",

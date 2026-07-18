@@ -1,11 +1,12 @@
 # 11ai Utilities
 
-Eight general-purpose skills for text compression, reverse engineering, reviews, LLM cost analysis, analytics, publication CMS, calls to action, and project sites.
+Nine general-purpose skills for code quality, text compression, reverse engineering, reviews, LLM cost analysis, analytics, publication CMS, calls to action, and project sites.
 
 ## Choose a skill
 
 | Skill | Use it for |
 | --- | --- |
+| [`11ai-code-quality`](./11ai-code-quality/SKILL.md) | Reviewing and safely improving code clarity, structure, comments, maintainability, and regression coverage |
 | [`11ai-compression`](./11ai-compression/SKILL.md) | Shortening Markdown guidance locally while preserving its technical structure |
 | [`11ai-llm-cost`](./11ai-llm-cost/SKILL.md) | Recursively analyzing LLM thread usage and writing a detailed root-level `LLM_COST.md` |
 | [`11ai-platform-cta`](./11ai-platform-cta/SKILL.md) | Adding context-aware platform calls to action with measurable conversion events |

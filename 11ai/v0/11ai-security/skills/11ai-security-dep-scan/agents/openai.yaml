@@ -1,4 +1,4 @@
 interface:
   display_name: "11ai Security Dependency Scan"
-  short_description: "Scan dependency vulnerabilities and installed versions"
-  default_prompt: "Use $11ai-security-dep-scan to scan this project for dependency vulnerabilities and risky installed package versions."
+  short_description: "Gate every dependency version against vulns and malware"
+  default_prompt: "Use $11ai-security-dep-scan to enumerate every dependency version this project could install and check each candidate against current vulnerability, malware, registry, and web evidence before approving any install."

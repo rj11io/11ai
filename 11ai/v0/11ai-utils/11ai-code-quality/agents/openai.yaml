@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Quality"
+  short_description: "Review and safely improve code quality"
+  default_prompt: "Use $11ai-code-quality to review this code and safely improve its clarity, structure, comments, and test coverage."
