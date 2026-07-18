@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Jest Config"
+  short_description: "Inspect and change Jest config with evidence"
+  default_prompt: "Use $11ai-jest-config to inspect the resolved Jest config and make the smallest justified configuration change."

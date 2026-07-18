@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Docker Images"
+  short_description: "Pull, inspect, tag, and remove Docker images"
+  default_prompt: "Use $11ai-docker-images to manage or inspect these Docker images."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Docker Compose"
+  short_description: "Validate and operate multi-container Compose apps"
+  default_prompt: "Use $11ai-docker-compose to inspect or operate this Docker Compose application."

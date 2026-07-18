@@ -1,0 +1,4 @@
+interface:
+  display_name: "AWS troubleshooting"
+  short_description: "Diagnose AWS failures from evidence"
+  default_prompt: "Use $11ai-aws-troubleshooting to diagnose this AWS failure."

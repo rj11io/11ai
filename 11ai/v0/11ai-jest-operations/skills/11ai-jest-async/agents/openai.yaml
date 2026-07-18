@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Jest Async"
+  short_description: "Make async Jest tests complete and assert reliably"
+  default_prompt: "Use $11ai-jest-async to repair or explain this promise, callback, rejection, or Jest timeout test."

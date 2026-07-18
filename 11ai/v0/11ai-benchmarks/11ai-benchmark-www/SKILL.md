@@ -35,8 +35,10 @@ missing/invalid state in the exploration UI. Run
 `scripts/verify-www-scope.mjs` against the planned changed paths before
 finishing; a protected-path violation is a hard stop.
 
-Read [artifact contracts](../references/artifact-contracts.md) and
-[the website matrix](../references/website-data-and-visualizations.md). Apply
+Read [artifact contracts](../references/artifact-contracts.md),
+[the website matrix](../references/website-data-and-visualizations.md), and the
+[benchmark WWW visualization and table patterns](../references/benchmark-www-visualization-patterns.md).
+Apply
 `$11ai-design-styleguides` to every site.
 
 ## 1. Inventory the complete tree
@@ -139,7 +141,10 @@ overhead, metadata availability, and cycle timelines.
 
 Link list/filter state to charts. Use exact-value tooltips, stable configuration
 colors, accessible controls, table fallbacks, sample size, provenance, missing
-states, responsive layouts, and reduced motion. Prefer honest bars, lines,
+states, responsive layouts, and reduced motion. Apply the visualization and
+table-card contract in the visualization patterns reference: synchronized
+chart/table views, URL-persisted filters, scoped exports, grouped sortable
+tables, and explicit units/directionality/status. Prefer honest bars, lines,
 scatterplots, matrices, and small multiples over decorative charts.
 
 ## 6. Preserve all metadata
@@ -155,15 +160,23 @@ Do not overload the initial list. Progressive disclosure is not omission.
 
 ## 7. Copy and calls to action
 
-Use plain, evidence-backed copy. Preserve the successful CTA quantity and
-placement from the 11bench pattern while distinguishing:
+Use plain, evidence-backed copy. Every benchmark exploration surface must
+provide exactly these two CTA references:
 
-- **Run it yourself** — reproduce/open the benchmark being viewed, using its
-  source/deployment instructions.
-- **Run your own** — create a benchmark with the plugin, linking to
-  `https://ai.rj11.io/plugins/benchmarks`.
+- **Run this benchmark** — give the user concise local reproduction
+  instructions, link to the benchmark's GitHub repository, and link to the
+  relevant results page. At benchmark and cycle levels, the results link must
+  point to the current results or the exact benchmark/cycle page being viewed;
+  at root and parent levels, provide these links per benchmark card rather
+  than using an ambiguous global target.
+- **Run your own benchmark** — invite the user to create a new benchmark with
+  the plugin, linking to `https://ai.rj11.io/plugins/benchmarks`.
 
-Use both meanings consistently at root, parent, benchmark, and cycle levels.
+Use these exact labels and meanings consistently at root, parent, benchmark,
+cycle, and run levels. Do not collapse the two actions into a generic
+repository link or omit either action. If a GitHub, local-run, or results URL
+is unavailable, show an explicit unavailable state and preserve the other
+available links.
 
 ## 8. Apply the 11ai design language
 
@@ -202,7 +215,8 @@ time-gated targets, exclusions, waivers, and campaign-open state.
 - Test search/filter/sort/URL persistence and chart/list linkage.
 - Reconcile displayed accounting totals and token classes to source artifacts.
 - Test light/dark, desktop/mobile, keyboard, reduced motion, and missing data.
-- Check both CTA destinations and one exact source deep link per level.
+- Check both CTA references, the GitHub/source link, the local reproduction
+  instructions, and one exact results deep link per level.
 - Build twice; the second build must not duplicate data or create a content diff.
 - Verify an existing-app upgrade, not only greenfield generation, and confirm
   stale copy, design, and chart surfaces were refreshed from canonical data.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Node.js API HTTP Client"
+  short_description: "Call upstream APIs with Node.js safely"
+  default_prompt: "Use $11ai-nodejs-api-http-client to implement or troubleshoot this Node.js API's outbound HTTP call."

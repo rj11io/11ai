@@ -28,6 +28,20 @@ const PLUGIN_CONFIG = [
       "End-to-end chat products: sessions, tools, models, providers, UI, and messaging-platform extensions.",
   },
   {
+    slug: "antdesign-operations",
+    dir: "11ai-antdesign-operations",
+    title: "Ant Design operations",
+    tagline:
+      "Common Ant Design React setup, layouts, forms, tables, navigation, overlays, display, theming, reference, and troubleshooting.",
+  },
+  {
+    slug: "aws-operations",
+    dir: "11ai-aws-operations",
+    title: "AWS operations",
+    tagline:
+      "Common AWS CLI operations for account context, S3, EC2, Lambda, ECS, ECR, CloudWatch, IAM, CloudFormation, reference, and troubleshooting.",
+  },
+  {
     slug: "benchmarks",
     dir: "11ai-benchmarks",
     title: "Benchmarks",
@@ -56,11 +70,18 @@ const PLUGIN_CONFIG = [
       "Playwright setup, npm publishing, and fully automated releases for your repositories.",
   },
   {
+    slug: "docker-operations",
+    dir: "11ai-docker-operations",
+    title: "Docker operations",
+    tagline:
+      "Common Docker CLI and Compose operations with safety-first cleanup, registry, storage, and troubleshooting workflows.",
+  },
+  {
     slug: "git-operations",
     dir: "11ai-git-operations",
     title: "Git operations",
     tagline:
-      "Wrap any repository task in a disciplined Git workflow, on the main branch or through a reviewed pull request.",
+      "Modular, safety-first Git skills for repository state, commits, branches, synchronization, recovery, and troubleshooting.",
   },
   {
     slug: "integrations",
@@ -70,11 +91,25 @@ const PLUGIN_CONFIG = [
       "Add Convex, WorkOS AuthKit, or both to Next.js applications the right way.",
   },
   {
+    slug: "mongodb-operations",
+    dir: "11ai-mongodb-operations",
+    title: "MongoDB operations",
+    tagline:
+      "Common MongoDB Shell and Database Tools work with read-first safety checks around data changes.",
+  },
+  {
     slug: "super",
     dir: "11ai-super",
     title: "Super",
     tagline:
       "Long-running general and specialist routines that perform, audit, fix, and verify repeatedly until a high quality bar is met.",
+  },
+  {
+    slug: "security",
+    dir: "11ai-security",
+    title: "Security",
+    tagline:
+      "Read-only dependency auditing with precise installed-version evidence and critical host-harm triage.",
   },
   {
     slug: "utils",

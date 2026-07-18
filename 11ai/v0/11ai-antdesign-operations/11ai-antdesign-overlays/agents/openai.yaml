@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build Ant Design overlays and feedback"
+  short_description: "Add modals, drawers, and feedback"
+  default_prompt: "Use $11ai-antdesign-overlays to build or fix this Ant Design overlay or feedback flow."

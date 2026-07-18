@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build responsive Ant Design layouts"
+  short_description: "Compose responsive shells with Ant Design"
+  default_prompt: "Use $11ai-antdesign-layout to build or fix this responsive Ant Design layout."

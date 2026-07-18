@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai MongoDB Indexes"
+  short_description: "Inspect indexes and explain query plans"
+  default_prompt: "Use $11ai-mongodb-indexes to inspect MongoDB indexes, analyze explain output, or propose an index change."

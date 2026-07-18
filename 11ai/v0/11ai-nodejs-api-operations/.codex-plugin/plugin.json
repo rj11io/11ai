@@ -1,0 +1,21 @@
+{
+  "name": "11ai-nodejs-api-operations",
+  "version": "1.16.0",
+  "description": "Modular, evidence-first skills for common Node.js API development and operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": ["nodejs", "node", "api", "rest", "express", "fastify", "testing"],
+  "skills": "./",
+  "interface": {
+    "displayName": "11ai Node.js API Operations",
+    "shortDescription": "Build, inspect, test, and troubleshoot Node.js APIs.",
+    "longDescription": "A modular toolbox for inspecting Node.js API projects, running local servers, changing routes, validating input, handling errors, securing endpoints, calling upstream APIs, testing behavior, and diagnosing failures.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-nodejs-api-operations skills for this Node.js API task."
+  }
+}

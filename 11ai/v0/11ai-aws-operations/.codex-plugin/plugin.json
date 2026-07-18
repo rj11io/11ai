@@ -1,0 +1,35 @@
+{
+  "name": "11ai-aws-operations",
+  "version": "1.16.0",
+  "description": "Modular, safety-first skills for common AWS CLI operations and troubleshooting.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "aws",
+    "amazon-web-services",
+    "aws-cli",
+    "cloud",
+    "devops",
+    "s3",
+    "ec2",
+    "lambda",
+    "ecs"
+  ],
+  "skills": "./",
+  "interface": {
+    "displayName": "11ai AWS Operations",
+    "shortDescription": "Run common AWS tasks safely and clearly.",
+    "longDescription": "A modular AWS CLI toolbox for inspecting account context, operating S3, EC2, Lambda, ECS, ECR, CloudWatch, IAM, and CloudFormation, answering command questions, and troubleshooting failures from evidence before proposing changes.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
+    "defaultPrompt": "Help me use the 11ai-aws-operations skills for this AWS task."
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Node.js API Routes"
+  short_description: "Add and verify Node.js API routes safely"
+  default_prompt: "Use $11ai-nodejs-api-routes to inspect, add, change, or verify this Node.js API route."

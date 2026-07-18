@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Jest CI"
+  short_description: "Make Jest CI runs deterministic and diagnosable"
+  default_prompt: "Use $11ai-jest-ci to design or verify a deterministic Jest command for this CI pipeline."

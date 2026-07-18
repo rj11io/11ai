@@ -1,0 +1,4 @@
+interface:
+  display_name: "AWS CLI cheatsheet"
+  short_description: "Look up common AWS CLI commands"
+  default_prompt: "Use $11ai-aws-cheatsheet for a quick AWS CLI reference."

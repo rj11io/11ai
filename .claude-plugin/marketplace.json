@@ -15,6 +15,14 @@
       "source": "./11ai/v0/11ai-ai-chat"
     },
     {
+      "name": "11ai-antdesign-operations",
+      "source": "./11ai/v0/11ai-antdesign-operations"
+    },
+    {
+      "name": "11ai-aws-operations",
+      "source": "./11ai/v0/11ai-aws-operations"
+    },
+    {
       "name": "11ai-benchmarks",
       "source": "./11ai/v0/11ai-benchmarks"
     },
@@ -31,6 +39,10 @@
       "source": "./11ai/v0/11ai-codebase"
     },
     {
+      "name": "11ai-docker-operations",
+      "source": "./11ai/v0/11ai-docker-operations"
+    },
+    {
       "name": "11ai-git-operations",
       "source": "./11ai/v0/11ai-git-operations"
     },
@@ -39,8 +51,16 @@
       "source": "./11ai/v0/11ai-integrations"
     },
     {
+      "name": "11ai-nodejs-api-operations",
+      "source": "./11ai/v0/11ai-nodejs-api-operations"
+    },
+    {
       "name": "11ai-super",
       "source": "./11ai/v0/11ai-super"
+    },
+    {
+      "name": "11ai-security",
+      "source": "./11ai/v0/11ai-security"
     },
     {
       "name": "11ai-utils",
@@ -53,6 +73,14 @@
     {
       "name": "11ai-xharness",
       "source": "./11ai/v0/11ai-xharness"
+    },
+    {
+      "name": "11ai-jest-operations",
+      "source": "./11ai/v0/11ai-jest-operations"
+    },
+    {
+      "name": "11ai-mongodb-operations",
+      "source": "./11ai/v0/11ai-mongodb-operations"
     }
   ]
 }

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Jest Environment"
+  short_description: "Inspect a Jest project before changing or running it"
+  default_prompt: "Use $11ai-jest-environment to inspect this repository's Jest setup and report the safest next command."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Docker Environment"
+  short_description: "Check Docker daemon health and active context"
+  default_prompt: "Use $11ai-docker-environment to inspect Docker health, contexts, permissions, and Compose availability."

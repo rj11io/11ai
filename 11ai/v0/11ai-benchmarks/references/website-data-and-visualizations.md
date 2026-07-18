@@ -3,6 +3,10 @@
 Build every page from reviewed cycle data, analyzer output, and accountant
 artifacts. Never scrape rendered prose when structured data exists.
 
+For the interaction, tooltip, filter, export, table, responsive, accessibility,
+and provenance requirements behind these visualizations, read the
+[benchmark WWW visualization and table patterns](./benchmark-www-visualization-patterns.md).
+
 ## Hierarchy
 
 - Root collection: all parent groups and benchmarks; spacious editorial hero.
@@ -60,10 +64,18 @@ when a grouped bar or small multiples communicate values more accurately.
 
 ## Calls to action
 
-Keep the established CTA quantity and placement. Distinguish:
+Every benchmark exploration surface must provide exactly these two CTA
+references:
 
-- **Run it yourself**: reproduce or open the benchmark currently viewed.
-- **Run your own**: create a new benchmark via
+- **Run this benchmark**: give concise local reproduction instructions, link
+  to the benchmark's GitHub repository, and link to the relevant results page.
+  At benchmark and cycle levels, link to the current results or exact
+  benchmark/cycle page being viewed; at root and parent levels, provide these
+  links per benchmark card rather than using an ambiguous global target.
+- **Run your own benchmark**: create a new benchmark via
   `https://ai.rj11.io/plugins/benchmarks`.
 
-Use those labels and meanings consistently at every hierarchy level.
+Use these exact labels and meanings consistently at every hierarchy level. Do
+not collapse the two actions into a generic repository link or omit either
+action. If a GitHub, local-run, or results URL is unavailable, show an explicit
+unavailable state and preserve the other available links.

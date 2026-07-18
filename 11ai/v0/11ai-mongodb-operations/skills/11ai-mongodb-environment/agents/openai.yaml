@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai MongoDB Environment"
+  short_description: "Check MongoDB tools and deployment health"
+  default_prompt: "Use $11ai-mongodb-environment to inspect MongoDB tools, connection, server health, and deployment context."

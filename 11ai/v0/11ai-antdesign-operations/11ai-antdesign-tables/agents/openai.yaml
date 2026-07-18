@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build robust Ant Design tables"
+  short_description: "Build typed tables with server state"
+  default_prompt: "Use $11ai-antdesign-tables to build or fix this Ant Design data table."

@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-utils",
   "version": "1.16.0",
-  "description": "General-purpose skills for compression, reviews, analytics, CMS work, calls to action, and project sites.",
+  "description": "General-purpose skills for compression, reviews, recursive LLM cost analysis, analytics, CMS work, calls to action, and project sites.",
   "author": {
     "name": "rj11io"
   },

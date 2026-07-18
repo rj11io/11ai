@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Jest Runner"
+  short_description: "Run Jest tests at the smallest useful scope"
+  default_prompt: "Use $11ai-jest-runner to run the right Jest tests for this request and report evidence."

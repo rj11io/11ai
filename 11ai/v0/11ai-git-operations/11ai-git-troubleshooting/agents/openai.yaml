@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Git Troubleshooting"
+  short_description: "Diagnose Git failures from focused evidence"
+  default_prompt: "Use $11ai-git-troubleshooting to classify this Git failure, collect focused evidence, and identify the smallest justified fix."

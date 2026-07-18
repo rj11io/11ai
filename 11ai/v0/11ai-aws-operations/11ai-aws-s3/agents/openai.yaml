@@ -1,0 +1,4 @@
+interface:
+  display_name: "AWS S3 operations"
+  short_description: "Run common S3 operations safely"
+  default_prompt: "Help me use $11ai-aws-s3 for this S3 operation."

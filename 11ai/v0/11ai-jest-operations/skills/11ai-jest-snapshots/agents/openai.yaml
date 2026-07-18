@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Jest Snapshots"
+  short_description: "Review and update Jest snapshots deliberately"
+  default_prompt: "Use $11ai-jest-snapshots to diagnose this snapshot result and update only the snapshots that are intentionally changing."

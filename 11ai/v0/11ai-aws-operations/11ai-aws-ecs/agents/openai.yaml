@@ -1,0 +1,4 @@
+interface:
+  display_name: "AWS ECS operations"
+  short_description: "Inspect and operate ECS safely"
+  default_prompt: "Help me use $11ai-aws-ecs for this ECS operation."

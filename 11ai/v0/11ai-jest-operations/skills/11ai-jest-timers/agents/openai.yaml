@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Jest Timers"
+  short_description: "Drive timer-based Jest tests deterministically"
+  default_prompt: "Use $11ai-jest-timers to make this timer-driven Jest test deterministic and clean up its clock safely."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Git Status"
+  short_description: "Inspect repository state without changing it"
+  default_prompt: "Use $11ai-git-status to inspect this repository and report its current branch, changes, and upstream state."

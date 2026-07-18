@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Git Stage"
+  short_description: "Prepare only the intended Git changes"
+  default_prompt: "Use $11ai-git-stage to review and stage only the changes intended for the next commit."

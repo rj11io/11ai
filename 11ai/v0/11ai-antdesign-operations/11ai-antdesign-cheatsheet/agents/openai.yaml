@@ -1,0 +1,4 @@
+interface:
+  display_name: "Answer common Ant Design questions"
+  short_description: "Look up components, props, and patterns"
+  default_prompt: "Use $11ai-antdesign-cheatsheet to answer this Ant Design component or API question."

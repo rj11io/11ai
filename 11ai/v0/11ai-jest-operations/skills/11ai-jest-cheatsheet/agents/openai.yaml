@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Jest Cheatsheet"
+  short_description: "Look up common Jest commands and APIs quickly"
+  default_prompt: "Use $11ai-jest-cheatsheet to answer this common Jest command or API question with a version-aware example."

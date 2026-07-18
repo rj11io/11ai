@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai MongoDB Import Export"
+  short_description: "Move data with MongoDB Database Tools"
+  default_prompt: "Use $11ai-mongodb-import-export to import, export, dump, restore, or inspect MongoDB data files."

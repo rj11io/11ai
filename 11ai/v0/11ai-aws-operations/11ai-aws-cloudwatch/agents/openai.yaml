@@ -1,0 +1,4 @@
+interface:
+  display_name: "AWS CloudWatch"
+  short_description: "Query CloudWatch observability data"
+  default_prompt: "Help me use $11ai-aws-cloudwatch for this observability task."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Docker Cleanup"
+  short_description: "Review and prune Docker resources safely"
+  default_prompt: "Use $11ai-docker-cleanup to measure Docker usage and review cleanup candidates."

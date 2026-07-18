@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Docker Storage"
+  short_description: "Inspect Docker volumes and service networks"
+  default_prompt: "Use $11ai-docker-volumes-and-networks to inspect or manage this Docker storage or network issue."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai MongoDB Querying"
+  short_description: "Build precise MongoDB read queries"
+  default_prompt: "Use $11ai-mongodb-querying to build bounded MongoDB filters, projections, sorts, counts, or date and array queries."

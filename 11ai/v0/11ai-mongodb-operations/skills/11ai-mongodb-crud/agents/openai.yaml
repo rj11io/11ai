@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai MongoDB CRUD"
+  short_description: "Run scoped MongoDB document operations"
+  default_prompt: "Use $11ai-mongodb-crud to insert, find, update, or delete MongoDB documents with preview-first safety."

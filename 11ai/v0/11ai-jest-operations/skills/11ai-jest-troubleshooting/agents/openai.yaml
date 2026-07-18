@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Jest Troubleshooting"
+  short_description: "Diagnose Jest failures with focused evidence"
+  default_prompt: "Use $11ai-jest-troubleshooting to classify this Jest failure, run focused probes, and identify the smallest justified fix."

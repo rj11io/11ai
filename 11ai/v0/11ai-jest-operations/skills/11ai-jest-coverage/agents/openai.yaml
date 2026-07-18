@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Jest Coverage"
+  short_description: "Collect and understand Jest coverage reports"
+  default_prompt: "Use $11ai-jest-coverage to collect Jest coverage for the right scope and explain any gaps or threshold failures."

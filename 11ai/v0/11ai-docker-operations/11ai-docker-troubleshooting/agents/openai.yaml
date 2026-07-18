@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Docker Troubleshooting"
+  short_description: "Diagnose Docker and Compose failures systematically"
+  default_prompt: "Use $11ai-docker-troubleshooting to diagnose this Docker or Compose failure from evidence."

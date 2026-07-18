@@ -1,0 +1,4 @@
+interface:
+  display_name: "Diagnose Ant Design issues"
+  short_description: "Diagnose Ant Design rendering and API issues"
+  default_prompt: "Use $11ai-antdesign-troubleshooting to diagnose this Ant Design issue."

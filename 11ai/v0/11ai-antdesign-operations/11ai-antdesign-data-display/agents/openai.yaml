@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build Ant Design data displays"
+  short_description: "Compose cards, lists, and states"
+  default_prompt: "Use $11ai-antdesign-data-display to build or fix this Ant Design data display."

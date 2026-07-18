@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai MongoDB Aggregation"
+  short_description: "Build and test aggregation pipelines"
+  default_prompt: "Use $11ai-mongodb-aggregation to design, test, explain, or safely run a MongoDB aggregation pipeline."

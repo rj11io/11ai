@@ -1,0 +1,4 @@
+interface:
+  display_name: "AWS Lambda operations"
+  short_description: "Operate and troubleshoot Lambda"
+  default_prompt: "Help me use $11ai-aws-lambda for this Lambda operation."

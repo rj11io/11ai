@@ -1,0 +1,21 @@
+{
+  "name": "11ai-antdesign-operations",
+  "version": "1.16.0",
+  "description": "Modular, version-aware skills for common Ant Design React operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": ["ant-design", "antd", "react", "frontend", "ui"],
+  "skills": "./",
+  "interface": {
+    "displayName": "11ai Ant Design Operations",
+    "shortDescription": "Build common Ant Design React interfaces.",
+    "longDescription": "A modular toolbox for setting up Ant Design, building layouts, forms, tables, navigation, overlays, and data displays, then theming, looking up, and troubleshooting the result.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": ["Build", "Review", "Troubleshoot"],
+    "defaultPrompt": "Help me use the 11ai-antdesign-operations skills for this Ant Design task."
+  }
+}

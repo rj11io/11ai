@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Node.js API Environment"
+  short_description: "Inspect Node.js API runtime and project configuration"
+  default_prompt: "Use $11ai-nodejs-api-environment to inspect this Node.js API project's runtime, framework, scripts, and configuration."

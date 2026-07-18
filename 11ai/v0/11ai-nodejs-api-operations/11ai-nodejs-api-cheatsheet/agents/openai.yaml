@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Node.js API Cheatsheet"
+  short_description: "Look up safe Node.js API commands and patterns"
+  default_prompt: "Use $11ai-nodejs-api-cheatsheet to answer this Node.js API command, pattern, or status-code question."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai MongoDB Cheatsheet"
+  short_description: "Look up MongoDB commands and syntax"
+  default_prompt: "Use $11ai-mongodb-cheatsheet to answer this MongoDB command, syntax, or terminology question."

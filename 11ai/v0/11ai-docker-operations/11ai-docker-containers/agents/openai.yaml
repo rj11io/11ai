@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Docker Containers"
+  short_description: "Run and inspect individual Docker containers"
+  default_prompt: "Use $11ai-docker-containers to operate on or diagnose this Docker container."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Docker Cheatsheet"
+  short_description: "Look up safe Docker commands and flags quickly"
+  default_prompt: "Use $11ai-docker-cheatsheet to answer this Docker command or flag question."

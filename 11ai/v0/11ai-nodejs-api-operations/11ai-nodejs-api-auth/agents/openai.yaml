@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Node.js API Auth"
+  short_description: "Protect and debug Node.js API authentication"
+  default_prompt: "Use $11ai-nodejs-api-auth to add, review, or troubleshoot authentication and authorization for this Node.js API."

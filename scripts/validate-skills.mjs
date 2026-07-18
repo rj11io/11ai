@@ -254,6 +254,19 @@ function validateCatalog(plugins, pluginSkills, skills) {
     for (const skill of pluginSkills.get(plugin)) {
       if (!contents.includes(skill.name)) fail(readme, `does not list '${skill.name}'`)
     }
+
+    const count = pluginSkills.get(plugin).length
+    const rootCatalogRow = new RegExp(
+      `\\| \\[[^\\]]+\\]\\(\\.\\/11ai\\/v0\\/${plugin}\\/README\\.md\\) \\| ${count} \\|`,
+    )
+    if (!rootCatalogRow.test(rootReadme)) {
+      fail(path.join(root, "README.md"), `catalog row for '${plugin}' must state ${count} skills`)
+    }
+
+    const rootLayoutEntry = new RegExp(`^\\s+${plugin}\\/\\s+${count} `, "m")
+    if (!rootLayoutEntry.test(rootReadme)) {
+      fail(path.join(root, "README.md"), `layout entry for '${plugin}' must state ${count} skills`)
+    }
   }
 }
 

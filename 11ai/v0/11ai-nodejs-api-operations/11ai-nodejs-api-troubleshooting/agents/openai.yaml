@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Node.js API Troubleshooting"
+  short_description: "Diagnose Node.js API failures from evidence"
+  default_prompt: "Use $11ai-nodejs-api-troubleshooting to diagnose this Node.js API failure with bounded, redacted evidence."

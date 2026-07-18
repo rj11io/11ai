@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai MongoDB Collections"
+  short_description: "Inspect and manage MongoDB collections"
+  default_prompt: "Use $11ai-mongodb-collections to inspect, create, validate, rename, or deliberately drop a MongoDB collection."

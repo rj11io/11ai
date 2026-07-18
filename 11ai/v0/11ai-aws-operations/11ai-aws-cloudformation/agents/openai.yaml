@@ -1,0 +1,4 @@
+interface:
+  display_name: "AWS CloudFormation"
+  short_description: "Operate CloudFormation carefully"
+  default_prompt: "Help me use $11ai-aws-cloudformation for this stack operation."

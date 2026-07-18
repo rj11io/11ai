@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "11ai-mongodb-operations",
+  "version": "1.16.0",
+  "description": "Modular, safety-first skills for common MongoDB shell and database-tool operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "mongodb",
+    "mongosh",
+    "crud",
+    "aggregation",
+    "indexes",
+    "database-tools"
+  ],
+  "skills": "./skills/"
+}

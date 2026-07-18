@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Git Branches"
+  short_description: "Manage local Git branches safely"
+  default_prompt: "Use $11ai-git-branches to perform the requested local branch operation and verify the resulting checkout."

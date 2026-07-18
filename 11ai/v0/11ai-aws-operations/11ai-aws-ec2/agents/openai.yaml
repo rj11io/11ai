@@ -1,0 +1,4 @@
+interface:
+  display_name: "AWS EC2 operations"
+  short_description: "Inspect and operate EC2 safely"
+  default_prompt: "Help me use $11ai-aws-ec2 for this EC2 operation."

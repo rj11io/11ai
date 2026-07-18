@@ -1,0 +1,4 @@
+interface:
+  display_name: "Theme Ant Design consistently"
+  short_description: "Configure tokens, modes, and themes"
+  default_prompt: "Use $11ai-antdesign-theming to configure or fix Ant Design theming in this app."

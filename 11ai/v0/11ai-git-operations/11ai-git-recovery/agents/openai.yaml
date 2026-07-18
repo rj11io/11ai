@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Git Recovery"
+  short_description: "Undo or recover Git work with guardrails"
+  default_prompt: "Use $11ai-git-recovery to inspect this Git mistake and choose the least destructive recovery path."

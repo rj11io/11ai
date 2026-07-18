@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Node.js API Testing"
+  short_description: "Test Node.js API routes and integrations"
+  default_prompt: "Use $11ai-nodejs-api-testing to add or run focused tests for this Node.js API change."

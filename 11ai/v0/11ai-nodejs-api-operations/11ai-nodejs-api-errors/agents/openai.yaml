@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Node.js API Errors"
+  short_description: "Make Node.js API errors stable and safe"
+  default_prompt: "Use $11ai-nodejs-api-errors to review or repair this Node.js API's error handling and safe error responses."

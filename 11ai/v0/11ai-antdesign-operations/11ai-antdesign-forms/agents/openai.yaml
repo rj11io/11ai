@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build validated Ant Design forms"
+  short_description: "Build typed forms with validation"
+  default_prompt: "Use $11ai-antdesign-forms to build or fix this Ant Design form."

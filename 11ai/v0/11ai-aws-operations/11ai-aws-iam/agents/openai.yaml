@@ -1,0 +1,4 @@
+interface:
+  display_name: "AWS IAM analysis"
+  short_description: "Inspect IAM access safely"
+  default_prompt: "Help me use $11ai-aws-iam to inspect this IAM question safely."

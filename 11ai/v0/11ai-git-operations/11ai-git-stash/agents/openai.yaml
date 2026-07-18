@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Git Stash"
+  short_description: "Shelve and restore Git work deliberately"
+  default_prompt: "Use $11ai-git-stash to shelve, inspect, or restore the requested Git work without losing it."

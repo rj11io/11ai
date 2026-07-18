@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai MongoDB Troubleshooting"
+  short_description: "Diagnose MongoDB failures safely"
+  default_prompt: "Use $11ai-mongodb-troubleshooting to diagnose MongoDB connection, auth, TLS, write, restore, or performance failures."

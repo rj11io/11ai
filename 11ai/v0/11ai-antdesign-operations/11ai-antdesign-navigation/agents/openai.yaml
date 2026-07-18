@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build Ant Design navigation"
+  short_description: "Implement menus, tabs, and breadcrumbs"
+  default_prompt: "Use $11ai-antdesign-navigation to build or fix this Ant Design navigation."

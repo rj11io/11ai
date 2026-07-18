@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Jest Mocks"
+  short_description: "Isolate Jest dependencies with correct mock cleanup"
+  default_prompt: "Use $11ai-jest-mocks to create or diagnose the smallest Jest mock and verify its cleanup and assertions."

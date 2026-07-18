@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Git Commit"
+  short_description: "Create one reviewed local Git commit"
+  default_prompt: "Use $11ai-git-commit to create a focused local commit from the staged changes and verify the result."

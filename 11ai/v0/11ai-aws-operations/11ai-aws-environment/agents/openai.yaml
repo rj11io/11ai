@@ -1,0 +1,4 @@
+interface:
+  display_name: "AWS environment context"
+  short_description: "Inspect AWS profiles, identity, and region"
+  default_prompt: "Help me use $11ai-aws-environment to inspect this AWS context safely."

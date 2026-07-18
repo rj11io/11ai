@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Docker Registry"
+  short_description: "Move images safely between Docker and registries"
+  default_prompt: "Use $11ai-docker-registry to authenticate, tag, pull, or push this Docker image."

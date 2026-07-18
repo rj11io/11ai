@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Docker Build"
+  short_description: "Build and verify local Docker images"
+  default_prompt: "Use $11ai-docker-build to build or diagnose this Docker image build."

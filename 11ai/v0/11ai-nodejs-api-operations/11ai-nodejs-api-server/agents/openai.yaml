@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Node.js API Server"
+  short_description: "Run and health-check a local Node.js API"
+  default_prompt: "Use $11ai-nodejs-api-server to start, inspect, health-check, or safely stop this local Node.js API."

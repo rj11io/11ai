@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Git Cheatsheet"
+  short_description: "Look up safe Git commands and flags quickly"
+  default_prompt: "Use $11ai-git-cheatsheet to answer this Git command, flag, or workflow question with a safe example."

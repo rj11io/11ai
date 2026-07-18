@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Node.js API Validation"
+  short_description: "Validate Node.js API input consistently"
+  default_prompt: "Use $11ai-nodejs-api-validation to add or review safe validation for this Node.js API endpoint."

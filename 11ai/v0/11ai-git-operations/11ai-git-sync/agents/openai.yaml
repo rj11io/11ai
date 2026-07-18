@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Git Sync"
+  short_description: "Fetch, pull, compare, and push safely"
+  default_prompt: "Use $11ai-git-sync to inspect this branch's remote state and perform the requested Git synchronization safely."
