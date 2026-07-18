@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 import { createHash } from "node:crypto"
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs"
-import { dirname, extname, join, relative, resolve } from "node:path"
+import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readSync, readdirSync, statSync, writeFileSync } from "node:fs"
+import { homedir } from "node:os"
+import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path"
 import { fileURLToPath } from "node:url"
 
 const argv = process.argv.slice(2)
@@ -13,7 +14,7 @@ const option = (name) => {
 }
 
 if (argv.includes("--help")) {
-  console.log("usage: node analyze-llm-cost.mjs [root-folder] [--pricing pricing.json] [--output report.md]")
+  console.log("usage: node analyze-llm-cost.mjs [root-folder] [--pricing pricing.json] [--output report.md] [--codex-home dir] [--claude-home dir] [--project-only]")
   process.exit(0)
 }
 
@@ -40,6 +41,9 @@ const SKIP_DIRS = new Set([
   "coverage", "dist", "build", "out", "vendor", ".venv", "venv", "__pycache__",
 ])
 const JSON_EXTENSIONS = new Set([".json", ".jsonl", ".ndjson"])
+const SESSION_EXTENSIONS = new Set([".jsonl", ".ndjson"])
+const externalSessions = new Map()
+const discovery = { nativeFilesConsidered: 0, nativeSessionsMatched: 0, codexSessions: 0, claudeSessions: 0 }
 const finite = (value) => typeof value === "number" && Number.isFinite(value)
 const number = (value) => {
   if (finite(value)) return value
@@ -64,11 +68,23 @@ function globRegex(pattern) {
   return new RegExp(`^${String(pattern).split("*").map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join(".*")}$`, "i")
 }
 
+function isWithin(parent, child) {
+  const rel = relative(resolve(parent), resolve(child))
+  return rel === "" || (rel !== ".." && !rel.startsWith(`..${sep}`) && !isAbsolute(rel))
+}
+
 function sourceLabel(file) {
+  const external = externalSessions.get(resolve(file))
+  if (external) return `${external.harness}-session/${external.label}`
   return relative(root, file).replaceAll("\\", "/") || "."
 }
 
 function folderLabel(file) {
+  const external = externalSessions.get(resolve(file))
+  if (external?.cwd) {
+    const rel = relative(root, external.cwd).replaceAll("\\", "/")
+    return !rel || rel === "." ? "." : rel.split("/")[0]
+  }
   const rel = sourceLabel(file)
   const first = rel.split("/")[0]
   return rel.includes("/") ? first : "."
@@ -82,6 +98,71 @@ function walk(dir, files = []) {
     else if (entry.isFile() && JSON_EXTENSIONS.has(extname(entry.name).toLowerCase())) files.push(file)
   }
   return files
+}
+
+function walkSessionFiles(dir, files = []) {
+  if (!existsSync(dir) || !statSync(dir).isDirectory()) return files
+  for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    const file = join(dir, entry.name)
+    if (entry.isDirectory()) walkSessionFiles(file, files)
+    else if (entry.isFile() && SESSION_EXTENSIONS.has(extname(entry.name).toLowerCase())) files.push(file)
+  }
+  return files
+}
+
+function readPrefix(file, limit = 256 * 1024) {
+  const fd = openSync(file, "r")
+  try {
+    const size = Math.min(statSync(file).size, limit)
+    const buffer = Buffer.alloc(size)
+    const bytes = readSync(fd, buffer, 0, size, 0)
+    return buffer.subarray(0, bytes).toString("utf8")
+  } finally {
+    closeSync(fd)
+  }
+}
+
+function nativeSessionMetadata(file) {
+  const lines = readPrefix(file).split(/\r?\n/)
+  for (const line of lines) {
+    if (!line.trim()) continue
+    let record
+    try { record = JSON.parse(line) } catch { continue }
+    const cwd = firstValue(record?.cwd, record?.payload?.cwd, record?.metadata?.cwd, record?.session?.cwd)
+    if (!cwd || typeof cwd !== "string") continue
+    return {
+      cwd: resolve(cwd),
+      id: firstValue(record?.sessionId, record?.session_id, record?.payload?.id, record?.payload?.session_id),
+    }
+  }
+  return null
+}
+
+function discoverNativeSessions() {
+  if (argv.includes("--project-only")) return []
+  const codexHome = resolve(option("--codex-home") ?? process.env.CODEX_HOME ?? join(homedir(), ".codex"))
+  const claudeHome = resolve(option("--claude-home") ?? process.env.CLAUDE_CONFIG_DIR ?? join(homedir(), ".claude"))
+  const sources = [
+    { harness: "codex", home: codexHome, roots: [join(codexHome, "sessions"), join(codexHome, "archived_sessions")] },
+    { harness: "claude", home: claudeHome, roots: [join(claudeHome, "projects")] },
+  ]
+  const matched = []
+  for (const source of sources) {
+    for (const sessionRoot of source.roots) {
+      for (const file of walkSessionFiles(sessionRoot)) {
+        discovery.nativeFilesConsidered += 1
+        const metadata = nativeSessionMetadata(file)
+        if (!metadata || !isWithin(root, metadata.cwd)) continue
+        const rel = relative(source.home, file).replaceAll("\\", "/") || basename(file)
+        externalSessions.set(resolve(file), { ...metadata, harness: source.harness, label: rel })
+        matched.push(resolve(file))
+        discovery.nativeSessionsMatched += 1
+        if (source.harness === "codex") discovery.codexSessions += 1
+        if (source.harness === "claude") discovery.claudeSessions += 1
+      }
+    }
+  }
+  return matched
 }
 
 function readRecords(file) {
@@ -495,6 +576,11 @@ function report({ threads, stats, malformed, duplicateIds }) {
     table(["Coverage", "Value"], [
       ["Files visited", fmtInt(stats.filesVisited)],
       ["JSON/JSONL/NDJSON files inspected", fmtInt(stats.candidateFiles)],
+      ["Project JSON-family files", fmtInt(stats.projectCandidateFiles)],
+      ["Native session files metadata-checked", fmtInt(stats.nativeFilesConsidered)],
+      ["Project-associated native sessions", fmtInt(stats.nativeSessionsMatched)],
+      ["Codex sessions", fmtInt(stats.codexSessions)],
+      ["Claude sessions", fmtInt(stats.claudeSessions)],
       ["Files containing usage records", fmtInt(stats.recognizedFiles)],
       ["Malformed records", fmtInt(malformed.length)],
       ["Pricing catalog", pricingPath ? (pricingPath.startsWith(root) ? sourceLabel(pricingPath) : "bundled default") : "none"],
@@ -581,6 +667,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "## Methodology",
     "",
     "- Recursively inspect JSON, JSONL, and NDJSON files below the requested root, excluding dependency, VCS, cache, virtual-environment, and build directories.",
+    "- Discover Codex and Claude Code transcripts directly from their native session directories. Read only a bounded metadata prefix while filtering, then parse the complete transcript only when its recorded working directory equals or is inside the requested root.",
     "- Use the last cumulative Codex token-count event; deduplicate Claude streaming records by message ID or exact model/usage payload; aggregate generic usage records by provider and model.",
     "- Preserve provider-native usage semantics: OpenAI cached input is a subset of input, while Anthropic cache buckets are disjoint. Reasoning tokens are a subset of output.",
     "- Treat missing values as unavailable. Sum known totals for overview coverage, but surface every incomplete or unpriced thread in the detail and limitations sections.",
@@ -592,8 +679,19 @@ function report({ threads, stats, malformed, duplicateIds }) {
   return lines.join("\n")
 }
 
-const files = walk(root)
-const stats = { filesVisited: 0, candidateFiles: files.length, recognizedFiles: 0 }
+const projectFiles = walk(root)
+const nativeFiles = discoverNativeSessions()
+const files = [...new Set([...projectFiles, ...nativeFiles].map((file) => resolve(file)))]
+const stats = {
+  filesVisited: 0,
+  candidateFiles: files.length,
+  projectCandidateFiles: projectFiles.length,
+  nativeFilesConsidered: discovery.nativeFilesConsidered,
+  nativeSessionsMatched: discovery.nativeSessionsMatched,
+  codexSessions: discovery.codexSessions,
+  claudeSessions: discovery.claudeSessions,
+  recognizedFiles: 0,
+}
 let malformed = []
 const threads = []
 const logicalSources = new Map()
@@ -626,6 +724,11 @@ console.log(JSON.stringify({
   root,
   output,
   filesInspected: stats.candidateFiles,
+  projectFilesInspected: stats.projectCandidateFiles,
+  nativeFilesMetadataChecked: stats.nativeFilesConsidered,
+  nativeSessionsMatched: stats.nativeSessionsMatched,
+  codexSessions: stats.codexSessions,
+  claudeSessions: stats.claudeSessions,
   recognizedFiles: stats.recognizedFiles,
   threads: threads.length,
   knownTokens: threads.filter((thread) => finite(thread.tokens.providerTotal)).length,

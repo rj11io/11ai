@@ -18,13 +18,16 @@ node <skill>/scripts/analyze-llm-cost.mjs <root-folder>
 The command writes `<root-folder>/11ai-llm-cost-{datetime}.md`, where `{datetime}` is the UTC ISO timestamp for the run with colons and the decimal point replaced by hyphens (for example, `11ai-llm-cost-2026-07-18T14-30-45-123Z.md`). The default write is exclusive so it never overwrites an existing report. It accepts:
 
 - `--pricing <file>` to use a repository-specific pricing catalog;
-- `--output <file>` only when the user explicitly requests a different report path.
+- `--output <file>` only when the user explicitly requests a different report path;
+- `--codex-home <dir>` or `CODEX_HOME` to override the native Codex data directory;
+- `--claude-home <dir>` or `CLAUDE_CONFIG_DIR` to override the native Claude Code data directory;
+- `--project-only` to disable native session discovery and inspect only the requested root.
 
-The analyzer reads JSON, JSONL, and NDJSON files recursively, while skipping dependency, VCS, cache, and build directories. It only includes a file in the report when it contains a recognized usage record. Never scan the user's home transcript directories unless they are inside the requested root.
+The analyzer reads JSON, JSONL, and NDJSON files recursively, while skipping dependency, VCS, cache, and build directories. It also discovers Codex and Claude Code transcripts directly in their native session directories. During discovery it reads only a bounded metadata prefix, and it parses a complete native transcript only when the transcript's recorded working directory is the requested root or one of its children. It only includes a file in the report when it contains a recognized usage record.
 
 ## Workflow
 
-1. Establish the exact root and confirm the output path is inside it unless the user asked otherwise.
+1. Establish the exact root, resolve native transcript homes from CLI options, harness environment variables, or the current user's home directory, and confirm the output path is inside the root unless the user asked otherwise.
 2. Run the analyzer. Preserve malformed, ambiguous, unpriced, and reported-only records in the report's coverage and limitations sections rather than silently dropping them.
 3. Review the generated `11ai-llm-cost-{datetime}.md` for the executive summary, provider/model rollups, root-versus-child-folder rollups, token-class detail, per-thread table, pricing coverage, anomalies, and methodology.
 4. If a model is unmatched or pricing is older than 30 days, verify the provider's official pricing page. Prefer a repository-local `llm-pricing.json` or `.llm-cost/pricing.json` override so the report remains reproducible; never invent a rate from memory.
@@ -39,6 +42,8 @@ The bundled parser handles:
 - OpenAI-style response usage: `input_tokens` or `prompt_tokens`, cached-input details, output/completion tokens, and reasoning details;
 - Anthropic-style usage objects and generic `usage`, `token_usage`, or `tokenUsage` records;
 - harness-reported `cost`, `cost_usd`, or `total_cost_usd` when token pricing is unavailable.
+
+Codex and Claude Code are discovered from their native files without an application database or thread index. Other harnesses remain compatible by placing or exporting any supported JSON usage shape within the requested root.
 
 Provider-native raw usage is retained in the analyzer's in-memory record and normalized with these semantics:
 
