@@ -1,3 +1,10 @@
+## [1.18.4](https://github.com/rj11io/11ai/compare/v1.18.3...v1.18.4) (2026-07-18)
+
+
+### Bug Fixes
+
+* add signatures ([7589179](https://github.com/rj11io/11ai/commit/7589179c607c58346b23d63204accf37816df1b0))
+
 ## [1.18.3](https://github.com/rj11io/11ai/compare/v1.18.2...v1.18.3) (2026-07-18)
 
 
