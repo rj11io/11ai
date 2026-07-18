@@ -1,3 +1,11 @@
+## [1.19.1](https://github.com/rj11io/11ai/compare/v1.19.0...v1.19.1) (2026-07-18)
+
+
+### Bug Fixes
+
+* link on a new tab ([7260364](https://github.com/rj11io/11ai/commit/72603642b30b8383b4ce9210c73ca79e574807cd))
+* refactor v0 ([bec6c8c](https://github.com/rj11io/11ai/commit/bec6c8c5ef77886307df83385d57875b08020604))
+
 # [1.19.0](https://github.com/rj11io/11ai/compare/v1.18.4...v1.19.0) (2026-07-18)
 
 
