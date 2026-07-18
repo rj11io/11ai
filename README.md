@@ -38,7 +38,7 @@ Install the npm package directly when you need a versioned copy of the raw files
 npm install --save-dev @rj11io/11ai
 ```
 
-The files are installed at `node_modules/@rj11io/11ai/11ai/v0/`. You can also clone this repository and use [`11ai/v0`](./11ai/v0) directly.
+The files are installed at `node_modules/@rj11io/11ai/v0/plugins/`. You can also clone this repository and use [`v0/plugins`](./v0/plugins) directly.
 
 ## Skill catalog
 
@@ -46,60 +46,62 @@ The repository currently contains 152 skills in 20 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
-| [Agent automation](./11ai/v0/11ai-agent-automation/README.md) | 8 | Scheduled autonomous work using the Ledger + Conductor + Routine pattern |
-| [AI chat](./11ai/v0/11ai-ai-chat/README.md) | 9 | End-to-end chat, sessions, tools, models, providers, UI, and messaging-platform extensions |
-| [Ant Design operations](./11ai/v0/11ai-antdesign-operations/README.md) | 10 | Common Ant Design React setup, layouts, forms, tables, navigation, overlays, display, theming, reference, and troubleshooting |
-| [AWS operations](./11ai/v0/11ai-aws-operations/README.md) | 11 | Common AWS CLI operations for account context, S3, EC2, Lambda, ECS, ECR, CloudWatch, IAM, CloudFormation, reference, and troubleshooting |
-| [Benchmarks](./11ai/v0/11ai-benchmarks/README.md) | 19 | Running resumable soft/final lifecycles; creating, auditing, AI/human judging, accounting, reviewing, synchronizing, and publishing benchmarks |
-| [Blog builder](./11ai/v0/11ai-blog-builder/README.md) | 8 | Building file-backed editorial blogs with composable CMS, author, Markdown, content, navigation, and UI skills |
-| [Cleanup](./11ai/v0/11ai-cleanup/README.md) | 5 | Safely finding and removing abandoned local resources |
-| [Codebase](./11ai/v0/11ai-codebase/README.md) | 3 | Playwright setup, npm publishing, and automated releases |
-| [Docker operations](./11ai/v0/11ai-docker-operations/README.md) | 10 | Common Docker CLI and Compose operations, safe cleanup, and troubleshooting |
-| [Git operations](./11ai/v0/11ai-git-operations/README.md) | 11 | Modular, safety-first skills for common Git operations, repository workflows, learning, and troubleshooting |
-| [Integrations](./11ai/v0/11ai-integrations/README.md) | 3 | Adding Convex, WorkOS AuthKit, or both to Next.js applications |
-| [Jest operations](./11ai/v0/11ai-jest-operations/README.md) | 12 | Inspecting, running, configuring, and troubleshooting common Jest operations |
-| [LLM costs](./11ai/v0/11ai-llm-costs/README.md) | 2 | Project-scoped and machine-wide LLM usage and cost reporting across local coding harnesses |
-| [MongoDB operations](./11ai/v0/11ai-mongodb-operations/README.md) | 10 | Common MongoDB Shell and Database Tools work with read-first safety checks |
-| [Node.js API operations](./11ai/v0/11ai-nodejs-api-operations/README.md) | 10 | Inspecting, changing, testing, and troubleshooting Node.js APIs across common frameworks |
-| [Super](./11ai/v0/11ai-super/README.md) | 8 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
-| [Security](./11ai/v0/11ai-security/README.md) | 1 | Read-only dependency vulnerability and supply-chain auditing with critical host-harm triage |
-| [Utilities](./11ai/v0/11ai-utils/README.md) | 8 | Code-quality review and improvement, Markdown compression, reverse engineering, critique, analytics, publication CMS, calls to action, and project sites |
-| [Web design](./11ai/v0/11ai-web-design/README.md) | 2 | The 11ai visual language and deliberate content-led styling for accessible web interfaces |
-| [Cross-harness](./11ai/v0/11ai-xharness/README.md) | 2 | Delegating work to agents running in other CLI harnesses |
+| [Agent automation](./v0/plugins/11ai-agent-automation/README.md) | 8 | Scheduled autonomous work using the Ledger + Conductor + Routine pattern |
+| [AI chat](./v0/plugins/11ai-ai-chat/README.md) | 9 | End-to-end chat, sessions, tools, models, providers, UI, and messaging-platform extensions |
+| [Ant Design operations](./v0/plugins/11ai-antdesign-operations/README.md) | 10 | Common Ant Design React setup, layouts, forms, tables, navigation, overlays, display, theming, reference, and troubleshooting |
+| [AWS operations](./v0/plugins/11ai-aws-operations/README.md) | 11 | Common AWS CLI operations for account context, S3, EC2, Lambda, ECS, ECR, CloudWatch, IAM, CloudFormation, reference, and troubleshooting |
+| [Benchmarks](./v0/plugins/11ai-benchmarks/README.md) | 19 | Running resumable soft/final lifecycles; creating, auditing, AI/human judging, accounting, reviewing, synchronizing, and publishing benchmarks |
+| [Blog builder](./v0/plugins/11ai-blog-builder/README.md) | 8 | Building file-backed editorial blogs with composable CMS, author, Markdown, content, navigation, and UI skills |
+| [Cleanup](./v0/plugins/11ai-cleanup/README.md) | 5 | Safely finding and removing abandoned local resources |
+| [Codebase](./v0/plugins/11ai-codebase/README.md) | 3 | Playwright setup, npm publishing, and automated releases |
+| [Docker operations](./v0/plugins/11ai-docker-operations/README.md) | 10 | Common Docker CLI and Compose operations, safe cleanup, and troubleshooting |
+| [Git operations](./v0/plugins/11ai-git-operations/README.md) | 11 | Modular, safety-first skills for common Git operations, repository workflows, learning, and troubleshooting |
+| [Integrations](./v0/plugins/11ai-integrations/README.md) | 3 | Adding Convex, WorkOS AuthKit, or both to Next.js applications |
+| [Jest operations](./v0/plugins/11ai-jest-operations/README.md) | 12 | Inspecting, running, configuring, and troubleshooting common Jest operations |
+| [LLM costs](./v0/plugins/11ai-llm-costs/README.md) | 2 | Project-scoped and machine-wide LLM usage and cost reporting across local coding harnesses |
+| [MongoDB operations](./v0/plugins/11ai-mongodb-operations/README.md) | 10 | Common MongoDB Shell and Database Tools work with read-first safety checks |
+| [Node.js API operations](./v0/plugins/11ai-nodejs-api-operations/README.md) | 10 | Inspecting, changing, testing, and troubleshooting Node.js APIs across common frameworks |
+| [Super](./v0/plugins/11ai-super/README.md) | 8 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
+| [Security](./v0/plugins/11ai-security/README.md) | 1 | Read-only dependency vulnerability and supply-chain auditing with critical host-harm triage |
+| [Utilities](./v0/plugins/11ai-utils/README.md) | 8 | Code-quality review and improvement, Markdown compression, reverse engineering, critique, analytics, publication CMS, calls to action, and project sites |
+| [Web design](./v0/plugins/11ai-web-design/README.md) | 2 | The 11ai visual language and deliberate content-led styling for accessible web interfaces |
+| [Cross-harness](./v0/plugins/11ai-xharness/README.md) | 2 | Delegating work to agents running in other CLI harnesses |
 
 Start with a plugin's README to choose a skill, then name that skill in your request. Skills provide instructions and examples; they do not install the application dependencies used in those examples by themselves.
 
 ## Repository layout
 
 ```text
+.claude-plugin/               Claude marketplace discovery entry point
 11ai/
   index.js                    CommonJS package entry point
-  v0/
-    11ai-agent-automation/    8 automation skills
-    11ai-ai-chat/             9 AI chat skills
-    11ai-antdesign-operations/ 10 Ant Design React operation skills
-    11ai-aws-operations/      11 AWS CLI operation skills
-    11ai-benchmarks/          19 benchmark skills
-    11ai-blog-builder/        8 editorial blog skills
-    11ai-cleanup/             5 cleanup skills
-    11ai-codebase/            3 codebase skills
-    11ai-docker-operations/   10 Docker CLI operation skills
-    11ai-git-operations/      11 Git operation and workflow skills
-    11ai-integrations/        3 integration skills
-    11ai-jest-operations/     12 Jest operation skills
-    11ai-llm-costs/           2 LLM cost reporting skills
-    11ai-mongodb-operations/  10 MongoDB operation skills
-    11ai-nodejs-api-operations/ 10 Node.js API operation skills
-    11ai-super/               8 iterative task and improvement skills
-    11ai-security/            1 dependency security audit skill
-    11ai-utils/               8 utility skills
-    11ai-web-design/          2 web design skills
-    11ai-xharness/            2 cross-harness skills
-scripts/                      Root package validation, release, and publishing helpers
-www/                          Next.js project site
+v0/
+  plugins/
+    11ai-agent-automation/    8 automation skills under skills/
+    11ai-ai-chat/             9 AI chat skills under skills/
+    11ai-antdesign-operations/ 10 Ant Design React operation skills under skills/
+    11ai-aws-operations/      11 AWS CLI operation skills under skills/
+    11ai-benchmarks/          19 benchmark skills under skills/
+    11ai-blog-builder/        8 editorial blog skills under skills/
+    11ai-cleanup/             5 cleanup skills under skills/
+    11ai-codebase/            3 codebase skills under skills/
+    11ai-docker-operations/   10 Docker CLI operation skills under skills/
+    11ai-git-operations/      11 Git operation and workflow skills under skills/
+    11ai-integrations/        3 integration skills under skills/
+    11ai-jest-operations/     12 Jest operation skills under skills/
+    11ai-llm-costs/           2 LLM cost reporting skills under skills/
+    11ai-mongodb-operations/  10 MongoDB operation skills under skills/
+    11ai-nodejs-api-operations/ 10 Node.js API operation skills under skills/
+    11ai-super/               8 iterative task and improvement skills under skills/
+    11ai-security/            1 dependency security audit skill under skills/
+    11ai-utils/               8 utility skills under skills/
+    11ai-web-design/          2 web design skills under skills/
+    11ai-xharness/            2 cross-harness skills under skills/
+  scripts/                    Package validation, release, and publishing helpers
+  www/                        Next.js project site
 ```
 
-`v0` is the current skill-format namespace. Pin the npm package version or a commit when reproducibility matters, because skill content can change between releases. See [`CHANGELOG.md`](./CHANGELOG.md) for release history.
+`v0` is the current versioned distribution namespace for the plugins, package tooling, and project site. The root marketplace manifest is their stable Claude discovery entry point. Pin the npm package version or a commit when reproducibility matters, because its content can change between releases. See [`CHANGELOG.md`](./CHANGELOG.md) for release history.
 
 The CommonJS entry point exposes package metadata only:
 
@@ -109,7 +111,7 @@ const elevenAI = require("@rj11io/11ai")
 console.log(elevenAI.name) // "@rj11io/11ai"
 ```
 
-The supported consumer surface is the skill content under `11ai/v0`, not a JavaScript runtime API.
+The supported consumer surface is the skill content under `v0/plugins/{plugin-name}/skills/{skill-name}`, not a JavaScript runtime API.
 
 ## Repository commands
 
@@ -121,7 +123,7 @@ npm run validate-skills
 npm run pack-dry
 ```
 
-`validate-skills` checks frontmatter, Codex metadata, Claude plugin and marketplace configuration, links, scripts, and catalog coverage. `pack-dry` shows the npm tarball contents without publishing. The manual publishing command and its token requirements are documented in [`scripts/README.md`](./scripts/README.md). The project site has its own dependencies and commands in [`www/README.md`](./www/README.md).
+`validate-skills` checks frontmatter, Codex metadata, Claude plugin and marketplace configuration, links, scripts, and catalog coverage. `pack-dry` shows the npm tarball contents without publishing. The manual publishing command and its token requirements are documented in [`v0/scripts/README.md`](./v0/scripts/README.md). The project site has its own dependencies and commands in [`v0/www/README.md`](./v0/www/README.md).
 
 Pushes to `main` run semantic-release, which updates the changelog and package version, publishes to npm, creates a GitHub release, and publishes the generated tarball to GitHub Packages.
 

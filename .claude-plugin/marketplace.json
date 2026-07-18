@@ -8,83 +8,83 @@
   "plugins": [
     {
       "name": "11ai-agent-automation",
-      "source": "./11ai/v0/11ai-agent-automation"
+      "source": "./v0/plugins/11ai-agent-automation"
     },
     {
       "name": "11ai-ai-chat",
-      "source": "./11ai/v0/11ai-ai-chat"
+      "source": "./v0/plugins/11ai-ai-chat"
     },
     {
       "name": "11ai-antdesign-operations",
-      "source": "./11ai/v0/11ai-antdesign-operations"
+      "source": "./v0/plugins/11ai-antdesign-operations"
     },
     {
       "name": "11ai-aws-operations",
-      "source": "./11ai/v0/11ai-aws-operations"
+      "source": "./v0/plugins/11ai-aws-operations"
     },
     {
       "name": "11ai-benchmarks",
-      "source": "./11ai/v0/11ai-benchmarks"
+      "source": "./v0/plugins/11ai-benchmarks"
     },
     {
       "name": "11ai-blog-builder",
-      "source": "./11ai/v0/11ai-blog-builder"
+      "source": "./v0/plugins/11ai-blog-builder"
     },
     {
       "name": "11ai-cleanup",
-      "source": "./11ai/v0/11ai-cleanup"
+      "source": "./v0/plugins/11ai-cleanup"
     },
     {
       "name": "11ai-codebase",
-      "source": "./11ai/v0/11ai-codebase"
+      "source": "./v0/plugins/11ai-codebase"
     },
     {
       "name": "11ai-docker-operations",
-      "source": "./11ai/v0/11ai-docker-operations"
+      "source": "./v0/plugins/11ai-docker-operations"
     },
     {
       "name": "11ai-git-operations",
-      "source": "./11ai/v0/11ai-git-operations"
+      "source": "./v0/plugins/11ai-git-operations"
     },
     {
       "name": "11ai-integrations",
-      "source": "./11ai/v0/11ai-integrations"
+      "source": "./v0/plugins/11ai-integrations"
     },
     {
       "name": "11ai-nodejs-api-operations",
-      "source": "./11ai/v0/11ai-nodejs-api-operations"
+      "source": "./v0/plugins/11ai-nodejs-api-operations"
     },
     {
       "name": "11ai-super",
-      "source": "./11ai/v0/11ai-super"
+      "source": "./v0/plugins/11ai-super"
     },
     {
       "name": "11ai-security",
-      "source": "./11ai/v0/11ai-security"
+      "source": "./v0/plugins/11ai-security"
     },
     {
       "name": "11ai-utils",
-      "source": "./11ai/v0/11ai-utils"
+      "source": "./v0/plugins/11ai-utils"
     },
     {
       "name": "11ai-web-design",
-      "source": "./11ai/v0/11ai-web-design"
+      "source": "./v0/plugins/11ai-web-design"
     },
     {
       "name": "11ai-xharness",
-      "source": "./11ai/v0/11ai-xharness"
+      "source": "./v0/plugins/11ai-xharness"
     },
     {
       "name": "11ai-jest-operations",
-      "source": "./11ai/v0/11ai-jest-operations"
+      "source": "./v0/plugins/11ai-jest-operations"
     },
     {
       "name": "11ai-llm-costs",
-      "source": "./11ai/v0/11ai-llm-costs"
+      "source": "./v0/plugins/11ai-llm-costs"
     },
     {
       "name": "11ai-mongodb-operations",
-      "source": "./11ai/v0/11ai-mongodb-operations"
+      "source": "./v0/plugins/11ai-mongodb-operations"
     }
   ]
 }

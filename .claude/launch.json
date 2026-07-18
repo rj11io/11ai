@@ -4,8 +4,9 @@
     {
       "name": "www-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "www"],
-      "port": 3000
+      "runtimeArgs": ["run", "dev", "--prefix", "v0/www", "--port", "3300"],
+      "port": 3300,
+      "autoPort": true
     }
   ]
 }

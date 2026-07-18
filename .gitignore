@@ -5,6 +5,6 @@
 node_modules/
 .DS_Store
 
-11ai/v0/lab
+v0/plugins/lab
 
 .dir

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "11ai-xharness",
+  "version": "1.19.0",
+  "description": "Delegate and coordinate work across agents running in different CLI harnesses.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "skills": "./skills/"
+}

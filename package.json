@@ -3,18 +3,19 @@
   "version": "1.19.0",
   "private": false,
   "description": "AI skills and workflows",
-  "main": "11ai/index.js",
+  "main": "v0/index.js",
   "files": [
-    "11ai",
+    "v0/index.js",
+    "v0/plugins",
     ".claude-plugin",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
     "pack-dry": "npm pack --dry-run",
-    "validate-skills": "node ./scripts/validate-skills.mjs",
-    "postversion": "node ./scripts/sync-claude-plugin-versions.mjs && npm run validate-skills",
-    "publish-public-local": "node ./scripts/publish-public-w-local-token.cjs",
+    "validate-skills": "node ./v0/scripts/validate-skills.mjs",
+    "postversion": "node ./v0/scripts/sync-claude-plugin-versions.mjs && npm run validate-skills",
+    "publish-public-local": "node ./v0/scripts/publish-public-w-local-token.cjs",
     "semantic-release": "semantic-release"
   },
   "keywords": [

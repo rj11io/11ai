@@ -17,7 +17,8 @@ module.exports = {
         assets: [
           "package.json",
           "CHANGELOG.md",
-          "11ai/v0/*/.claude-plugin/plugin.json",
+          "v0/plugins/*/.claude-plugin/plugin.json",
+          "v0/plugins/*/.codex-plugin/plugin.json",
         ],
         message:
           "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}",

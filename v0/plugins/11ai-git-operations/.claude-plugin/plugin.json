@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "11ai-git-operations",
+  "version": "1.19.0",
+  "description": "Modular, safety-first skills for common Git operations, repository workflows, and troubleshooting.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "git",
+    "version-control",
+    "branches",
+    "commits",
+    "pull-requests"
+  ],
+  "skills": "./skills/"
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "11ai-super",
+  "version": "1.19.0",
+  "description": "Run long-lived general and specialist routines to a high evidence-based quality bar.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "skills": "./skills/"
+}
