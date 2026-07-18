@@ -1,3 +1,10 @@
+## [1.18.1](https://github.com/rj11io/11ai/compare/v1.18.0...v1.18.1) (2026-07-18)
+
+
+### Bug Fixes
+
+* write report on root ([8844a0d](https://github.com/rj11io/11ai/commit/8844a0d043a015c2adb7ada2ae10b3f916468d05))
+
 # [1.18.0](https://github.com/rj11io/11ai/compare/v1.17.0...v1.18.0) (2026-07-18)
 
 
