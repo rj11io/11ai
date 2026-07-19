@@ -42,7 +42,7 @@ The files are installed at `node_modules/@rj11io/11ai/v0/plugins/`. You can also
 
 ## Skill catalog
 
-The repository currently contains 153 skills in 20 plugins.
+The repository currently contains 154 skills in 20 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
@@ -55,7 +55,7 @@ The repository currently contains 153 skills in 20 plugins.
 | [Cleanup](./v0/plugins/11ai-cleanup/README.md) | 5 | Safely finding and removing abandoned local resources |
 | [Codebase](./v0/plugins/11ai-codebase/README.md) | 3 | Playwright setup, npm publishing, and automated releases |
 | [Docker operations](./v0/plugins/11ai-docker-operations/README.md) | 10 | Common Docker CLI and Compose operations, safe cleanup, and troubleshooting |
-| [Git operations](./v0/plugins/11ai-git-operations/README.md) | 11 | Modular, safety-first skills for common Git operations, repository workflows, learning, and troubleshooting |
+| [Git operations](./v0/plugins/11ai-git-operations/README.md) | 12 | Modular, safety-first skills for common Git operations, repository workflows, learning, and troubleshooting |
 | [Integrations](./v0/plugins/11ai-integrations/README.md) | 3 | Adding Convex, WorkOS AuthKit, or both to Next.js applications |
 | [Jest operations](./v0/plugins/11ai-jest-operations/README.md) | 12 | Inspecting, running, configuring, and troubleshooting common Jest operations |
 | [LLM costs](./v0/plugins/11ai-llm-costs/README.md) | 3 | Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports |
@@ -73,9 +73,8 @@ Start with a plugin's README to choose a skill, then name that skill in your req
 
 ```text
 .claude-plugin/               Claude marketplace discovery entry point
-11ai/
-  index.js                    CommonJS package entry point
 v0/
+  index.js                    CommonJS package entry point
   plugins/
     11ai-agent-automation/    8 automation skills under skills/
     11ai-ai-chat/             9 AI chat skills under skills/
@@ -86,7 +85,7 @@ v0/
     11ai-cleanup/             5 cleanup skills under skills/
     11ai-codebase/            3 codebase skills under skills/
     11ai-docker-operations/   10 Docker CLI operation skills under skills/
-    11ai-git-operations/      11 Git operation and workflow skills under skills/
+    11ai-git-operations/      12 Git operation and workflow skills under skills/
     11ai-integrations/        3 integration skills under skills/
     11ai-jest-operations/     12 Jest operation skills under skills/
     11ai-llm-costs/           3 LLM cost, effort, and timing skills under skills/
