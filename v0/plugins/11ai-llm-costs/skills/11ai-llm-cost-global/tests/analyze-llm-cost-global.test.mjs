@@ -104,6 +104,7 @@ try {
   assert.equal(modelHeadingIndexes.length, 4)
   for (const index of modelHeadingIndexes) assert.equal(reportHeadings[index + 1], "### Cost by model by effort")
   assert.match(markdown, /\| openai \/ gpt-5\.6-sol \| high \|/)
+  assert.match(markdown, /\| anthropic \/ claude-sonnet-4-6 \| high \|/)
   assert.match(markdown, /\| Harness \| Threads \| Input \| Cached \| Output \| Tokens \| Known cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Cost \/ thread \| Reported-cost sum \| Average tokens \/ thread \| Priced \| Unpriced \|/)
   assert.match(markdown, /\| Provider \| Threads \| Input \| Cached \| Output \| Tokens \| Known cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Cost \/ thread \| Priced \| Unpriced \|/)
   assert.match(markdown, /\| Provider \/ model \| Threads \| Input \| Cached \| Output \| Tokens \| Cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Cost \/ thread \|/)

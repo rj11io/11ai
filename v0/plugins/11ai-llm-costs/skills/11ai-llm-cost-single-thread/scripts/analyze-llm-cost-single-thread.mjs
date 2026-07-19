@@ -315,17 +315,57 @@ function providerFrom(record, usage, model = modelFrom(record, usage)) {
 }
 
 function effortFrom(record) {
-  return firstValue(
+  const effort = firstValue(
     record?.effort,
+    record?.effort_level,
+    record?.effortLevel,
     record?.reasoning_effort,
     record?.reasoningEffort,
+    record?.output_config?.effort,
+    record?.outputConfig?.effort,
+    record?.request?.output_config?.effort,
+    record?.request?.outputConfig?.effort,
+    record?.body?.output_config?.effort,
+    record?.body?.outputConfig?.effort,
+    record?.message?.effort,
+    record?.message?.effort_level,
+    record?.message?.effortLevel,
+    record?.message?.output_config?.effort,
+    record?.message?.outputConfig?.effort,
+    record?.usage?.effort,
+    record?.message?.usage?.effort,
+    record?.info?.effort,
+    record?.info?.effort_level,
+    record?.info?.effortLevel,
+    record?.info?.output_config?.effort,
+    record?.info?.outputConfig?.effort,
     record?.payload?.effort,
+    record?.payload?.effort_level,
+    record?.payload?.effortLevel,
     record?.payload?.reasoning_effort,
     record?.payload?.reasoningEffort,
+    record?.payload?.output_config?.effort,
+    record?.payload?.outputConfig?.effort,
     record?.metadata?.effort,
+    record?.metadata?.effort_level,
+    record?.metadata?.effortLevel,
     record?.metadata?.reasoning_effort,
     record?.metadata?.reasoningEffort,
+    record?.metadata?.output_config?.effort,
+    record?.metadata?.outputConfig?.effort,
+    record?.settings?.effortLevel,
   )
+  if (!effort) return null
+  const normalized = String(effort).trim().toLowerCase()
+  if (normalized === "med") return "medium"
+  if (normalized === "ultracode") return "xhigh"
+  return normalized
+}
+
+function defaultEffortFor(provider, model) {
+  if (provider !== "anthropic") return null
+  const normalized = String(model).trim().toLowerCase()
+  return /^claude-(?:fable-5|mythos-(?:5|preview)|opus-4-(?:5|6|7|8)|sonnet-(?:4-6|5))(?:-|\[|$)/.test(normalized) ? "high" : null
 }
 
 function timeFrom(record) {
@@ -443,12 +483,14 @@ function addTokens(items) {
 function baseThread(file, index, provider, harness, model, tokens, records, usageList, reportedCostUsd = null, logicalId = null) {
   const timing = timingFrom(records)
   const threadKey = `${sourceLabel(file)}|${provider}|${harness}|${model}|${index}`
+  const recordedEffort = records.map(effortFrom).filter(Boolean).at(-1) ?? null
   return {
     threadId: `${provider}:${sha(threadKey).slice(0, 20)}`,
     provider,
     harness,
     model,
-    effort: records.map(effortFrom).filter(Boolean).at(-1) ?? null,
+    effort: recordedEffort ?? defaultEffortFor(provider, model),
+    effortSource: recordedEffort ? "recorded" : defaultEffortFor(provider, model) ? "provider-default" : null,
     logicalId: logicalId ? String(logicalId) : null,
     parentThreadId: null,
     nativeAgentDepth: null,
@@ -1019,6 +1061,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "- Discover Codex, Claude Code, Gemini CLI, Cline, Roo Code, and OpenCode usage from their native local stores. Include only sessions whose recorded project directory or project hash belongs to the requested root.",
     "- Use the last cumulative Codex token-count event; deduplicate Claude streaming records; aggregate Gemini per-message counters and Cline/Roo API request metrics; read OpenCode's session ledger in read-only mode; aggregate generic usage records by provider and model.",
     "- Preserve provider-native usage semantics: OpenAI cached input is a subset of input, while Anthropic cache buckets are disjoint. Reasoning tokens are a subset of output.",
+    "- Read effort from recorded request, message, payload, metadata, or settings fields. Normalize Claude Code ultracode to xhigh. For effort-capable Claude models whose response transcript omits the request field, report high as the documented provider default and retain that provenance internally as provider-default; leave unsupported Claude models unavailable.",
     "- Measure wall time from the first to last distinct timestamp observed for a thread. Estimate active time by summing consecutive timestamp gaps with each gap capped at five minutes; report both as unavailable when fewer than two distinct timestamps exist.",
     "- Starting from the exactly selected task, recursively include Codex sessions whose native metadata identifies the selected task or an included descendant as their parent. Do not infer sub-agent relationships from working directories, timestamps, or fork metadata alone.",
     "- Retain explicitly linked sub-agent sessions even when cumulative token usage is unavailable; show their token and cost fields as unavailable rather than silently omitting the task.",

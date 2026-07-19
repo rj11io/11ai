@@ -53,7 +53,7 @@ try {
     { type: "event_msg", payload: { type: "token_count", info: { total_token_usage: { input_tokens: 9999, output_tokens: 999, total_tokens: 10998 } } } },
   ])
   writeJsonl(join(claudeHome, "projects", "fixture", "matching.jsonl"), [
-    { cwd: project, sessionId: "claude-matching", message: { id: "message-1", model: "claude-sonnet-4-6", usage: { input_tokens: 200, cache_creation_input_tokens: 20, cache_read_input_tokens: 80, output_tokens: 50 } } },
+    { cwd: project, sessionId: "claude-matching", message: { id: "message-1", model: "claude-sonnet-4-6", output_config: { effort: "medium" }, usage: { input_tokens: 200, cache_creation_input_tokens: 20, cache_read_input_tokens: 80, output_tokens: 50 } } },
   ])
 
   writeJsonl(join(geminiHome, "tmp", "project-hash", "chats", "session.jsonl"), [
@@ -103,6 +103,7 @@ try {
   const levelTwoHeadings = markdown.match(/^## .+$/gm) ?? []
   assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Cost by model") + 1], "## Cost by model by effort")
   assert.match(markdown, /\| openai \/ gpt-5\.6-sol \| high \| 1 \| 1,000 \| 600 \| 100 \| 1,100 \|/)
+  assert.match(markdown, /\| anthropic \/ claude-sonnet-4-6 \| medium \|/)
   assert.match(markdown, /\| Sum of thread wall time \| 22m \|/)
   assert.match(markdown, /\| Estimated active time \| 12m \|/)
   assert.match(markdown, /\| Harness \| Threads \| Input \| Cached \| Output \| Tokens \| Known cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Cost \/ thread \| Reported-cost sum \| Average tokens \/ thread \| Priced \| Unpriced \|/)

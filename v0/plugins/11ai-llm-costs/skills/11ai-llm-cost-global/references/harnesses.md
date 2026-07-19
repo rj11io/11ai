@@ -17,8 +17,9 @@ The analyzer reads these stores without modifying them. Layouts are implementati
 - Project transcripts: `$CLAUDE_CONFIG_DIR/projects/<encoded-project-path>/<session-id>.jsonl`, with subagent transcripts potentially nested below the parent session.
 - Workspace labels use the transcript's recorded `cwd`; machine-wide discovery does not filter by it.
 - Counters: assistant `message.usage` supplies uncached `input_tokens`, `output_tokens`, `cache_creation_input_tokens`, and `cache_read_input_tokens`. Where present, split cache creation into its 5-minute and 1-hour buckets.
+- Effort: prefer an explicit `effort`, `effort_level`, `effortLevel`, or `output_config.effort` value from request, message, payload, metadata, or settings objects. Normalize Claude Code `ultracode` to API effort `xhigh`. Native assistant-response transcript lines can omit the request parameter; for models documented to support effort, treat omission as the provider's `high` default. Leave models without effort support as `n/a`.
 - Deduplication: retain one usage record per assistant message ID because a transcript can contain repeated or streaming representations. Claude Code's internal transcript line schema is not a documented stable API, so ignore unknown record types and keep parsing tolerant.
-- Sources: official Claude Code [hook transcript fields](https://code.claude.com/docs/en/hooks), [status-line usage and cost fields](https://code.claude.com/docs/en/statusline), [session resume CLI](https://docs.anthropic.com/en/docs/claude-code/cli-usage), and [prompt-caching accounting](https://platform.claude.com/docs/en/build-with-claude/prompt-caching).
+- Sources: official Claude Code [hook transcript fields](https://code.claude.com/docs/en/hooks), [status-line usage and cost fields](https://code.claude.com/docs/en/statusline), [session resume CLI](https://docs.anthropic.com/en/docs/claude-code/cli-usage), [effort semantics and supported models](https://platform.claude.com/docs/en/build-with-claude/effort), and [prompt-caching accounting](https://platform.claude.com/docs/en/build-with-claude/prompt-caching).
 
 ## Gemini CLI
 

@@ -29,6 +29,7 @@ try {
   const project = join(fixtureRoot, "project")
   const threadRoot = join(fixtureRoot, "thread-root")
   const codexHome = join(fixtureRoot, "codex")
+  const claudeHome = join(fixtureRoot, "claude")
   mkdirSync(project, { recursive: true })
   mkdirSync(threadRoot, { recursive: true })
 
@@ -55,6 +56,9 @@ try {
     { timestamp: "2026-07-19T11:03:00.000Z", type: "session_meta", payload: { id: "other-child-thread", cwd: project, thread_source: "subagent", parent_thread_id: "other-thread", source: { subagent: { thread_spawn: { parent_thread_id: "other-thread", depth: 1 } } } } },
     { timestamp: "2026-07-19T11:04:00.000Z", type: "turn_context", payload: { model: "gpt-5.6-sol", effort: "low" } },
     { timestamp: "2026-07-19T11:05:00.000Z", type: "event_msg", payload: { type: "token_count", info: { total_token_usage: { input_tokens: 500, output_tokens: 50, total_tokens: 550 } } } },
+  ])
+  writeJsonl(join(claudeHome, "projects", "fixture", "claude.jsonl"), [
+    { timestamp: "2026-07-19T12:00:00.000Z", cwd: project, sessionId: "claude-single", message: { id: "claude-message-1", model: "claude-sonnet-5", output_config: { effort: "ultracode" }, usage: { input_tokens: 200, cache_creation_input_tokens: 20, cache_read_input_tokens: 80, output_tokens: 50 } } },
   ])
 
   const summary = run([project, "--codex-home", codexHome, "--claude-home", join(fixtureRoot, "no-claude"), "--gemini-home", join(fixtureRoot, "no-gemini"), "--cline-tasks", join(fixtureRoot, "no-cline"), "--roo-tasks", join(fixtureRoot, "no-roo")], threadRoot, { CODEX_THREAD_ID: "selected-thread" })
@@ -103,6 +107,10 @@ try {
   assert.doesNotMatch(html, /main \{[^}]*box-shadow/)
   assert.ok(html.lastIndexOf("</details>") < html.indexOf('<blockquote class="generation-message">'))
   assert.ok(html.indexOf('<blockquote class="generation-message">') < html.indexOf('<p class="signature">'))
+
+  const claudeSummary = run([project, "--thread", "claude-single", "--codex-home", codexHome, "--claude-home", claudeHome, "--gemini-home", join(fixtureRoot, "no-gemini"), "--cline-tasks", join(fixtureRoot, "no-cline"), "--roo-tasks", join(fixtureRoot, "no-roo")], threadRoot)
+  assert.equal(claudeSummary.threads, 1)
+  assert.match(readFileSync(claudeSummary.markdownReport, "utf8"), /\| anthropic \/ claude-sonnet-5 \| xhigh \|/)
 
   const unmatched = spawnSync(process.execPath, [analyzer, project, "--thread", "missing-thread", "--codex-home", codexHome], { encoding: "utf8", cwd: threadRoot })
   assert.notEqual(unmatched.status, 0)
