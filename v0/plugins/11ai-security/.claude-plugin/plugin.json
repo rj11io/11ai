@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-security",
-  "version": "1.19.1",
+  "version": "1.20.0",
   "description": "Read-only dependency security auditing with critical vulnerability and host-harm triage.",
   "author": {
     "name": "rj11io"

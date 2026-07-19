@@ -1,3 +1,17 @@
+# [1.20.0](https://github.com/rj11io/11ai/compare/v1.19.1...v1.20.0) (2026-07-19)
+
+
+### Bug Fixes
+
+* claude effort level ([46c9dc9](https://github.com/rj11io/11ai/commit/46c9dc9bbe8976bb20166509456e64e3cb6da968))
+
+
+### Features
+
+* improve report ui ([41975a3](https://github.com/rj11io/11ai/commit/41975a34dfe6823acda713bfb42a7c9cf38cc574))
+* improve skills ([2c1bc66](https://github.com/rj11io/11ai/commit/2c1bc6656bf7d1b743b5e8c84e6f56ae67c222c7))
+* improvements ([45ecd96](https://github.com/rj11io/11ai/commit/45ecd96b1ecff7a0a442f7ecee7454cb3716e1ed))
+
 ## [1.19.1](https://github.com/rj11io/11ai/compare/v1.19.0...v1.19.1) (2026-07-18)
 
 

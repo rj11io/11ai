@@ -1,6 +1,6 @@
 {
   "name": "11ai-docker-operations",
-  "version": "1.19.1",
+  "version": "1.20.0",
   "description": "Modular, safety-first skills for common Docker CLI and Compose operations.",
   "author": {
     "name": "rj11io"
