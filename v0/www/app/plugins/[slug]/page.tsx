@@ -43,10 +43,10 @@ export default async function PluginPage({
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
       <Link
-        href="/skills"
+        href="/plugins"
         className="mb-8 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
       >
-        <ArrowLeft className="size-3.5" /> All skills
+        <ArrowLeft className="size-3.5" /> All plugins
       </Link>
 
       <div className="mb-10 space-y-4">

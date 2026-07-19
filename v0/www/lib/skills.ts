@@ -301,7 +301,7 @@ function loaded() {
 }
 
 export function getPlugins(): Plugin[] {
-  return loaded().plugins
+  return [...loaded().plugins].sort((a, b) => a.title.localeCompare(b.title))
 }
 
 export function getPlugin(slug: string): Plugin | undefined {
