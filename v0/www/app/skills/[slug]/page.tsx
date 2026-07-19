@@ -5,6 +5,7 @@ import { ArrowLeft, ChevronRight, Sparkles } from "lucide-react"
 
 import { CopyButton } from "@/components/copy-button"
 import { GithubIcon } from "@/components/github-icon"
+import { TerminalBlock } from "@/components/terminal-block"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { renderMarkdown } from "@/lib/markdown"
@@ -90,6 +91,11 @@ export default async function SkillPage({
           </Link>
         </div>
       </div>
+
+      <TerminalBlock
+        command={`npx skills add rj11io/11ai --skill ${skill.name}`}
+        className="mb-12"
+      />
 
       {/* Try it */}
       <div className="mb-12 rounded-xl border border-border/80 bg-card p-5">

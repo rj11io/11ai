@@ -54,6 +54,13 @@ export default function Page() {
             Browse all skills
             <ArrowRight data-icon="inline-end" />
           </Link>
+          <Link
+            href="/plugins"
+            className={cn(buttonVariants({ variant: "outline", size: "lg" }), "px-5")}
+          >
+            Browse all plugins
+            <ArrowRight data-icon="inline-end" />
+          </Link>
           <a
             href={GITHUB_REPO_URL}
             target="_blank"

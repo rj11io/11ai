@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react"
 
 import { GithubIcon } from "@/components/github-icon"
 import { SkillCard } from "@/components/skill-card"
+import { TerminalBlock } from "@/components/terminal-block"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { getPlugin, getPlugins, getSkillsByPlugin } from "@/lib/skills"
@@ -70,6 +71,11 @@ export default async function PluginPage({
           View this plugin on GitHub
         </a>
       </div>
+
+      <TerminalBlock
+        command={`npx skills add rj11io/11ai ${skills.map((skill) => `--skill ${skill.name}`).join(" ")}`}
+        className="mb-12"
+      />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {skills.map((skill) => (
