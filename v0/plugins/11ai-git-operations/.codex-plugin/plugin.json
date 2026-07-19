@@ -1,6 +1,6 @@
 {
   "name": "11ai-git-operations",
-  "version": "1.20.1",
+  "version": "1.21.0",
   "description": "Modular, safety-first skills for common Git operations, repository workflows, and troubleshooting.",
   "author": {
     "name": "rj11io"
