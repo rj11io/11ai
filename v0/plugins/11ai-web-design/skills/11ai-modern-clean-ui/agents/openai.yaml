@@ -1,0 +1,4 @@
+interface:
+  display_name: "Modern Clean UI"
+  short_description: "Build or restyle a UI in the modern clean aesthetic"
+  default_prompt: "Use $11ai-modern-clean-ui to build this interface in a modern, clean visual style."
