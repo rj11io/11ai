@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Git Conventional Commits"
+  short_description: "Write Conventional Commit messages for Git work"
+  default_prompt: "Use $11ai-git-conventional-commits to choose and validate a Conventional Commits 1.0.0 message for this work."

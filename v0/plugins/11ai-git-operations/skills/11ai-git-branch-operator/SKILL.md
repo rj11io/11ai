@@ -34,7 +34,7 @@ Run a task on a dedicated branch and land it through a reviewed pull request. Th
 
 1. Do the work the user requested, following any task-specific skill that covers it.
 2. Work in small, coherent batches. After each batch, reconcile the change manifest against `git status --short`. Any changed path the session cannot account for is an abort signal until ownership is established.
-3. Commit the work to the task branch in focused commits using the repository's commit conventions. Branch commits are part of this workflow; pushing the branch to open the PR is too. Merging is not.
+3. Commit the work to the task branch in focused commits. For every task commit, use `11ai-git-conventional-commits` to choose and validate a Conventional Commits 1.0.0 message that also respects compatible repository rules. Branch commits are part of this workflow; pushing the branch to open the PR is too. Merging is not.
 
 ### 4. Quality-check the result
 

@@ -1,27 +1,27 @@
 ---
-name: 11ai-global-llm-cost
-description: "Inspect all readable Codex, Claude Code, Gemini CLI, Cline, Roo Code, and OpenCode usage stores across the machine; normalize token counters, calculate attributable USD costs, and write Markdown and standalone HTML reports under the Desktop's 11ai-global-llm-cost-reports folder with All time, Year to date, Month to date, and Past 7 days sections. Use for global LLM spend, token usage, model cost, AI activity, or cross-project analysis."
+name: 11ai-llm-cost-global
+description: "Inspect all readable Codex, Claude Code, Gemini CLI, Cline, Roo Code, and OpenCode usage stores across the machine; normalize token counters, calculate attributable USD costs, measure wall and estimated active time, and write Markdown and standalone HTML reports under the Desktop's 11ai-llm-cost-global-reports folder with All time, Year to date, Month to date, and Past 7 days sections. Use for global LLM spend, token usage, model and effort cost, AI timing, or cross-project analysis."
 ---
 
-# 11ai Global LLM Cost
+# 11ai LLM Cost Global
 
-Analyze machine-wide LLM activity without a project boundary, external service, or benchmark schema. Write every default report package beneath the persistent `11ai-global-llm-cost-reports` folder on the user's Desktop; keep source transcripts, task stores, and ledgers read-only.
+Analyze machine-wide LLM activity without a project boundary, external service, or benchmark schema. Write every default report package beneath the persistent `11ai-llm-cost-global-reports` folder on the user's Desktop; keep source transcripts, task stores, and ledgers read-only.
 
 ## Contract
 
 Run the bundled analyzer:
 
 ```bash
-node <skill>/scripts/analyze-global-llm-cost.mjs
+node <skill>/scripts/analyze-llm-cost-global.mjs
 ```
 
 The command creates this structure if needed, where `{datetime}` is the UTC ISO timestamp with colons and the decimal point replaced by hyphens:
 
 ```text
-~/Desktop/11ai-global-llm-cost-reports/
-└── 11ai-global-llm-cost-reports-{datetime}/
-    ├── 11ai-global-llm-cost-{datetime}.md
-    └── 11ai-global-llm-cost-{datetime}.html
+~/Desktop/11ai-llm-cost-global-reports/
+└── 11ai-llm-cost-global-reports-{datetime}/
+    ├── 11ai-llm-cost-global-{datetime}.md
+    └── 11ai-llm-cost-global-{datetime}.html
 ```
 
 Generate both reports from the same analysis so their facts, tables, ordering, limitations, and signature agree. Make the HTML report self-contained with embedded styling and no network dependency. Render every level-two and level-three HTML report section as a native disclosure that is collapsed by default. The timestamped default package uses exclusive file creation and never overwrites an existing report. The command accepts:
@@ -43,9 +43,9 @@ For `--include` directories, recurse through JSON-family files while skipping de
 
 ## Workflow
 
-1. Confirm that the request is machine-wide. Use `~/Desktop/11ai-global-llm-cost-reports/11ai-global-llm-cost-reports-{datetime}` for default output and use home overrides only for deterministic fixtures or an intentionally restricted scan.
+1. Confirm that the request is machine-wide. Use `~/Desktop/11ai-llm-cost-global-reports/11ai-llm-cost-global-reports-{datetime}` for default output and use home overrides only for deterministic fixtures or an intentionally restricted scan.
 2. Run the analyzer. Preserve malformed, ambiguous, unpriced, reported-only, and undated records in coverage or limitations rather than silently dropping them.
-3. Review both generated files for all four period sections plus scan coverage, explicit totals, provider/model/harness/workspace aggregates, token-class detail, per-thread tables, pricing coverage, anomalies, and methodology.
+3. Review both generated files for all four period sections plus scan coverage, explicit totals, provider/model/model-by-effort/harness/workspace aggregates, token-class detail, wall time, estimated active time, per-thread tables, pricing coverage, anomalies, and methodology.
 4. If a model is unmatched or pricing is older than 30 days, verify the provider's official pricing page. Prefer an explicit pricing override or the machine-level `~/.llm-cost/pricing.json` so the report remains reproducible; never invent a rate from memory.
 5. Rerun after pricing or input changes. The analyzer does not edit transcripts.
 
@@ -80,19 +80,23 @@ Retain provider-native usage with these semantics:
 - reasoning output is a subset of output;
 - missing data is `n/a`, never zero.
 
+## Timing
+
+Measure wall time from the first to last distinct timestamp observed for a thread. Estimate active time by summing consecutive timestamp gaps while capping each gap at five minutes. Report both as `n/a` when fewer than two distinct timestamps exist. Treat active time as a reproducible estimate of interaction time, not foreground-process telemetry.
+
 ## Report requirements
 
-Within every period, display explicit grand totals for threads, token classes, measured/provider tokens, known cost, and cost coverage. Aggregate by provider, model, harness, and workspace; include a `Total` row in every aggregate table; and show average tokens per thread plus average known cost per priced thread in the harness aggregate. Distinguish measured token usage, derived cost, harness-reported cost, and unavailable cost. State that computed subscription usage is an API-equivalent estimate, not necessarily an invoice. Include normalized source labels, workspace paths, and timestamps where available, but do not copy prompts, message content, secrets, or full transcripts.
+Within every period, display explicit grand totals for threads, token classes, measured/provider tokens, known cost, cost coverage, wall time, and estimated active time. Aggregate by provider, model, model and effort, harness, and workspace within each period. Make `Cost by model by effort` a level-three sibling immediately after the level-three `Cost by model` section in every period. Include a `Total` row in every aggregate table; show average tokens per thread plus average known cost per priced thread in the harness aggregate; and show wall time, active time, cost per wall hour, and cost per active hour in every thread-derived aggregate and thread-detail table when calculable. Do not add hourly metrics to scan, token-composition, or pricing tables because their rows are not disjoint thread groups. In HTML, make every table column sortable while preserving generated row order on initial load. A newly selected column must sort descending first and then toggle direction; keep unavailable values and `Total` rows at the bottom. Distinguish measured token usage, derived cost, harness-reported cost, and unavailable cost. State that computed subscription usage is an API-equivalent estimate, not necessarily an invoice. Include normalized source labels, workspace paths, and timestamps where available, but do not copy prompts, message content, secrets, or full transcripts.
 
 In HTML, render every level-two and level-three report section as a native `<details>` element with a `<summary>`, omit the `open` attribute so all sections are collapsed by default, and keep the report title and signature outside those disclosures.
 
 End the Markdown report with this exact linked signature:
 
 ```markdown
-_LLM token cost analysis by [11ai-global-llm-cost](https://ai.rj11.io/skills/11ai-global-llm-cost)._
+_LLM token cost analysis by [11ai-llm-cost-global](https://ai.rj11.io/skills/11ai-llm-cost-global)._
 ```
 
-End the HTML report with the same visible signature and a clickable link whose `href` is exactly `https://ai.rj11.io/skills/11ai-global-llm-cost`. Set `target="_blank"` and `rel="noopener noreferrer"` on that signature link so it opens safely in a new tab.
+End the HTML report with the same visible signature and a clickable link whose `href` is exactly `https://ai.rj11.io/skills/11ai-llm-cost-global`. Set `target="_blank"` and `rel="noopener noreferrer"` on that signature link so it opens safely in a new tab.
 
 If extending an existing report, preserve its prior skill attribution and keep all skill signatures together at the end.
 
@@ -114,12 +118,14 @@ Rates are USD per one million tokens. Every priced thread must show the matched 
 Before reporting completion:
 
 - confirm the analyzer exits successfully;
-- confirm `~/Desktop/11ai-global-llm-cost-reports/11ai-global-llm-cost-reports-{datetime}` exists unless the user requested an override;
+- confirm `~/Desktop/11ai-llm-cost-global-reports/11ai-llm-cost-global-reports-{datetime}` exists unless the user requested an override;
 - confirm the timestamped package contains same-named `.md` and `.html` reports;
 - confirm both reports include `All time`, `Year to date`, `Month to date`, and `Past 7 days` in that order;
-- confirm every period in both formats displays totals and provider/model/harness/workspace aggregates with grand-total rows;
+- confirm every period in both formats displays totals and provider/model/model-by-effort/harness/workspace aggregates with grand-total rows plus wall time, estimated active time, and both hourly cost rates where calculable;
+- confirm every period contains `Cost by model by effort` as a level-three sibling immediately after `Cost by model`;
+- confirm every HTML table header is sortable, initial row order is unchanged, a newly selected column starts descending, and `Total` rows remain pinned last;
 - confirm every HTML level-two and level-three report section is a `<details>` disclosure without an `open` attribute, so all sections load collapsed;
 - confirm both state inspected files, recognized threads, known and unknown costs, pricing coverage, and limitations;
-- confirm both end with a signature linking to `https://ai.rj11.io/skills/11ai-global-llm-cost`;
+- confirm both end with a signature linking to `https://ai.rj11.io/skills/11ai-llm-cost-global`;
 - rerun once with unchanged inputs, confirm a second timestamped report package is created in the reports folder, and ensure both formats are stable apart from generated timestamps;
 - report the exact folder and file paths, unreadable scope, and model/pricing gaps.

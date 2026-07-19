@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai LLM Cost Project"
+  short_description: "Analyze project LLM cost, effort, and time"
+  default_prompt: "Use $11ai-llm-cost-project to analyze project-attributed LLM usage, cost by model and effort, wall time, and estimated active time, then write matching Markdown and HTML reports under the current thread folder."

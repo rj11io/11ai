@@ -1,7 +1,7 @@
 {
   "name": "11ai-llm-costs",
   "version": "1.19.1",
-  "description": "Project-scoped and machine-wide LLM usage and cost reporting across local coding harnesses.",
+  "description": "Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports.",
   "author": {
     "name": "rj11io"
   },
@@ -15,13 +15,15 @@
     "gemini-cli",
     "cline",
     "roo-code",
-    "opencode"
+    "opencode",
+    "active-time",
+    "reasoning-effort"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "11ai LLM Costs",
-    "shortDescription": "Project and machine-wide LLM cost reports.",
-    "longDescription": "Analyze local Codex, Claude Code, Gemini CLI, Cline, Roo Code, OpenCode, and exported usage. Generate project-scoped or machine-wide reports with totals, aggregates, pricing coverage, and per-thread detail.",
+    "shortDescription": "Single-thread, project, and global LLM reports.",
+    "longDescription": "Analyze local Codex, Claude Code, Gemini CLI, Cline, Roo Code, OpenCode, and exported usage. Generate single-thread, project-scoped, or machine-wide reports with cost by model and effort, wall time, estimated active time, pricing coverage, and thread detail.",
     "developerName": "rj11io",
     "category": "Developer Tools",
     "capabilities": [
@@ -31,6 +33,7 @@
     ],
     "defaultPrompt": [
       "Analyze LLM costs for this project.",
+      "Analyze the cost and timing of this LLM thread.",
       "Create a machine-wide LLM cost report.",
       "Show LLM token totals and cost aggregates."
     ]

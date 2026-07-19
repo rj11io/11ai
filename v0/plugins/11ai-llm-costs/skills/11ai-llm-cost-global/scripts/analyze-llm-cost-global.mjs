@@ -14,7 +14,7 @@ const option = (name) => {
 const options = (name) => argv.flatMap((arg, index) => arg === name && argv[index + 1] ? [argv[index + 1]] : [])
 
 if (argv.includes("--help")) {
-  console.log("usage: node analyze-global-llm-cost.mjs [--pricing pricing.json] [--output report-folder] [--output-dir report-folder] [--codex-home dir] [--claude-home dir] [--gemini-home dir] [--cline-tasks dir] [--roo-tasks dir] [--opencode-db file] [--include dir-or-file]")
+  console.log("usage: node analyze-llm-cost-global.mjs [--pricing pricing.json] [--output report-folder] [--output-dir report-folder] [--codex-home dir] [--claude-home dir] [--gemini-home dir] [--cline-tasks dir] [--roo-tasks dir] [--opencode-db file] [--include dir-or-file]")
   process.exit(0)
 }
 
@@ -29,11 +29,11 @@ for (let index = 0; index < argv.length; index += 1) {
 const generatedAt = new Date().toISOString()
 const generatedTime = new Date(generatedAt)
 const filenameTimestamp = generatedAt.replaceAll(":", "-").replaceAll(".", "-")
-const reportName = `11ai-global-llm-cost-${filenameTimestamp}`
-const reportPackageName = `11ai-global-llm-cost-reports-${filenameTimestamp}`
+const reportName = `11ai-llm-cost-global-${filenameTimestamp}`
+const reportPackageName = `11ai-llm-cost-global-reports-${filenameTimestamp}`
 const explicitOutputDir = option("--output-dir") ?? option("--output")
 if (option("--output-dir") && option("--output")) throw new Error("use either --output or --output-dir, not both")
-const outputDir = resolve(explicitOutputDir ?? join(homedir(), "Desktop", "11ai-global-llm-cost-reports", reportPackageName))
+const outputDir = resolve(explicitOutputDir ?? join(homedir(), "Desktop", "11ai-llm-cost-global-reports", reportPackageName))
 const markdownOutput = join(outputDir, `${reportName}.md`)
 const htmlOutput = join(outputDir, `${reportName}.html`)
 
@@ -54,6 +54,7 @@ const SKIP_DIRS = new Set([
 ])
 const JSON_EXTENSIONS = new Set([".json", ".jsonl", ".ndjson"])
 const SESSION_EXTENSIONS = new Set([".json", ".jsonl", ".ndjson"])
+const ACTIVE_GAP_MS = 5 * 60 * 1000
 const externalSessions = new Map()
 const includedFiles = new Map()
 const discovery = { accountsConsidered: 0, nativeFilesConsidered: 0, codexSessions: 0, claudeSessions: 0, geminiSessions: 0, clineSessions: 0, rooSessions: 0, opencodeSessions: 0, unreadableFiles: 0, limitations: [], scopeDescription: "" }
@@ -74,8 +75,6 @@ const firstValue = (...values) => values.find((value) => value !== undefined && 
 const sumKnown = (values) => values.filter(finite).reduce((sum, value) => sum + value, 0)
 const sumNullable = (values) => values.every(finite) ? values.reduce((sum, value) => sum + value, 0) : null
 const sumReported = (values) => values.filter(finite).length ? sumKnown(values) : null
-const minDate = (values) => values.filter(Boolean).sort()[0] ?? null
-const maxDate = (values) => values.filter(Boolean).sort().at(-1) ?? null
 
 function globRegex(pattern) {
   return new RegExp(`^${String(pattern).split("*").map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join(".*")}$`, "i")
@@ -368,11 +367,31 @@ function providerFrom(record, usage, model = modelFrom(record, usage)) {
 }
 
 function effortFrom(record) {
-  return firstValue(record?.effort, record?.payload?.effort, record?.metadata?.effort)
+  return firstValue(
+    record?.effort,
+    record?.reasoning_effort,
+    record?.reasoningEffort,
+    record?.payload?.effort,
+    record?.payload?.reasoning_effort,
+    record?.payload?.reasoningEffort,
+    record?.metadata?.effort,
+    record?.metadata?.reasoning_effort,
+    record?.metadata?.reasoningEffort,
+  )
 }
 
 function timeFrom(record) {
-  return iso(firstValue(record?.timestamp, record?.created_at, record?.createdAt, record?.created, record?.time?.completed, record?.time?.created, record?.time, record?.info?.time?.completed, record?.info?.time?.created, record?.payload?.timestamp))
+  return iso(firstValue(record?.timestamp, record?.startTime, record?.endTime, record?.created_at, record?.createdAt, record?.created, record?.updated_at, record?.updatedAt, record?.time?.completed, record?.time?.updated, record?.time?.created, record?.time, record?.info?.time?.completed, record?.info?.time?.updated, record?.info?.time?.created, record?.payload?.timestamp))
+}
+
+function timingFrom(records) {
+  const points = [...new Set(records.map(timeFrom).filter(Boolean).map((value) => new Date(value).getTime()).filter(Number.isFinite))].sort((a, b) => a - b)
+  const startedAt = points.length ? new Date(points[0]).toISOString() : null
+  const finishedAt = points.length ? new Date(points.at(-1)).toISOString() : null
+  if (points.length < 2) return { startedAt, finishedAt, wallTimeMs: null, activeTimeMs: null, timestampCount: points.length }
+  const wallTimeMs = points.at(-1) - points[0]
+  const activeTimeMs = points.slice(1).reduce((sum, point, index) => sum + Math.min(point - points[index], ACTIVE_GAP_MS), 0)
+  return { startedAt, finishedAt, wallTimeMs, activeTimeMs, timestampCount: points.length }
 }
 
 function logicalIdFrom(record) {
@@ -474,19 +493,18 @@ function addTokens(items) {
 }
 
 function baseThread(file, index, provider, harness, model, tokens, records, usageList, reportedCostUsd = null, logicalId = null) {
-  const times = records.map(timeFrom)
+  const timing = timingFrom(records)
   const threadKey = `${sourceLabel(file)}|${provider}|${harness}|${model}|${index}`
   return {
     threadId: `${provider}:${sha(threadKey).slice(0, 20)}`,
     provider,
     harness,
     model,
-    effort: records.map(effortFrom).find(Boolean) ?? null,
+    effort: records.map(effortFrom).filter(Boolean).at(-1) ?? null,
     logicalId: logicalId ? String(logicalId) : null,
     sourceFile: sourceLabel(file),
     folder: folderLabel(file),
-    startedAt: minDate(times),
-    finishedAt: maxDate(times),
+    ...timing,
     recordCount: records.length,
     usageRecordCount: usageList.length,
     rawUsage: usageList.length === 1 ? usageList[0] : usageList,
@@ -577,7 +595,7 @@ function parseGemini(file, records) {
     group.tokens.push(normalized)
     groups.set(model, group)
   }
-  return [...groups.entries()].map(([model, group], index) => baseThread(file, index, "google", "gemini", model, addTokens(group.tokens), group.records, group.usages, null, metadata?.sessionId))
+  return [...groups.entries()].map(([model, group], index) => baseThread(file, index, "google", "gemini", model, addTokens(group.tokens), [metadata, ...group.records].filter(Boolean), group.usages, null, metadata?.sessionId))
 }
 
 function parseClineFamily(file, records, harness) {
@@ -767,12 +785,18 @@ function priceThread(thread) {
 function rollup(items) {
   const tokenValues = items.map((item) => item.tokens.providerTotal)
   const costValues = items.map((item) => item.cost.totalUsd)
+  const wallValues = items.map((item) => item.wallTimeMs)
+  const activeValues = items.map((item) => item.activeTimeMs)
   return {
     threadCount: items.length,
     knownTokenThreads: tokenValues.filter(finite).length,
     knownCostThreads: costValues.filter(finite).length,
     tokens: tokenValues.some(finite) ? sumKnown(tokenValues) : null,
     costUsd: costValues.some(finite) ? sumKnown(costValues) : null,
+    knownWallThreads: wallValues.filter(finite).length,
+    knownActiveThreads: activeValues.filter(finite).length,
+    wallTimeMs: wallValues.some(finite) ? sumKnown(wallValues) : null,
+    activeTimeMs: activeValues.some(finite) ? sumKnown(activeValues) : null,
   }
 }
 
@@ -794,14 +818,21 @@ function fmtUsd(value) {
   return finite(value) ? `$${value.toFixed(4)}` : "n/a"
 }
 
-function fmtPct(numerator, denominator) {
-  return finite(numerator) && denominator > 0 ? `${(numerator / denominator * 100).toFixed(1)}%` : "n/a"
+function fmtDurationMs(value) {
+  if (!finite(value)) return "n/a"
+  const totalSeconds = Math.max(0, Math.round(value / 1000))
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+  return [hours ? `${hours}h` : null, minutes ? `${minutes}m` : null, seconds || (!hours && !minutes) ? `${seconds}s` : null].filter(Boolean).join(" ")
 }
 
-function fmtDuration(startedAt, finishedAt) {
-  if (!startedAt || !finishedAt) return "n/a"
-  const minutes = (new Date(finishedAt).getTime() - new Date(startedAt).getTime()) / 60000
-  return Number.isFinite(minutes) && minutes >= 0 ? `${minutes.toFixed(1)} min` : "n/a"
+function fmtUsdPerActiveHour(costUsd, activeTimeMs) {
+  return finite(costUsd) && finite(activeTimeMs) && activeTimeMs > 0 ? fmtUsd(costUsd / (activeTimeMs / 3600000)) : "n/a"
+}
+
+function fmtPct(numerator, denominator) {
+  return finite(numerator) && denominator > 0 ? `${(numerator / denominator * 100).toFixed(1)}%` : "n/a"
 }
 
 function groupBy(items, selector) {
@@ -851,6 +882,8 @@ function windowSection(definition, threads) {
     .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1))
   const models = [...groupBy(threads, (thread) => `${thread.provider} / ${thread.model}`).entries()]
     .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1))
+  const modelEfforts = [...groupBy(threads, (thread) => `${thread.provider} / ${thread.model}\u0000${thread.effort ?? "n/a"}`).entries()]
+    .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1) || a[0].localeCompare(b[0]))
   const workspaces = [...groupBy(threads, (thread) => thread.folder).entries()]
     .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1))
   const sortedThreads = [...threads].sort((a, b) => (b.cost.totalUsd ?? -1) - (a.cost.totalUsd ?? -1) || (b.tokens.providerTotal ?? -1) - (a.tokens.providerTotal ?? -1) || a.sourceFile.localeCompare(b.sourceFile))
@@ -880,44 +913,54 @@ function windowSection(definition, threads) {
       ["Cached input", `${fmtInt(cachedInput)} (${fmtPct(cachedInput, inputTotal)})`],
       ["Output tokens", fmtInt(outputTotal)],
       ["Reasoning output", `${fmtInt(reasoningTotal)} (${fmtPct(reasoningTotal, outputTotal)})`],
+      ["Threads with measurable wall time", `${fmtInt(total.knownWallThreads)} / ${fmtInt(total.threadCount)}`],
+      ["Sum of thread wall time", fmtDurationMs(total.wallTimeMs)],
+      ["Threads with estimated active time", `${fmtInt(total.knownActiveThreads)} / ${fmtInt(total.threadCount)}`],
+      ["Estimated active time", fmtDurationMs(total.activeTimeMs)],
+      ["Active / wall time", fmtPct(total.activeTimeMs, total.wallTimeMs)],
+      ["Cost / wall hour", fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs)],
+      ["Cost / active hour", fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs)],
     ]),
     "",
     "The known-cost total includes derived API-equivalent prices and harness-reported costs. It is not necessarily an invoice, especially for subscription, enterprise, batch, priority, or negotiated usage.",
     "",
     "### Cost by provider",
     "",
-    noRows("No threads fall in this period.") ?? table(["Provider", "Threads", "Known tokens", "Known cost", "Priced", "Unpriced"], [...providers.map(([key, items]) => {
+    noRows("No threads fall in this period.") ?? table(["Provider", "Threads", "Known tokens", "Known cost", "Wall time", "Active time", "Cost / wall hour", "Cost / active hour", "Priced", "Unpriced"], [...providers.map(([key, items]) => {
       const r = rollup(items)
-      return [key, fmtInt(r.threadCount), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
-    }), ["Total", fmtInt(total.threadCount), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
+      return [key, fmtInt(r.threadCount), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtDurationMs(r.wallTimeMs), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
+    }), ["Total", fmtInt(total.threadCount), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtDurationMs(total.wallTimeMs), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
     "### Cost by harness",
     "",
-    noRows("No threads fall in this period.") ?? table(["Harness", "Threads", "Known tokens", "Known cost", "Reported-cost sum", "Average tokens / thread", "Average known cost / priced thread"], [...harnesses.map(([key, items]) => {
+    noRows("No threads fall in this period.") ?? table(["Harness", "Threads", "Known tokens", "Known cost", "Reported-cost sum", "Average tokens / thread", "Average known cost / priced thread", "Wall time", "Active time", "Cost / wall hour", "Cost / active hour"], [...harnesses.map(([key, items]) => {
       const r = rollup(items)
-      return [key, fmtInt(r.threadCount), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount ? r.tokens / r.threadCount : null), fmtUsd(r.knownCostThreads ? r.costUsd / r.knownCostThreads : null)]
-    }), ["Total", fmtInt(total.threadCount), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtUsd(sumReported(threads.map((item) => item.reportedCostUsd))), fmtInt(total.threadCount ? total.tokens / total.threadCount : null), fmtUsd(total.knownCostThreads ? total.costUsd / total.knownCostThreads : null)]]),
+      return [key, fmtInt(r.threadCount), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount ? r.tokens / r.threadCount : null), fmtUsd(r.knownCostThreads ? r.costUsd / r.knownCostThreads : null), fmtDurationMs(r.wallTimeMs), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs)]
+    }), ["Total", fmtInt(total.threadCount), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtUsd(sumReported(threads.map((item) => item.reportedCostUsd))), fmtInt(total.threadCount ? total.tokens / total.threadCount : null), fmtUsd(total.knownCostThreads ? total.costUsd / total.knownCostThreads : null), fmtDurationMs(total.wallTimeMs), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs)]]),
     "",
     "### Cost by model",
     "",
-    noRows("No threads fall in this period.") ?? table(["Provider / model", "Threads", "Input", "Cached", "Output", "Tokens", "Cost"], [...models.map(([key, items]) => [
-      key,
-      fmtInt(items.length),
-      fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))),
-      fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))),
-      fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))),
-      fmtInt(rollup(items).tokens),
-      fmtUsd(rollup(items).costUsd),
-    ]), ["Total", fmtInt(total.threadCount), fmtInt(inputTotal), fmtInt(cachedInput), fmtInt(outputTotal), fmtInt(total.tokens), fmtUsd(total.costUsd)]]),
+    noRows("No threads fall in this period.") ?? table(["Provider / model", "Threads", "Input", "Cached", "Output", "Tokens", "Cost", "Wall time", "Active time", "Cost / wall hour", "Cost / active hour"], [...models.map(([key, items]) => {
+      const r = rollup(items)
+      return [key, fmtInt(items.length), fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))), fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))), fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtDurationMs(r.wallTimeMs), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs)]
+    }), ["Total", fmtInt(total.threadCount), fmtInt(inputTotal), fmtInt(cachedInput), fmtInt(outputTotal), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtDurationMs(total.wallTimeMs), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs)]]),
+    "",
+    "### Cost by model by effort",
+    "",
+    noRows("No threads fall in this period.") ?? table(["Provider / model", "Effort", "Threads", "Tokens", "Known cost", "Average known cost / priced thread", "Wall time", "Active time", "Cost / wall hour", "Cost / active hour"], [...modelEfforts.map(([key, items]) => {
+      const [model, effort] = key.split("\u0000")
+      const r = rollup(items)
+      return [model, effort, fmtInt(r.threadCount), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtUsd(r.knownCostThreads ? r.costUsd / r.knownCostThreads : null), fmtDurationMs(r.wallTimeMs), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs)]
+    }), ["Total", "All efforts", fmtInt(total.threadCount), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtUsd(total.knownCostThreads ? total.costUsd / total.knownCostThreads : null), fmtDurationMs(total.wallTimeMs), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs)]]),
     "",
     "### Cost by workspace",
     "",
     "Workspace comes from a native session's recorded working directory; supplemental logs are grouped by included root.",
     "",
-    noRows("No threads fall in this period.") ?? table(["Workspace", "Threads", "Tokens", "Known cost", "Priced", "Unpriced"], [...workspaces.map(([key, items]) => {
+    noRows("No threads fall in this period.") ?? table(["Workspace", "Threads", "Tokens", "Known cost", "Wall time", "Active time", "Cost / wall hour", "Cost / active hour", "Priced", "Unpriced"], [...workspaces.map(([key, items]) => {
       const r = rollup(items)
-      return [key, fmtInt(r.threadCount), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
-    }), ["Total", fmtInt(total.threadCount), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
+      return [key, fmtInt(r.threadCount), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtDurationMs(r.wallTimeMs), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
+    }), ["Total", fmtInt(total.threadCount), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtDurationMs(total.wallTimeMs), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
     "### Token composition",
     "",
@@ -932,17 +975,20 @@ function windowSection(definition, threads) {
     "",
     "### Thread detail",
     "",
-    noRows("No threads fall in this period.") ?? table(["Thread", "Source", "Workspace", "Provider / model", "Attributed at", "Tokens", "Selected cost", "Harness reported", "Method", "Duration"], sortedThreads.map((thread) => [
+    noRows("No threads fall in this period.") ?? table(["Thread", "Source", "Workspace", "Provider / model / effort", "Attributed at", "Tokens", "Selected cost", "Harness reported", "Method", "Wall time", "Active time", "Cost / wall hour", "Cost / active hour"], sortedThreads.map((thread) => [
       thread.threadId,
       thread.sourceFile,
       thread.folder,
-      `${thread.provider} / ${thread.model}${thread.effort ? ` / ${thread.effort}` : ""}`,
+      `${thread.provider} / ${thread.model} / ${thread.effort ?? "n/a"}`,
       threadTime(thread)?.toISOString() ?? "n/a",
       fmtInt(thread.tokens.providerTotal),
       fmtUsd(thread.cost.totalUsd),
       fmtUsd(thread.reportedCostUsd),
       thread.costMethod === "derived" ? `derived${thread.pricingStatus === "matched-stale" ? " (stale rate)" : ""}` : thread.costMethod,
-      fmtDuration(thread.startedAt, thread.finishedAt),
+      fmtDurationMs(thread.wallTimeMs),
+      fmtDurationMs(thread.activeTimeMs),
+      fmtUsdPerActiveHour(thread.cost.totalUsd, thread.wallTimeMs),
+      fmtUsdPerActiveHour(thread.cost.totalUsd, thread.activeTimeMs),
     ])),
     "",
   ]
@@ -959,7 +1005,8 @@ function report({ threads, stats, malformed, duplicateIds }) {
   for (const thread of threads) {
     if (thread.model === "unknown") anomalies.push(`${thread.sourceFile}: model is unavailable`)
     if (thread.provider === "unknown") anomalies.push(`${thread.sourceFile}: provider is unavailable`)
-    if (!thread.startedAt || !thread.finishedAt) anomalies.push(`${thread.sourceFile}: timestamps are incomplete; the thread appears in All time but requires a usable timestamp for dated periods`)
+    if (!thread.startedAt || !thread.finishedAt) anomalies.push(`${thread.sourceFile}: timestamps are unavailable; the thread appears in All time but requires a usable timestamp for dated periods`)
+    else if (!finite(thread.wallTimeMs)) anomalies.push(`${thread.sourceFile}: wall and active time require at least two distinct timestamps`)
     if (thread.pricingStatus === "unmatched") anomalies.push(`${thread.sourceFile}: no pricing catalog match for ${thread.provider} / ${thread.model}`)
     if (thread.pricingStatus === "partial") anomalies.push(`${thread.sourceFile}: pricing is incomplete for one or more observed token classes`)
     if (thread.reportedCostUsd !== null && thread.costMethod === "derived" && Math.abs(thread.reportedCostUsd - thread.cost.totalUsd) > 0.01) anomalies.push(`${thread.sourceFile}: reported ${fmtUsd(thread.reportedCostUsd)} differs from derived ${fmtUsd(thread.cost.totalUsd)}`)
@@ -1028,10 +1075,12 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "- Use the last cumulative Codex token-count event; deduplicate Claude streaming records; aggregate Gemini per-message counters and Cline/Roo API request metrics; read OpenCode's session ledger in read-only mode; aggregate generic usage records by provider and model.",
     "- Attribute a whole thread to its finish timestamp, falling back to its start timestamp. All time includes undated threads; dated periods exclude them. Year-to-date and month-to-date use the machine's local calendar boundaries, while Past 7 days is a rolling 168-hour window.",
     "- Preserve provider-native usage semantics: OpenAI cached input is a subset of input, while Anthropic cache buckets are disjoint. Reasoning tokens are a subset of output.",
+    "- Measure wall time from the first to last distinct timestamp observed for a thread. Estimate active time by summing consecutive timestamp gaps with each gap capped at five minutes; report both as unavailable when fewer than two distinct timestamps exist.",
+    "- Calculate cost per wall hour and cost per active hour by dividing known cost by the corresponding summed measurable duration. Report the rate as unavailable when cost or duration is unavailable or duration is zero.",
     "- Treat missing values as unavailable. Sum known totals for overview coverage, but surface every incomplete or unpriced thread in the detail and limitations sections.",
     "- Do not include prompts, message text, secrets, or raw transcripts in this report. Native source labels and normalized workspace paths are the traceability boundary.",
     "",
-    "_LLM token cost analysis by [11ai-global-llm-cost](https://ai.rj11.io/skills/11ai-global-llm-cost)._",
+    "_LLM token cost analysis by [11ai-llm-cost-global](https://ai.rj11.io/skills/11ai-llm-cost-global)._",
     "",
   ]
   return lines.join("\n")
@@ -1109,12 +1158,12 @@ function htmlReport(markdown) {
       index += 1
       continue
     }
-    const signature = line === "_LLM token cost analysis by [11ai-global-llm-cost](https://ai.rj11.io/skills/11ai-global-llm-cost)._"
+    const signature = line === "_LLM token cost analysis by [11ai-llm-cost-global](https://ai.rj11.io/skills/11ai-llm-cost-global)._"
     if (signature) {
       closeAllSections()
       const signatureHtml = inlineHtml(line).replace(
-        '<a href="https://ai.rj11.io/skills/11ai-global-llm-cost">',
-        '<a href="https://ai.rj11.io/skills/11ai-global-llm-cost" target="_blank" rel="noopener noreferrer">',
+        '<a href="https://ai.rj11.io/skills/11ai-llm-cost-global">',
+        '<a href="https://ai.rj11.io/skills/11ai-llm-cost-global" target="_blank" rel="noopener noreferrer">',
       )
       body.push(`<p class="signature">${signatureHtml}</p>`)
       index += 1
@@ -1134,7 +1183,7 @@ function htmlReport(markdown) {
         index += 1
       }
       body.push("<div class=\"table-wrap\"><table><thead><tr>")
-      body.push(headers.map((cell) => `<th>${inlineHtml(cell)}</th>`).join(""))
+      body.push(headers.map((cell) => `<th scope="col" aria-sort="none"><button type="button" class="sort-button">${inlineHtml(cell)}<span class="sort-indicator" aria-hidden="true"></span></button></th>`).join(""))
       body.push("</tr></thead><tbody>")
       for (const row of rows) body.push(`<tr>${row.map((cell) => `<td>${inlineHtml(cell)}</td>`).join("")}</tr>`)
       body.push("</tbody></table></div>")
@@ -1154,7 +1203,7 @@ function htmlReport(markdown) {
   }
   closeAllSections()
 
-  return `<!doctype html>
+  return String.raw`<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -1181,8 +1230,14 @@ function htmlReport(markdown) {
     blockquote { margin: 1.5rem 0; padding: 1rem 1.25rem; border-left: 4px solid var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); color: var(--muted); }
     .table-wrap { margin: 1rem 0 1.75rem; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
     table { width: 100%; border-collapse: collapse; font-size: .9rem; }
-    th, td { padding: .7rem .8rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); white-space: nowrap; }
-    th { background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--text); }
+    th, td { text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    td { padding: .7rem .8rem; }
+    th { padding: 0; background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--text); }
+    .sort-button { display: flex; width: 100%; align-items: center; gap: .4rem; padding: .7rem .8rem; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 700; text-align: left; white-space: nowrap; cursor: pointer; }
+    .sort-button:hover, .sort-button:focus-visible { background: color-mix(in srgb, var(--accent) 14%, transparent); outline: none; }
+    .sort-indicator { min-width: .8em; color: var(--accent); }
+    th[aria-sort="descending"] .sort-indicator::after { content: "▼"; }
+    th[aria-sort="ascending"] .sort-indicator::after { content: "▲"; }
     tr:last-child td { border-bottom: 0; }
     code { padding: .1rem .3rem; border-radius: 4px; background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--text); }
     a { color: var(--accent); }
@@ -1194,6 +1249,66 @@ function htmlReport(markdown) {
 <main>
 ${body.join("\n")}
 </main>
+<script>
+  (() => {
+    const sortValue = (cell) => {
+      const text = (cell?.textContent ?? "").trim()
+      const lower = text.toLowerCase()
+      if (!text || lower === "n/a" || lower === "none" || lower === "unknown") return { kind: 2, value: null }
+      if (/^\d{4}-\d{2}-\d{2}T/.test(text)) {
+        const timestamp = Date.parse(text)
+        if (Number.isFinite(timestamp)) return { kind: 0, value: timestamp }
+      }
+      let durationSeconds = 0
+      let durationParts = 0
+      const durationRemainder = lower.replace(/(\d+(?:\.\d+)?)\s*([hms])/g, (_match, amount, unit) => {
+        durationSeconds += Number(amount) * ({ h: 3600, m: 60, s: 1 })[unit]
+        durationParts += 1
+        return ""
+      }).trim()
+      if (durationParts && !durationRemainder) return { kind: 0, value: durationSeconds }
+      const normalized = text.replaceAll(",", "").replace(/^\$/, "").replace(/%$/, "").trim()
+      if (/^-?\d+(?:\.\d+)?$/.test(normalized)) return { kind: 0, value: Number(normalized) }
+      const ratio = /^(-?\d+(?:\.\d+)?)\s*\//.exec(normalized)
+      if (ratio) return { kind: 0, value: Number(ratio[1]) }
+      return { kind: 1, value: lower }
+    }
+    const compareValues = (left, right, direction) => {
+      if (left.kind === 2 && right.kind === 2) return 0
+      if (left.kind === 2) return 1
+      if (right.kind === 2) return -1
+      const comparison = left.kind === 0 && right.kind === 0
+        ? left.value - right.value
+        : String(left.value).localeCompare(String(right.value), undefined, { numeric: true, sensitivity: "base" })
+      return direction === "descending" ? -comparison : comparison
+    }
+    document.querySelectorAll("table").forEach((table) => {
+      const headers = [...table.querySelectorAll("thead th")]
+      const body = table.tBodies[0]
+      if (!body) return
+      ;[...body.rows].forEach((row, index) => { row.dataset.originalIndex = String(index) })
+      headers.forEach((header, column) => {
+        const button = header.querySelector(".sort-button")
+        if (!button) return
+        button.title = "Sort descending"
+        button.addEventListener("click", () => {
+          const direction = header.getAttribute("aria-sort") === "descending" ? "ascending" : "descending"
+          headers.forEach((item) => item.setAttribute("aria-sort", "none"))
+          header.setAttribute("aria-sort", direction)
+          headers.forEach((item) => {
+            const itemButton = item.querySelector(".sort-button")
+            if (itemButton) itemButton.title = item === header && direction === "descending" ? "Sort ascending" : "Sort descending"
+          })
+          const rows = [...body.rows]
+          const totals = rows.filter((row) => (row.cells[0]?.textContent ?? "").trim().toLowerCase() === "total")
+          const sortable = rows.filter((row) => !totals.includes(row))
+          sortable.sort((left, right) => compareValues(sortValue(left.cells[column]), sortValue(right.cells[column]), direction) || Number(left.dataset.originalIndex) - Number(right.dataset.originalIndex))
+          body.replaceChildren(...sortable, ...totals)
+        })
+      })
+    })
+  })()
+</script>
 </body>
 </html>
 `
@@ -1291,6 +1406,8 @@ console.log(JSON.stringify({
   knownTokens: threads.filter((thread) => finite(thread.tokens.providerTotal)).length,
   knownCosts: threads.filter((thread) => finite(thread.cost.totalUsd)).length,
   costUsd: sumKnown(threads.map((thread) => thread.cost.totalUsd)),
+  wallTimeMs: rollup(threads).wallTimeMs,
+  activeTimeMs: rollup(threads).activeTimeMs,
   periods: Object.fromEntries(windowDefinitions().map((definition) => {
     const items = threadsForWindow(threads, definition.start)
     const totals = rollup(items)

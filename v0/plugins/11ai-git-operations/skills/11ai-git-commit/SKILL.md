@@ -18,7 +18,7 @@ git diff --cached
 git log --oneline --decorate -n 5
 ```
 
-If nothing is staged, stop and ask whether to use `11ai-git-stage` and which paths or hunks should be included. If unrelated changes are staged, stop rather than absorbing them. Check for secrets, generated files, and accidental environment changes. Use the repository's existing commit convention when one is evident; otherwise use a concise imperative subject that explains the result.
+If nothing is staged, stop and ask whether to use `11ai-git-stage` and which paths or hunks should be included. If unrelated changes are staged, stop rather than absorbing them. Check for secrets, generated files, and accidental environment changes. Use `11ai-git-conventional-commits` to choose and validate a Conventional Commits 1.0.0 message, including any compatible repository-specific types, scopes, or wording rules.
 
 ## Create and verify
 

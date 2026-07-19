@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Global LLM Cost"
-  short_description: "Analyze global LLM costs across harnesses"
-  default_prompt: "Use $11ai-global-llm-cost to analyze machine-wide Codex, Claude Code, Gemini CLI, Cline, Roo Code, OpenCode, and exported usage, then create matching Markdown and HTML reports in a timestamped 11ai-global-llm-cost-reports-{datetime} package under ~/Desktop/11ai-global-llm-cost-reports; include explicit totals and aggregates for every period, and make every HTML section collapsed by default."

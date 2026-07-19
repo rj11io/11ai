@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai LLM Cost Global"
+  short_description: "Analyze global LLM cost, effort, and time"
+  default_prompt: "Use $11ai-llm-cost-global to analyze machine-wide LLM usage, cost by model and effort, wall time, and estimated active time, then create matching Markdown and HTML reports for every period under ~/Desktop/11ai-llm-cost-global-reports."

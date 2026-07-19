@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-llm-costs",
   "version": "1.19.1",
-  "description": "Project-scoped and machine-wide LLM usage and cost reporting across local coding harnesses.",
+  "description": "Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports.",
   "author": {
     "name": "rj11io"
   },
@@ -17,6 +17,8 @@
     "gemini-cli",
     "cline",
     "roo-code",
-    "opencode"
+    "opencode",
+    "active-time",
+    "reasoning-effort"
   ]
 }

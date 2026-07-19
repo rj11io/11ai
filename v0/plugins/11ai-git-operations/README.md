@@ -11,6 +11,7 @@ Small, standalone Git skills for inspecting, staging, committing, synchronizing,
 | [`11ai-git-status`](./skills/11ai-git-status/SKILL.md) | Inspecting repository identity, worktree changes, diffs, history, branches, and upstream state without mutation |
 | [`11ai-git-stage`](./skills/11ai-git-stage/SKILL.md) | Reviewing and staging only the intended paths or hunks, or safely unstaging them without committing |
 | [`11ai-git-commit`](./skills/11ai-git-commit/SKILL.md) | Creating one reviewed local commit with a clear message, without pushing or amending unless asked |
+| [`11ai-git-conventional-commits`](./skills/11ai-git-conventional-commits/SKILL.md) | Choosing and validating a Conventional Commits 1.0.0 message whenever an operator needs to commit its work |
 | [`11ai-git-sync`](./skills/11ai-git-sync/SKILL.md) | Fetching, pulling, comparing with upstream, and pushing a named branch with fast-forward and force-push safeguards |
 | [`11ai-git-branches`](./skills/11ai-git-branches/SKILL.md) | Listing, creating, switching, renaming, and deleting local branches safely |
 | [`11ai-git-stash`](./skills/11ai-git-stash/SKILL.md) | Shelving selected work temporarily, inspecting stashes, and applying or dropping them deliberately |

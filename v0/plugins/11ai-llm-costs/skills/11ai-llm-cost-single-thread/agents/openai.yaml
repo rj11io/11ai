@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai LLM Cost Single Thread"
+  short_description: "Analyze a thread tree's cost and timing"
+  default_prompt: "Use $11ai-llm-cost-single-thread to analyze the current thread plus recursively spawned Codex sub-agents and create matching Markdown and HTML cost reports."

@@ -1,27 +1,27 @@
 ---
-name: 11ai-llm-cost
-description: "Inspect a repository plus its project-attributed Codex, Claude Code, Gemini CLI, Cline, Roo Code, and OpenCode records; normalize provider token counters, calculate attributable USD costs, and write matching timestamped Markdown and HTML reports under the current thread folder's 11ai-llm-cost-reports directory. Use for project LLM spend, token usage, model cost, thread cost, AI activity, or recursive cost analysis."
+name: 11ai-llm-cost-project
+description: "Inspect a repository plus its project-attributed Codex, Claude Code, Gemini CLI, Cline, Roo Code, and OpenCode records; normalize provider token counters, calculate attributable USD costs, measure wall and estimated active time, and write matching timestamped Markdown and HTML reports under the current thread folder's 11ai-llm-cost-project-reports directory. Use for project LLM spend, token usage, model and effort cost, thread timing, AI activity, or recursive cost analysis."
 ---
 
-# 11ai LLM Cost
+# 11ai LLM Cost Project
 
-Analyze local LLM activity without depending on a benchmark repository, benchmark schema, or external service. Write every default report package beneath the persistent `11ai-llm-cost-reports` folder at the current thread's working-directory root; keep source transcripts and input files read-only.
+Analyze local LLM activity without depending on a benchmark repository, benchmark schema, or external service. Write every default report package beneath the persistent `11ai-llm-cost-project-reports` folder at the current thread's working-directory root; keep source transcripts and input files read-only.
 
 ## Contract
 
 Run the bundled analyzer from the current thread's folder root. The optional positional folder is the project to analyze and does not change the default report destination:
 
 ```bash
-node <skill>/scripts/analyze-llm-cost.mjs <root-folder>
+node <skill>/scripts/analyze-llm-cost-project.mjs <root-folder>
 ```
 
 The command treats `process.cwd()` as the current thread folder and creates this structure if needed. `{datetime}` is the UTC ISO timestamp for the run with colons and the decimal point replaced by hyphens:
 
 ```text
-<thread-folder>/11ai-llm-cost-reports/
-└── 11ai-llm-cost-reports-{datetime}/
-    ├── 11ai-llm-cost-{datetime}.md
-    └── 11ai-llm-cost-{datetime}.html
+<thread-folder>/11ai-llm-cost-project-reports/
+└── 11ai-llm-cost-project-reports-{datetime}/
+    ├── 11ai-llm-cost-project-{datetime}.md
+    └── 11ai-llm-cost-project-{datetime}.html
 ```
 
 Generate both files from the same analysis. The HTML must be self-contained with embedded styling and no network dependency. The timestamped default package uses exclusive file creation so it never overwrites existing reports. It accepts:
@@ -33,6 +33,7 @@ Generate both files from the same analysis. The HTML must be self-contained with
 - `--gemini-home <dir>` or `GEMINI_CLI_HOME` to override Gemini CLI discovery (`--gemini-home` points directly to `.gemini`);
 - `--cline-tasks <dir>` and `--roo-tasks <dir>` to override their task roots;
 - `--opencode-db <file>` to override OpenCode database discovery;
+- `--thread <id-or-source>` to restrict the report to one exact logical thread, report thread ID, source label, source filename, or transcript path;
 - `--project-only` to disable native session discovery and inspect only the requested root.
 
 The analyzer reads JSON, JSONL, and NDJSON files recursively, while skipping dependency, VCS, cache, and build directories. It also discovers six harnesses from their native stores. It includes a native record only when its working directory, Gemini project hash/directory, task metadata, or OpenCode session directory associates it with the requested root. It only reports files containing recognized usage.
@@ -41,9 +42,9 @@ Read [references/harnesses.md](references/harnesses.md) when native discovery, v
 
 ## Workflow
 
-1. Establish both the current thread folder (`process.cwd()`) and the project root to analyze. Resolve native transcript homes from CLI options, harness environment variables, or the current user's home directory, and use `<thread-folder>/11ai-llm-cost-reports/11ai-llm-cost-reports-{datetime}` unless the user explicitly requested another output path.
+1. Establish both the current thread folder (`process.cwd()`) and the project root to analyze. Resolve native transcript homes from CLI options, harness environment variables, or the current user's home directory, and use `<thread-folder>/11ai-llm-cost-project-reports/11ai-llm-cost-project-reports-{datetime}` unless the user explicitly requested another output path.
 2. Run the analyzer. Preserve malformed, ambiguous, unpriced, and reported-only records in the report's coverage and limitations sections rather than silently dropping them.
-3. Review both generated files for explicit totals, provider/model/harness aggregates, root-versus-child-folder aggregates, token-class detail, per-thread table, pricing coverage, anomalies, and methodology. Confirm every HTML report section is a native collapsed disclosure control on first load.
+3. Review both generated files for explicit totals, provider/model/harness aggregates, root-versus-child-folder aggregates, `Cost by model by effort`, token-class detail, wall time, estimated active time, per-thread detail, pricing coverage, anomalies, and methodology. Confirm every HTML report section is a native collapsed disclosure control on first load.
 4. If a model is unmatched or pricing is older than 30 days, verify the provider's official pricing page. Prefer a repository-local `llm-pricing.json` or `.llm-cost/pricing.json` override so the report remains reproducible; never invent a rate from memory.
 5. Rerun the analyzer after pricing or input changes. It is idempotent and does not edit transcripts.
 
@@ -69,19 +70,23 @@ Provider-native raw usage is retained in the analyzer's in-memory record and nor
 - reasoning output is a subset of output;
 - missing data is `n/a`, never zero.
 
+## Timing
+
+Measure wall time from the first to last distinct timestamp observed for a thread. Estimate active time by summing consecutive timestamp gaps while capping each gap at five minutes. Report both as `n/a` when fewer than two distinct timestamps exist. Treat active time as a reproducible estimate of interaction time, not foreground-process telemetry.
+
 ## Report requirements
 
-Both reports must display explicit grand totals for threads, token classes, measured/provider tokens, known cost, and cost coverage. They must aggregate by provider, model, harness, and root/child folder; include a `Total` row in every aggregate table; and show average tokens per thread plus average known cost per priced thread in the harness aggregate. Distinguish measured token usage, derived cost, harness-reported cost, and unavailable cost. State that computed subscription usage is an API-equivalent estimate, not necessarily an invoice. Include source-relative paths and timestamps where available, but do not copy prompts, message content, secrets, or full transcripts into the report.
+Both reports must display explicit grand totals for threads, token classes, measured/provider tokens, known cost, cost coverage, wall time, and estimated active time. Make `Cost by model by effort` a level-two sibling immediately after the level-two `Cost by model` section. Aggregate by provider, model, model and effort, harness, and root/child folder; include a `Total` row in every aggregate table; show average tokens per thread plus average known cost per priced thread in the harness aggregate; and show wall time, active time, cost per wall hour, and cost per active hour in every thread-derived aggregate and thread-detail table when calculable. Do not add hourly metrics to scan, token-composition, or pricing tables because their rows are not disjoint thread groups. In HTML, make every table column sortable while preserving generated row order on initial load. A newly selected column must sort descending first and then toggle direction; keep unavailable values and `Total` rows at the bottom. Distinguish measured token usage, derived cost, harness-reported cost, and unavailable cost. State that computed subscription usage is an API-equivalent estimate, not necessarily an invoice. Include source-relative paths and timestamps where available, but do not copy prompts, message content, secrets, or full transcripts into the report.
 
 In HTML, render every level-two and level-three report section as a native `<details>` element with a `<summary>`, omit the `open` attribute so all sections are collapsed by default, and keep the report title and signature outside those disclosures.
 
 End every Markdown report with this exact linked signature:
 
 ```markdown
-_LLM token cost analysis by [11ai-llm-cost](https://ai.rj11.io/skills/11ai-llm-cost)._
+_LLM token cost analysis by [11ai-llm-cost-project](https://ai.rj11.io/skills/11ai-llm-cost-project)._
 ```
 
-End the HTML report with the same visible signature and a clickable link whose `href` is exactly `https://ai.rj11.io/skills/11ai-llm-cost`. Set `target="_blank"` and `rel="noopener noreferrer"` on that signature link so it opens safely in a new tab.
+End the HTML report with the same visible signature and a clickable link whose `href` is exactly `https://ai.rj11.io/skills/11ai-llm-cost-project`. Set `target="_blank"` and `rel="noopener noreferrer"` on that signature link so it opens safely in a new tab.
 
 If this skill extends an existing report, preserve its prior skill attribution
 and keep all skill signatures together at the end of the combined report.
@@ -104,8 +109,10 @@ Rates are USD per one million tokens. Every priced thread must show the matched 
 Before reporting completion:
 
 - confirm the analyzer exits successfully;
-- confirm `<thread-folder>/11ai-llm-cost-reports/11ai-llm-cost-reports-{datetime}` exists and contains matching `11ai-llm-cost-{datetime}.md` and `.html` files;
-- confirm both reports display totals, provider/model/harness/folder aggregates with grand-total rows, scanned files, recognized threads, known and unknown costs, pricing coverage, limitations, and the exact linked signature above;
+- confirm `<thread-folder>/11ai-llm-cost-project-reports/11ai-llm-cost-project-reports-{datetime}` exists and contains matching `11ai-llm-cost-project-{datetime}.md` and `.html` files;
+- confirm both reports display totals, provider/model/model-by-effort/harness/folder aggregates with grand-total rows, wall time, estimated active time, both hourly cost rates where calculable, scanned files, recognized threads, known and unknown costs, pricing coverage, limitations, and the exact linked signature above;
+- confirm `Cost by model by effort` is a level-two sibling immediately after `Cost by model`;
+- confirm every HTML table header is sortable, initial row order is unchanged, a newly selected column starts descending, and `Total` rows remain pinned last;
 - confirm every HTML level-two and level-three report section is a `<details>` disclosure without an `open` attribute, so all sections load collapsed;
 - rerun once with unchanged inputs, confirm it creates a second timestamped report pair, and ensure report content is stable apart from its generated timestamp;
 - report the exact output paths and any model/pricing gaps.

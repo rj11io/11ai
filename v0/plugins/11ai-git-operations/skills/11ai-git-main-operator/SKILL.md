@@ -41,7 +41,7 @@ Run a task directly on the repository's main branch inside a disciplined Git tra
 ### 4. Stage, commit, or push only on explicit instruction
 
 1. If the user did not ask, leave everything uncommitted in the working tree and say so in the report.
-2. If the user asked, treat stage, commit, and push as three separate permissions. Perform only the ones requested, after the quality checks pass, using the repository's commit conventions.
+2. If the user asked, treat stage, commit, and push as three separate permissions. Perform only the ones requested after the quality checks pass. For every task commit, use `11ai-git-conventional-commits` to choose and validate a Conventional Commits 1.0.0 message that also respects compatible repository rules.
 
 ## Abort conditions
 
