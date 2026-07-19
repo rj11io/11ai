@@ -831,6 +831,10 @@ function fmtUsdPerActiveHour(costUsd, activeTimeMs) {
   return finite(costUsd) && finite(activeTimeMs) && activeTimeMs > 0 ? fmtUsd(costUsd / (activeTimeMs / 3600000)) : "n/a"
 }
 
+function fmtUsdPerThread(costUsd, threadCount) {
+  return finite(costUsd) && finite(threadCount) && threadCount > 0 ? fmtUsd(costUsd / threadCount) : "n/a"
+}
+
 function fmtPct(numerator, denominator) {
   return finite(numerator) && denominator > 0 ? `${(numerator / denominator * 100).toFixed(1)}%` : "n/a"
 }
@@ -908,59 +912,60 @@ function windowSection(definition, threads) {
       ["Threads with unavailable or partial cost", fmtInt(unknown.length)],
       ["Measured/provider tokens", fmtInt(total.tokens)],
       ["Known cost", fmtUsd(total.costUsd)],
+      ["Estimated active time", fmtDurationMs(total.activeTimeMs)],
+      ["Cost / active hour", fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs)],
+      ["Sum of thread wall time", fmtDurationMs(total.wallTimeMs)],
+      ["Cost / wall hour", fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs)],
+      ["Cost / thread", fmtUsdPerThread(total.costUsd, total.threadCount)],
       ["Cost coverage", fmtPct(total.knownCostThreads, total.threadCount)],
       ["Input tokens", fmtInt(inputTotal)],
       ["Cached input", `${fmtInt(cachedInput)} (${fmtPct(cachedInput, inputTotal)})`],
       ["Output tokens", fmtInt(outputTotal)],
       ["Reasoning output", `${fmtInt(reasoningTotal)} (${fmtPct(reasoningTotal, outputTotal)})`],
       ["Threads with measurable wall time", `${fmtInt(total.knownWallThreads)} / ${fmtInt(total.threadCount)}`],
-      ["Sum of thread wall time", fmtDurationMs(total.wallTimeMs)],
       ["Threads with estimated active time", `${fmtInt(total.knownActiveThreads)} / ${fmtInt(total.threadCount)}`],
-      ["Estimated active time", fmtDurationMs(total.activeTimeMs)],
       ["Active / wall time", fmtPct(total.activeTimeMs, total.wallTimeMs)],
-      ["Cost / wall hour", fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs)],
-      ["Cost / active hour", fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs)],
     ]),
     "",
     "The known-cost total includes derived API-equivalent prices and harness-reported costs. It is not necessarily an invoice, especially for subscription, enterprise, batch, priority, or negotiated usage.",
     "",
     "### Cost by provider",
     "",
-    noRows("No threads fall in this period.") ?? table(["Provider", "Threads", "Known tokens", "Known cost", "Wall time", "Active time", "Cost / wall hour", "Cost / active hour", "Priced", "Unpriced"], [...providers.map(([key, items]) => {
+    noRows("No threads fall in this period.") ?? table(["Provider", "Threads", "Input", "Cached", "Output", "Tokens", "Known cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Cost / thread", "Priced", "Unpriced"], [...providers.map(([key, items]) => {
       const r = rollup(items)
-      return [key, fmtInt(r.threadCount), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtDurationMs(r.wallTimeMs), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
-    }), ["Total", fmtInt(total.threadCount), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtDurationMs(total.wallTimeMs), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
+      return [key, fmtInt(r.threadCount), fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))), fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))), fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs), fmtDurationMs(r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerThread(r.costUsd, r.threadCount), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
+    }), ["Total", fmtInt(total.threadCount), fmtInt(inputTotal), fmtInt(cachedInput), fmtInt(outputTotal), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs), fmtDurationMs(total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerThread(total.costUsd, total.threadCount), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
     "### Cost by harness",
     "",
-    noRows("No threads fall in this period.") ?? table(["Harness", "Threads", "Known tokens", "Known cost", "Reported-cost sum", "Average tokens / thread", "Average known cost / priced thread", "Wall time", "Active time", "Cost / wall hour", "Cost / active hour"], [...harnesses.map(([key, items]) => {
+    noRows("No threads fall in this period.") ?? table(["Harness", "Threads", "Input", "Cached", "Output", "Tokens", "Known cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Cost / thread", "Reported-cost sum", "Average tokens / thread", "Priced", "Unpriced"], [...harnesses.map(([key, items]) => {
       const r = rollup(items)
-      return [key, fmtInt(r.threadCount), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount ? r.tokens / r.threadCount : null), fmtUsd(r.knownCostThreads ? r.costUsd / r.knownCostThreads : null), fmtDurationMs(r.wallTimeMs), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs)]
-    }), ["Total", fmtInt(total.threadCount), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtUsd(sumReported(threads.map((item) => item.reportedCostUsd))), fmtInt(total.threadCount ? total.tokens / total.threadCount : null), fmtUsd(total.knownCostThreads ? total.costUsd / total.knownCostThreads : null), fmtDurationMs(total.wallTimeMs), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs)]]),
+      return [key, fmtInt(r.threadCount), fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))), fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))), fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs), fmtDurationMs(r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerThread(r.costUsd, r.threadCount), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount ? r.tokens / r.threadCount : null), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
+    }), ["Total", fmtInt(total.threadCount), fmtInt(inputTotal), fmtInt(cachedInput), fmtInt(outputTotal), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs), fmtDurationMs(total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerThread(total.costUsd, total.threadCount), fmtUsd(sumReported(threads.map((item) => item.reportedCostUsd))), fmtInt(total.threadCount ? total.tokens / total.threadCount : null), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
     "### Cost by model",
     "",
-    noRows("No threads fall in this period.") ?? table(["Provider / model", "Threads", "Input", "Cached", "Output", "Tokens", "Cost", "Wall time", "Active time", "Cost / wall hour", "Cost / active hour"], [...models.map(([key, items]) => {
+    noRows("No threads fall in this period.") ?? table(["Provider / model", "Threads", "Input", "Cached", "Output", "Tokens", "Cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Cost / thread"], [...models.map(([key, items]) => {
       const r = rollup(items)
-      return [key, fmtInt(items.length), fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))), fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))), fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtDurationMs(r.wallTimeMs), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs)]
-    }), ["Total", fmtInt(total.threadCount), fmtInt(inputTotal), fmtInt(cachedInput), fmtInt(outputTotal), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtDurationMs(total.wallTimeMs), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs)]]),
+      return [key, fmtInt(items.length), fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))), fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))), fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs), fmtDurationMs(r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerThread(r.costUsd, r.threadCount)]
+    }), ["Total", fmtInt(total.threadCount), fmtInt(inputTotal), fmtInt(cachedInput), fmtInt(outputTotal), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs), fmtDurationMs(total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerThread(total.costUsd, total.threadCount)]]),
     "",
     "### Cost by model by effort",
     "",
-    noRows("No threads fall in this period.") ?? table(["Provider / model", "Effort", "Threads", "Tokens", "Known cost", "Average known cost / priced thread", "Wall time", "Active time", "Cost / wall hour", "Cost / active hour"], [...modelEfforts.map(([key, items]) => {
+    noRows("No threads fall in this period.") ?? table(["Provider / model", "Effort", "Threads", "Input", "Cached", "Output", "Tokens", "Known cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Cost / thread"], [...modelEfforts.map(([key, items]) => {
       const [model, effort] = key.split("\u0000")
       const r = rollup(items)
-      return [model, effort, fmtInt(r.threadCount), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtUsd(r.knownCostThreads ? r.costUsd / r.knownCostThreads : null), fmtDurationMs(r.wallTimeMs), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs)]
-    }), ["Total", "All efforts", fmtInt(total.threadCount), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtUsd(total.knownCostThreads ? total.costUsd / total.knownCostThreads : null), fmtDurationMs(total.wallTimeMs), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs)]]),
+      return [model, effort, fmtInt(r.threadCount), fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))), fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))), fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs), fmtDurationMs(r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerThread(r.costUsd, r.threadCount)]
+    }), ["Total", "All efforts", fmtInt(total.threadCount), fmtInt(inputTotal), fmtInt(cachedInput), fmtInt(outputTotal), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs), fmtDurationMs(total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerThread(total.costUsd, total.threadCount)]]),
     "",
     "### Cost by workspace",
     "",
     "Workspace comes from a native session's recorded working directory; supplemental logs are grouped by included root.",
     "",
-    noRows("No threads fall in this period.") ?? table(["Workspace", "Threads", "Tokens", "Known cost", "Wall time", "Active time", "Cost / wall hour", "Cost / active hour", "Priced", "Unpriced"], [...workspaces.map(([key, items]) => {
+    noRows("No threads fall in this period.") ?? table(["Workspace", "Threads", "Input", "Cached", "Output", "Tokens", "Known cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Cost / thread", "Priced", "Unpriced"], [...workspaces.map(([key, items]) => {
       const r = rollup(items)
-      return [key, fmtInt(r.threadCount), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtDurationMs(r.wallTimeMs), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
-    }), ["Total", fmtInt(total.threadCount), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtDurationMs(total.wallTimeMs), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
+      return [key, fmtInt(r.threadCount), fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))), fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))), fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs), fmtDurationMs(r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerThread(r.costUsd, r.threadCount), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
+    }), ["Total", fmtInt(total.threadCount), fmtInt(inputTotal), fmtInt(cachedInput), fmtInt(outputTotal), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs), fmtDurationMs(total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerThread(total.costUsd, total.threadCount), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
     "### Token composition",
     "",
@@ -975,20 +980,23 @@ function windowSection(definition, threads) {
     "",
     "### Thread detail",
     "",
-    noRows("No threads fall in this period.") ?? table(["Thread", "Source", "Workspace", "Provider / model / effort", "Attributed at", "Tokens", "Selected cost", "Harness reported", "Method", "Wall time", "Active time", "Cost / wall hour", "Cost / active hour"], sortedThreads.map((thread) => [
+    noRows("No threads fall in this period.") ?? table(["Thread", "Source", "Workspace", "Provider / model / effort", "Attributed at", "Input", "Cached", "Output", "Tokens", "Selected cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Harness reported", "Method"], sortedThreads.map((thread) => [
       thread.threadId,
       thread.sourceFile,
       thread.folder,
       `${thread.provider} / ${thread.model} / ${thread.effort ?? "n/a"}`,
       threadTime(thread)?.toISOString() ?? "n/a",
+      fmtInt(thread.tokens.inputTotal),
+      fmtInt(thread.tokens.cachedInputRead),
+      fmtInt(thread.tokens.outputTotal),
       fmtInt(thread.tokens.providerTotal),
       fmtUsd(thread.cost.totalUsd),
+      fmtDurationMs(thread.activeTimeMs),
+      fmtUsdPerActiveHour(thread.cost.totalUsd, thread.activeTimeMs),
+      fmtDurationMs(thread.wallTimeMs),
+      fmtUsdPerActiveHour(thread.cost.totalUsd, thread.wallTimeMs),
       fmtUsd(thread.reportedCostUsd),
       thread.costMethod === "derived" ? `derived${thread.pricingStatus === "matched-stale" ? " (stale rate)" : ""}` : thread.costMethod,
-      fmtDurationMs(thread.wallTimeMs),
-      fmtDurationMs(thread.activeTimeMs),
-      fmtUsdPerActiveHour(thread.cost.totalUsd, thread.wallTimeMs),
-      fmtUsdPerActiveHour(thread.cost.totalUsd, thread.activeTimeMs),
     ])),
     "",
   ]
@@ -1016,8 +1024,6 @@ function report({ threads, stats, malformed, duplicateIds }) {
 
   const lines = [
     "# Global LLM Cost Report",
-    "",
-    `> Generated ${generatedAt} · Scope: ${stats.scopeDescription} · Prices are USD per 1M tokens unless noted`,
     "",
     "## Scan coverage",
     "",
@@ -1077,8 +1083,11 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "- Preserve provider-native usage semantics: OpenAI cached input is a subset of input, while Anthropic cache buckets are disjoint. Reasoning tokens are a subset of output.",
     "- Measure wall time from the first to last distinct timestamp observed for a thread. Estimate active time by summing consecutive timestamp gaps with each gap capped at five minutes; report both as unavailable when fewer than two distinct timestamps exist.",
     "- Calculate cost per wall hour and cost per active hour by dividing known cost by the corresponding summed measurable duration. Report the rate as unavailable when cost or duration is unavailable or duration is zero.",
+    "- Calculate cost per thread by dividing known cost by every recognized thread in the row. Incomplete cost coverage can therefore understate this rate. Per-thread detail omits the metric because it would duplicate selected cost.",
     "- Treat missing values as unavailable. Sum known totals for overview coverage, but surface every incomplete or unpriced thread in the detail and limitations sections.",
     "- Do not include prompts, message text, secrets, or raw transcripts in this report. Native source labels and normalized workspace paths are the traceability boundary.",
+    "",
+    `> Generated ${generatedAt} · Scope: ${stats.scopeDescription} · Prices are USD per 1M tokens unless noted`,
     "",
     "_LLM token cost analysis by [11ai-llm-cost-global](https://ai.rj11.io/skills/11ai-llm-cost-global)._",
     "",
@@ -1169,6 +1178,12 @@ function htmlReport(markdown) {
       index += 1
       continue
     }
+    if (line.startsWith("> Generated ")) {
+      closeAllSections()
+      body.push(`<blockquote class="generation-message">${inlineHtml(line.slice(2))}</blockquote>`)
+      index += 1
+      continue
+    }
     if (line.startsWith("> ")) {
       body.push(`<blockquote>${inlineHtml(line.slice(2))}</blockquote>`)
       index += 1
@@ -1213,27 +1228,27 @@ function htmlReport(markdown) {
     :root { color-scheme: light dark; --bg: #f6f7fb; --card: #fff; --text: #172033; --muted: #5d6678; --line: #dce1ea; --accent: #3157d5; }
     @media (prefers-color-scheme: dark) { :root { --bg: #10131a; --card: #181d27; --text: #edf1f7; --muted: #aab3c3; --line: #303848; --accent: #8da8ff; } }
     * { box-sizing: border-box; }
-    body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    main { width: min(1180px, calc(100% - 32px)); margin: 32px auto; padding: 40px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 12px 36px rgba(0,0,0,.08); }
-    h1 { margin-top: 0; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -.035em; }
-    .report-section { margin: 1rem 0; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: color-mix(in srgb, var(--card) 96%, var(--accent)); }
-    .report-section.level-2 { margin-top: 1.5rem; }
-    .report-section.level-3 { margin: .85rem 0; }
-    summary { display: flex; align-items: center; gap: .7rem; padding: 1rem 1.2rem; cursor: pointer; color: var(--text); font-weight: 750; list-style: none; user-select: none; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    main { width: 100%; margin: 0; padding: 16px 20px 24px; background: transparent; }
+    h1 { margin: 0 0 .75rem; font-size: clamp(1.65rem, 3vw, 2.4rem); letter-spacing: -.035em; }
+    .report-section { margin: .55rem 0; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: color-mix(in srgb, var(--card) 96%, var(--accent)); }
+    .report-section.level-2 { margin-top: .8rem; }
+    .report-section.level-3 { margin: .45rem 0; }
+    summary { display: flex; align-items: center; gap: .5rem; padding: .62rem .78rem; cursor: pointer; color: var(--text); font-weight: 750; list-style: none; user-select: none; }
     summary::-webkit-details-marker { display: none; }
     summary::before { content: "▸"; flex: 0 0 auto; color: var(--accent); transition: transform .15s ease; }
     details[open] > summary::before { transform: rotate(90deg); }
-    .level-2 > summary { font-size: 1.3rem; }
-    .level-3 > summary { font-size: 1.05rem; }
-    .section-body { padding: 0 1.2rem 1.2rem; border-top: 1px solid var(--line); }
-    p, li { color: var(--muted); }
-    blockquote { margin: 1.5rem 0; padding: 1rem 1.25rem; border-left: 4px solid var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); color: var(--muted); }
-    .table-wrap { margin: 1rem 0 1.75rem; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
-    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    .level-2 > summary { font-size: 1.12rem; }
+    .level-3 > summary { font-size: .98rem; }
+    .section-body { padding: 0 .78rem .72rem; border-top: 1px solid var(--line); }
+    p, li { margin: .45rem 0; color: var(--muted); }
+    blockquote { margin: .75rem 0; padding: .65rem .8rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); color: var(--muted); }
+    .table-wrap { margin: .55rem 0 .9rem; overflow-x: auto; border: 1px solid var(--line); border-radius: 7px; }
+    table { width: 100%; border-collapse: collapse; font-size: .82rem; }
     th, td { text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); white-space: nowrap; }
-    td { padding: .7rem .8rem; }
+    td { padding: .42rem .52rem; }
     th { padding: 0; background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--text); }
-    .sort-button { display: flex; width: 100%; align-items: center; gap: .4rem; padding: .7rem .8rem; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 700; text-align: left; white-space: nowrap; cursor: pointer; }
+    .sort-button { display: flex; width: 100%; align-items: center; gap: .3rem; padding: .42rem .52rem; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 700; text-align: left; white-space: nowrap; cursor: pointer; }
     .sort-button:hover, .sort-button:focus-visible { background: color-mix(in srgb, var(--accent) 14%, transparent); outline: none; }
     .sort-indicator { min-width: .8em; color: var(--accent); }
     th[aria-sort="descending"] .sort-indicator::after { content: "▼"; }
@@ -1241,8 +1256,9 @@ function htmlReport(markdown) {
     tr:last-child td { border-bottom: 0; }
     code { padding: .1rem .3rem; border-radius: 4px; background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--text); }
     a { color: var(--accent); }
-    .signature { margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
-    @media (max-width: 700px) { main { width: 100%; margin: 0; padding: 24px 16px; border: 0; border-radius: 0; } }
+    .generation-message { margin-top: 1rem; }
+    .signature { margin-top: .75rem; padding-top: .75rem; border-top: 1px solid var(--line); }
+    @media (max-width: 700px) { main { padding: 10px; } }
   </style>
 </head>
 <body>
