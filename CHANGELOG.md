@@ -1,3 +1,11 @@
+## [1.20.1](https://github.com/rj11io/11ai/compare/v1.20.0...v1.20.1) (2026-07-19)
+
+
+### Bug Fixes
+
+* detail pages terminal commands ([f6ea81b](https://github.com/rj11io/11ai/commit/f6ea81b0b2f474247f9a34ca641432a89a8ee840))
+* sort plugins ([2af9b7e](https://github.com/rj11io/11ai/commit/2af9b7e72b0047e8dca5e8f2963654083e5219bc))
+
 # [1.20.0](https://github.com/rj11io/11ai/compare/v1.19.1...v1.20.0) (2026-07-19)
 
 
