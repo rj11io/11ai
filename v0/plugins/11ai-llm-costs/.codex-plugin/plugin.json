@@ -1,6 +1,6 @@
 {
   "name": "11ai-llm-costs",
-  "version": "1.20.0",
+  "version": "1.20.1",
   "description": "Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports.",
   "author": {
     "name": "rj11io"
