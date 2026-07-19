@@ -46,7 +46,7 @@ Read [the bundled harness reference](references/harnesses.md) when native discov
 
 Measure wall time independently for the selected root and every included sub-agent from each task's first to last distinct timestamp, then sum known task durations in aggregates. Estimate each task's active time by summing consecutive timestamp gaps while capping every gap at five minutes, then sum known estimates. This suppresses long idle periods without pretending to observe foreground activity. Report both metrics as `n/a` for a task when fewer than two distinct timestamps exist.
 
-Capture Claude effort from recorded request/configuration fields when present, normalize Claude Code `ultracode` to `xhigh`, and use the documented `high` default only for effort-capable Claude models when native response transcripts omit the request field. Leave unsupported models as unavailable.
+Capture Claude effort only from recorded request/configuration fields when present, normalize Claude Code `ultracode` to `xhigh`, and group native usage by both model and recorded effort. Native transcript omissions remain unavailable; never substitute the current setting or a model default for missing history.
 
 ## Report requirements
 

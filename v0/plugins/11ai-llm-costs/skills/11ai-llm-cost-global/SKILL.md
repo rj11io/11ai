@@ -65,8 +65,8 @@ Attribute a whole thread to its finish timestamp, falling back to its start time
 The bundled parser handles:
 
 - Codex session JSONL: final cumulative `token_count` usage and the latest model/effort context;
-- Claude session JSONL: assistant usage, cache creation/read buckets, and per-model grouping;
-- Claude effort: recorded request/configuration fields when present, `ultracode` normalized to `xhigh`, and the documented `high` default for effort-capable models when native response transcripts omit the request field;
+- Claude session JSONL: assistant usage, cache creation/read buckets, and per-model/per-effort grouping;
+- Claude effort: recorded request/configuration fields when present, with `ultracode` normalized to `xhigh`. Native transcript omissions remain `n/a`; never rewrite missing historical effort as the current setting or a model default;
 - Gemini CLI chat JSONL: per-response input, output, cached, thought, tool, and total counters;
 - Cline and Roo Code task `ui_messages.json`: API request, deleted-request, and subagent usage counters plus harness-reported cost;
 - OpenCode SQLite session ledgers: model/provider, workspace, cost, uncached input, output, reasoning, cache-read, and cache-write counters;

@@ -45,7 +45,8 @@ try {
     { timestamp: older, type: "event_msg", payload: { type: "token_count", info: { total_token_usage: { input_tokens: 500, cached_input_tokens: 0, output_tokens: 50, total_tokens: 550 } } } },
   ])
   writeJsonl(join(claudeHome, "projects", "fixture", "old.jsonl"), [
-    { timestamp: older, cwd: join(fixtureRoot, "workspace-b"), sessionId: "claude-old", message: { id: "message-1", model: "claude-sonnet-4-6", usage: { input_tokens: 200, cache_creation_input_tokens: 20, cache_read_input_tokens: 80, output_tokens: 50 } } },
+    { timestamp: "2020-01-15T12:01:00.000Z", cwd: join(fixtureRoot, "workspace-b"), sessionId: "claude-old", message: { id: "message-1", model: "claude-sonnet-4-6", usage: { input_tokens: 200, cache_creation_input_tokens: 20, cache_read_input_tokens: 80, output_tokens: 50 } } },
+    { timestamp: "2020-01-15T12:03:00.000Z", cwd: join(fixtureRoot, "workspace-b"), sessionId: "claude-old", message: { id: "message-2", model: "claude-sonnet-4-6", usage: { input_tokens: 100, cache_creation_input_tokens: 10, cache_read_input_tokens: 40, output_tokens: 25 } } },
   ])
   writeJsonl(join(geminiHome, "tmp", "hash", "chats", "recent.jsonl"), [
     { sessionId: "gemini-recent", projectHash: "hash", startTime: recent, directories: [join(fixtureRoot, "workspace-c")] },
@@ -104,7 +105,7 @@ try {
   assert.equal(modelHeadingIndexes.length, 4)
   for (const index of modelHeadingIndexes) assert.equal(reportHeadings[index + 1], "### Cost by model by effort")
   assert.match(markdown, /\| openai \/ gpt-5\.6-sol \| high \|/)
-  assert.match(markdown, /\| anthropic \/ claude-sonnet-4-6 \| high \|/)
+  assert.match(markdown, /\| anthropic \/ claude-sonnet-4-6 \| n\/a \|/)
   assert.match(markdown, /\| Harness \| Threads \| Input \| Cached \| Output \| Tokens \| Known cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Cost \/ thread \| Reported-cost sum \| Average tokens \/ thread \| Priced \| Unpriced \|/)
   assert.match(markdown, /\| Provider \| Threads \| Input \| Cached \| Output \| Tokens \| Known cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Cost \/ thread \| Priced \| Unpriced \|/)
   assert.match(markdown, /\| Provider \/ model \| Threads \| Input \| Cached \| Output \| Tokens \| Cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Cost \/ thread \|/)
@@ -168,6 +169,30 @@ try {
     .replace(/<blockquote class="generation-message">Generated .*?<\/blockquote>/, '<blockquote class="generation-message">Generated &lt;run-time&gt;</blockquote>')
     .replace(/<p>Threads attributed from .*? through .*?\.<\/p>/g, "<p>Threads attributed from &lt;period-start&gt; through &lt;run-time&gt;.</p>")
   assert.equal(normalizeHtmlRunTime(readFileSync(secondSummary.htmlReport, "utf8")), normalizeHtmlRunTime(html))
+
+  const canonicalEfforts = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra"]
+  const capturedEfforts = [...canonicalEfforts, "light"]
+  const effortClaudeHome = join(fixtureRoot, "effort-claude")
+  const effortTranscript = join(effortClaudeHome, "projects", "fixture", "all-efforts.jsonl")
+  const effortTime = (index, offset) => new Date(Date.UTC(2020, 1, 1, 12, index * 2 + offset)).toISOString()
+  writeJsonl(effortTranscript, capturedEfforts.map((effort, index) => ({
+    timestamp: effortTime(index, 1),
+    cwd: join(fixtureRoot, "effort-workspace"),
+    sessionId: "claude-all-efforts",
+    message: { id: `effort-message-${index}`, model: "claude-sonnet-4-6", output_config: { effort }, usage: { input_tokens: 10, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 1 } },
+  })))
+  const effortSummary = run([
+    "--codex-home", join(fixtureRoot, "empty-codex"),
+    "--claude-home", effortClaudeHome,
+    "--gemini-home", join(fixtureRoot, "empty-gemini"),
+    "--cline-tasks", join(fixtureRoot, "empty-cline"),
+    "--roo-tasks", join(fixtureRoot, "empty-roo"),
+    "--opencode-db", opencodeDb,
+    "--output", join(fixtureRoot, "effort-report"),
+  ])
+  const effortMarkdown = readFileSync(effortSummary.markdownReport, "utf8")
+  for (const effort of canonicalEfforts) assert.match(effortMarkdown, new RegExp(`\\| anthropic \\/ claude-sonnet-4-6 \\| ${effort} \\|`))
+  assert.doesNotMatch(effortMarkdown, /\| anthropic \/ claude-sonnet-4-6 \| light \|/)
 
   const fakeHome = join(fixtureRoot, "home")
   const fakeDesktop = join(fakeHome, "Desktop")

@@ -44,7 +44,7 @@ try {
 
   writeJsonl(join(codexHome, "sessions", "2026", "07", "18", "matching.jsonl"), [
     { timestamp: "2026-07-18T09:00:00.000Z", type: "session_meta", payload: { id: "codex-matching", cwd: project } },
-    { timestamp: "2026-07-18T09:10:00.000Z", type: "turn_context", payload: { model: "gpt-5.6-sol", effort: "high" } },
+    { timestamp: "2026-07-18T09:10:00.000Z", type: "turn_context", payload: { model: "gpt-5.6-sol", effort: "light" } },
     { timestamp: "2026-07-18T09:20:00.000Z", type: "event_msg", payload: { type: "token_count", info: { total_token_usage: { input_tokens: 1000, cached_input_tokens: 600, output_tokens: 100, reasoning_output_tokens: 40, total_tokens: 1100 } } } },
   ])
   writeJsonl(join(codexHome, "sessions", "2026", "07", "18", "unrelated.jsonl"), [
@@ -102,7 +102,8 @@ try {
   assert.match(markdown, /^## Cost by model by effort$/m)
   const levelTwoHeadings = markdown.match(/^## .+$/gm) ?? []
   assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Cost by model") + 1], "## Cost by model by effort")
-  assert.match(markdown, /\| openai \/ gpt-5\.6-sol \| high \| 1 \| 1,000 \| 600 \| 100 \| 1,100 \|/)
+  assert.match(markdown, /\| openai \/ gpt-5\.6-sol \| low \| 1 \| 1,000 \| 600 \| 100 \| 1,100 \|/)
+  assert.doesNotMatch(markdown, /\| openai \/ gpt-5\.6-sol \| light \|/)
   assert.match(markdown, /\| anthropic \/ claude-sonnet-4-6 \| medium \|/)
   assert.match(markdown, /\| Sum of thread wall time \| 22m \|/)
   assert.match(markdown, /\| Estimated active time \| 12m \|/)

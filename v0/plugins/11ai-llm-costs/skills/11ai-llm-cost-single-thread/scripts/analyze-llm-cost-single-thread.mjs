@@ -357,15 +357,11 @@ function effortFrom(record) {
   )
   if (!effort) return null
   const normalized = String(effort).trim().toLowerCase()
+  if (normalized === "light") return "low"
+  if (["extra high", "extra-high", "extra_high"].includes(normalized)) return "xhigh"
   if (normalized === "med") return "medium"
   if (normalized === "ultracode") return "xhigh"
   return normalized
-}
-
-function defaultEffortFor(provider, model) {
-  if (provider !== "anthropic") return null
-  const normalized = String(model).trim().toLowerCase()
-  return /^claude-(?:fable-5|mythos-(?:5|preview)|opus-4-(?:5|6|7|8)|sonnet-(?:4-6|5))(?:-|\[|$)/.test(normalized) ? "high" : null
 }
 
 function timeFrom(record) {
@@ -489,8 +485,8 @@ function baseThread(file, index, provider, harness, model, tokens, records, usag
     provider,
     harness,
     model,
-    effort: recordedEffort ?? defaultEffortFor(provider, model),
-    effortSource: recordedEffort ? "recorded" : defaultEffortFor(provider, model) ? "provider-default" : null,
+    effort: recordedEffort,
+    effortSource: recordedEffort ? "recorded" : null,
     logicalId: logicalId ? String(logicalId) : null,
     parentThreadId: null,
     nativeAgentDepth: null,
@@ -553,13 +549,13 @@ function parseClaude(file, records) {
     if (!usage || !isClaudeUsage(record, usage)) continue
     const model = modelFrom(record, usage)
     const key = firstValue(record?.id, record?.message?.id) ?? sha(JSON.stringify({ model, usage }))
-    byKey.set(key, { record, usage, model, provider: "anthropic" })
+    byKey.set(key, { record, usage, model, provider: "anthropic", effort: effortFrom(record) })
   }
   const entries = [...byKey.values()]
   if (!entries.length) return []
   const groups = new Map()
   for (const entry of entries) {
-    const key = entry.model || "unknown"
+    const key = `${entry.model || "unknown"}\u0000${entry.effort ?? ""}`
     const group = groups.get(key) ?? { entries: [], tokens: [] }
     group.entries.push(entry)
     group.tokens.push(normalizeUsage(entry.usage, entry.provider))
@@ -1061,7 +1057,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "- Discover Codex, Claude Code, Gemini CLI, Cline, Roo Code, and OpenCode usage from their native local stores. Include only sessions whose recorded project directory or project hash belongs to the requested root.",
     "- Use the last cumulative Codex token-count event; deduplicate Claude streaming records; aggregate Gemini per-message counters and Cline/Roo API request metrics; read OpenCode's session ledger in read-only mode; aggregate generic usage records by provider and model.",
     "- Preserve provider-native usage semantics: OpenAI cached input is a subset of input, while Anthropic cache buckets are disjoint. Reasoning tokens are a subset of output.",
-    "- Read effort from recorded request, message, payload, metadata, or settings fields. Normalize Claude Code ultracode to xhigh. For effort-capable Claude models whose response transcript omits the request field, report high as the documented provider default and retain that provenance internally as provider-default; leave unsupported Claude models unavailable.",
+    "- Read effort only from discoverable request, message, payload, metadata, or settings fields and group Claude usage by model and recorded effort. Normalize Claude Code ultracode to xhigh. Never infer a missing effort from current settings or model defaults; report it as n/a.",
     "- Measure wall time from the first to last distinct timestamp observed for a thread. Estimate active time by summing consecutive timestamp gaps with each gap capped at five minutes; report both as unavailable when fewer than two distinct timestamps exist.",
     "- Starting from the exactly selected task, recursively include Codex sessions whose native metadata identifies the selected task or an included descendant as their parent. Do not infer sub-agent relationships from working directories, timestamps, or fork metadata alone.",
     "- Retain explicitly linked sub-agent sessions even when cumulative token usage is unavailable; show their token and cost fields as unavailable rather than silently omitting the task.",

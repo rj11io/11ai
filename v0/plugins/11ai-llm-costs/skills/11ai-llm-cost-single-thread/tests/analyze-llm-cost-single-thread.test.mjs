@@ -35,7 +35,7 @@ try {
 
   writeJsonl(join(codexHome, "sessions", "selected.jsonl"), [
     { timestamp: "2026-07-19T10:00:00.000Z", type: "session_meta", payload: { id: "selected-thread", cwd: project } },
-    { timestamp: "2026-07-19T10:02:00.000Z", type: "turn_context", payload: { model: "gpt-5.6-sol", effort: "xhigh" } },
+    { timestamp: "2026-07-19T10:02:00.000Z", type: "turn_context", payload: { model: "gpt-5.6-sol", effort: "ultra" } },
     { timestamp: "2026-07-19T10:10:00.000Z", type: "event_msg", payload: { type: "token_count", info: { total_token_usage: { input_tokens: 1000, cached_input_tokens: 400, output_tokens: 100, reasoning_output_tokens: 30, total_tokens: 1100 } } } },
   ])
   writeJsonl(join(codexHome, "sessions", "child.jsonl"), [
@@ -79,7 +79,7 @@ try {
   assert.match(markdown, /^## Cost by model by effort$/m)
   const levelTwoHeadings = markdown.match(/^## .+$/gm) ?? []
   assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Cost by model") + 1], "## Cost by model by effort")
-  assert.match(markdown, /\| openai \/ gpt-5\.6-sol \| xhigh \| 1 \| 1,000 \| 400 \| 100 \| 1,100 \|/)
+  assert.match(markdown, /\| openai \/ gpt-5\.6-sol \| ultra \| 1 \| 1,000 \| 400 \| 100 \| 1,100 \|/)
   assert.match(markdown, /\| Selected root threads \| 1 \|/)
   assert.match(markdown, /\| Included sub-agent threads \| 2 \|/)
   assert.match(markdown, /\| Sum of thread wall time \| 12m 30s \|/)
