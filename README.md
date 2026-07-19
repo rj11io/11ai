@@ -42,7 +42,7 @@ The files are installed at `node_modules/@rj11io/11ai/v0/plugins/`. You can also
 
 ## Skill catalog
 
-The repository currently contains 154 skills in 20 plugins.
+The repository currently contains 155 skills in 20 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
@@ -64,7 +64,7 @@ The repository currently contains 154 skills in 20 plugins.
 | [Super](./v0/plugins/11ai-super/README.md) | 8 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
 | [Security](./v0/plugins/11ai-security/README.md) | 1 | Read-only dependency vulnerability and supply-chain auditing with critical host-harm triage |
 | [Utilities](./v0/plugins/11ai-utils/README.md) | 8 | Code-quality review and improvement, Markdown compression, reverse engineering, critique, analytics, publication CMS, calls to action, and project sites |
-| [Web design](./v0/plugins/11ai-web-design/README.md) | 2 | The 11ai visual language and deliberate content-led styling for accessible web interfaces |
+| [Web design](./v0/plugins/11ai-web-design/README.md) | 3 | The 11ai visual language and deliberate content-led styling for accessible web interfaces |
 | [Cross-harness](./v0/plugins/11ai-xharness/README.md) | 2 | Delegating work to agents running in other CLI harnesses |
 
 Start with a plugin's README to choose a skill, then name that skill in your request. Skills provide instructions and examples; they do not install the application dependencies used in those examples by themselves.
@@ -94,7 +94,7 @@ v0/
     11ai-super/               8 iterative task and improvement skills under skills/
     11ai-security/            1 dependency security audit skill under skills/
     11ai-utils/               8 utility skills under skills/
-    11ai-web-design/          2 web design skills under skills/
+    11ai-web-design/          3 web design skills under skills/
     11ai-xharness/            2 cross-harness skills under skills/
   scripts/                    Package validation, release, and publishing helpers
   www/                        Next.js project site
