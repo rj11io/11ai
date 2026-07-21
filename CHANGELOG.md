@@ -1,3 +1,17 @@
+# [1.22.0](https://github.com/rj11io/11ai/compare/v1.21.0...v1.22.0) (2026-07-21)
+
+
+### Bug Fixes
+
+* format dollar values ([46c8405](https://github.com/rj11io/11ai/commit/46c84055f81d3530c081c9400bb695e7a1a22391))
+* merge conflicts ([408f7a5](https://github.com/rj11io/11ai/commit/408f7a5166d0098e8a08356f46dd443c59e40262))
+* skill validation ([f94387c](https://github.com/rj11io/11ai/commit/f94387cd06e7bc43d8229295188b72c2a3745582))
+
+
+### Features
+
+* improve llm cost skills ([89a7232](https://github.com/rj11io/11ai/commit/89a7232d0de2e9d2979de47e419552b2af3fbb8d))
+
 # [1.21.0](https://github.com/rj11io/11ai/compare/v1.20.1...v1.21.0) (2026-07-19)
 
 
