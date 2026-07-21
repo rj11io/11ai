@@ -1,6 +1,6 @@
 ---
 name: 11ai-llm-cost-pricing-update
-description: Refresh the canonical token-pricing catalog used by the 11ai LLM cost reports from official AI-lab sources, synchronize the project, global, and single-thread copies, and validate their schemas and equality. Use when model prices, model aliases, pricing dates, providers, or pricing caveats have changed, or when adding pricing support for another AI lab.
+description: "Refresh the canonical token-pricing catalog used by the 11ai LLM cost reports from official AI-lab sources, synchronize the project, global, and single-thread copies, and validate their schemas and equality. Use when model prices, model aliases, pricing dates, providers, or pricing caveats have changed, or when adding pricing support for another AI lab."
 ---
 
 # 11ai LLM Cost Pricing Update

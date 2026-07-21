@@ -42,7 +42,7 @@ The files are installed at `node_modules/@rj11io/11ai/v0/plugins/`. You can also
 
 ## Skill catalog
 
-The repository currently contains 155 skills in 20 plugins.
+The repository currently contains 156 skills in 20 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
@@ -58,7 +58,7 @@ The repository currently contains 155 skills in 20 plugins.
 | [Git operations](./v0/plugins/11ai-git-operations/README.md) | 12 | Modular, safety-first skills for common Git operations, repository workflows, learning, and troubleshooting |
 | [Integrations](./v0/plugins/11ai-integrations/README.md) | 3 | Adding Convex, WorkOS AuthKit, or both to Next.js applications |
 | [Jest operations](./v0/plugins/11ai-jest-operations/README.md) | 12 | Inspecting, running, configuring, and troubleshooting common Jest operations |
-| [LLM costs](./v0/plugins/11ai-llm-costs/README.md) | 3 | Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports |
+| [LLM costs](./v0/plugins/11ai-llm-costs/README.md) | 4 | Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports |
 | [MongoDB operations](./v0/plugins/11ai-mongodb-operations/README.md) | 10 | Common MongoDB Shell and Database Tools work with read-first safety checks |
 | [Node.js API operations](./v0/plugins/11ai-nodejs-api-operations/README.md) | 10 | Inspecting, changing, testing, and troubleshooting Node.js APIs across common frameworks |
 | [Super](./v0/plugins/11ai-super/README.md) | 8 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
@@ -88,7 +88,7 @@ v0/
     11ai-git-operations/      12 Git operation and workflow skills under skills/
     11ai-integrations/        3 integration skills under skills/
     11ai-jest-operations/     12 Jest operation skills under skills/
-    11ai-llm-costs/           3 LLM cost, effort, and timing skills under skills/
+    11ai-llm-costs/           4 LLM cost, effort, and timing skills under skills/
     11ai-mongodb-operations/  10 MongoDB operation skills under skills/
     11ai-nodejs-api-operations/ 10 Node.js API operation skills under skills/
     11ai-super/               8 iterative task and improvement skills under skills/
