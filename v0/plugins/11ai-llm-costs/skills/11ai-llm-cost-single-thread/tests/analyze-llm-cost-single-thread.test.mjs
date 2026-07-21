@@ -41,7 +41,7 @@ try {
   writeJsonl(join(codexHome, "sessions", "child.jsonl"), [
     { timestamp: "2026-07-19T10:03:00.000Z", type: "session_meta", payload: { id: "child-thread", cwd: project, thread_source: "subagent", parent_thread_id: "selected-thread", source: { subagent: { thread_spawn: { parent_thread_id: "selected-thread", depth: 1 } } } } },
     { timestamp: "2026-07-19T10:04:00.000Z", type: "turn_context", payload: { model: "gpt-5.6-sol", effort: "high" } },
-    { timestamp: "2026-07-19T10:05:00.000Z", type: "event_msg", payload: { type: "token_count", info: { total_token_usage: { input_tokens: 250, cached_input_tokens: 100, output_tokens: 50, reasoning_output_tokens: 10, total_tokens: 300 } } } },
+    { timestamp: "2026-07-19T10:05:00.000Z", type: "event_msg", payload: { type: "token_count", info: { total_token_usage: { input_tokens: 246900000, cached_input_tokens: 0, output_tokens: 0, reasoning_output_tokens: 0, total_tokens: 246900000 } } } },
   ])
   writeJsonl(join(codexHome, "sessions", "grandchild-without-usage.jsonl"), [
     { timestamp: "2026-07-19T10:04:15.000Z", type: "session_meta", payload: { id: "grandchild-thread", cwd: project, thread_source: "subagent", parent_thread_id: "child-thread", source: { subagent: { thread_spawn: { parent_thread_id: "child-thread", depth: 2 } } } } },
@@ -90,7 +90,8 @@ try {
   assert.match(markdown, /\| Provider \/ model \| Effort \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \|/)
   assert.match(markdown, /\| Folder \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Priced \| Unpriced \|/)
   assert.match(markdown, /\| Thread \| Relationship \| Parent thread \| Source \| Provider \/ model \/ effort \| Input \| Cached \| Output \| Tokens \| Selected cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Harness reported \| Method \|/)
-  assert.match(markdown, /\| Cost \/ thread \| \$0\./)
+  assert.match(markdown, /\| Cost \/ thread \| \$[\d,]+\./)
+  assert.match(markdown, /\$1,234\.\d{4}/)
   assert.match(markdown, /Sub-agent \(depth 1\)/)
   assert.match(markdown, /Sub-agent \(depth 2\)/)
   assert.match(markdown, /child\.jsonl/)

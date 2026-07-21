@@ -834,7 +834,7 @@ function fmtInt(value) {
 }
 
 function fmtUsd(value) {
-  return finite(value) ? `$${value.toFixed(4)}` : "n/a"
+  return finite(value) ? `$${value.toLocaleString("en-US", { minimumFractionDigits: 4, maximumFractionDigits: 4 })}` : "n/a"
 }
 
 function fmtDurationMs(value) {

@@ -69,8 +69,9 @@ try {
   mkdirSync(supplemental, { recursive: true })
   writeFileSync(join(supplemental, "undated.json"), JSON.stringify({
     id: "generic-undated",
-    provider: "openai",
-    model: "gpt-5.6-sol",
+    provider: "other",
+    model: "custom-model",
+    cost_usd: 1234.5,
     usage: { input_tokens: 100, output_tokens: 20, total_tokens: 120 },
   }))
 
@@ -112,8 +113,9 @@ try {
   assert.match(markdown, /\| Provider \/ model \| Effort \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \|/)
   assert.match(markdown, /\| Workspace \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Priced \| Unpriced \|/)
   assert.match(markdown, /\| Thread \| Source \| Workspace \| Provider \/ model \/ effort \| Attributed at \| Input \| Cached \| Output \| Tokens \| Selected cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Harness reported \| Method \|/)
-  assert.match(markdown, /\| Cost \/ thread \| \$0\./)
-  assert.match(markdown, /\| Total \| \$\d+\.\d+ \| [\d,]+ \| [\d,]+ \| \$\d+\.\d+ \| [\d,]+ \| \$\d+\.\d+ \| [\d,]+ \| \$\d+\.\d+ \| 8 \|/)
+  assert.match(markdown, /\| Cost \/ thread \| \$[\d,]+\./)
+  assert.match(markdown, /\| Total \| \$[\d,]+\.\d+ \| [\d,]+ \| [\d,]+ \| \$[\d,]+\.\d+ \| [\d,]+ \| \$[\d,]+\.\d+ \| [\d,]+ \| \$[\d,]+\.\d+ \| 8 \|/)
+  assert.match(markdown, /\$1,234\.\d{4}/)
   assert.match(markdown, /Scope: Codex: explicit override; Claude: explicit override; Gemini: explicit override/)
   assert.match(markdown, /^## Year to date$/m)
   assert.match(markdown, /^## Month to date$/m)
