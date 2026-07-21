@@ -358,10 +358,22 @@ function modelFrom(record, usage) {
 
 function providerFrom(record, usage, model = modelFrom(record, usage)) {
   const explicit = firstValue(record?.provider, record?.providerID, record?.providerId, record?.info?.providerID, record?.info?.providerId, record?.payload?.provider, usage?.provider)
-  if (explicit) return String(explicit).toLowerCase()
+  if (explicit) {
+    const provider = String(explicit).toLowerCase()
+    if (["google-ai", "google-generative-ai", "vertex", "vertexai"].includes(provider)) return "google"
+    if (["x.ai", "x-ai"].includes(provider)) return "xai"
+    if (provider === "deepseek-ai") return "deepseek"
+    if (provider === "mistralai") return "mistral"
+    return provider
+  }
   if (String(model).toLowerCase().startsWith("claude")) return "anthropic"
   if (/^(gpt|o[1-9]|chatgpt)/i.test(String(model))) return "openai"
   if (/^gemini/i.test(String(model))) return "google"
+  if (/^grok/i.test(String(model))) return "xai"
+  if (/^deepseek/i.test(String(model))) return "deepseek"
+  if (/^(mistral|codestral|devstral|magistral|ministral|open-mistral)/i.test(String(model))) return "mistral"
+  if (/^command-/i.test(String(model))) return "cohere"
+  if (/^sonar/i.test(String(model))) return "perplexity"
   if (usage && ("cache_creation_input_tokens" in usage || "cache_read_input_tokens" in usage)) return "anthropic"
   return "unknown"
 }
@@ -806,7 +818,7 @@ function priceThread(thread) {
     cost.totalUsd = thread.reportedCostUsd
     return {
       cost,
-      pricing: { provider: rate.provider ?? thread.provider, match: rate.match, per1M: p, effectiveDate: rate.effectiveDate ?? null, sourceUrl: rate.sourceUrl ?? null, verifiedAt: rate.verifiedAt ?? null, ageDays: pricingAgeDays(rate) },
+      pricing: { provider: rate.provider ?? thread.provider, match: rate.match, per1M: p, effectiveDate: rate.effectiveDate ?? null, sourceUrl: rate.sourceUrl ?? null, verifiedAt: rate.verifiedAt ?? null, notes: rate.notes ?? null, ageDays: pricingAgeDays(rate) },
       pricingStatus: "reported",
       costMethod: "reported",
     }
@@ -814,7 +826,7 @@ function priceThread(thread) {
   const age = pricingAgeDays(rate)
   return {
     cost,
-    pricing: { provider: rate.provider ?? thread.provider, match: rate.match, per1M: p, effectiveDate: rate.effectiveDate ?? null, sourceUrl: rate.sourceUrl ?? null, verifiedAt: rate.verifiedAt ?? null, ageDays: age },
+    pricing: { provider: rate.provider ?? thread.provider, match: rate.match, per1M: p, effectiveDate: rate.effectiveDate ?? null, sourceUrl: rate.sourceUrl ?? null, verifiedAt: rate.verifiedAt ?? null, notes: rate.notes ?? null, ageDays: age },
     pricingStatus: cost.totalUsd === null ? "partial" : age !== null && age > 30 ? "matched-stale" : "matched",
     costMethod: cost.totalUsd === null ? "partial" : "derived",
   }
@@ -823,6 +835,11 @@ function priceThread(thread) {
 function rollup(items) {
   const tokenValues = items.map((item) => item.tokens.providerTotal)
   const costValues = items.map((item) => item.cost.totalUsd)
+  const inputCostValues = items.map((item) => {
+    const values = [item.cost.inputUncachedUsd, item.cost.cachedInputReadUsd, item.cost.cacheWrite5mUsd, item.cost.cacheWrite1hUsd]
+    return values.some(finite) ? sumKnown(values) : null
+  })
+  const outputCostValues = items.map((item) => item.cost.outputUsd)
   const wallValues = items.map((item) => item.wallTimeMs)
   const activeValues = items.map((item) => item.activeTimeMs)
   return {
@@ -831,6 +848,8 @@ function rollup(items) {
     knownCostThreads: costValues.filter(finite).length,
     tokens: tokenValues.some(finite) ? sumKnown(tokenValues) : null,
     costUsd: costValues.some(finite) ? sumKnown(costValues) : null,
+    inputCostUsd: inputCostValues.some(finite) ? sumKnown(inputCostValues) : null,
+    outputCostUsd: outputCostValues.some(finite) ? sumKnown(outputCostValues) : null,
     knownWallThreads: wallValues.filter(finite).length,
     knownActiveThreads: activeValues.filter(finite).length,
     wallTimeMs: wallValues.some(finite) ? sumKnown(wallValues) : null,
@@ -871,6 +890,32 @@ function fmtUsdPerActiveHour(costUsd, activeTimeMs) {
 
 function fmtUsdPerThread(costUsd, threadCount) {
   return finite(costUsd) && finite(threadCount) && threadCount > 0 ? fmtUsd(costUsd / threadCount) : "n/a"
+}
+
+function fmtUsdPerMillionTokens(costUsd, tokens) {
+  return finite(costUsd) && finite(tokens) && tokens > 0 ? fmtUsd(costUsd / tokens * 1_000_000) : "n/a"
+}
+
+const COST_BY_HEADERS = ["Cost", "Input", "Cached", "Input cost", "Output", "Output cost", "Tokens", "Cost / 1M tokens", "Threads", "Cost / thread", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour"]
+
+function costByValues(items) {
+  const result = rollup(items)
+  return [
+    fmtUsd(result.costUsd),
+    fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))),
+    fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))),
+    fmtUsd(result.inputCostUsd),
+    fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))),
+    fmtUsd(result.outputCostUsd),
+    fmtInt(result.tokens),
+    fmtUsdPerMillionTokens(result.costUsd, result.tokens),
+    fmtInt(result.threadCount),
+    fmtUsdPerThread(result.costUsd, result.threadCount),
+    fmtDurationMs(result.activeTimeMs),
+    fmtUsdPerActiveHour(result.costUsd, result.activeTimeMs),
+    fmtDurationMs(result.wallTimeMs),
+    fmtUsdPerActiveHour(result.costUsd, result.wallTimeMs),
+  ]
 }
 
 function fmtPct(numerator, denominator) {
@@ -969,41 +1014,37 @@ function windowSection(definition, threads) {
     "",
     "### Cost by provider",
     "",
-    noRows("No threads fall in this period.") ?? table(["Provider", "Threads", "Input", "Cached", "Output", "Tokens", "Known cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Cost / thread", "Priced", "Unpriced"], [...providers.map(([key, items]) => {
+    noRows("No threads fall in this period.") ?? table(["Provider", ...COST_BY_HEADERS, "Priced", "Unpriced"], [...providers.map(([key, items]) => {
       const r = rollup(items)
-      return [key, fmtInt(r.threadCount), fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))), fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))), fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs), fmtDurationMs(r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerThread(r.costUsd, r.threadCount), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
-    }), ["Total", fmtInt(total.threadCount), fmtInt(inputTotal), fmtInt(cachedInput), fmtInt(outputTotal), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs), fmtDurationMs(total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerThread(total.costUsd, total.threadCount), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
+      return [key, ...costByValues(items), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
+    }), ["Total", ...costByValues(threads), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
     "### Cost by harness",
     "",
-    noRows("No threads fall in this period.") ?? table(["Harness", "Threads", "Input", "Cached", "Output", "Tokens", "Known cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Cost / thread", "Reported-cost sum", "Average tokens / thread", "Priced", "Unpriced"], [...harnesses.map(([key, items]) => {
+    noRows("No threads fall in this period.") ?? table(["Harness", ...COST_BY_HEADERS, "Reported-cost sum", "Average tokens / thread", "Priced", "Unpriced"], [...harnesses.map(([key, items]) => {
       const r = rollup(items)
-      return [key, fmtInt(r.threadCount), fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))), fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))), fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs), fmtDurationMs(r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerThread(r.costUsd, r.threadCount), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount ? r.tokens / r.threadCount : null), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
-    }), ["Total", fmtInt(total.threadCount), fmtInt(inputTotal), fmtInt(cachedInput), fmtInt(outputTotal), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs), fmtDurationMs(total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerThread(total.costUsd, total.threadCount), fmtUsd(sumReported(threads.map((item) => item.reportedCostUsd))), fmtInt(total.threadCount ? total.tokens / total.threadCount : null), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
+      return [key, ...costByValues(items), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount ? r.tokens / r.threadCount : null), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
+    }), ["Total", ...costByValues(threads), fmtUsd(sumReported(threads.map((item) => item.reportedCostUsd))), fmtInt(total.threadCount ? total.tokens / total.threadCount : null), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
     "### Cost by model",
     "",
-    noRows("No threads fall in this period.") ?? table(["Provider / model", "Threads", "Input", "Cached", "Output", "Tokens", "Cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Cost / thread"], [...models.map(([key, items]) => {
-      const r = rollup(items)
-      return [key, fmtInt(items.length), fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))), fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))), fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs), fmtDurationMs(r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerThread(r.costUsd, r.threadCount)]
-    }), ["Total", fmtInt(total.threadCount), fmtInt(inputTotal), fmtInt(cachedInput), fmtInt(outputTotal), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs), fmtDurationMs(total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerThread(total.costUsd, total.threadCount)]]),
+    noRows("No threads fall in this period.") ?? table(["Provider / model", ...COST_BY_HEADERS], [...models.map(([key, items]) => [key, ...costByValues(items)]), ["Total", ...costByValues(threads)]]),
     "",
     "### Cost by model by effort",
     "",
-    noRows("No threads fall in this period.") ?? table(["Provider / model", "Effort", "Threads", "Input", "Cached", "Output", "Tokens", "Known cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Cost / thread"], [...modelEfforts.map(([key, items]) => {
+    noRows("No threads fall in this period.") ?? table(["Provider / model", "Effort", ...COST_BY_HEADERS], [...modelEfforts.map(([key, items]) => {
       const [model, effort] = key.split("\u0000")
-      const r = rollup(items)
-      return [model, effort, fmtInt(r.threadCount), fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))), fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))), fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs), fmtDurationMs(r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerThread(r.costUsd, r.threadCount)]
-    }), ["Total", "All efforts", fmtInt(total.threadCount), fmtInt(inputTotal), fmtInt(cachedInput), fmtInt(outputTotal), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs), fmtDurationMs(total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerThread(total.costUsd, total.threadCount)]]),
+      return [model, effort, ...costByValues(items)]
+    }), ["Total", "All efforts", ...costByValues(threads)]]),
     "",
     "### Cost by workspace",
     "",
     "Workspace comes from a native session's recorded working directory; supplemental logs are grouped by included root.",
     "",
-    noRows("No threads fall in this period.") ?? table(["Workspace", "Threads", "Input", "Cached", "Output", "Tokens", "Known cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Cost / thread", "Priced", "Unpriced"], [...workspaces.map(([key, items]) => {
+    noRows("No threads fall in this period.") ?? table(["Workspace", ...COST_BY_HEADERS, "Priced", "Unpriced"], [...workspaces.map(([key, items]) => {
       const r = rollup(items)
-      return [key, fmtInt(r.threadCount), fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))), fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))), fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))), fmtInt(r.tokens), fmtUsd(r.costUsd), fmtDurationMs(r.activeTimeMs), fmtUsdPerActiveHour(r.costUsd, r.activeTimeMs), fmtDurationMs(r.wallTimeMs), fmtUsdPerActiveHour(r.costUsd, r.wallTimeMs), fmtUsdPerThread(r.costUsd, r.threadCount), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
-    }), ["Total", fmtInt(total.threadCount), fmtInt(inputTotal), fmtInt(cachedInput), fmtInt(outputTotal), fmtInt(total.tokens), fmtUsd(total.costUsd), fmtDurationMs(total.activeTimeMs), fmtUsdPerActiveHour(total.costUsd, total.activeTimeMs), fmtDurationMs(total.wallTimeMs), fmtUsdPerActiveHour(total.costUsd, total.wallTimeMs), fmtUsdPerThread(total.costUsd, total.threadCount), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
+      return [key, ...costByValues(items), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
+    }), ["Total", ...costByValues(threads), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
     "### Token composition",
     "",
@@ -1100,10 +1141,10 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "",
     "### Pricing catalog match detail",
     "",
-    pricingRows.length ? table(["Provider / model", "Match", "Rates per 1M", "Effective", "Verified", "Source"], pricingRows.map(([key, items]) => {
+    pricingRows.length ? table(["Provider / model", "Match", "Rates per 1M", "Effective", "Verified", "Notes", "Source"], pricingRows.map(([key, items]) => {
       const pricing = items[0].pricing
       const rates = Object.entries(pricing.per1M ?? {}).map(([name, value]) => `${name}=${value === null ? "n/a" : value}`).join(", ")
-      return [key, (pricing.match ?? []).join(", "), rates, pricing.effectiveDate ?? "n/a", pricing.verifiedAt ?? "n/a", pricing.sourceUrl ?? "n/a"]
+      return [key, (pricing.match ?? []).join(", "), rates, pricing.effectiveDate ?? "n/a", pricing.verifiedAt ?? "n/a", pricing.notes ?? "Standard real-time text-token rates.", pricing.sourceUrl ?? "n/a"]
     })) : "No model matched the available pricing catalogs.",
     "",
     "Update the pricing override and rerun when rates are stale or unmatched.",
