@@ -1,3 +1,10 @@
+# [1.21.0](https://github.com/rj11io/11ai/compare/v1.20.1...v1.21.0) (2026-07-19)
+
+
+### Features
+
+* modern ui skill ([cf0da64](https://github.com/rj11io/11ai/commit/cf0da6421752498860ba00223e57b7caac0c339e))
+
 ## [1.20.1](https://github.com/rj11io/11ai/compare/v1.20.0...v1.20.1) (2026-07-19)
 
 
