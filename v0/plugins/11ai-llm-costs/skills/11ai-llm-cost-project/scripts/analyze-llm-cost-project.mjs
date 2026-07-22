@@ -1155,7 +1155,7 @@ function htmlReport(markdown) {
       const level = heading[1].length
       if (level === 1) {
         closeAllSections()
-        body.push(`<h1>${inlineHtml(heading[2])}</h1>`)
+        body.push(`<h1>${inlineHtml(heading[2])} <span class="powered-by"><a href="${reportSkillUrl}" target="_blank" rel="noopener noreferrer">powered by ${reportSkillName}</a></span></h1>`)
       } else {
         closeSectionsThrough(level)
         body.push(`<details class="report-section level-${level}"><summary><span class="section-title">${inlineHtml(heading[2])}</span></summary><div class="section-body">`)
@@ -1228,6 +1228,9 @@ function htmlReport(markdown) {
     body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     main { width: 100%; margin: 0; padding: 16px 20px 24px; background: transparent; }
     h1 { margin: 0 0 .75rem; font-size: clamp(1.65rem, 3vw, 2.4rem); letter-spacing: -.035em; }
+    .powered-by { display: inline-block; margin-left: .35rem; font-size: .38em; font-weight: 500; letter-spacing: 0; white-space: nowrap; vertical-align: middle; }
+    .powered-by a { color: var(--muted); text-decoration: none; }
+    .powered-by a:hover, .powered-by a:focus-visible { color: var(--accent); text-decoration: underline; }
     .report-section { margin: .55rem 0; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: color-mix(in srgb, var(--card) 96%, var(--accent)); }
     .report-section.level-2 { margin-top: .8rem; }
     .report-section.level-3 { margin: .45rem 0; }

@@ -29,7 +29,9 @@ for (let index = 0; index < argv.length; index += 1) {
 const generatedAt = new Date().toISOString()
 const generatedTime = new Date(generatedAt)
 const filenameTimestamp = generatedAt.replaceAll(":", "-").replaceAll(".", "-")
-const reportName = `11ai-llm-cost-global-${filenameTimestamp}`
+const reportSkillName = "11ai-llm-cost-global"
+const reportSkillUrl = `https://ai.rj11.io/skills/${reportSkillName}`
+const reportName = `${reportSkillName}-${filenameTimestamp}`
 const reportPackageName = `11ai-llm-cost-global-reports-${filenameTimestamp}`
 const explicitOutputDir = option("--output-dir") ?? option("--output")
 if (option("--output-dir") && option("--output")) throw new Error("use either --output or --output-dir, not both")
@@ -935,11 +937,13 @@ function windowDefinitions() {
   const yearStart = new Date(generatedTime.getFullYear(), 0, 1)
   const monthStart = new Date(generatedTime.getFullYear(), generatedTime.getMonth(), 1)
   const past7Start = new Date(generatedTime.getTime() - 7 * 24 * 60 * 60 * 1000)
+  const past30Start = new Date(generatedTime.getTime() - 30 * 24 * 60 * 60 * 1000)
   return [
-    { title: "All time", start: null, description: "Every recognized thread, including threads without a usable timestamp." },
-    { title: "Year to date", start: yearStart, description: `Threads attributed from ${yearStart.toISOString()} through ${generatedAt}.` },
-    { title: "Month to date", start: monthStart, description: `Threads attributed from ${monthStart.toISOString()} through ${generatedAt}.` },
     { title: "Past 7 days", start: past7Start, description: `Threads attributed from ${past7Start.toISOString()} through ${generatedAt}.` },
+    { title: "Past 30 days", start: past30Start, description: `Threads attributed from ${past30Start.toISOString()} through ${generatedAt}.` },
+    { title: "Month to date", start: monthStart, description: `Threads attributed from ${monthStart.toISOString()} through ${generatedAt}.` },
+    { title: "Year to date", start: yearStart, description: `Threads attributed from ${yearStart.toISOString()} through ${generatedAt}.` },
+    { title: "All time", start: null, description: "Every recognized thread, including threads without a usable timestamp." },
   ]
 }
 
@@ -950,15 +954,38 @@ function threadTime(thread) {
   return Number.isNaN(date.getTime()) ? null : date
 }
 
-function threadsForWindow(threads, start) {
-  if (!start) return threads
+function monthlyDefinitions(threads) {
+  const months = new Map()
+  for (const thread of threads) {
+    const date = threadTime(thread)
+    if (!date || date > generatedTime) continue
+    const year = date.getFullYear()
+    const month = date.getMonth()
+    const key = `${year}-${String(month + 1).padStart(2, "0")}`
+    if (months.has(key)) continue
+    const start = new Date(year, month, 1)
+    const end = new Date(year, month + 1, 1)
+    months.set(key, {
+      title: start.toLocaleString("en-US", { month: "long", year: "numeric" }),
+      start,
+      end,
+      description: `Threads attributed to the local calendar month from ${start.toISOString()} up to ${end.toISOString()} (exclusive).`,
+    })
+  }
+  return [...months.values()].sort((a, b) => b.start - a.start)
+}
+
+function threadsForDefinition(threads, definition) {
+  if (!definition.start) return threads
   return threads.filter((thread) => {
     const date = threadTime(thread)
-    return date && date >= start && date <= generatedTime
+    return date && date >= definition.start && date <= generatedTime && (!definition.end || date < definition.end)
   })
 }
 
-function windowSection(definition, threads) {
+function windowSection(definition, threads, headingLevel = 2) {
+  const heading = "#".repeat(headingLevel)
+  const subheading = "#".repeat(headingLevel + 1)
   const total = rollup(threads)
   const priced = threads.filter((thread) => thread.costMethod === "derived")
   const reported = threads.filter((thread) => thread.costMethod === "reported")
@@ -981,11 +1008,11 @@ function windowSection(definition, threads) {
   const noRows = (message) => threads.length ? null : message
 
   return [
-    `## ${definition.title}`,
+    `${heading} ${definition.title}`,
     "",
     definition.description,
     "",
-    "### Totals",
+    `${subheading} Totals`,
     "",
     table(["Metric", "Value"], [
       ["Threads recognized", fmtInt(total.threadCount)],
@@ -1012,32 +1039,32 @@ function windowSection(definition, threads) {
     "",
     "The known-cost total includes derived API-equivalent prices and harness-reported costs. It is not necessarily an invoice, especially for subscription, enterprise, batch, priority, or negotiated usage.",
     "",
-    "### Cost by provider",
+    `${subheading} Cost by provider`,
     "",
     noRows("No threads fall in this period.") ?? table(["Provider", ...COST_BY_HEADERS, "Priced", "Unpriced"], [...providers.map(([key, items]) => {
       const r = rollup(items)
       return [key, ...costByValues(items), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
     }), ["Total", ...costByValues(threads), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
-    "### Cost by harness",
+    `${subheading} Cost by harness`,
     "",
     noRows("No threads fall in this period.") ?? table(["Harness", ...COST_BY_HEADERS, "Reported-cost sum", "Average tokens / thread", "Priced", "Unpriced"], [...harnesses.map(([key, items]) => {
       const r = rollup(items)
       return [key, ...costByValues(items), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount ? r.tokens / r.threadCount : null), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
     }), ["Total", ...costByValues(threads), fmtUsd(sumReported(threads.map((item) => item.reportedCostUsd))), fmtInt(total.threadCount ? total.tokens / total.threadCount : null), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
-    "### Cost by model",
+    `${subheading} Cost by model`,
     "",
     noRows("No threads fall in this period.") ?? table(["Provider / model", ...COST_BY_HEADERS], [...models.map(([key, items]) => [key, ...costByValues(items)]), ["Total", ...costByValues(threads)]]),
     "",
-    "### Cost by model by effort",
+    `${subheading} Cost by model by effort`,
     "",
     noRows("No threads fall in this period.") ?? table(["Provider / model", "Effort", ...COST_BY_HEADERS], [...modelEfforts.map(([key, items]) => {
       const [model, effort] = key.split("\u0000")
       return [model, effort, ...costByValues(items)]
     }), ["Total", "All efforts", ...costByValues(threads)]]),
     "",
-    "### Cost by workspace",
+    `${subheading} Cost by workspace`,
     "",
     "Workspace comes from a native session's recorded working directory; supplemental logs are grouped by included root.",
     "",
@@ -1046,7 +1073,7 @@ function windowSection(definition, threads) {
       return [key, ...costByValues(items), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
     }), ["Total", ...costByValues(threads), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
-    "### Token composition",
+    `${subheading} Token composition`,
     "",
     table(["Token class", "Tokens", "Share of available total", "Meaning"], [
       ["Uncached input", fmtInt(sumKnown(threads.map((thread) => thread.tokens.inputUncached))), fmtPct(sumKnown(threads.map((thread) => thread.tokens.inputUncached)), inputTotal), "Input billed at the base input rate"],
@@ -1057,7 +1084,7 @@ function windowSection(definition, threads) {
       ["Reasoning output", fmtInt(reasoningTotal), fmtPct(reasoningTotal, outputTotal), "Subset of output, never added twice"],
     ]),
     "",
-    "### Thread detail",
+    `${subheading} Thread detail`,
     "",
     noRows("No threads fall in this period.") ?? table(["Thread", "Source", "Workspace", "Provider / model / effort", "Attributed at", "Input", "Cached", "Output", "Tokens", "Selected cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Harness reported", "Method"], sortedThreads.map((thread) => [
       thread.threadId,
@@ -1101,9 +1128,28 @@ function report({ threads, stats, malformed, duplicateIds }) {
   for (const file of malformed) anomalies.push(`malformed JSON ignored: ${file}`)
   for (const id of duplicateIds) anomalies.push(`logical thread identity appears in multiple source files: ${id}`)
 
+  const definitions = new Map(windowDefinitions().map((definition) => [definition.title, definition]))
+  const sectionFor = (title) => {
+    const definition = definitions.get(title)
+    return windowSection(definition, threadsForDefinition(threads, definition))
+  }
+  const months = monthlyDefinitions(threads)
+
   const lines = [
     "# Global LLM Cost Report",
     "",
+    ...sectionFor("Past 7 days"),
+    ...sectionFor("Past 30 days"),
+    ...sectionFor("Month to date"),
+    ...sectionFor("Year to date"),
+    "## Monthly reports",
+    "",
+    "Calendar-month reports use local calendar boundaries, include only months with dated activity, and appear newest first. Undated threads remain in All time only.",
+    "",
+    ...(months.length
+      ? months.flatMap((definition) => windowSection(definition, threadsForDefinition(threads, definition), 3))
+      : ["No dated threads are available for monthly reports.", ""]),
+    ...sectionFor("All time"),
     "## Scan coverage",
     "",
     table(["Coverage", "Value"], [
@@ -1127,7 +1173,6 @@ function report({ threads, stats, malformed, duplicateIds }) {
       ["Newest observed thread", threads.map((thread) => thread.finishedAt).filter(Boolean).sort().at(-1) ?? "n/a"],
     ]),
     "",
-    ...windowDefinitions().flatMap((definition) => windowSection(definition, threadsForWindow(threads, definition.start))),
     "## Pricing coverage",
     "",
     table(["Status", "Threads", "Meaning"], [
@@ -1158,7 +1203,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "- Discover Codex, Claude Code, Gemini CLI, Cline, Roo Code, and OpenCode usage in conventional native local stores for every readable local account. Do not filter by project or recorded working directory.",
     "- Recursively inspect JSON, JSONL, and NDJSON files below each explicit `--include` path, excluding dependency, VCS, cache, virtual-environment, and build directories.",
     "- Use the last cumulative Codex token-count event; deduplicate Claude streaming records; aggregate Gemini per-message counters and Cline/Roo API request metrics; read OpenCode's session ledger in read-only mode; aggregate generic usage records by provider and model.",
-    "- Attribute a whole thread to its finish timestamp, falling back to its start timestamp. All time includes undated threads; dated periods exclude them. Year-to-date and month-to-date use the machine's local calendar boundaries, while Past 7 days is a rolling 168-hour window.",
+    "- Attribute a whole thread to its finish timestamp, falling back to its start timestamp. All time includes undated threads; dated periods exclude them. Year-to-date, month-to-date, and monthly reports use the machine's local calendar boundaries. Past 7 days and Past 30 days are rolling 168-hour and 720-hour windows.",
     "- Preserve provider-native usage semantics: OpenAI cached input is a subset of input, while Anthropic cache buckets are disjoint. Reasoning tokens are a subset of output.",
     "- Read effort only from discoverable request, message, payload, metadata, or settings fields and group Claude usage by model and recorded effort. Normalize Claude Code ultracode to xhigh. Never infer a missing effort from current settings or model defaults; report it as n/a.",
     "- Measure wall time from the first to last distinct timestamp observed for a thread. Estimate active time by summing consecutive timestamp gaps with each gap capped at five minutes; report both as unavailable when fewer than two distinct timestamps exist.",
@@ -1233,12 +1278,12 @@ function htmlReport(markdown) {
       index += 1
       continue
     }
-    const heading = /^(#{1,3})\s+(.+)$/.exec(line)
+    const heading = /^(#{1,4})\s+(.+)$/.exec(line)
     if (heading) {
       const level = heading[1].length
       if (level === 1) {
         closeAllSections()
-        body.push(`<h1>${inlineHtml(heading[2])}</h1>`)
+        body.push(`<h1>${inlineHtml(heading[2])} <span class="powered-by"><a href="${reportSkillUrl}" target="_blank" rel="noopener noreferrer">powered by ${reportSkillName}</a></span></h1>`)
       } else {
         closeSectionsThrough(level)
         body.push(`<details class="report-section level-${level}"><summary><span class="section-title">${inlineHtml(heading[2])}</span></summary><div class="section-body">`)
@@ -1311,15 +1356,20 @@ function htmlReport(markdown) {
     body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     main { width: 100%; margin: 0; padding: 16px 20px 24px; background: transparent; }
     h1 { margin: 0 0 .75rem; font-size: clamp(1.65rem, 3vw, 2.4rem); letter-spacing: -.035em; }
+    .powered-by { display: inline-block; margin-left: .35rem; font-size: .38em; font-weight: 500; letter-spacing: 0; white-space: nowrap; vertical-align: middle; }
+    .powered-by a { color: var(--muted); text-decoration: none; }
+    .powered-by a:hover, .powered-by a:focus-visible { color: var(--accent); text-decoration: underline; }
     .report-section { margin: .55rem 0; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: color-mix(in srgb, var(--card) 96%, var(--accent)); }
     .report-section.level-2 { margin-top: .8rem; }
     .report-section.level-3 { margin: .45rem 0; }
+    .report-section.level-4 { margin: .35rem 0; }
     summary { display: flex; align-items: center; gap: .5rem; padding: .62rem .78rem; cursor: pointer; color: var(--text); font-weight: 750; list-style: none; user-select: none; }
     summary::-webkit-details-marker { display: none; }
     summary::before { content: "▸"; flex: 0 0 auto; color: var(--accent); transition: transform .15s ease; }
     details[open] > summary::before { transform: rotate(90deg); }
     .level-2 > summary { font-size: 1.12rem; }
     .level-3 > summary { font-size: .98rem; }
+    .level-4 > summary { font-size: .9rem; }
     .section-body { padding: 0 .78rem .72rem; border-top: 1px solid var(--line); }
     p, li { margin: .45rem 0; color: var(--muted); }
     blockquote { margin: .75rem 0; padding: .65rem .8rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); color: var(--muted); }
@@ -1505,7 +1555,12 @@ console.log(JSON.stringify({
   wallTimeMs: rollup(threads).wallTimeMs,
   activeTimeMs: rollup(threads).activeTimeMs,
   periods: Object.fromEntries(windowDefinitions().map((definition) => {
-    const items = threadsForWindow(threads, definition.start)
+    const items = threadsForDefinition(threads, definition)
+    const totals = rollup(items)
+    return [definition.title, { threads: items.length, knownTokens: totals.tokens, knownCostUsd: totals.costUsd }]
+  })),
+  monthlyReports: Object.fromEntries(monthlyDefinitions(threads).map((definition) => {
+    const items = threadsForDefinition(threads, definition)
     const totals = rollup(items)
     return [definition.title, { threads: items.length, knownTokens: totals.tokens, knownCostUsd: totals.costUsd }]
   })),

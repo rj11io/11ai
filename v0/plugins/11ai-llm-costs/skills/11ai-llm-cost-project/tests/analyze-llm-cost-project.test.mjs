@@ -132,6 +132,7 @@ try {
   const htmlSections = html.match(/<details class="report-section level-[23]">/g) ?? []
   assert.equal(htmlSections.length, (markdown.match(/^#{2,3} /gm) ?? []).length)
   assert.equal((html.match(/<\/details>/g) ?? []).length, htmlSections.length)
+  assert.match(html, /<h1>Project LLM Cost Report <span class="powered-by"><a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-project" target="_blank" rel="noopener noreferrer">powered by 11ai-llm-cost-project<\/a><\/span><\/h1>/)
   assert.match(html, /<summary><span class="section-title">Totals<\/span><\/summary>/)
   assert.match(html, /<summary><span class="section-title">Pricing catalog match detail<\/span><\/summary>/)
   assert.match(html, /<summary><span class="section-title">Cost by model by effort<\/span><\/summary>/)

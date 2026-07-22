@@ -92,19 +92,46 @@ try {
   assert.equal(summary.recognizedFiles, 8)
   assert.equal(summary.threads, 8)
   assert.equal(summary.knownCosts, 7)
+  assert.deepEqual(Object.keys(summary.periods), ["Past 7 days", "Past 30 days", "Month to date", "Year to date", "All time"])
   assert.equal(summary.periods["All time"].threads, 8)
   assert.equal(summary.periods["Past 7 days"].threads, 5)
+  assert.equal(summary.periods["Past 30 days"].threads, 5)
+  assert.ok(summary.periods["Past 30 days"].threads >= summary.periods["Past 7 days"].threads)
 
   const markdown = readFileSync(summary.markdownReport, "utf8")
   const html = readFileSync(summary.htmlReport, "utf8")
+  const recentMonth = new Date(recent).toLocaleString("en-US", { month: "long", year: "numeric" })
+  assert.equal(summary.monthlyReports[recentMonth].threads, 5)
+  assert.equal(summary.monthlyReports["January 2020"].threads, 2)
+  assert.deepEqual(markdown.match(/^## .+$/gm), [
+    "## Past 7 days",
+    "## Past 30 days",
+    "## Month to date",
+    "## Year to date",
+    "## Monthly reports",
+    "## All time",
+    "## Scan coverage",
+    "## Pricing coverage",
+    "## Anomalies and limitations",
+    "## Methodology",
+  ])
   assert.match(markdown, /^## All time$/m)
-  assert.equal((markdown.match(/^### Totals$/gm) ?? []).length, 4)
-  assert.equal((markdown.match(/^### Cost by harness$/gm) ?? []).length, 4)
-  assert.equal((markdown.match(/^### Cost by model by effort$/gm) ?? []).length, 4)
-  const reportHeadings = markdown.match(/^#{2,3} .+$/gm) ?? []
+  assert.match(markdown, new RegExp(`^### ${recentMonth}$`, "m"))
+  assert.match(markdown, /^### January 2020$/m)
+  assert.ok(markdown.indexOf(`### ${recentMonth}`) < markdown.indexOf("### January 2020"))
+  assert.equal((markdown.match(/^### Totals$/gm) ?? []).length, 5)
+  assert.equal((markdown.match(/^#### Totals$/gm) ?? []).length, 2)
+  assert.equal((markdown.match(/^### Cost by harness$/gm) ?? []).length, 5)
+  assert.equal((markdown.match(/^#### Cost by harness$/gm) ?? []).length, 2)
+  assert.equal((markdown.match(/^### Cost by model by effort$/gm) ?? []).length, 5)
+  assert.equal((markdown.match(/^#### Cost by model by effort$/gm) ?? []).length, 2)
+  const reportHeadings = markdown.match(/^#{2,4} .+$/gm) ?? []
   const modelHeadingIndexes = reportHeadings.flatMap((heading, index) => heading === "### Cost by model" ? [index] : [])
-  assert.equal(modelHeadingIndexes.length, 4)
+  assert.equal(modelHeadingIndexes.length, 5)
   for (const index of modelHeadingIndexes) assert.equal(reportHeadings[index + 1], "### Cost by model by effort")
+  const monthlyModelHeadingIndexes = reportHeadings.flatMap((heading, index) => heading === "#### Cost by model" ? [index] : [])
+  assert.equal(monthlyModelHeadingIndexes.length, 2)
+  for (const index of monthlyModelHeadingIndexes) assert.equal(reportHeadings[index + 1], "#### Cost by model by effort")
   assert.match(markdown, /\| openai \/ gpt-5\.6-sol \| high \|/)
   assert.match(markdown, /\| anthropic \/ claude-sonnet-4-6 \| n\/a \|/)
   assert.match(markdown, /\| Harness \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Reported-cost sum \| Average tokens \/ thread \| Priced \| Unpriced \|/)
@@ -120,6 +147,8 @@ try {
   assert.match(markdown, /^## Year to date$/m)
   assert.match(markdown, /^## Month to date$/m)
   assert.match(markdown, /^## Past 7 days$/m)
+  assert.match(markdown, /^## Past 30 days$/m)
+  assert.match(markdown, /^## Monthly reports$/m)
   assert.match(markdown, /codex-session\/[^/]+\/sessions\/recent\.jsonl/)
   assert.match(markdown, /codex-session\/[^/]+\/archived_sessions\/old-unrelated-workspace\.jsonl/)
   assert.match(markdown, /claude-session\/[^/]+\/projects\/fixture\/old\.jsonl/)
@@ -132,22 +161,26 @@ try {
   assert.ok(markdown.lastIndexOf("> Generated ") > markdown.indexOf("## Methodology"))
   assert.ok(markdown.lastIndexOf("> Generated ") < markdown.lastIndexOf("_LLM token cost analysis"))
   assert.doesNotMatch(markdown, new RegExp(fixtureRoot.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")))
-  const htmlSections = html.match(/<details class="report-section level-[23]">/g) ?? []
-  assert.equal(htmlSections.length, (markdown.match(/^#{2,3} /gm) ?? []).length)
+  const htmlSections = html.match(/<details class="report-section level-[234]">/g) ?? []
+  assert.equal(htmlSections.length, (markdown.match(/^#{2,4} /gm) ?? []).length)
   assert.equal((html.match(/<\/details>/g) ?? []).length, htmlSections.length)
+  assert.match(html, /<h1>Global LLM Cost Report <span class="powered-by"><a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-global" target="_blank" rel="noopener noreferrer">powered by 11ai-llm-cost-global<\/a><\/span><\/h1>/)
   assert.match(html, /<summary><span class="section-title">All time<\/span><\/summary>/)
-  assert.equal((html.match(/<summary><span class="section-title">Totals<\/span><\/summary>/g) ?? []).length, 4)
-  assert.equal((html.match(/<summary><span class="section-title">Cost by harness<\/span><\/summary>/g) ?? []).length, 4)
-  assert.equal((html.match(/<summary><span class="section-title">Cost by model by effort<\/span><\/summary>/g) ?? []).length, 4)
+  assert.equal((html.match(/<summary><span class="section-title">Totals<\/span><\/summary>/g) ?? []).length, 7)
+  assert.equal((html.match(/<summary><span class="section-title">Cost by harness<\/span><\/summary>/g) ?? []).length, 7)
+  assert.equal((html.match(/<summary><span class="section-title">Cost by model by effort<\/span><\/summary>/g) ?? []).length, 7)
   assert.match(html, /<summary><span class="section-title">Year to date<\/span><\/summary>/)
   assert.match(html, /<summary><span class="section-title">Month to date<\/span><\/summary>/)
   assert.match(html, /<summary><span class="section-title">Past 7 days<\/span><\/summary>/)
+  assert.match(html, /<summary><span class="section-title">Past 30 days<\/span><\/summary>/)
+  assert.match(html, /<summary><span class="section-title">Monthly reports<\/span><\/summary>/)
   assert.doesNotMatch(html, /<details\b[^>]*\bopen\b[^>]*>/)
   assert.match(html, /<table>/)
   assert.match(html, /codex-session\/[^/]+\/sessions\/recent\.jsonl/)
-  assert.ok(html.indexOf('class="section-title">All time</span>') < html.indexOf('class="section-title">Year to date</span>'))
-  assert.ok(html.indexOf('class="section-title">Year to date</span>') < html.indexOf('class="section-title">Month to date</span>'))
-  assert.ok(html.indexOf('class="section-title">Month to date</span>') < html.indexOf('class="section-title">Past 7 days</span>'))
+  const orderedHtmlSections = ["Past 7 days", "Past 30 days", "Month to date", "Year to date", "Monthly reports", "All time", "Scan coverage", "Pricing coverage", "Anomalies and limitations", "Methodology"]
+  for (let index = 1; index < orderedHtmlSections.length; index += 1) {
+    assert.ok(html.indexOf(`class="section-title">${orderedHtmlSections[index - 1]}</span>`) < html.indexOf(`class="section-title">${orderedHtmlSections[index]}</span>`))
+  }
   assert.match(html, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-global" target="_blank" rel="noopener noreferrer">11ai-llm-cost-global<\/a>/)
   assert.match(html, /<p class="signature"><em>LLM token cost analysis by /)
   assert.equal((html.match(/<th\b/g) ?? []).length, (html.match(/class="sort-button"/g) ?? []).length)
@@ -164,6 +197,7 @@ try {
 
   const secondSummary = run([...harnessArgs, "--include", supplemental, "--output", secondReportDir])
   assert.deepEqual(secondSummary.periods, summary.periods)
+  assert.deepEqual(secondSummary.monthlyReports, summary.monthlyReports)
   const normalizeRunTime = (value) => value
     .replace(/^> Generated .*$/m, "> Generated <run-time>")
     .replace(/^Threads attributed from .* through .*\.$/gm, "Threads attributed from <period-start> through <run-time>.")
