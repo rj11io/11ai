@@ -1,3 +1,11 @@
+# [1.23.0](https://github.com/rj11io/11ai/compare/v1.22.0...v1.23.0) (2026-07-22)
+
+
+### Features
+
+* improve reports ([a57230d](https://github.com/rj11io/11ai/commit/a57230ded9521036e094cd17652d2e5213c27f25))
+* powered by links ([826bfcb](https://github.com/rj11io/11ai/commit/826bfcb5873a1aac35f0d0e00e5a8b310313c2c9))
+
 # [1.22.0](https://github.com/rj11io/11ai/compare/v1.21.0...v1.22.0) (2026-07-21)
 
 
