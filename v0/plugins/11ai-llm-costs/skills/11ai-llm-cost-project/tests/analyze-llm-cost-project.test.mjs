@@ -97,6 +97,7 @@ try {
 
   const markdown = readFileSync(report, "utf8")
   const html = readFileSync(summary.htmlReport, "utf8")
+  assert.match(markdown, /^# Project LLM Cost Report\n\n_powered by \[11ai-llm-cost-project\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-project\)\._\n\n/)
   assert.match(markdown, /^# Project LLM Cost Report$/m)
   assert.match(markdown, /^## Totals$/m)
   assert.match(markdown, /^## Cost by harness$/m)
@@ -133,6 +134,7 @@ try {
   assert.equal(htmlSections.length, (markdown.match(/^#{2,3} /gm) ?? []).length)
   assert.equal((html.match(/<\/details>/g) ?? []).length, htmlSections.length)
   assert.match(html, /<h1>Project LLM Cost Report <span class="powered-by"><a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-project" target="_blank" rel="noopener noreferrer">powered by 11ai-llm-cost-project<\/a><\/span><\/h1>/)
+  assert.equal((html.match(/powered by 11ai-llm-cost-project/g) ?? []).length, 1)
   assert.match(html, /<summary><span class="section-title">Totals<\/span><\/summary>/)
   assert.match(html, /<summary><span class="section-title">Pricing catalog match detail<\/span><\/summary>/)
   assert.match(html, /<summary><span class="section-title">Cost by model by effort<\/span><\/summary>/)

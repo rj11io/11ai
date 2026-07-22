@@ -75,6 +75,7 @@ try {
 
   const markdown = readFileSync(summary.markdownReport, "utf8")
   const html = readFileSync(summary.htmlReport, "utf8")
+  assert.match(markdown, /^# Single-Thread LLM Cost Report\n\n_powered by \[11ai-llm-cost-single-thread\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-single-thread\)\._\n\n/)
   assert.match(markdown, /^# Single-Thread LLM Cost Report$/m)
   assert.match(markdown, /^## Cost by model by effort$/m)
   const levelTwoHeadings = markdown.match(/^## .+$/gm) ?? []
@@ -102,6 +103,7 @@ try {
   assert.ok(markdown.lastIndexOf("> Generated ") > markdown.indexOf("## Methodology"))
   assert.ok(markdown.lastIndexOf("> Generated ") < markdown.lastIndexOf("_LLM token cost analysis"))
   assert.match(html, /<h1>Single-Thread LLM Cost Report <span class="powered-by"><a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-single-thread" target="_blank" rel="noopener noreferrer">powered by 11ai-llm-cost-single-thread<\/a><\/span><\/h1>/)
+  assert.equal((html.match(/powered by 11ai-llm-cost-single-thread/g) ?? []).length, 1)
   assert.match(html, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-single-thread" target="_blank" rel="noopener noreferrer">11ai-llm-cost-single-thread<\/a>/)
   assert.doesNotMatch(html, /<details\b[^>]*\bopen\b[^>]*>/)
   assert.equal((html.match(/<th\b/g) ?? []).length, (html.match(/class="sort-button"/g) ?? []).length)

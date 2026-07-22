@@ -31,6 +31,7 @@ const generatedTime = new Date(generatedAt)
 const filenameTimestamp = generatedAt.replaceAll(":", "-").replaceAll(".", "-")
 const reportSkillName = "11ai-llm-cost-global"
 const reportSkillUrl = `https://ai.rj11.io/skills/${reportSkillName}`
+const reportPoweredBy = `_powered by [${reportSkillName}](${reportSkillUrl})._`
 const reportName = `${reportSkillName}-${filenameTimestamp}`
 const reportPackageName = `11ai-llm-cost-global-reports-${filenameTimestamp}`
 const explicitOutputDir = option("--output-dir") ?? option("--output")
@@ -1138,6 +1139,8 @@ function report({ threads, stats, malformed, duplicateIds }) {
   const lines = [
     "# Global LLM Cost Report",
     "",
+    reportPoweredBy,
+    "",
     ...sectionFor("Past 7 days"),
     ...sectionFor("Past 30 days"),
     ...sectionFor("Month to date"),
@@ -1293,6 +1296,10 @@ function htmlReport(markdown) {
       continue
     }
     const signature = line === "_LLM token cost analysis by [11ai-llm-cost-global](https://ai.rj11.io/skills/11ai-llm-cost-global)._"
+    if (line === reportPoweredBy) {
+      index += 1
+      continue
+    }
     if (signature) {
       closeAllSections()
       const signatureHtml = inlineHtml(line).replace(

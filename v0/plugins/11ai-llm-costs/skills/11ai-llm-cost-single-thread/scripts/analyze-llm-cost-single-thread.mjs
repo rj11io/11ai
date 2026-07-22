@@ -46,6 +46,7 @@ const reportName = `${reportSkillName}-${filenameTimestamp}`
 const reportsRootName = `${reportSkillName}-reports`
 const reportPackageName = `${reportsRootName}-${filenameTimestamp}`
 const reportSkillUrl = `https://ai.rj11.io/skills/${reportSkillName}`
+const reportPoweredBy = `_powered by [${reportSkillName}](${reportSkillUrl})._`
 const reportSignature = `_LLM token cost analysis by [${reportSkillName}](${reportSkillUrl})._`
 const explicitOutput = option("--output")
 const markdownOutput = resolve(explicitOutput ?? join(threadRoot, reportsRootName, reportPackageName, `${reportName}.md`))
@@ -951,6 +952,8 @@ function report({ threads, stats, malformed, duplicateIds }) {
   const lines = [
     `# ${reportTitle}`,
     "",
+    reportPoweredBy,
+    "",
     "## Totals",
     "",
     table(["Metric", "Value"], [
@@ -1188,6 +1191,10 @@ function htmlReport(markdown) {
       continue
     }
     const signature = line === reportSignature
+    if (line === reportPoweredBy) {
+      index += 1
+      continue
+    }
     if (signature) {
       closeAllSections()
       const signatureHtml = inlineHtml(line).replace(

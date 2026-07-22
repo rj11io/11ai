@@ -100,6 +100,7 @@ try {
 
   const markdown = readFileSync(summary.markdownReport, "utf8")
   const html = readFileSync(summary.htmlReport, "utf8")
+  assert.match(markdown, /^# Global LLM Cost Report\n\n_powered by \[11ai-llm-cost-global\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-global\)\._\n\n/)
   const recentMonth = new Date(recent).toLocaleString("en-US", { month: "long", year: "numeric" })
   assert.equal(summary.monthlyReports[recentMonth].threads, 5)
   assert.equal(summary.monthlyReports["January 2020"].threads, 2)
@@ -165,6 +166,7 @@ try {
   assert.equal(htmlSections.length, (markdown.match(/^#{2,4} /gm) ?? []).length)
   assert.equal((html.match(/<\/details>/g) ?? []).length, htmlSections.length)
   assert.match(html, /<h1>Global LLM Cost Report <span class="powered-by"><a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-global" target="_blank" rel="noopener noreferrer">powered by 11ai-llm-cost-global<\/a><\/span><\/h1>/)
+  assert.equal((html.match(/powered by 11ai-llm-cost-global/g) ?? []).length, 1)
   assert.match(html, /<summary><span class="section-title">All time<\/span><\/summary>/)
   assert.equal((html.match(/<summary><span class="section-title">Totals<\/span><\/summary>/g) ?? []).length, 7)
   assert.equal((html.match(/<summary><span class="section-title">Cost by harness<\/span><\/summary>/g) ?? []).length, 7)
