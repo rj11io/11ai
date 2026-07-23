@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 
-import { PluginCard } from "@/components/plugin-card"
+import { PluginCatalog } from "@/components/plugin-catalog"
 import { getPlugins, getSkillCount } from "@/lib/skills"
 
 export const metadata: Metadata = {
@@ -28,11 +28,7 @@ export default function PluginsPage() {
           then drill into the skill you need.
         </p>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {plugins.map((plugin) => (
-          <PluginCard key={plugin.slug} plugin={plugin} />
-        ))}
-      </div>
+      <PluginCatalog plugins={plugins} />
     </div>
   )
 }
