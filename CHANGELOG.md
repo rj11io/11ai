@@ -1,3 +1,15 @@
+# [1.24.0](https://github.com/rj11io/11ai/compare/v1.23.0...v1.24.0) (2026-07-23)
+
+
+### Bug Fixes
+
+* landing page copy ([2035534](https://github.com/rj11io/11ai/commit/2035534c934584ecb87ecff64df10eb61be3d867))
+
+
+### Features
+
+* plugins search bar ([5d3131c](https://github.com/rj11io/11ai/commit/5d3131c45f2f670076cff49b4108377fe6c63c56))
+
 # [1.23.0](https://github.com/rj11io/11ai/compare/v1.22.0...v1.23.0) (2026-07-22)
 
 

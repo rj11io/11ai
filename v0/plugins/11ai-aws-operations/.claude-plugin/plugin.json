@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-aws-operations",
-  "version": "1.23.0",
+  "version": "1.24.0",
   "description": "Modular, safety-first skills for common AWS CLI operations and troubleshooting.",
   "author": {
     "name": "rj11io"

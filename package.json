@@ -1,6 +1,6 @@
 {
   "name": "@rj11io/11ai",
-  "version": "1.23.0",
+  "version": "1.24.0",
   "private": false,
   "description": "AI skills and workflows",
   "main": "v0/index.js",
