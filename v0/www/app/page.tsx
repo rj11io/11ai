@@ -38,27 +38,25 @@ export default function Page() {
           {skillCount} skills · Apache-2.0
         </Badge>
         <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-balance sm:text-6xl">
-          Reusable skills for AI coding agents
+          Open source AI agent skills and plugins
         </h1>
-        <p className="max-w-2xl text-lg leading-relaxed text-balance text-muted-foreground">
-          Open-source playbooks your agent installs once and follows by name —
-          for building chat products, automating scheduled work, running
-          benchmarks, and keeping codebases clean.
+        <p className="max-w-xl text-lg leading-relaxed text-balance text-muted-foreground">
+          Playbooks, routines, automations, and long running tasks for building software and more.
         </p>
         <TerminalBlock command={INSTALL_COMMAND} className="w-full max-w-xl text-left" />
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Link
-            href="/skills"
+            href="/plugins"
             className={cn(buttonVariants({ size: "lg" }), "px-5")}
           >
-            Browse all skills
+            Browse plugins
             <ArrowRight data-icon="inline-end" />
           </Link>
           <Link
-            href="/plugins"
+            href="/skills"
             className={cn(buttonVariants({ variant: "outline", size: "lg" }), "px-5")}
           >
-            Browse all plugins
+            Browse skills
             <ArrowRight data-icon="inline-end" />
           </Link>
           <a
