@@ -1,6 +1,6 @@
 {
   "name": "11ai-aws-operations",
-  "version": "1.24.0",
+  "version": "1.24.1",
   "description": "Modular, safety-first skills for common AWS CLI operations and troubleshooting.",
   "author": {
     "name": "rj11io"

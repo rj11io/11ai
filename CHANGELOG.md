@@ -1,3 +1,10 @@
+## [1.24.1](https://github.com/rj11io/11ai/compare/v1.24.0...v1.24.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* metadata ([346b5a5](https://github.com/rj11io/11ai/commit/346b5a5fe28a53f6f25dd226cc1df4ec822bfcb9))
+
 # [1.24.0](https://github.com/rj11io/11ai/compare/v1.23.0...v1.24.0) (2026-07-23)
 
 
