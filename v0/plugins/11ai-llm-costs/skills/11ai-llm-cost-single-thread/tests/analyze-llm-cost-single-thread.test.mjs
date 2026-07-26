@@ -33,6 +33,15 @@ try {
   mkdirSync(project, { recursive: true })
   mkdirSync(threadRoot, { recursive: true })
 
+  const poisonPricing = JSON.stringify({
+    version: 1,
+    updatedAt: "2020-01-01",
+    models: [{ match: ["gpt-5.6-sol*", "claude-unpriced-9*"], provider: "openai", per1M: { input: 999, output: 999 } }],
+  })
+  writeFileSync(join(project, "llm-pricing.json"), poisonPricing)
+  mkdirSync(join(project, ".llm-cost"), { recursive: true })
+  writeFileSync(join(project, ".llm-cost", "pricing.json"), poisonPricing)
+
   writeJsonl(join(codexHome, "sessions", "selected.jsonl"), [
     { timestamp: "2026-07-19T10:00:00.000Z", type: "session_meta", payload: { id: "selected-thread", cwd: project } },
     { timestamp: "2026-07-19T10:02:00.000Z", type: "turn_context", payload: { model: "gpt-5.6-sol", effort: "ultra" } },
@@ -78,6 +87,8 @@ try {
   assert.match(markdown, /^# Single-Thread LLM Cost Report\n\n_powered by \[11ai-llm-cost-single-thread\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-single-thread\)\._\n\n/)
   assert.match(markdown, /^# Single-Thread LLM Cost Report$/m)
   assert.match(markdown, /^## Cost by model by effort$/m)
+  assert.match(markdown, /\| Pricing catalog \| bundled default \(version 2, updated 2026-07-26\) \|/)
+  assert.doesNotMatch(markdown, /^### Models requiring a pricing update$/m)
   const levelTwoHeadings = markdown.match(/^## .+$/gm) ?? []
   assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Cost by model") + 1], "## Cost by model by effort")
   assert.match(markdown, /\| openai \/ gpt-5\.6-sol \| ultra \| \$\d+\.\d+ \| 1,000 \| 400 \| \$\d+\.\d+ \| 100 \| \$\d+\.\d+ \| 1,100 \| \$\d+\.\d+ \| 1 \| \$\d+\.\d+ \|/)
@@ -119,6 +130,21 @@ try {
   const claudeSummary = run([project, "--thread", "claude-single", "--codex-home", codexHome, "--claude-home", claudeHome, "--gemini-home", join(fixtureRoot, "no-gemini"), "--cline-tasks", join(fixtureRoot, "no-cline"), "--roo-tasks", join(fixtureRoot, "no-roo")], threadRoot)
   assert.equal(claudeSummary.threads, 1)
   assert.match(readFileSync(claudeSummary.markdownReport, "utf8"), /\| anthropic \/ claude-sonnet-5 \| xhigh \|/)
+
+  writeJsonl(join(claudeHome, "projects", "fixture", "unpriced.jsonl"), [
+    { timestamp: "2026-07-19T12:10:00.000Z", cwd: project, sessionId: "claude-unpriced", message: { id: "claude-unpriced-message", model: "claude-unpriced-9", usage: { input_tokens: 100, cache_creation_input_tokens: 0, cache_read_input_tokens: 50, output_tokens: 10 } } },
+  ])
+  const unpricedSummary = run([project, "--thread", "claude-unpriced", "--codex-home", codexHome, "--claude-home", claudeHome, "--gemini-home", join(fixtureRoot, "no-gemini"), "--cline-tasks", join(fixtureRoot, "no-cline"), "--roo-tasks", join(fixtureRoot, "no-roo")], threadRoot)
+  assert.equal(unpricedSummary.threads, 1)
+  assert.equal(unpricedSummary.knownCosts, 0)
+  const unpricedMarkdown = readFileSync(unpricedSummary.markdownReport, "utf8")
+  const unpricedHtml = readFileSync(unpricedSummary.htmlReport, "utf8")
+  assert.match(unpricedMarkdown, /^### Models requiring a pricing update$/m)
+  assert.match(unpricedMarkdown, /\| anthropic \/ claude-unpriced-9 \| 1 \| 150 \| 50 \| 10 \| 160 \|/)
+  assert.match(unpricedHtml, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-pricing-update" target="_blank" rel="noopener noreferrer">11ai-llm-cost-pricing-update<\/a>/)
+  const removedPricingOption = spawnSync(process.execPath, [analyzer, project, "--thread", "selected-thread", "--pricing", join(project, "llm-pricing.json")], { encoding: "utf8", cwd: threadRoot })
+  assert.notEqual(removedPricingOption.status, 0)
+  assert.match(removedPricingOption.stderr, /unknown argument: --pricing/)
 
   const unmatched = spawnSync(process.execPath, [analyzer, project, "--thread", "missing-thread", "--codex-home", codexHome], { encoding: "utf8", cwd: threadRoot })
   assert.notEqual(unmatched.status, 0)

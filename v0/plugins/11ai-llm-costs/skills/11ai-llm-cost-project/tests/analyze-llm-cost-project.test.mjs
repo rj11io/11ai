@@ -35,6 +35,15 @@ try {
   mkdirSync(project, { recursive: true })
   mkdirSync(threadRoot, { recursive: true })
 
+  const poisonPricing = JSON.stringify({
+    version: 1,
+    updatedAt: "2020-01-01",
+    models: [{ match: ["gpt-5.6-sol*", "claude-unpriced-9*"], provider: "openai", per1M: { input: 999, output: 999 } }],
+  })
+  writeFileSync(join(project, "llm-pricing.json"), poisonPricing)
+  mkdirSync(join(project, ".llm-cost"), { recursive: true })
+  writeFileSync(join(project, ".llm-cost", "pricing.json"), poisonPricing)
+
   writeFileSync(join(project, "other-harness.json"), JSON.stringify({
     id: "generic-1",
     provider: "other",
@@ -102,6 +111,8 @@ try {
   assert.match(markdown, /^## Totals$/m)
   assert.match(markdown, /^## Cost by harness$/m)
   assert.match(markdown, /^## Cost by model by effort$/m)
+  assert.match(markdown, /\| Pricing catalog \| bundled default \(version 2, updated 2026-07-26\) \|/)
+  assert.doesNotMatch(markdown, /^### Models requiring a pricing update$/m)
   const levelTwoHeadings = markdown.match(/^## .+$/gm) ?? []
   assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Cost by model") + 1], "## Cost by model by effort")
   assert.match(markdown, /\| openai \/ gpt-5\.6-sol \| low \| \$\d+\.\d+ \| 1,000 \| 600 \| \$\d+\.\d+ \| 100 \| \$\d+\.\d+ \| 1,100 \| \$\d+\.\d+ \| 1 \| \$\d+\.\d+ \|/)
@@ -158,6 +169,38 @@ try {
   assert.equal(localOnly.nativeFilesMetadataChecked, 0)
   assert.equal(localOnly.nativeSessionsMatched, 0)
   assert.equal(localOnly.threads, 1)
+
+  const unmatchedProject = join(fixtureRoot, "unmatched-project")
+  mkdirSync(unmatchedProject, { recursive: true })
+  writeFileSync(join(unmatchedProject, "usage.json"), JSON.stringify({
+    id: "unpriced-thread",
+    provider: "anthropic",
+    model: "claude-unpriced-9",
+    usage: { input_tokens: 100, cache_read_input_tokens: 50, output_tokens: 10 },
+  }))
+  writeFileSync(join(unmatchedProject, "synthetic.json"), JSON.stringify({
+    id: "synthetic-thread",
+    provider: "anthropic",
+    model: "<synthetic>",
+    usage: { input_tokens: 0, output_tokens: 0, total_tokens: 0 },
+  }))
+  writeFileSync(join(unmatchedProject, "llm-pricing.json"), poisonPricing)
+  mkdirSync(join(unmatchedProject, ".llm-cost"), { recursive: true })
+  writeFileSync(join(unmatchedProject, ".llm-cost", "pricing.json"), poisonPricing)
+  const unmatchedReport = join(fixtureRoot, "unmatched-report.md")
+  const unmatchedSummary = run([unmatchedProject, ...harnessArgs, "--project-only", "--output", unmatchedReport])
+  assert.equal(unmatchedSummary.knownCosts, 0)
+  const unmatchedMarkdown = readFileSync(unmatchedReport, "utf8")
+  const unmatchedHtml = readFileSync(unmatchedSummary.htmlReport, "utf8")
+  assert.match(unmatchedMarkdown, /\| Pricing catalog \| bundled default \(version 2, updated 2026-07-26\) \|/)
+  assert.match(unmatchedMarkdown, /^### Models requiring a pricing update$/m)
+  assert.match(unmatchedMarkdown, /\| anthropic \/ claude-unpriced-9 \| 1 \| 150 \| 50 \| 10 \| 160 \|/)
+  const unmatchedCallout = unmatchedMarkdown.slice(unmatchedMarkdown.indexOf("### Models requiring a pricing update"), unmatchedMarkdown.indexOf("### Pricing catalog match detail"))
+  assert.doesNotMatch(unmatchedCallout, /<synthetic>/)
+  assert.match(unmatchedHtml, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-pricing-update" target="_blank" rel="noopener noreferrer">11ai-llm-cost-pricing-update<\/a>/)
+  const removedPricingOption = spawnSync(process.execPath, [analyzer, unmatchedProject, "--pricing", join(unmatchedProject, "llm-pricing.json")], { encoding: "utf8", cwd: threadRoot })
+  assert.notEqual(removedPricingOption.status, 0)
+  assert.match(removedPricingOption.stderr, /unknown argument: --pricing/)
 
   const defaultSummary = run([project, ...harnessArgs, "--project-only"], threadRoot)
   const resolvedThreadRoot = realpathSync(threadRoot)

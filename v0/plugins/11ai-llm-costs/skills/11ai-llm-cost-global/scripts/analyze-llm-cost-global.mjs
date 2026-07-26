@@ -14,11 +14,11 @@ const option = (name) => {
 const options = (name) => argv.flatMap((arg, index) => arg === name && argv[index + 1] ? [argv[index + 1]] : [])
 
 if (argv.includes("--help")) {
-  console.log("usage: node analyze-llm-cost-global.mjs [--pricing pricing.json] [--output report-folder] [--output-dir report-folder] [--codex-home dir] [--claude-home dir] [--gemini-home dir] [--cline-tasks dir] [--roo-tasks dir] [--opencode-db file] [--include dir-or-file]")
+  console.log("usage: node analyze-llm-cost-global.mjs [--output report-folder] [--output-dir report-folder] [--codex-home dir] [--claude-home dir] [--gemini-home dir] [--cline-tasks dir] [--roo-tasks dir] [--opencode-db file] [--include dir-or-file]")
   process.exit(0)
 }
 
-const VALUE_OPTIONS = new Set(["--pricing", "--output", "--output-dir", "--codex-home", "--claude-home", "--gemini-home", "--cline-tasks", "--roo-tasks", "--opencode-db", "--include"])
+const VALUE_OPTIONS = new Set(["--output", "--output-dir", "--codex-home", "--claude-home", "--gemini-home", "--cline-tasks", "--roo-tasks", "--opencode-db", "--include"])
 for (let index = 0; index < argv.length; index += 1) {
   const arg = argv[index]
   if (!VALUE_OPTIONS.has(arg)) throw new Error(`unknown argument: ${arg}`)
@@ -31,6 +31,7 @@ const generatedTime = new Date(generatedAt)
 const filenameTimestamp = generatedAt.replaceAll(":", "-").replaceAll(".", "-")
 const reportSkillName = "11ai-llm-cost-global"
 const reportSkillUrl = `https://ai.rj11.io/skills/${reportSkillName}`
+const pricingUpdateSkillUrl = "https://ai.rj11.io/skills/11ai-llm-cost-pricing-update"
 const reportPoweredBy = `_powered by [${reportSkillName}](${reportSkillUrl})._`
 const reportName = `${reportSkillName}-${filenameTimestamp}`
 const reportPackageName = `11ai-llm-cost-global-reports-${filenameTimestamp}`
@@ -41,15 +42,15 @@ const markdownOutput = join(outputDir, `${reportName}.md`)
 const htmlOutput = join(outputDir, `${reportName}.html`)
 
 const skillRoot = fileURLToPath(new URL("..", import.meta.url))
-const pricingCandidates = [
-  option("--pricing") ? resolve(option("--pricing")) : null,
-  join(process.cwd(), "llm-pricing.json"),
-  join(homedir(), ".llm-cost", "pricing.json"),
-  join(skillRoot, "references", "pricing.json"),
-].filter(Boolean)
-if (option("--pricing") && !existsSync(resolve(option("--pricing")))) throw new Error(`pricing file does not exist: ${resolve(option("--pricing"))}`)
-const pricingPath = pricingCandidates.find((file) => existsSync(file))
-const pricing = pricingPath ? JSON.parse(readFileSync(pricingPath, "utf8")) : { models: [] }
+const pricingPath = join(skillRoot, "references", "pricing.json")
+if (!existsSync(pricingPath)) throw new Error(`bundled pricing catalog does not exist: ${pricingPath}`)
+let pricing
+try {
+  pricing = JSON.parse(readFileSync(pricingPath, "utf8"))
+} catch (error) {
+  throw new Error(`bundled pricing catalog is invalid JSON: ${error.message}`)
+}
+if (!Array.isArray(pricing.models)) throw new Error(`bundled pricing catalog has no models array: ${pricingPath}`)
 
 const SKIP_DIRS = new Set([
   ".git", ".hg", ".svn", "node_modules", ".next", ".turbo", ".cache", ".parcel-cache",
@@ -1114,6 +1115,9 @@ function report({ threads, stats, malformed, duplicateIds }) {
   const stale = threads.filter((thread) => thread.pricingStatus === "matched-stale")
   const unmatched = threads.filter((thread) => thread.pricingStatus === "unmatched")
   const partial = threads.filter((thread) => thread.pricingStatus === "partial")
+  const actionableUnmatched = [...groupBy(unmatched.filter((thread) =>
+    thread.model !== "unknown" && thread.model !== "<synthetic>" && finite(thread.tokens.providerTotal) && thread.tokens.providerTotal > 0
+  ), (thread) => `${thread.provider} / ${thread.model}`).entries()].sort((a, b) => a[0].localeCompare(b[0]))
   const pricingRows = [...groupBy(threads.filter((thread) => thread.pricing), (thread) => `${thread.provider} / ${thread.model}`).entries()]
     .sort((a, b) => a[0].localeCompare(b[0]))
   const anomalies = []
@@ -1171,7 +1175,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
       ["Files containing usage records", fmtInt(stats.recognizedFiles)],
       ["Malformed records", fmtInt(malformed.length)],
       ["Unreadable native files skipped", fmtInt(stats.unreadableFiles)],
-      ["Pricing catalog", pricingPath === join(skillRoot, "references", "pricing.json") ? "bundled default" : pricingPath ?? "none"],
+      ["Pricing catalog", `bundled default (version ${pricing.version ?? "n/a"}, updated ${pricing.updatedAt ?? "n/a"})`],
       ["Oldest observed thread", threads.map((thread) => thread.startedAt).filter(Boolean).sort()[0] ?? "n/a"],
       ["Newest observed thread", threads.map((thread) => thread.finishedAt).filter(Boolean).sort().at(-1) ?? "n/a"],
     ]),
@@ -1182,20 +1186,34 @@ function report({ threads, stats, malformed, duplicateIds }) {
       ["Matched", fmtInt(threads.filter((thread) => thread.pricingStatus === "matched").length), "Model matched and all required token classes were priced"],
       ["Matched but stale", fmtInt(stale.length), "Matched rate is more than 30 days past verification"],
       ["Partial", fmtInt(partial.length), "A model matched, but one or more required rates or token classes are unavailable"],
-      ["Reported", fmtInt(reported.length), "Cost came from the harness record rather than local pricing"],
+      ["Reported", fmtInt(reported.length), "Cost came from the harness record rather than bundled pricing"],
       ["Unmatched", fmtInt(unmatched.length), "No model pattern matched the pricing catalog"],
     ]),
     "",
-    "",
+    ...(actionableUnmatched.length ? [
+      "### Models requiring a pricing update",
+      "",
+      table(["Provider / model", "Threads", "Input", "Cached", "Output", "Tokens"], actionableUnmatched.map(([key, items]) => [
+        key,
+        fmtInt(items.length),
+        fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))),
+        fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))),
+        fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))),
+        fmtInt(sumKnown(items.map((item) => item.tokens.providerTotal))),
+      ])),
+      "",
+      `**Pricing update required:** Known-cost totals exclude the models above. Run [11ai-llm-cost-pricing-update](${pricingUpdateSkillUrl}) to verify official rates and update the bundled catalog, then regenerate this report.`,
+      "",
+    ] : []),
     "### Pricing catalog match detail",
     "",
     pricingRows.length ? table(["Provider / model", "Match", "Rates per 1M", "Effective", "Verified", "Notes", "Source"], pricingRows.map(([key, items]) => {
       const pricing = items[0].pricing
       const rates = Object.entries(pricing.per1M ?? {}).map(([name, value]) => `${name}=${value === null ? "n/a" : value}`).join(", ")
       return [key, (pricing.match ?? []).join(", "), rates, pricing.effectiveDate ?? "n/a", pricing.verifiedAt ?? "n/a", pricing.notes ?? "Standard real-time text-token rates.", pricing.sourceUrl ?? "n/a"]
-    })) : "No model matched the available pricing catalogs.",
+    })) : "No model matched the bundled pricing catalog.",
     "",
-    "Update the pricing override and rerun when rates are stale or unmatched.",
+    "Unmatched models remain unpriced until the bundled catalog is updated through the pricing-update skill.",
     "",
     "## Anomalies and limitations",
     "",
@@ -1235,7 +1253,8 @@ function escapeHtml(value) {
 function inlineHtml(value) {
   let html = escapeHtml(value)
   html = html.replace(/`([^`]+)`/g, "<code>$1</code>")
-  html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2">$1</a>')
+  html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+  html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
   html = html.replace(/^_([\s\S]+)_$/, "<em>$1</em>")
   return html
 }

@@ -26,7 +26,6 @@ The command creates this structure if needed, where `{datetime}` is the UTC ISO 
 
 Generate both reports from the same analysis so their facts, tables, ordering, limitations, and signature agree. Make the HTML report self-contained with embedded styling and no network dependency. Render every level-two, level-three, and level-four HTML report section as a native disclosure that is collapsed by default. The timestamped default package uses exclusive file creation and never overwrites an existing report. The command accepts:
 
-- `--pricing <file>` to use an explicit pricing catalog;
 - `--output <folder>` or `--output-dir <folder>` only when the user explicitly requests a different reports directory;
 - `--codex-home <dir>` or `CODEX_HOME` to replace automatic Codex home discovery;
 - `--claude-home <dir>` or `CLAUDE_CONFIG_DIR` to replace automatic Claude Code home discovery;
@@ -46,8 +45,8 @@ For `--include` directories, recurse through JSON-family files while skipping de
 1. Confirm that the request is machine-wide. Use `~/Desktop/11ai-llm-cost-global-reports/11ai-llm-cost-global-reports-{datetime}` for default output and use home overrides only for deterministic fixtures or an intentionally restricted scan.
 2. Run the analyzer. Preserve malformed, ambiguous, unpriced, reported-only, and undated records in coverage or limitations rather than silently dropping them.
 3. Review both generated files for both rolling periods, month-to-date, year-to-date, monthly reports, all-time, scan coverage, explicit totals, provider/model/model-by-effort/harness/workspace aggregates, token-class detail, wall time, estimated active time, per-thread tables, pricing coverage, anomalies, and methodology.
-4. If a model is unmatched or pricing is older than 30 days, verify the provider's official pricing page. Prefer an explicit pricing override or the machine-level `~/.llm-cost/pricing.json` so the report remains reproducible; never invent a rate from memory.
-5. Rerun after pricing or input changes. The analyzer does not edit transcripts.
+4. Leave unmatched models unpriced and make the report direct the user to [`11ai-llm-cost-pricing-update`](https://ai.rj11.io/skills/11ai-llm-cost-pricing-update). Do not research, inject, or persist rates from this reporting skill.
+5. Rerun after the bundled catalog is updated by the pricing-update skill or after input changes. The analyzer does not edit transcripts or pricing.
 
 ## Period attribution
 
@@ -99,6 +98,8 @@ For Cost by tables, the following specific layout supersedes any general metric-
 
 Within every period, display explicit grand totals for threads, token classes, measured/provider tokens, known cost, cost coverage, wall time, and estimated active time. Aggregate by provider, model, model and effort, harness, and workspace within each period. Make `Cost by model by effort` a same-level sibling immediately after `Cost by model`: level three in fixed period reports and level four within each monthly report. Include a `Total` row in every aggregate table. In every thread-derived table, expand tokens into `Input`, `Cached`, `Output`, and total `Tokens` columns. Immediately after cost, order metrics as active time, cost per active hour, wall time, cost per wall hour, then cost per thread where rows contain multiple threads. Cost per thread divides known cost by all recognized threads and may be understated when coverage is incomplete; omit it from thread detail because it duplicates selected cost. Keep harness-specific reported cost, average tokens, and coverage fields after those shared metrics. Do not add hourly metrics to scan, token-composition, or pricing tables because their rows are not disjoint thread groups. In HTML, make every table column sortable while preserving generated row order on initial load. A newly selected column must sort descending first and then toggle direction; keep unavailable values and `Total` rows at the bottom. Use a fluid full-width layout with minimal padding, compact spacing, and no outer report card. Distinguish measured token usage, derived cost, harness-reported cost, and unavailable cost. State that computed subscription usage is an API-equivalent estimate, not necessarily an invoice. Include normalized source labels, workspace paths, and timestamps where available, but do not copy prompts, message content, secrets, or full transcripts.
 
+When one or more unmatched real models have positive measured/provider tokens, add `Models requiring a pricing update` inside `Pricing coverage`. Aggregate those models by provider and model with thread, input, cached-input, output, and total-token counts. State that known-cost totals exclude them and link `11ai-llm-cost-pricing-update` to `https://ai.rj11.io/skills/11ai-llm-cost-pricing-update`, instructing the user to run it and regenerate the report. Omit synthetic, unknown, and zero-token placeholders from this callout. In HTML, open the link in a new tab with `rel="noopener noreferrer"`. Omit the entire callout when no actionable unmatched model exists.
+
 Immediately below the Markdown H1, place `_powered by [11ai-llm-cost-global](https://ai.rj11.io/skills/11ai-llm-cost-global)._`. In HTML, append a smaller inline span to the main title with the exact text `powered by 11ai-llm-cost-global`; link that text to the same skill URL with `target="_blank"` and `rel="noopener noreferrer"`. Render every level-two, level-three, and level-four report section as a native `<details>` element with a `<summary>`, omit the `open` attribute so all sections are collapsed by default, and keep the report title, generation message, and signature outside those disclosures. Put the generation message after all report sections and immediately before the signature in both formats.
 
 End the Markdown report with this exact linked signature:
@@ -115,14 +116,7 @@ Do not modify source transcripts, code, benchmark artifacts, ledgers, reviews, o
 
 ## Pricing
 
-Pricing lookup order is:
-
-1. explicit `--pricing` file;
-2. `llm-pricing.json` in the invocation's current working directory;
-3. `~/.llm-cost/pricing.json`;
-4. this skill's `references/pricing.json`.
-
-Rates are USD per one million tokens. Every priced thread must show the matched model pattern, rate source, effective date, and verification date. Keep unmatched or stale prices visible as limitations and do not turn them into zero-cost rows.
+Use only this skill's bundled `references/pricing.json`. Do not accept a pricing override or read, create, update, or recommend `llm-pricing.json`, `.llm-cost/pricing.json`, or `~/.llm-cost/pricing.json`; legacy files at those paths have no effect. Rates are USD per one million tokens. Every priced thread must show the matched model pattern, official source, effective date when published, and verification date. Keep unmatched or stale prices visible as limitations and never turn them into zero-cost rows. Only `11ai-llm-cost-pricing-update` may research official pricing and update the bundled catalogs.
 
 ## Completion checks
 
@@ -141,6 +135,7 @@ Before reporting completion:
 - confirm every HTML level-two, level-three, and level-four report section is a `<details>` disclosure without an `open` attribute, so all sections load collapsed;
 - confirm the HTML is fluid and compact without an outer card, and the generation message follows all disclosures immediately before the signature in both formats;
 - confirm both state inspected files, recognized threads, known and unknown costs, pricing coverage, and limitations;
+- confirm both identify the bundled catalog version and update date, and conditionally show actionable unmatched models, excluded token totals, and the exact pricing-update link without listing synthetic or zero-token placeholders;
 - confirm both end with a signature linking to `https://ai.rj11.io/skills/11ai-llm-cost-global`;
 - rerun once with unchanged inputs, confirm a second timestamped report package is created in the reports folder, and ensure both formats are stable apart from generated timestamps;
 - report the exact folder and file paths, unreadable scope, and model/pricing gaps.

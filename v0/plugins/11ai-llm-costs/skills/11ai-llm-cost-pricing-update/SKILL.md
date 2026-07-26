@@ -7,6 +7,8 @@ description: "Refresh the canonical token-pricing catalog used by the 11ai LLM c
 
 Maintain one provider-verified catalog and keep every 11ai cost-report skill on the same rates.
 
+This is the only skill allowed to research official prices and modify the bundled pricing catalogs. Reporting skills consume their bundled copy directly, leave unmatched models unpriced, and link here for a catalog update; they must not create or use local pricing overrides.
+
 ## Workflow
 
 1. Read [`references/provider-sources.md`](references/provider-sources.md) completely before researching or editing.
@@ -53,3 +55,5 @@ The canonical catalog is [`references/pricing.json`](references/pricing.json). T
 - `../11ai-llm-cost-single-thread/references/pricing.json`
 
 Treat divergence as a validation failure.
+
+After synchronization, regenerate any affected reports. Existing reports remain immutable historical artifacts and do not acquire new rates retroactively.

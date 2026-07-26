@@ -15,8 +15,8 @@ function writeJsonl(file, records) {
   writeFileSync(file, `${records.map((record) => JSON.stringify(record)).join("\n")}\n`)
 }
 
-function run(args, env = {}) {
-  const result = spawnSync(process.execPath, [analyzer, ...args], { encoding: "utf8", env: { ...process.env, ...env } })
+function run(args, env = {}, cwd = undefined) {
+  const result = spawnSync(process.execPath, [analyzer, ...args], { encoding: "utf8", env: { ...process.env, ...env }, cwd })
   assert.equal(result.status, 0, result.stderr)
   return JSON.parse(result.stdout)
 }
@@ -91,7 +91,7 @@ try {
   assert.equal(summary.supplementalFilesInspected, 1)
   assert.equal(summary.recognizedFiles, 8)
   assert.equal(summary.threads, 8)
-  assert.equal(summary.knownCosts, 7)
+  assert.equal(summary.knownCosts, 8)
   assert.deepEqual(Object.keys(summary.periods), ["Past 7 days", "Past 30 days", "Month to date", "Year to date", "All time"])
   assert.equal(summary.periods["All time"].threads, 8)
   assert.equal(summary.periods["Past 7 days"].threads, 5)
@@ -150,6 +150,8 @@ try {
   assert.match(markdown, /^## Past 7 days$/m)
   assert.match(markdown, /^## Past 30 days$/m)
   assert.match(markdown, /^## Monthly reports$/m)
+  assert.match(markdown, /\| Pricing catalog \| bundled default \(version 2, updated 2026-07-26\) \|/)
+  assert.doesNotMatch(markdown, /^### Models requiring a pricing update$/m)
   assert.match(markdown, /codex-session\/[^/]+\/sessions\/recent\.jsonl/)
   assert.match(markdown, /codex-session\/[^/]+\/archived_sessions\/old-unrelated-workspace\.jsonl/)
   assert.match(markdown, /claude-session\/[^/]+\/projects\/fixture\/old\.jsonl/)
@@ -244,6 +246,50 @@ try {
   assert.equal(dirname(defaultSummary.htmlReport), defaultSummary.outputDirectory)
   assert.match(basename(defaultSummary.markdownReport), /^11ai-llm-cost-global-\d{4}-\d{2}-\d{2}T.*\.md$/)
   assert.equal(basename(defaultSummary.htmlReport), `${basename(defaultSummary.markdownReport, ".md")}.html`)
+
+  const legacyHome = join(fixtureRoot, "legacy-home")
+  const legacyCwd = join(fixtureRoot, "legacy-cwd")
+  const legacyClaudeHome = join(fixtureRoot, "legacy-claude")
+  const legacyOpenCodeDb = join(fixtureRoot, "legacy-opencode.db")
+  mkdirSync(join(legacyHome, ".llm-cost"), { recursive: true })
+  mkdirSync(legacyCwd, { recursive: true })
+  const poisonPricing = JSON.stringify({
+    version: 1,
+    updatedAt: "2020-01-01",
+    models: [{ match: ["claude-opus-5*", "claude-unpriced-9*"], provider: "anthropic", per1M: { input: 999, output: 999 } }],
+  })
+  writeFileSync(join(legacyHome, ".llm-cost", "pricing.json"), poisonPricing)
+  writeFileSync(join(legacyCwd, "llm-pricing.json"), poisonPricing)
+  writeJsonl(join(legacyClaudeHome, "projects", "fixture", "opus.jsonl"), [
+    { timestamp: recent, cwd: join(fixtureRoot, "legacy-workspace"), sessionId: "opus-thread", message: { id: "opus-message", model: "claude-opus-5", usage: { input_tokens: 100, cache_creation_input_tokens: 0, cache_read_input_tokens: 50, output_tokens: 10 } } },
+  ])
+  writeJsonl(join(legacyClaudeHome, "projects", "fixture", "unpriced.jsonl"), [
+    { timestamp: recent, cwd: join(fixtureRoot, "legacy-workspace"), sessionId: "unpriced-thread", message: { id: "unpriced-message", model: "claude-unpriced-9", usage: { input_tokens: 100, cache_creation_input_tokens: 0, cache_read_input_tokens: 50, output_tokens: 10 } } },
+  ])
+  const legacyDatabase = new DatabaseSync(legacyOpenCodeDb)
+  legacyDatabase.exec("CREATE TABLE session (id TEXT, directory TEXT, cost REAL, tokens_input INTEGER, tokens_output INTEGER, tokens_reasoning INTEGER, tokens_cache_read INTEGER, tokens_cache_write INTEGER, model TEXT, time_created INTEGER, time_updated INTEGER)")
+  legacyDatabase.close()
+  const legacySummary = run([
+    "--codex-home", join(fixtureRoot, "legacy-empty-codex"),
+    "--claude-home", legacyClaudeHome,
+    "--gemini-home", join(fixtureRoot, "legacy-empty-gemini"),
+    "--cline-tasks", join(fixtureRoot, "legacy-empty-cline"),
+    "--roo-tasks", join(fixtureRoot, "legacy-empty-roo"),
+    "--opencode-db", legacyOpenCodeDb,
+    "--output", join(fixtureRoot, "legacy-report"),
+  ], { HOME: legacyHome }, legacyCwd)
+  assert.equal(legacySummary.threads, 2)
+  assert.equal(legacySummary.knownCosts, 1)
+  const legacyMarkdown = readFileSync(legacySummary.markdownReport, "utf8")
+  const legacyHtml = readFileSync(legacySummary.htmlReport, "utf8")
+  assert.match(legacyMarkdown, /\| Pricing catalog \| bundled default \(version 2, updated 2026-07-26\) \|/)
+  assert.match(legacyMarkdown, /^### Models requiring a pricing update$/m)
+  assert.match(legacyMarkdown, /\| anthropic \/ claude-unpriced-9 \| 1 \| 150 \| 50 \| 10 \| 160 \|/)
+  assert.match(legacyMarkdown, /Known-cost totals exclude the models above\. Run \[11ai-llm-cost-pricing-update\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-pricing-update\)/)
+  assert.match(legacyHtml, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-pricing-update" target="_blank" rel="noopener noreferrer">11ai-llm-cost-pricing-update<\/a>/)
+  const removedPricingOption = spawnSync(process.execPath, [analyzer, "--pricing", join(legacyCwd, "llm-pricing.json")], { encoding: "utf8", cwd: legacyCwd, env: { ...process.env, HOME: legacyHome } })
+  assert.notEqual(removedPricingOption.status, 0)
+  assert.match(removedPricingOption.stderr, /unknown argument: --pricing/)
 } finally {
   rmSync(fixtureRoot, { recursive: true, force: true })
 }
