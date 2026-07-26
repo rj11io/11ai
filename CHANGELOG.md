@@ -1,3 +1,10 @@
+# [1.25.0](https://github.com/rj11io/11ai/compare/v1.24.1...v1.25.0) (2026-07-26)
+
+
+### Features
+
+* **llm-costs:** add opus5 pricing ([bc03250](https://github.com/rj11io/11ai/commit/bc0325096fe1a313b4d0a3a9607d80543770f29f))
+
 ## [1.24.1](https://github.com/rj11io/11ai/compare/v1.24.0...v1.24.1) (2026-07-23)
 
 
