@@ -1,3 +1,10 @@
+## [1.25.1](https://github.com/rj11io/11ai/compare/v1.25.0...v1.25.1) (2026-07-26)
+
+
+### Bug Fixes
+
+* remove local pricing override ([7f42481](https://github.com/rj11io/11ai/commit/7f42481fc27399f46837fdccd46bcf50366dd14f))
+
 # [1.25.0](https://github.com/rj11io/11ai/compare/v1.24.1...v1.25.0) (2026-07-26)
 
 
