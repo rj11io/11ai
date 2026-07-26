@@ -32,6 +32,13 @@ test("canonical catalog is synchronized and covers current common providers", ()
 
   const providers = new Set(pricing.models.map((entry) => entry.provider))
   assert.deepEqual([...providers].sort(), ["anthropic", "cohere", "deepseek", "google", "mistral", "openai", "perplexity", "xai"])
+  assert.deepEqual(findRate(pricing, "anthropic", "claude-opus-5").per1M, {
+    input: 5,
+    output: 25,
+    cacheWrite5m: 6.25,
+    cacheWrite1h: 10,
+    cacheRead: 0.5,
+  })
   assert.deepEqual(findRate(pricing, "anthropic", "claude-sonnet-5").per1M, {
     input: 2,
     output: 10,

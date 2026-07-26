@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-07-21",
+  "updatedAt": "2026-07-26",
   "comment": "Rates are standard, real-time USD prices per 1M text tokens. Cached input is a subset of input; Anthropic input, cache writes, and cache reads are disjoint. Long-context, batch, priority, regional, tool, request, storage, media, subscription, enterprise, and negotiated charges are excluded unless a note says otherwise.",
   "models": [
     {
@@ -19,6 +19,22 @@
       "effectiveDate": "2026-06-24",
       "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
       "verifiedAt": "2026-07-21"
+    },
+    {
+      "match": [
+        "claude-opus-5*"
+      ],
+      "provider": "anthropic",
+      "per1M": {
+        "input": 5,
+        "output": 25,
+        "cacheWrite5m": 6.25,
+        "cacheWrite1h": 10,
+        "cacheRead": 0.5
+      },
+      "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "verifiedAt": "2026-07-26",
+      "notes": "Standard Claude API rates. Fast mode, batch processing, and platform-specific pricing are excluded because current report inputs do not attribute those request classes."
     },
     {
       "match": [
