@@ -1,3 +1,10 @@
+## [1.26.1](https://github.com/rj11io/11ai/compare/v1.26.0...v1.26.1) (2026-07-29)
+
+
+### Bug Fixes
+
+* fixed npm publish step ([425a25b](https://github.com/rj11io/11ai/commit/425a25ba061a4e53d81d5dae330934878991b0be))
+
 # [1.26.0](https://github.com/rj11io/11ai/compare/v1.25.1...v1.26.0) (2026-07-29)
 
 
