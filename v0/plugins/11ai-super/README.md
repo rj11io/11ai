@@ -7,7 +7,7 @@ Nine long-running skills that perform a project task repeatedly, verify the resu
 | Skill | Use it for |
 | --- | --- |
 | [`11ai-super-bugfixing`](./skills/11ai-super-bugfixing/SKILL.md) | Continuously finding, reproducing, fixing, and verifying software defects until no material bug remains |
-| [`11ai-super-creator`](./skills/11ai-super-creator/SKILL.md) | Running any specified repository task through repeated implementation and verification passes to a high-confidence result |
+| [`11ai-super-code-quality`](./skills/11ai-super-code-quality/SKILL.md) | Repeatedly improving clarity, structure, naming, comments, and test coverage until the code reaches a high bar, without changing behavior |
 | [`11ai-super-metadata`](./skills/11ai-super-metadata/SKILL.md) | Auditing and fixing project metadata, technical SEO, structured data, and social preview images |
 | [`11ai-super-performance`](./skills/11ai-super-performance/SKILL.md) | Measuring, fixing, and repeatedly optimizing project speed and resource efficiency |
 | [`11ai-super-readme`](./skills/11ai-super-readme/SKILL.md) | Auditing a repository's README files and repeatedly improving them until they match the code to a high bar |
@@ -20,4 +20,4 @@ Nine long-running skills that perform a project task repeatedly, verify the resu
 
 Run these skills from the repository you want to improve. Each one uses repeated implementation, audit, and verification passes instead of stopping after the first fix, keeps a manifest of every file it changes, and stops with a full report when the change set becomes unmanageable or troubleshooting outweighs progress.
 
-The skills preserve unrelated work. `11ai-super-creator` applies the shared workflow to a user-specified task, `11ai-super-bugfixing` applies it to evidence-backed software defects, `11ai-super-skill-qa` repairs skill packaging without rewriting skill routines, `11ai-super-readme` is documentation-only, and the other specialist super skills update the project areas named in their playbooks.
+The skills preserve unrelated work. `11ai-super-bugfixing` applies the shared workflow to evidence-backed software defects, `11ai-super-code-quality` applies it to the maintainability of the code it touches and keeps behavior unchanged, `11ai-super-skill-qa` repairs skill packaging without rewriting skill routines, `11ai-super-readme` is documentation-only, and the other specialist super skills update the project areas named in their playbooks.

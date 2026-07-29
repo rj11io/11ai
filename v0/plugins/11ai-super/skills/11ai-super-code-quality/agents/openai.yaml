@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Super Code Quality"
+  short_description: "Audit, fix, and continuously raise code quality"
+  default_prompt: "Use $11ai-super-code-quality to audit this code, fix its critical and major quality defects while protecting existing behavior, and iterate with fresh passes until it reaches a high bar."

@@ -61,9 +61,9 @@ The repository currently contains 156 skills in 20 plugins.
 | [LLM costs](./v0/plugins/11ai-llm-costs/README.md) | 4 | Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports |
 | [MongoDB operations](./v0/plugins/11ai-mongodb-operations/README.md) | 10 | Common MongoDB Shell and Database Tools work with read-first safety checks |
 | [Node.js API operations](./v0/plugins/11ai-nodejs-api-operations/README.md) | 10 | Inspecting, changing, testing, and troubleshooting Node.js APIs across common frameworks |
-| [Super](./v0/plugins/11ai-super/README.md) | 8 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
+| [Super](./v0/plugins/11ai-super/README.md) | 9 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
 | [Security](./v0/plugins/11ai-security/README.md) | 1 | Read-only dependency vulnerability and supply-chain auditing with critical host-harm triage |
-| [Utilities](./v0/plugins/11ai-utils/README.md) | 8 | Code-quality review and improvement, Markdown compression, reverse engineering, critique, analytics, publication CMS, calls to action, and project sites |
+| [Utilities](./v0/plugins/11ai-utils/README.md) | 7 | Markdown compression, reverse engineering, critique, analytics, publication CMS, calls to action, and project sites |
 | [Web design](./v0/plugins/11ai-web-design/README.md) | 3 | The 11ai visual language and deliberate content-led styling for accessible web interfaces |
 | [Cross-harness](./v0/plugins/11ai-xharness/README.md) | 2 | Delegating work to agents running in other CLI harnesses |
 
@@ -91,9 +91,9 @@ v0/
     11ai-llm-costs/           4 LLM cost, effort, and timing skills under skills/
     11ai-mongodb-operations/  10 MongoDB operation skills under skills/
     11ai-nodejs-api-operations/ 10 Node.js API operation skills under skills/
-    11ai-super/               8 iterative task and improvement skills under skills/
+    11ai-super/               9 iterative task and improvement skills under skills/
     11ai-security/            1 dependency security audit skill under skills/
-    11ai-utils/               8 utility skills under skills/
+    11ai-utils/               7 utility skills under skills/
     11ai-web-design/          3 web design skills under skills/
     11ai-xharness/            2 cross-harness skills under skills/
   scripts/                    Package validation, release, and publishing helpers
