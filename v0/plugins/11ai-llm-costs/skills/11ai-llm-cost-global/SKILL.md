@@ -1,6 +1,6 @@
 ---
 name: 11ai-llm-cost-global
-description: "Inspect all readable Codex, Claude Code, Gemini CLI, Cline, Roo Code, and OpenCode usage stores across the machine; normalize token counters, calculate attributable USD costs, measure wall and estimated active time, and write Markdown and standalone HTML reports under the Desktop's 11ai-llm-cost-global-reports folder with rolling, calendar-to-date, monthly, and all-time sections. Use for global LLM spend, token usage, model and effort cost, AI timing, or cross-project analysis."
+description: "Inspect all readable Codex, Claude Code, Gemini CLI, Cline, Roo Code, and OpenCode usage stores across the machine; normalize token counters, calculate attributable USD costs, measure wall and estimated active time, and write Markdown and standalone HTML reports under the Desktop's 11ai-llm-cost-global-reports folder with rolling, calendar-to-date, monthly, quarterly, yearly, and all-time sections. Use for global LLM spend, token usage, model and effort cost, AI timing, or cross-project analysis."
 ---
 
 # 11ai LLM Cost Global
@@ -44,7 +44,7 @@ For `--include` directories, recurse through JSON-family files while skipping de
 
 1. Confirm that the request is machine-wide. Use `~/Desktop/11ai-llm-cost-global-reports/11ai-llm-cost-global-reports-{datetime}` for default output and use home overrides only for deterministic fixtures or an intentionally restricted scan.
 2. Run the analyzer. Preserve malformed, ambiguous, unpriced, reported-only, and undated records in coverage or limitations rather than silently dropping them.
-3. Review both generated files for both rolling periods, month-to-date, year-to-date, monthly reports, all-time, scan coverage, explicit totals, provider/model/model-by-effort/harness/workspace aggregates, token-class detail, wall time, estimated active time, per-thread tables, pricing coverage, anomalies, and methodology.
+3. Review both generated files for all rolling periods, today, month/quarter/year-to-date, monthly/quarterly/yearly reports, all-time, scan coverage, explicit totals, provider/model/model-by-effort/harness/workspace aggregates, token-class detail, wall time, estimated active time, per-thread tables, pricing coverage, anomalies, and methodology.
 4. Leave unmatched models unpriced and make the report direct the user to [`11ai-llm-cost-pricing-update`](https://ai.rj11.io/skills/11ai-llm-cost-pricing-update). Do not research, inject, or persist rates from this reporting skill.
 5. Rerun after the bundled catalog is updated by the pricing-update skill or after input changes. The analyzer does not edit transcripts or pricing.
 
@@ -52,18 +52,25 @@ For `--include` directories, recurse through JSON-family files while skipping de
 
 Render these top-level report sections in this order:
 
-1. `Past 7 days`
-2. `Past 30 days`
-3. `Month to date`
-4. `Year to date`
-5. `Monthly reports`
-6. `All time`
-7. `Scan coverage`
-8. `Pricing coverage`
-9. `Anomalies and limitations`
-10. `Methodology`
+1. `Past 24 hours`
+2. `Past 7 days`
+3. `Past 30 days`
+4. `Past 60 days`
+5. `Past 90 days`
+6. `Today`
+7. `Month to date`
+8. `Quarter to date`
+9. `Year to date`
+10. `Monthly reports`
+11. `Quarterly reports`
+12. `Yearly reports`
+13. `All time`
+14. `Scan coverage`
+15. `Pricing coverage`
+16. `Anomalies and limitations`
+17. `Methodology`
 
-Attribute a whole thread to its finish timestamp, falling back to its start timestamp. Include undated threads only in `All time` and flag them as limitations. Use the machine's local calendar boundaries for year-to-date, month-to-date, and calendar-month reports. Treat `Past 7 days` and `Past 30 days` as rolling 168-hour and 720-hour windows ending at report generation time. Under `Monthly reports`, include one level-three subsection for every calendar month with dated activity, newest first, and render that month's totals and full breakdown as level-four subsections.
+Attribute a whole thread to its finish timestamp, falling back to its start timestamp. Include undated threads only in `All time` and flag them as limitations. Use the machine's local calendar boundaries for `Today`, month/quarter/year-to-date, and monthly/quarterly/yearly reports. Treat `Past 24 hours` and `Past 7/30/60/90 days` as rolling 24/168/720/1,440/2,160-hour windows ending at report generation time. Under each calendar archive, include one level-three subsection for every month, quarter, or year with dated activity, newest first, and render that period's totals and full breakdown as level-four subsections.
 
 ## Supported usage shapes
 
@@ -92,7 +99,7 @@ Measure wall time from the first to last distinct timestamp observed for a threa
 
 ## Report requirements
 
-Within every fixed and monthly period, place `Totals` immediately after `Cost by workspace` at the same heading level.
+Within every fixed and calendar-archive period, place `Totals` immediately after `Cost by workspace` at the same heading level.
 
 Format every USD value with a dollar sign, comma thousands separators, and exactly four decimal places, such as `$1,234.5678`.
 
@@ -129,10 +136,10 @@ Before reporting completion:
 - confirm the timestamped package contains same-named `.md` and `.html` reports;
 - confirm the Markdown report places the linked `powered by 11ai-llm-cost-global` attribution immediately below its H1;
 - confirm the HTML main title includes the smaller inline linked text `powered by 11ai-llm-cost-global` and that its link safely opens in a new tab;
-- confirm both reports use this exact top-level order: `Past 7 days`, `Past 30 days`, `Month to date`, `Year to date`, `Monthly reports`, `All time`, `Scan coverage`, `Pricing coverage`, `Anomalies and limitations`, `Methodology`;
-- confirm `Monthly reports` contains one newest-first level-three subsection for every calendar month with dated activity and that every month contains the same full breakdown at level four;
+- confirm both reports use this exact top-level order: `Past 24 hours`, `Past 7 days`, `Past 30 days`, `Past 60 days`, `Past 90 days`, `Today`, `Month to date`, `Quarter to date`, `Year to date`, `Monthly reports`, `Quarterly reports`, `Yearly reports`, `All time`, `Scan coverage`, `Pricing coverage`, `Anomalies and limitations`, `Methodology`;
+- confirm monthly, quarterly, and yearly reports contain one newest-first level-three subsection for every corresponding calendar period with dated activity and that every archive period contains the same full breakdown at level four;
 - confirm every period in both formats displays the standardized token breakdown and cost-adjacent metric order, aggregate cost per thread, totals, and provider/model/model-by-effort/harness/workspace aggregates with grand-total rows;
-- confirm every fixed period contains `Cost by model by effort` as a level-three sibling immediately after `Cost by model`, and every monthly report contains the equivalent level-four sibling pair;
+- confirm every fixed period contains `Cost by model by effort` as a level-three sibling immediately after `Cost by model`, and every calendar archive report contains the equivalent level-four sibling pair;
 - confirm every period places `Totals` immediately after `Cost by workspace` at the same heading level;
 - confirm every HTML table header is sortable, initial row order is unchanged, a newly selected column starts descending, and `Total` rows remain pinned last;
 - confirm every HTML level-two, level-three, and level-four report section is a `<details>` disclosure without an `open` attribute, so all sections load collapsed;

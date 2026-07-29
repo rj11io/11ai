@@ -936,14 +936,24 @@ function groupBy(items, selector) {
 }
 
 function windowDefinitions() {
+  const todayStart = new Date(generatedTime.getFullYear(), generatedTime.getMonth(), generatedTime.getDate())
   const yearStart = new Date(generatedTime.getFullYear(), 0, 1)
   const monthStart = new Date(generatedTime.getFullYear(), generatedTime.getMonth(), 1)
+  const quarterStart = new Date(generatedTime.getFullYear(), Math.floor(generatedTime.getMonth() / 3) * 3, 1)
+  const past24Start = new Date(generatedTime.getTime() - 24 * 60 * 60 * 1000)
   const past7Start = new Date(generatedTime.getTime() - 7 * 24 * 60 * 60 * 1000)
   const past30Start = new Date(generatedTime.getTime() - 30 * 24 * 60 * 60 * 1000)
+  const past60Start = new Date(generatedTime.getTime() - 60 * 24 * 60 * 60 * 1000)
+  const past90Start = new Date(generatedTime.getTime() - 90 * 24 * 60 * 60 * 1000)
   return [
+    { title: "Past 24 hours", start: past24Start, description: `Threads attributed from ${past24Start.toISOString()} through ${generatedAt}.` },
     { title: "Past 7 days", start: past7Start, description: `Threads attributed from ${past7Start.toISOString()} through ${generatedAt}.` },
     { title: "Past 30 days", start: past30Start, description: `Threads attributed from ${past30Start.toISOString()} through ${generatedAt}.` },
+    { title: "Past 60 days", start: past60Start, description: `Threads attributed from ${past60Start.toISOString()} through ${generatedAt}.` },
+    { title: "Past 90 days", start: past90Start, description: `Threads attributed from ${past90Start.toISOString()} through ${generatedAt}.` },
+    { title: "Today", start: todayStart, description: `Threads attributed from ${todayStart.toISOString()} through ${generatedAt}, using the machine's local calendar day.` },
     { title: "Month to date", start: monthStart, description: `Threads attributed from ${monthStart.toISOString()} through ${generatedAt}.` },
+    { title: "Quarter to date", start: quarterStart, description: `Threads attributed from ${quarterStart.toISOString()} through ${generatedAt}.` },
     { title: "Year to date", start: yearStart, description: `Threads attributed from ${yearStart.toISOString()} through ${generatedAt}.` },
     { title: "All time", start: null, description: "Every recognized thread, including threads without a usable timestamp." },
   ]
@@ -975,6 +985,46 @@ function monthlyDefinitions(threads) {
     })
   }
   return [...months.values()].sort((a, b) => b.start - a.start)
+}
+
+function quarterlyDefinitions(threads) {
+  const quarters = new Map()
+  for (const thread of threads) {
+    const date = threadTime(thread)
+    if (!date || date > generatedTime) continue
+    const year = date.getFullYear()
+    const quarter = Math.floor(date.getMonth() / 3)
+    const key = `${year}-Q${quarter + 1}`
+    if (quarters.has(key)) continue
+    const start = new Date(year, quarter * 3, 1)
+    const end = new Date(year, quarter * 3 + 3, 1)
+    quarters.set(key, {
+      title: `Q${quarter + 1} ${year}`,
+      start,
+      end,
+      description: `Threads attributed to the local calendar quarter from ${start.toISOString()} up to ${end.toISOString()} (exclusive).`,
+    })
+  }
+  return [...quarters.values()].sort((a, b) => b.start - a.start)
+}
+
+function yearlyDefinitions(threads) {
+  const years = new Map()
+  for (const thread of threads) {
+    const date = threadTime(thread)
+    if (!date || date > generatedTime) continue
+    const year = date.getFullYear()
+    if (years.has(year)) continue
+    const start = new Date(year, 0, 1)
+    const end = new Date(year + 1, 0, 1)
+    years.set(year, {
+      title: String(year),
+      start,
+      end,
+      description: `Threads attributed to the local calendar year from ${start.toISOString()} up to ${end.toISOString()} (exclusive).`,
+    })
+  }
+  return [...years.values()].sort((a, b) => b.start - a.start)
 }
 
 function threadsForDefinition(threads, definition) {
@@ -1139,15 +1189,22 @@ function report({ threads, stats, malformed, duplicateIds }) {
     return windowSection(definition, threadsForDefinition(threads, definition))
   }
   const months = monthlyDefinitions(threads)
+  const quarters = quarterlyDefinitions(threads)
+  const years = yearlyDefinitions(threads)
 
   const lines = [
     "# Global LLM Cost Report",
     "",
     reportPoweredBy,
     "",
+    ...sectionFor("Past 24 hours"),
     ...sectionFor("Past 7 days"),
     ...sectionFor("Past 30 days"),
+    ...sectionFor("Past 60 days"),
+    ...sectionFor("Past 90 days"),
+    ...sectionFor("Today"),
     ...sectionFor("Month to date"),
+    ...sectionFor("Quarter to date"),
     ...sectionFor("Year to date"),
     "## Monthly reports",
     "",
@@ -1156,6 +1213,20 @@ function report({ threads, stats, malformed, duplicateIds }) {
     ...(months.length
       ? months.flatMap((definition) => windowSection(definition, threadsForDefinition(threads, definition), 3))
       : ["No dated threads are available for monthly reports.", ""]),
+    "## Quarterly reports",
+    "",
+    "Calendar-quarter reports use local calendar boundaries, include only quarters with dated activity, and appear newest first. Undated threads remain in All time only.",
+    "",
+    ...(quarters.length
+      ? quarters.flatMap((definition) => windowSection(definition, threadsForDefinition(threads, definition), 3))
+      : ["No dated threads are available for quarterly reports.", ""]),
+    "## Yearly reports",
+    "",
+    "Calendar-year reports use local calendar boundaries, include only years with dated activity, and appear newest first. Undated threads remain in All time only.",
+    "",
+    ...(years.length
+      ? years.flatMap((definition) => windowSection(definition, threadsForDefinition(threads, definition), 3))
+      : ["No dated threads are available for yearly reports.", ""]),
     ...sectionFor("All time"),
     "## Scan coverage",
     "",
@@ -1224,7 +1295,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "- Discover Codex, Claude Code, Gemini CLI, Cline, Roo Code, and OpenCode usage in conventional native local stores for every readable local account. Do not filter by project or recorded working directory.",
     "- Recursively inspect JSON, JSONL, and NDJSON files below each explicit `--include` path, excluding dependency, VCS, cache, virtual-environment, and build directories.",
     "- Use the last cumulative Codex token-count event; deduplicate Claude streaming records; aggregate Gemini per-message counters and Cline/Roo API request metrics; read OpenCode's session ledger in read-only mode; aggregate generic usage records by provider and model.",
-    "- Attribute a whole thread to its finish timestamp, falling back to its start timestamp. All time includes undated threads; dated periods exclude them. Year-to-date, month-to-date, and monthly reports use the machine's local calendar boundaries. Past 7 days and Past 30 days are rolling 168-hour and 720-hour windows.",
+    "- Attribute a whole thread to its finish timestamp, falling back to its start timestamp. All time includes undated threads; dated periods exclude them. Today and calendar-to-date/archive reports use the machine's local boundaries. Past 24 hours and Past 7/30/60/90 days are rolling 24/168/720/1,440/2,160-hour windows.",
     "- Preserve provider-native usage semantics: OpenAI cached input is a subset of input, while Anthropic cache buckets are disjoint. Reasoning tokens are a subset of output.",
     "- Read effort only from discoverable request, message, payload, metadata, or settings fields and group Claude usage by model and recorded effort. Normalize Claude Code ultracode to xhigh. Never infer a missing effort from current settings or model defaults; report it as n/a.",
     "- Measure wall time from the first to last distinct timestamp observed for a thread. Estimate active time by summing consecutive timestamp gaps with each gap capped at five minutes; report both as unavailable when fewer than two distinct timestamps exist.",
@@ -1586,6 +1657,16 @@ console.log(JSON.stringify({
     return [definition.title, { threads: items.length, knownTokens: totals.tokens, knownCostUsd: totals.costUsd }]
   })),
   monthlyReports: Object.fromEntries(monthlyDefinitions(threads).map((definition) => {
+    const items = threadsForDefinition(threads, definition)
+    const totals = rollup(items)
+    return [definition.title, { threads: items.length, knownTokens: totals.tokens, knownCostUsd: totals.costUsd }]
+  })),
+  quarterlyReports: Object.fromEntries(quarterlyDefinitions(threads).map((definition) => {
+    const items = threadsForDefinition(threads, definition)
+    const totals = rollup(items)
+    return [definition.title, { threads: items.length, knownTokens: totals.tokens, knownCostUsd: totals.costUsd }]
+  })),
+  yearlyReports: Object.fromEntries(yearlyDefinitions(threads).map((definition) => {
     const items = threadsForDefinition(threads, definition)
     const totals = rollup(items)
     return [definition.title, { threads: items.length, knownTokens: totals.tokens, knownCostUsd: totals.costUsd }]

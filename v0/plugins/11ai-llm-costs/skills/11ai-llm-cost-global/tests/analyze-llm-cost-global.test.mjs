@@ -31,7 +31,7 @@ try {
   const supplemental = join(fixtureRoot, "exports")
   const reportDir = join(fixtureRoot, "report")
   const secondReportDir = join(fixtureRoot, "report-2")
-  const recent = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+  const recent = new Date().toISOString()
   const older = "2020-01-15T12:00:00.000Z"
 
   writeJsonl(join(codexHome, "sessions", "recent.jsonl"), [
@@ -92,24 +92,40 @@ try {
   assert.equal(summary.recognizedFiles, 8)
   assert.equal(summary.threads, 8)
   assert.equal(summary.knownCosts, 8)
-  assert.deepEqual(Object.keys(summary.periods), ["Past 7 days", "Past 30 days", "Month to date", "Year to date", "All time"])
+  assert.deepEqual(Object.keys(summary.periods), ["Past 24 hours", "Past 7 days", "Past 30 days", "Past 60 days", "Past 90 days", "Today", "Month to date", "Quarter to date", "Year to date", "All time"])
   assert.equal(summary.periods["All time"].threads, 8)
+  assert.equal(summary.periods["Past 24 hours"].threads, 5)
   assert.equal(summary.periods["Past 7 days"].threads, 5)
   assert.equal(summary.periods["Past 30 days"].threads, 5)
+  assert.equal(summary.periods.Today.threads, 5)
   assert.ok(summary.periods["Past 30 days"].threads >= summary.periods["Past 7 days"].threads)
 
   const markdown = readFileSync(summary.markdownReport, "utf8")
   const html = readFileSync(summary.htmlReport, "utf8")
   assert.match(markdown, /^# Global LLM Cost Report\n\n_powered by \[11ai-llm-cost-global\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-global\)\._\n\n/)
   const recentMonth = new Date(recent).toLocaleString("en-US", { month: "long", year: "numeric" })
+  const recentDate = new Date(recent)
+  const recentQuarter = `Q${Math.floor(recentDate.getMonth() / 3) + 1} ${recentDate.getFullYear()}`
+  const recentYear = String(recentDate.getFullYear())
   assert.equal(summary.monthlyReports[recentMonth].threads, 5)
   assert.equal(summary.monthlyReports["January 2020"].threads, 2)
+  assert.equal(summary.quarterlyReports[recentQuarter].threads, 5)
+  assert.equal(summary.quarterlyReports["Q1 2020"].threads, 2)
+  assert.equal(summary.yearlyReports[recentYear].threads, 5)
+  assert.equal(summary.yearlyReports["2020"].threads, 2)
   assert.deepEqual(markdown.match(/^## .+$/gm), [
+    "## Past 24 hours",
     "## Past 7 days",
     "## Past 30 days",
+    "## Past 60 days",
+    "## Past 90 days",
+    "## Today",
     "## Month to date",
+    "## Quarter to date",
     "## Year to date",
     "## Monthly reports",
+    "## Quarterly reports",
+    "## Yearly reports",
     "## All time",
     "## Scan coverage",
     "## Pricing coverage",
@@ -120,21 +136,25 @@ try {
   assert.match(markdown, new RegExp(`^### ${recentMonth}$`, "m"))
   assert.match(markdown, /^### January 2020$/m)
   assert.ok(markdown.indexOf(`### ${recentMonth}`) < markdown.indexOf("### January 2020"))
-  assert.equal((markdown.match(/^### Totals$/gm) ?? []).length, 5)
-  assert.equal((markdown.match(/^#### Totals$/gm) ?? []).length, 2)
-  assert.equal((markdown.match(/^### Cost by harness$/gm) ?? []).length, 5)
-  assert.equal((markdown.match(/^#### Cost by harness$/gm) ?? []).length, 2)
-  assert.equal((markdown.match(/^### Cost by model by effort$/gm) ?? []).length, 5)
-  assert.equal((markdown.match(/^#### Cost by model by effort$/gm) ?? []).length, 2)
+  assert.match(markdown, new RegExp(`^### ${recentQuarter}$`, "m"))
+  assert.match(markdown, /^### Q1 2020$/m)
+  assert.match(markdown, new RegExp(`^### ${recentYear}$`, "m"))
+  assert.match(markdown, /^### 2020$/m)
+  assert.equal((markdown.match(/^### Totals$/gm) ?? []).length, 10)
+  assert.equal((markdown.match(/^#### Totals$/gm) ?? []).length, 6)
+  assert.equal((markdown.match(/^### Cost by harness$/gm) ?? []).length, 10)
+  assert.equal((markdown.match(/^#### Cost by harness$/gm) ?? []).length, 6)
+  assert.equal((markdown.match(/^### Cost by model by effort$/gm) ?? []).length, 10)
+  assert.equal((markdown.match(/^#### Cost by model by effort$/gm) ?? []).length, 6)
   const reportHeadings = markdown.match(/^#{2,4} .+$/gm) ?? []
   const modelHeadingIndexes = reportHeadings.flatMap((heading, index) => heading === "### Cost by model" ? [index] : [])
-  assert.equal(modelHeadingIndexes.length, 5)
+  assert.equal(modelHeadingIndexes.length, 10)
   for (const index of modelHeadingIndexes) assert.equal(reportHeadings[index + 1], "### Cost by model by effort")
   const monthlyModelHeadingIndexes = reportHeadings.flatMap((heading, index) => heading === "#### Cost by model" ? [index] : [])
-  assert.equal(monthlyModelHeadingIndexes.length, 2)
+  assert.equal(monthlyModelHeadingIndexes.length, 6)
   for (const index of monthlyModelHeadingIndexes) assert.equal(reportHeadings[index + 1], "#### Cost by model by effort")
   const workspaceHeadingIndexes = reportHeadings.flatMap((heading, index) => /^#{3,4} Cost by workspace$/.test(heading) ? [index] : [])
-  assert.equal(workspaceHeadingIndexes.length, 7)
+  assert.equal(workspaceHeadingIndexes.length, 16)
   for (const index of workspaceHeadingIndexes) {
     const level = reportHeadings[index].match(/^#+/)[0]
     assert.equal(reportHeadings[index + 1], `${level} Totals`)
@@ -152,10 +172,17 @@ try {
   assert.match(markdown, /\$1,234\.\d{4}/)
   assert.match(markdown, /Scope: Codex: explicit override; Claude: explicit override; Gemini: explicit override/)
   assert.match(markdown, /^## Year to date$/m)
+  assert.match(markdown, /^## Quarter to date$/m)
   assert.match(markdown, /^## Month to date$/m)
+  assert.match(markdown, /^## Today$/m)
+  assert.match(markdown, /^## Past 24 hours$/m)
   assert.match(markdown, /^## Past 7 days$/m)
   assert.match(markdown, /^## Past 30 days$/m)
+  assert.match(markdown, /^## Past 60 days$/m)
+  assert.match(markdown, /^## Past 90 days$/m)
   assert.match(markdown, /^## Monthly reports$/m)
+  assert.match(markdown, /^## Quarterly reports$/m)
+  assert.match(markdown, /^## Yearly reports$/m)
   assert.match(markdown, /\| Pricing catalog \| bundled default \(version 2, updated 2026-07-26\) \|/)
   assert.doesNotMatch(markdown, /^### Models requiring a pricing update$/m)
   assert.match(markdown, /codex-session\/[^/]+\/sessions\/recent\.jsonl/)
@@ -176,18 +203,25 @@ try {
   assert.match(html, /<h1>Global LLM Cost Report <span class="powered-by"><a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-global" target="_blank" rel="noopener noreferrer">powered by 11ai-llm-cost-global<\/a><\/span><\/h1>/)
   assert.equal((html.match(/powered by 11ai-llm-cost-global/g) ?? []).length, 1)
   assert.match(html, /<summary><span class="section-title">All time<\/span><\/summary>/)
-  assert.equal((html.match(/<summary><span class="section-title">Totals<\/span><\/summary>/g) ?? []).length, 7)
-  assert.equal((html.match(/<summary><span class="section-title">Cost by harness<\/span><\/summary>/g) ?? []).length, 7)
-  assert.equal((html.match(/<summary><span class="section-title">Cost by model by effort<\/span><\/summary>/g) ?? []).length, 7)
+  assert.equal((html.match(/<summary><span class="section-title">Totals<\/span><\/summary>/g) ?? []).length, 16)
+  assert.equal((html.match(/<summary><span class="section-title">Cost by harness<\/span><\/summary>/g) ?? []).length, 16)
+  assert.equal((html.match(/<summary><span class="section-title">Cost by model by effort<\/span><\/summary>/g) ?? []).length, 16)
   assert.match(html, /<summary><span class="section-title">Year to date<\/span><\/summary>/)
+  assert.match(html, /<summary><span class="section-title">Quarter to date<\/span><\/summary>/)
   assert.match(html, /<summary><span class="section-title">Month to date<\/span><\/summary>/)
+  assert.match(html, /<summary><span class="section-title">Today<\/span><\/summary>/)
+  assert.match(html, /<summary><span class="section-title">Past 24 hours<\/span><\/summary>/)
   assert.match(html, /<summary><span class="section-title">Past 7 days<\/span><\/summary>/)
   assert.match(html, /<summary><span class="section-title">Past 30 days<\/span><\/summary>/)
+  assert.match(html, /<summary><span class="section-title">Past 60 days<\/span><\/summary>/)
+  assert.match(html, /<summary><span class="section-title">Past 90 days<\/span><\/summary>/)
   assert.match(html, /<summary><span class="section-title">Monthly reports<\/span><\/summary>/)
+  assert.match(html, /<summary><span class="section-title">Quarterly reports<\/span><\/summary>/)
+  assert.match(html, /<summary><span class="section-title">Yearly reports<\/span><\/summary>/)
   assert.doesNotMatch(html, /<details\b[^>]*\bopen\b[^>]*>/)
   assert.match(html, /<table>/)
   assert.match(html, /codex-session\/[^/]+\/sessions\/recent\.jsonl/)
-  const orderedHtmlSections = ["Past 7 days", "Past 30 days", "Month to date", "Year to date", "Monthly reports", "All time", "Scan coverage", "Pricing coverage", "Anomalies and limitations", "Methodology"]
+  const orderedHtmlSections = ["Past 24 hours", "Past 7 days", "Past 30 days", "Past 60 days", "Past 90 days", "Today", "Month to date", "Quarter to date", "Year to date", "Monthly reports", "Quarterly reports", "Yearly reports", "All time", "Scan coverage", "Pricing coverage", "Anomalies and limitations", "Methodology"]
   for (let index = 1; index < orderedHtmlSections.length; index += 1) {
     assert.ok(html.indexOf(`class="section-title">${orderedHtmlSections[index - 1]}</span>`) < html.indexOf(`class="section-title">${orderedHtmlSections[index]}</span>`))
   }
@@ -208,6 +242,8 @@ try {
   const secondSummary = run([...harnessArgs, "--include", supplemental, "--output", secondReportDir])
   assert.deepEqual(secondSummary.periods, summary.periods)
   assert.deepEqual(secondSummary.monthlyReports, summary.monthlyReports)
+  assert.deepEqual(secondSummary.quarterlyReports, summary.quarterlyReports)
+  assert.deepEqual(secondSummary.yearlyReports, summary.yearlyReports)
   const normalizeRunTime = (value) => value
     .replace(/^> Generated .*$/m, "> Generated <run-time>")
     .replace(/^Threads attributed from .* through .*\.$/gm, "Threads attributed from <period-start> through <run-time>.")
