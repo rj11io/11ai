@@ -116,6 +116,8 @@ try {
   const levelTwoHeadings = markdown.match(/^## .+$/gm) ?? []
   assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Cost by model") + 1], "## Cost by model by effort")
   assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Cost by root and child folder") + 1], "## Totals")
+  assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Thread detail") + 1], "## Scan coverage")
+  assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Scan coverage") + 1], "## Pricing coverage")
   assert.match(markdown, /\| openai \/ gpt-5\.6-sol \| low \| \$\d+\.\d+ \| 1,000 \| 600 \| \$\d+\.\d+ \| 100 \| \$\d+\.\d+ \| 1,100 \| \$\d+\.\d+ \| 1 \| \$\d+\.\d+ \|/)
   assert.doesNotMatch(markdown, /\| openai \/ gpt-5\.6-sol \| light \|/)
   assert.match(markdown, /\| anthropic \/ claude-sonnet-4-6 \| medium \|/)
@@ -151,6 +153,8 @@ try {
   assert.match(html, /<summary><span class="section-title">Pricing catalog match detail<\/span><\/summary>/)
   assert.match(html, /<summary><span class="section-title">Cost by model by effort<\/span><\/summary>/)
   assert.ok(html.indexOf('class="section-title">Cost by root and child folder</span>') < html.indexOf('class="section-title">Totals</span>'))
+  assert.ok(html.indexOf('class="section-title">Thread detail</span>') < html.indexOf('class="section-title">Scan coverage</span>'))
+  assert.ok(html.indexOf('class="section-title">Scan coverage</span>') < html.indexOf('class="section-title">Pricing coverage</span>'))
   assert.doesNotMatch(html, /<details\b[^>]*\bopen\b[^>]*>/)
   assert.match(html, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-project" target="_blank" rel="noopener noreferrer">11ai-llm-cost-project<\/a>/)
   assert.match(html, /<p class="signature"><em>LLM token cost analysis by /)

@@ -50,7 +50,7 @@ Capture Claude effort only from recorded request/configuration fields when prese
 
 ## Report requirements
 
-Place `Totals` immediately after `Cost by root and child folder` in both report formats.
+Place `Totals` immediately after `Cost by root and child folder`, and place `Scan coverage` immediately before `Pricing coverage`, in both report formats.
 
 Format every USD value with a dollar sign, comma thousands separators, and exactly four decimal places, such as `$1,234.5678`.
 
@@ -82,6 +82,7 @@ Before reporting completion:
 - confirm the HTML main title includes the smaller inline linked text `powered by 11ai-llm-cost-single-thread` and that its link safely opens in a new tab;
 - confirm both formats contain root/sub-agent counts and relationship detail, the standardized token breakdown and cost-adjacent metric order, aggregate cost per thread, plus `Cost by model by effort` as a level-two sibling immediately after `Cost by model`, totals, pricing coverage, limitations, and the exact linked signature;
 - confirm `Totals` is a level-two sibling immediately after `Cost by root and child folder`;
+- confirm `Scan coverage` is a level-two sibling immediately before `Pricing coverage`;
 - confirm every Cost by table contains total, input, output, per-1M-token, and per-thread costs in the required order, with a grand-total row;
 - confirm every HTML level-two and level-three section is collapsed by default;
 - confirm the HTML is fluid and compact without an outer card, and the generation message follows all disclosures immediately before the signature in both formats;

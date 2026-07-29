@@ -76,7 +76,7 @@ Measure wall time from the first to last distinct timestamp observed for a threa
 
 ## Report requirements
 
-Place `Totals` immediately after `Cost by root and child folder` in both report formats.
+Place `Totals` immediately after `Cost by root and child folder`, and place `Scan coverage` immediately before `Pricing coverage`, in both report formats.
 
 Format every USD value with a dollar sign, comma thousands separators, and exactly four decimal places, such as `$1,234.5678`.
 
@@ -116,6 +116,7 @@ Before reporting completion:
 - confirm both reports display the standardized token breakdown and cost-adjacent metric order, aggregate cost per thread, totals, provider/model/model-by-effort/harness/folder aggregates with grand-total rows, scanned files, recognized threads, known and unknown costs, pricing coverage, limitations, and the exact linked signature above;
 - confirm `Cost by model by effort` is a level-two sibling immediately after `Cost by model`;
 - confirm `Totals` is a level-two sibling immediately after `Cost by root and child folder`;
+- confirm `Scan coverage` is a level-two sibling immediately before `Pricing coverage`;
 - confirm every HTML table header is sortable, initial row order is unchanged, a newly selected column starts descending, and `Total` rows remain pinned last;
 - confirm every HTML level-two and level-three report section is a `<details>` disclosure without an `open` attribute, so all sections load collapsed;
 - confirm the HTML is fluid and compact without an outer card, and the generation message follows all disclosures immediately before the signature in both formats;
