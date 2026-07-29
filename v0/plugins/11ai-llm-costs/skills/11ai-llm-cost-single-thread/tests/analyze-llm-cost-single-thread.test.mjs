@@ -91,6 +91,7 @@ try {
   assert.doesNotMatch(markdown, /^### Models requiring a pricing update$/m)
   const levelTwoHeadings = markdown.match(/^## .+$/gm) ?? []
   assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Cost by model") + 1], "## Cost by model by effort")
+  assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Cost by root and child folder") + 1], "## Totals")
   assert.match(markdown, /\| openai \/ gpt-5\.6-sol \| ultra \| \$\d+\.\d+ \| 1,000 \| 400 \| \$\d+\.\d+ \| 100 \| \$\d+\.\d+ \| 1,100 \| \$\d+\.\d+ \| 1 \| \$\d+\.\d+ \|/)
   assert.match(markdown, /\| Selected root threads \| 1 \|/)
   assert.match(markdown, /\| Included sub-agent threads \| 2 \|/)
@@ -115,6 +116,7 @@ try {
   assert.ok(markdown.lastIndexOf("> Generated ") < markdown.lastIndexOf("_LLM token cost analysis"))
   assert.match(html, /<h1>Single-Thread LLM Cost Report <span class="powered-by"><a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-single-thread" target="_blank" rel="noopener noreferrer">powered by 11ai-llm-cost-single-thread<\/a><\/span><\/h1>/)
   assert.equal((html.match(/powered by 11ai-llm-cost-single-thread/g) ?? []).length, 1)
+  assert.ok(html.indexOf('class="section-title">Cost by root and child folder</span>') < html.indexOf('class="section-title">Totals</span>'))
   assert.match(html, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-single-thread" target="_blank" rel="noopener noreferrer">11ai-llm-cost-single-thread<\/a>/)
   assert.doesNotMatch(html, /<details\b[^>]*\bopen\b[^>]*>/)
   assert.equal((html.match(/<th\b/g) ?? []).length, (html.match(/class="sort-button"/g) ?? []).length)

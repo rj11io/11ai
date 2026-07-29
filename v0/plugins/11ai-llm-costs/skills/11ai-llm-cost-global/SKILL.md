@@ -92,6 +92,8 @@ Measure wall time from the first to last distinct timestamp observed for a threa
 
 ## Report requirements
 
+Within every fixed and monthly period, place `Totals` immediately after `Cost by workspace` at the same heading level.
+
 Format every USD value with a dollar sign, comma thousands separators, and exactly four decimal places, such as `$1,234.5678`.
 
 For Cost by tables, the following specific layout supersedes any general metric-order guidance below: put total `Cost` immediately after the provider/model/effort/workspace identity columns, then use `Input`, `Cached`, `Input cost`, `Output`, `Output cost`, total `Tokens`, `Cost / 1M tokens`, `Threads`, `Cost / thread`, active time, cost per active hour, wall time, and cost per wall hour. Input cost includes uncached input, cache reads, and supported cache-write classes. Cost per 1M tokens divides known total cost by total measured/provider tokens and multiplies the result by one million; cost per thread divides known cost by all recognized threads, so either may be understated when coverage is incomplete.
@@ -131,6 +133,7 @@ Before reporting completion:
 - confirm `Monthly reports` contains one newest-first level-three subsection for every calendar month with dated activity and that every month contains the same full breakdown at level four;
 - confirm every period in both formats displays the standardized token breakdown and cost-adjacent metric order, aggregate cost per thread, totals, and provider/model/model-by-effort/harness/workspace aggregates with grand-total rows;
 - confirm every fixed period contains `Cost by model by effort` as a level-three sibling immediately after `Cost by model`, and every monthly report contains the equivalent level-four sibling pair;
+- confirm every period places `Totals` immediately after `Cost by workspace` at the same heading level;
 - confirm every HTML table header is sortable, initial row order is unchanged, a newly selected column starts descending, and `Total` rows remain pinned last;
 - confirm every HTML level-two, level-three, and level-four report section is a `<details>` disclosure without an `open` attribute, so all sections load collapsed;
 - confirm the HTML is fluid and compact without an outer card, and the generation message follows all disclosures immediately before the signature in both formats;

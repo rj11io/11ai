@@ -76,6 +76,8 @@ Measure wall time from the first to last distinct timestamp observed for a threa
 
 ## Report requirements
 
+Place `Totals` immediately after `Cost by root and child folder` in both report formats.
+
 Format every USD value with a dollar sign, comma thousands separators, and exactly four decimal places, such as `$1,234.5678`.
 
 For Cost by tables, the following specific layout supersedes any general metric-order guidance below: put total `Cost` immediately after the provider/model/effort/folder identity columns, then use `Input`, `Cached`, `Input cost`, `Output`, `Output cost`, total `Tokens`, `Cost / 1M tokens`, `Threads`, `Cost / thread`, active time, cost per active hour, wall time, and cost per wall hour. Input cost includes uncached input, cache reads, and supported cache-write classes. Cost per 1M tokens divides known total cost by total measured/provider tokens and multiplies the result by one million; cost per thread divides known cost by all recognized threads, so either may be understated when coverage is incomplete.
@@ -113,6 +115,7 @@ Before reporting completion:
 - confirm the HTML main title includes the smaller inline linked text `powered by 11ai-llm-cost-project` and that its link safely opens in a new tab;
 - confirm both reports display the standardized token breakdown and cost-adjacent metric order, aggregate cost per thread, totals, provider/model/model-by-effort/harness/folder aggregates with grand-total rows, scanned files, recognized threads, known and unknown costs, pricing coverage, limitations, and the exact linked signature above;
 - confirm `Cost by model by effort` is a level-two sibling immediately after `Cost by model`;
+- confirm `Totals` is a level-two sibling immediately after `Cost by root and child folder`;
 - confirm every HTML table header is sortable, initial row order is unchanged, a newly selected column starts descending, and `Total` rows remain pinned last;
 - confirm every HTML level-two and level-three report section is a `<details>` disclosure without an `open` attribute, so all sections load collapsed;
 - confirm the HTML is fluid and compact without an outer card, and the generation message follows all disclosures immediately before the signature in both formats;

@@ -50,6 +50,8 @@ Capture Claude effort only from recorded request/configuration fields when prese
 
 ## Report requirements
 
+Place `Totals` immediately after `Cost by root and child folder` in both report formats.
+
 Format every USD value with a dollar sign, comma thousands separators, and exactly four decimal places, such as `$1,234.5678`.
 
 For Cost by tables, the following specific layout supersedes any general metric-order guidance below: put total `Cost` immediately after the provider/model/effort/folder identity columns, then use `Input`, `Cached`, `Input cost`, `Output`, `Output cost`, total `Tokens`, `Cost / 1M tokens`, `Threads`, `Cost / thread`, active time, cost per active hour, wall time, and cost per wall hour. Input cost includes uncached input, cache reads, and supported cache-write classes. Cost per 1M tokens divides known total cost by total measured/provider tokens and multiplies the result by one million; cost per thread divides known cost by all recognized threads, so either may be understated when coverage is incomplete.
@@ -79,6 +81,7 @@ Before reporting completion:
 - confirm the Markdown report places the linked `powered by 11ai-llm-cost-single-thread` attribution immediately below its H1;
 - confirm the HTML main title includes the smaller inline linked text `powered by 11ai-llm-cost-single-thread` and that its link safely opens in a new tab;
 - confirm both formats contain root/sub-agent counts and relationship detail, the standardized token breakdown and cost-adjacent metric order, aggregate cost per thread, plus `Cost by model by effort` as a level-two sibling immediately after `Cost by model`, totals, pricing coverage, limitations, and the exact linked signature;
+- confirm `Totals` is a level-two sibling immediately after `Cost by root and child folder`;
 - confirm every Cost by table contains total, input, output, per-1M-token, and per-thread costs in the required order, with a grand-total row;
 - confirm every HTML level-two and level-three section is collapsed by default;
 - confirm the HTML is fluid and compact without an outer card, and the generation message follows all disclosures immediately before the signature in both formats;

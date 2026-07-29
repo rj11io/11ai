@@ -133,6 +133,12 @@ try {
   const monthlyModelHeadingIndexes = reportHeadings.flatMap((heading, index) => heading === "#### Cost by model" ? [index] : [])
   assert.equal(monthlyModelHeadingIndexes.length, 2)
   for (const index of monthlyModelHeadingIndexes) assert.equal(reportHeadings[index + 1], "#### Cost by model by effort")
+  const workspaceHeadingIndexes = reportHeadings.flatMap((heading, index) => /^#{3,4} Cost by workspace$/.test(heading) ? [index] : [])
+  assert.equal(workspaceHeadingIndexes.length, 7)
+  for (const index of workspaceHeadingIndexes) {
+    const level = reportHeadings[index].match(/^#+/)[0]
+    assert.equal(reportHeadings[index + 1], `${level} Totals`)
+  }
   assert.match(markdown, /\| openai \/ gpt-5\.6-sol \| high \|/)
   assert.match(markdown, /\| anthropic \/ claude-sonnet-4-6 \| n\/a \|/)
   assert.match(markdown, /\| Harness \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Reported-cost sum \| Average tokens \/ thread \| Priced \| Unpriced \|/)
