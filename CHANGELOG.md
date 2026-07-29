@@ -1,3 +1,16 @@
+# [1.26.0](https://github.com/rj11io/11ai/compare/v1.25.1...v1.26.0) (2026-07-29)
+
+
+### Bug Fixes
+
+* improve report structure ([50d1342](https://github.com/rj11io/11ai/commit/50d1342d64d58d32c3703452b305e0ee4d489b39))
+* improve report structure ([94d209c](https://github.com/rj11io/11ai/commit/94d209c6f6af0bcb11a3af5b19fed794d72e0cb8))
+
+
+### Features
+
+* new timeframes ([f8acaf4](https://github.com/rj11io/11ai/commit/f8acaf4ba54e7e52d4d7cec6d1bad47441e0aa8e))
+
 ## [1.25.1](https://github.com/rj11io/11ai/compare/v1.25.0...v1.25.1) (2026-07-26)
 
 
