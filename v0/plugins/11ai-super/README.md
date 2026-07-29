@@ -1,6 +1,6 @@
 # 11ai Super
 
-Eight long-running skills that perform a project task repeatedly, verify the result, and stop when material issues are resolved or clearly documented.
+Nine long-running skills that perform a project task repeatedly, verify the result, and stop when material issues are resolved or clearly documented.
 
 ## Choose a skill
 
@@ -14,6 +14,7 @@ Eight long-running skills that perform a project task repeatedly, verify the res
 | [`11ai-super-security`](./skills/11ai-super-security/SKILL.md) | Auditing, fixing, and repeatedly hardening a project's security |
 | [`11ai-super-skill-qa`](./skills/11ai-super-skill-qa/SKILL.md) | Auditing and repairing skill formatting, harness metadata, plugin discovery, packaging, catalogs, creator templates, and validation guardrails |
 | [`11ai-super-ux`](./skills/11ai-super-ux/SKILL.md) | Auditing and improving usability, accessibility, responsiveness, visual consistency, and interface polish |
+| [`11ai-super-visual-a11y`](./skills/11ai-super-visual-a11y/SKILL.md) | Measuring and fixing contrast, focus visibility, target size, text scaling, and motion so light and dark themes clear the same thresholds |
 
 ## Shared workflow
 

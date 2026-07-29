@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Super Visual A11y"
+  short_description: "Measure, fix, and balance light and dark mode legibility"
+  default_prompt: "Use $11ai-super-visual-a11y to measure this project's visual accessibility in both light and dark modes, then iteratively fix and re-measure until both themes clear the thresholds."
