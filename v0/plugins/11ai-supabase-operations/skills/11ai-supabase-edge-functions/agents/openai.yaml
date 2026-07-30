@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Supabase Edge Functions"
+  short_description: "Write and deploy Supabase functions"
+  default_prompt: "Use $11ai-supabase-edge-functions to write, run, and deploy a Supabase edge function with its secrets."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai SSH Tunnels"
+  short_description: "Forward ports through SSH tunnels"
+  default_prompt: "Use $11ai-ssh-tunnels to forward a local, remote, or dynamic port through SSH."

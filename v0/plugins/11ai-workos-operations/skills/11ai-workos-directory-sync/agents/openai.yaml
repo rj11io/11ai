@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai WorkOS Directory Sync"
+  short_description: "Sync users and groups from a directory"
+  default_prompt: "Use $11ai-workos-directory-sync to set up directory sync and reconcile users and groups into the application."

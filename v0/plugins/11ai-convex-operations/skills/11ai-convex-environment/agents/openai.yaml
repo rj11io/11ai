@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Convex Environment"
+  short_description: "Inspect Convex deployments and env vars"
+  default_prompt: "Use $11ai-convex-environment to inspect which Convex deployment is active and what environment values it holds."

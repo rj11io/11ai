@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai SSH Setup"
+  short_description: "Install and configure an SSH client"
+  default_prompt: "Use $11ai-ssh-setup to install and configure the SSH client, agent, and first key on this machine."

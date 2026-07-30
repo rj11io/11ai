@@ -1,13 +1,16 @@
 # 11ai Jest Operations
 
-Twelve standalone skills for inspecting Jest projects, running focused tests,
-and diagnosing common test failures across JavaScript and TypeScript repositories.
+Fourteen standalone skills for setting up Jest, inspecting Jest projects, running
+focused tests, connecting Jest to the tools around it, and diagnosing common test
+failures across JavaScript and TypeScript repositories.
 
 ## Choose a skill
 
 | Skill | Use it for |
 | --- | --- |
+| [`11ai-jest-setup`](./skills/11ai-jest-setup/SKILL.md) | Installing Jest and choosing the transform, module system, environment, module mapping, and scripts |
 | [`11ai-jest-environment`](./skills/11ai-jest-environment/SKILL.md) | Inspecting the package manager, Jest version, test scripts, config, and test environment |
+| [`11ai-jest-integrations`](./skills/11ai-jest-integrations/SKILL.md) | Connecting Jest to Testing Library, request interception, containers, reporters, coverage services, and the debugger |
 | [`11ai-jest-runner`](./skills/11ai-jest-runner/SKILL.md) | Running all, selected, related, changed, or named tests with the right argument forwarding |
 | [`11ai-jest-watch`](./skills/11ai-jest-watch/SKILL.md) | Using interactive watch mode without accidentally turning it into a CI command |
 | [`11ai-jest-coverage`](./skills/11ai-jest-coverage/SKILL.md) | Collecting, reading, and improving Jest coverage reports and thresholds |
@@ -41,10 +44,10 @@ or running a focused test before collecting coverage.
 
 ## Follow-on skills worth adding
 
-- `11ai-jest-dom` for jsdom setup, Testing Library integration, and browser API gaps.
-- `11ai-jest-typescript-and-esm` for Babel, `ts-jest`, SWC, native ESM, and module-resolution migrations.
 - `11ai-jest-test-authoring` for adding focused unit tests from an existing behavior contract.
-- `11ai-jest-multi-project` for monorepos, project selection, and shared configuration.
 - `11ai-jest-flaky-tests` for repeat runs, seeds, isolation, open handles, and order-dependent failures.
-- `11ai-jest-reporters` for JSON, JUnit, custom reporters, and CI artifact wiring.
 - `11ai-jest-performance` for worker sizing, memory pressure, cache behavior, and slow-test triage.
+
+The transform and module-resolution choices once listed here now live in
+`11ai-jest-setup`; jsdom gaps, Testing Library, reporters, and monorepo project
+selection live in `11ai-jest-integrations`.

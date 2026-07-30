@@ -42,29 +42,36 @@ The files are installed at `node_modules/@rj11io/11ai/v0/plugins/`. You can also
 
 ## Skill catalog
 
-The repository currently contains 156 skills in 20 plugins.
+The repository currently contains 243 skills in 27 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
 | [Agent automation](./v0/plugins/11ai-agent-automation/README.md) | 8 | Scheduled autonomous work using the Ledger + Conductor + Routine pattern |
 | [AI chat](./v0/plugins/11ai-ai-chat/README.md) | 9 | End-to-end chat, sessions, tools, models, providers, UI, and messaging-platform extensions |
-| [Ant Design operations](./v0/plugins/11ai-antdesign-operations/README.md) | 10 | Common Ant Design React setup, layouts, forms, tables, navigation, overlays, display, theming, reference, and troubleshooting |
-| [AWS operations](./v0/plugins/11ai-aws-operations/README.md) | 11 | Common AWS CLI operations for account context, S3, EC2, Lambda, ECS, ECR, CloudWatch, IAM, CloudFormation, reference, and troubleshooting |
+| [Ant Design operations](./v0/plugins/11ai-antdesign-operations/README.md) | 11 | Common Ant Design React setup, layouts, forms, tables, navigation, overlays, display, theming, stack integrations, reference, and troubleshooting |
+| [AWS operations](./v0/plugins/11ai-aws-operations/README.md) | 13 | Common AWS CLI operations for setup, account context, S3, EC2, Lambda, ECS, ECR, CloudWatch, IAM, CloudFormation, integrations, reference, and troubleshooting |
+| [Bash operations](./v0/plugins/11ai-bash-operations/README.md) | 10 | Shell inspection, strict-mode scripting, text processing, files, processes, linting, and troubleshooting |
 | [Benchmarks](./v0/plugins/11ai-benchmarks/README.md) | 19 | Running resumable soft/final lifecycles; creating, auditing, AI/human judging, accounting, reviewing, synchronizing, and publishing benchmarks |
 | [Blog builder](./v0/plugins/11ai-blog-builder/README.md) | 8 | Building file-backed editorial blogs with composable CMS, author, Markdown, content, navigation, and UI skills |
 | [Cleanup](./v0/plugins/11ai-cleanup/README.md) | 5 | Safely finding and removing abandoned local resources |
+| [Clerk operations](./v0/plugins/11ai-clerk-operations/README.md) | 10 | Clerk setup, sign-in flows, server-side session protection, users, organizations, webhooks, and troubleshooting |
 | [Codebase](./v0/plugins/11ai-codebase/README.md) | 3 | Playwright setup, npm publishing, and automated releases |
-| [Docker operations](./v0/plugins/11ai-docker-operations/README.md) | 10 | Common Docker CLI and Compose operations, safe cleanup, and troubleshooting |
-| [Git operations](./v0/plugins/11ai-git-operations/README.md) | 12 | Modular, safety-first skills for common Git operations, repository workflows, learning, and troubleshooting |
+| [Convex operations](./v0/plugins/11ai-convex-operations/README.md) | 11 | Convex setup, schema and indexes, functions, actions and crons, auth, file storage, deployments, and troubleshooting |
+| [Docker operations](./v0/plugins/11ai-docker-operations/README.md) | 12 | Common Docker CLI and Compose operations, setup, integrations, safe cleanup, and troubleshooting |
+| [Git operations](./v0/plugins/11ai-git-operations/README.md) | 14 | Modular, safety-first skills for common Git operations, setup, integrations, repository workflows, learning, and troubleshooting |
 | [Integrations](./v0/plugins/11ai-integrations/README.md) | 3 | Adding Convex, WorkOS AuthKit, or both to Next.js applications |
-| [Jest operations](./v0/plugins/11ai-jest-operations/README.md) | 12 | Inspecting, running, configuring, and troubleshooting common Jest operations |
+| [Jest operations](./v0/plugins/11ai-jest-operations/README.md) | 14 | Setting up, inspecting, running, integrating, configuring, and troubleshooting common Jest operations |
 | [LLM costs](./v0/plugins/11ai-llm-costs/README.md) | 4 | Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports |
-| [MongoDB operations](./v0/plugins/11ai-mongodb-operations/README.md) | 10 | Common MongoDB Shell and Database Tools work with read-first safety checks |
-| [Node.js API operations](./v0/plugins/11ai-nodejs-api-operations/README.md) | 10 | Inspecting, changing, testing, and troubleshooting Node.js APIs across common frameworks |
+| [MongoDB operations](./v0/plugins/11ai-mongodb-operations/README.md) | 12 | Common MongoDB Shell and Database Tools work with setup, driver integrations, and read-first safety checks |
+| [Node.js API operations](./v0/plugins/11ai-nodejs-api-operations/README.md) | 12 | Scaffolding, inspecting, changing, testing, integrating, and troubleshooting Node.js APIs across common frameworks |
 | [Super](./v0/plugins/11ai-super/README.md) | 9 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
 | [Security](./v0/plugins/11ai-security/README.md) | 1 | Read-only dependency vulnerability and supply-chain auditing with critical host-harm triage |
-| [Utilities](./v0/plugins/11ai-utils/README.md) | 7 | Markdown compression, reverse engineering, critique, analytics, publication CMS, calls to action, and project sites |
+| [SSH operations](./v0/plugins/11ai-ssh-operations/README.md) | 10 | OpenSSH client setup, keys, host configuration, sessions, tunnels, file transfer, and troubleshooting |
+| [Stripe operations](./v0/plugins/11ai-stripe-operations/README.md) | 11 | Stripe setup, customers, prices, Checkout, subscriptions, payments, webhooks, entitlements, and troubleshooting |
+| [Supabase operations](./v0/plugins/11ai-supabase-operations/README.md) | 11 | Supabase setup, Postgres data and migrations, row level security, auth, storage, edge functions, and troubleshooting |
+| [Utilities](./v0/plugins/11ai-utils/README.md) | 8 | Markdown compression, reverse engineering, critique, analytics, publication CMS, calls to action, project sites, and operations-plugin scaffolding |
 | [Web design](./v0/plugins/11ai-web-design/README.md) | 3 | The 11ai visual language and deliberate content-led styling for accessible web interfaces |
+| [WorkOS operations](./v0/plugins/11ai-workos-operations/README.md) | 10 | WorkOS setup, AuthKit sessions, enterprise single sign-on, directory sync, organizations, webhooks, and troubleshooting |
 | [Cross-harness](./v0/plugins/11ai-xharness/README.md) | 2 | Delegating work to agents running in other CLI harnesses |
 
 Start with a plugin's README to choose a skill, then name that skill in your request. Skills provide instructions and examples; they do not install the application dependencies used in those examples by themselves.
@@ -78,23 +85,30 @@ v0/
   plugins/
     11ai-agent-automation/    8 automation skills under skills/
     11ai-ai-chat/             9 AI chat skills under skills/
-    11ai-antdesign-operations/ 10 Ant Design React operation skills under skills/
-    11ai-aws-operations/      11 AWS CLI operation skills under skills/
+    11ai-antdesign-operations/ 11 Ant Design React operation skills under skills/
+    11ai-aws-operations/      13 AWS CLI operation skills under skills/
+    11ai-bash-operations/     10 Bash shell and scripting skills under skills/
     11ai-benchmarks/          19 benchmark skills under skills/
     11ai-blog-builder/        8 editorial blog skills under skills/
     11ai-cleanup/             5 cleanup skills under skills/
+    11ai-clerk-operations/    10 Clerk authentication operation skills under skills/
     11ai-codebase/            3 codebase skills under skills/
-    11ai-docker-operations/   10 Docker CLI operation skills under skills/
-    11ai-git-operations/      12 Git operation and workflow skills under skills/
+    11ai-convex-operations/   11 Convex backend operation skills under skills/
+    11ai-docker-operations/   12 Docker CLI operation skills under skills/
+    11ai-git-operations/      14 Git operation and workflow skills under skills/
     11ai-integrations/        3 integration skills under skills/
-    11ai-jest-operations/     12 Jest operation skills under skills/
+    11ai-jest-operations/     14 Jest operation skills under skills/
     11ai-llm-costs/           4 LLM cost, effort, and timing skills under skills/
-    11ai-mongodb-operations/  10 MongoDB operation skills under skills/
-    11ai-nodejs-api-operations/ 10 Node.js API operation skills under skills/
+    11ai-mongodb-operations/  12 MongoDB operation skills under skills/
+    11ai-nodejs-api-operations/ 12 Node.js API operation skills under skills/
     11ai-super/               9 iterative task and improvement skills under skills/
     11ai-security/            1 dependency security audit skill under skills/
-    11ai-utils/               7 utility skills under skills/
+    11ai-ssh-operations/      10 OpenSSH client operation skills under skills/
+    11ai-stripe-operations/   11 Stripe billing operation skills under skills/
+    11ai-supabase-operations/ 11 Supabase project operation skills under skills/
+    11ai-utils/               8 utility skills under skills/
     11ai-web-design/          3 web design skills under skills/
+    11ai-workos-operations/   10 WorkOS authentication operation skills under skills/
     11ai-xharness/            2 cross-harness skills under skills/
   scripts/                    Package validation, release, and publishing helpers
   www/                        Next.js project site

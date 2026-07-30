@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Stripe Setup"
+  short_description: "Set up Stripe keys and the CLI"
+  default_prompt: "Use $11ai-stripe-setup to set up Stripe keys, the CLI, and webhook forwarding in test mode."

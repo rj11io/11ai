@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Bash Setup"
+  short_description: "Install and configure a Bash shell"
+  default_prompt: "Use $11ai-bash-setup to install a current Bash and configure the shell startup files and PATH."

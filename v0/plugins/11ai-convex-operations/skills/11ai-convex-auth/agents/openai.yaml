@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Convex Auth"
+  short_description: "Wire authentication into Convex"
+  default_prompt: "Use $11ai-convex-auth to wire an identity provider into Convex and enforce access inside functions."

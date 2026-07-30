@@ -1,0 +1,21 @@
+{
+  "name": "11ai-ssh-operations",
+  "version": "1.26.1",
+  "description": "Modular, safety-first skills for common SSH client operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": ["ssh", "openssh", "keys", "tunnels", "devops"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai SSH Operations",
+    "shortDescription": "Run common SSH tasks safely and clearly.",
+    "longDescription": "A modular toolbox for inspecting the SSH client, managing keys and host configuration, opening sessions, forwarding ports, transferring files, wiring SSH into Git and pipelines, and diagnosing connection failures.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-ssh-operations skills for this SSH task."
+  }
+}

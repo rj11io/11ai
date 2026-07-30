@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai WorkOS Organizations"
+  short_description: "Manage organizations and memberships"
+  default_prompt: "Use $11ai-workos-organizations to manage WorkOS organizations, domains, memberships, and roles."

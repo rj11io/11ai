@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Bash Troubleshooting"
+  short_description: "Diagnose failing Bash scripts"
+  default_prompt: "Use $11ai-bash-troubleshooting to diagnose a failing or misbehaving Bash script from reproducible evidence."

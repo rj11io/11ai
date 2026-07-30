@@ -1,13 +1,15 @@
 # 11ai Node.js API operations
 
-Ten standalone skills for inspecting, changing, testing, and troubleshooting Node.js APIs across common frameworks such as Express, Fastify, Koa, Hono, and NestJS.
+Twelve standalone skills for scaffolding, inspecting, changing, testing, integrating, and troubleshooting Node.js APIs across common frameworks such as Express, Fastify, Koa, Hono, and NestJS.
 
 ## Choose a skill
 
 | Skill | Use it for |
 | --- | --- |
 | [`11ai-nodejs-api-cheatsheet`](./skills/11ai-nodejs-api-cheatsheet/SKILL.md) | Looking up common Node.js API commands, patterns, status codes, and diagnostics |
+| [`11ai-nodejs-api-setup`](./skills/11ai-nodejs-api-setup/SKILL.md) | Scaffolding a new API: framework, TypeScript, validated configuration, health route, graceful shutdown, and scripts |
 | [`11ai-nodejs-api-environment`](./skills/11ai-nodejs-api-environment/SKILL.md) | Inspecting the runtime, package manager, framework, scripts, configuration, and local prerequisites |
+| [`11ai-nodejs-api-integrations`](./skills/11ai-nodejs-api-integrations/SKILL.md) | Wiring databases, queues, auth providers, webhook receivers, logging, tracing, containers, proxies, and pipelines |
 | [`11ai-nodejs-api-server`](./skills/11ai-nodejs-api-server/SKILL.md) | Starting, checking, observing, and safely stopping a local API server |
 | [`11ai-nodejs-api-routes`](./skills/11ai-nodejs-api-routes/SKILL.md) | Adding, changing, inspecting, and verifying HTTP routes while following project conventions |
 | [`11ai-nodejs-api-validation`](./skills/11ai-nodejs-api-validation/SKILL.md) | Validating request bodies, query strings, path parameters, and headers |
@@ -25,4 +27,4 @@ The skills discover and preserve the project's existing framework, package manag
 
 ## Likely follow-on skills
 
-Good candidates for a later release are database and CRUD operations, webhooks and signature verification, pagination and filtering, rate limiting, OpenAPI generation, observability and request correlation, background jobs, GraphQL, file uploads, deployment/runtime configuration, and API versioning.
+Good candidates for a later release are database and CRUD operations, pagination and filtering, rate limiting, OpenAPI generation, background jobs, GraphQL, file uploads, and API versioning. Webhook signature verification, observability and request correlation, and deployment or runtime configuration now live in `11ai-nodejs-api-integrations`.

@@ -33,6 +33,8 @@ Use `App` when descendants need the `message`, `notification`, or `modal` hooks.
 5. Import icons by name from `@ant-design/icons`; avoid string-based icon names and broad custom CSS that hides the real setup issue.
 6. Verify with one visible component, a production build when practical, and a browser check for styles, hydration warnings, focus behavior, and console errors.
 
+Read [references/setup.md](references/setup.md) for install commands per package manager, the framework-by-framework provider placement, the Next.js App Router style-registry pattern, and the version differences that change the styling pipeline.
+
 ## Guardrails
 
 - Do not add a v4 global stylesheet to a v5-style setup, or remove an existing stylesheet without checking the installed version.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai WorkOS SSO"
+  short_description: "Configure and test enterprise SSO"
+  default_prompt: "Use $11ai-workos-sso to configure and test an enterprise single sign-on connection."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Convex Integrations"
+  short_description: "Connect Convex to apps and services"
+  default_prompt: "Use $11ai-convex-integrations to connect Convex to a client framework, an auth provider, or an external service."

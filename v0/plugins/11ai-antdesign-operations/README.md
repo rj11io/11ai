@@ -1,6 +1,6 @@
 # 11ai Ant Design operations
 
-Ten standalone skills for common Ant Design React work: setup, layout, data entry, tables, navigation, overlays, data display, theming, quick reference, and diagnosis.
+Eleven standalone skills for common Ant Design React work: setup, layout, data entry, tables, navigation, overlays, data display, theming, stack integrations, quick reference, and diagnosis.
 
 ## Choose a skill
 
@@ -14,6 +14,7 @@ Ten standalone skills for common Ant Design React work: setup, layout, data entr
 | [`11ai-antdesign-overlays`](./skills/11ai-antdesign-overlays/SKILL.md) | Adding modals, drawers, confirmations, alerts, messages, notifications, and loading feedback |
 | [`11ai-antdesign-data-display`](./skills/11ai-antdesign-data-display/SKILL.md) | Choosing cards, lists, descriptions, statistics, status, empty, loading, and result states |
 | [`11ai-antdesign-theming`](./skills/11ai-antdesign-theming/SKILL.md) | Establishing tokens, component overrides, dark mode, compact mode, and visual consistency |
+| [`11ai-antdesign-integrations`](./skills/11ai-antdesign-integrations/SKILL.md) | Connecting Ant Design to a router, data library, date library, Tailwind or existing CSS, locale, and tests |
 | [`11ai-antdesign-cheatsheet`](./skills/11ai-antdesign-cheatsheet/SKILL.md) | Answering quick component, prop, import, and state-model questions |
 | [`11ai-antdesign-troubleshooting`](./skills/11ai-antdesign-troubleshooting/SKILL.md) | Diagnosing styles, hydration, providers, forms, tables, overlays, tokens, layout, and accessibility |
 

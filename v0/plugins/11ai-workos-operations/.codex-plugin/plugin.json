@@ -1,0 +1,21 @@
+{
+  "name": "11ai-workos-operations",
+  "version": "1.26.1",
+  "description": "Modular, safety-first skills for common WorkOS authentication and directory operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": ["workos", "authkit", "sso", "scim", "authentication"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai WorkOS Operations",
+    "shortDescription": "Run common WorkOS tasks safely and clearly.",
+    "longDescription": "A modular toolbox for setting up a WorkOS environment, wiring AuthKit sessions, configuring enterprise single sign-on and directory sync, managing organizations, verifying webhooks, and diagnosing failures.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-workos-operations skills for this WorkOS task."
+  }
+}

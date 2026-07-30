@@ -1,13 +1,15 @@
 # 11ai Docker operations
 
-Ten standalone skills for common Docker CLI and Compose work, with safety checks around state-changing and destructive commands.
+Twelve standalone skills for common Docker CLI and Compose work, with safety checks around state-changing and destructive commands.
 
 ## Choose a skill
 
 | Skill | Use it for |
 | --- | --- |
 | [`11ai-docker-cheatsheet`](./skills/11ai-docker-cheatsheet/SKILL.md) | Looking up common Docker and Compose commands, flags, and safe patterns |
+| [`11ai-docker-setup`](./skills/11ai-docker-setup/SKILL.md) | Installing Docker and configuring contexts, Compose, builders, socket permissions, and daemon limits |
 | [`11ai-docker-environment`](./skills/11ai-docker-environment/SKILL.md) | Checking Docker installation, daemon health, contexts, versions, and permissions |
+| [`11ai-docker-integrations`](./skills/11ai-docker-integrations/SKILL.md) | Connecting Docker to CI builds, registries, local dependency stacks, devcontainers, and orchestrators |
 | [`11ai-docker-containers`](./skills/11ai-docker-containers/SKILL.md) | Running, listing, inspecting, logging, entering, stopping, and removing containers |
 | [`11ai-docker-images`](./skills/11ai-docker-images/SKILL.md) | Pulling, listing, inspecting, tagging, and removing images |
 | [`11ai-docker-compose`](./skills/11ai-docker-compose/SKILL.md) | Validating and operating multi-container Compose applications |

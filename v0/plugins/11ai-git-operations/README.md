@@ -8,6 +8,8 @@ Small, standalone Git skills for inspecting, staging, committing, synchronizing,
 | --- | --- |
 | [`11ai-git-main-operator`](./skills/11ai-git-main-operator/SKILL.md) | Working directly on the main branch: sync a clean tree, do the task, quality-check, and report — committing or pushing only when explicitly asked |
 | [`11ai-git-branch-operator`](./skills/11ai-git-branch-operator/SKILL.md) | Landing work through a branch and pull request: branch from a clean tree, do the task, open a detailed PR, run two review subagents, address their comments — merging or closing only when explicitly asked |
+| [`11ai-git-setup`](./skills/11ai-git-setup/SKILL.md) | Configuring identity, defaults, credential helpers, commit signing, ignore rules, and line endings on a new machine |
+| [`11ai-git-integrations`](./skills/11ai-git-integrations/SKILL.md) | Connecting a repository to remotes, pull-request tooling, pipeline triggers, hook managers, commit gates, LFS, and submodules |
 | [`11ai-git-status`](./skills/11ai-git-status/SKILL.md) | Inspecting repository identity, worktree changes, diffs, history, branches, and upstream state without mutation |
 | [`11ai-git-stage`](./skills/11ai-git-stage/SKILL.md) | Reviewing and staging only the intended paths or hunks, or safely unstaging them without committing |
 | [`11ai-git-commit`](./skills/11ai-git-commit/SKILL.md) | Creating one reviewed local commit with a clear message, without pushing or amending unless asked |

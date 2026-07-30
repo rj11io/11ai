@@ -1,0 +1,21 @@
+{
+  "name": "11ai-clerk-operations",
+  "version": "1.26.1",
+  "description": "Modular, safety-first skills for common Clerk authentication and user operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": ["clerk", "authentication", "sessions", "users", "organizations"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Clerk Operations",
+    "shortDescription": "Run common Clerk tasks safely and clearly.",
+    "longDescription": "A modular toolbox for setting up Clerk, wiring sign-in and sign-up flows, protecting routes with sessions, managing users and organizations, verifying webhooks, and diagnosing authentication failures.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-clerk-operations skills for this Clerk task."
+  }
+}

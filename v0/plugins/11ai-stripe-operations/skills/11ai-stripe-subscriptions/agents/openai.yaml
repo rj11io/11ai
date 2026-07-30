@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Stripe Subscriptions"
+  short_description: "Manage Stripe subscription lifecycles"
+  default_prompt: "Use $11ai-stripe-subscriptions to create, change, or cancel a subscription and mirror its state locally."

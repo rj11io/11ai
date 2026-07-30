@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Git Setup"
+  short_description: "Install and configure Git and signing"
+  default_prompt: "Use $11ai-git-setup to configure Git identity, defaults, credential helper, and commit signing, then verify what a commit records."

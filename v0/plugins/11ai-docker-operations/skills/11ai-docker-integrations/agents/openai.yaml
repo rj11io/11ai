@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Docker Integrations"
+  short_description: "Connect Docker to CI, registries, and apps"
+  default_prompt: "Use $11ai-docker-integrations to connect Docker to this pipeline, registry, local development stack, or deployment target."

@@ -85,6 +85,34 @@
     {
       "name": "11ai-mongodb-operations",
       "source": "./v0/plugins/11ai-mongodb-operations"
+    },
+    {
+      "name": "11ai-ssh-operations",
+      "source": "./v0/plugins/11ai-ssh-operations"
+    },
+    {
+      "name": "11ai-bash-operations",
+      "source": "./v0/plugins/11ai-bash-operations"
+    },
+    {
+      "name": "11ai-supabase-operations",
+      "source": "./v0/plugins/11ai-supabase-operations"
+    },
+    {
+      "name": "11ai-workos-operations",
+      "source": "./v0/plugins/11ai-workos-operations"
+    },
+    {
+      "name": "11ai-convex-operations",
+      "source": "./v0/plugins/11ai-convex-operations"
+    },
+    {
+      "name": "11ai-clerk-operations",
+      "source": "./v0/plugins/11ai-clerk-operations"
+    },
+    {
+      "name": "11ai-stripe-operations",
+      "source": "./v0/plugins/11ai-stripe-operations"
     }
   ]
 }

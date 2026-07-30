@@ -32,14 +32,21 @@ const PLUGIN_CONFIG = [
     dir: "11ai-antdesign-operations",
     title: "Ant Design operations",
     tagline:
-      "Common Ant Design React setup, layouts, forms, tables, navigation, overlays, display, theming, reference, and troubleshooting.",
+      "Common Ant Design React setup, layouts, forms, tables, navigation, overlays, display, theming, stack integrations, reference, and troubleshooting.",
   },
   {
     slug: "aws-operations",
     dir: "11ai-aws-operations",
     title: "AWS operations",
     tagline:
-      "Common AWS CLI operations for account context, S3, EC2, Lambda, ECS, ECR, CloudWatch, IAM, CloudFormation, reference, and troubleshooting.",
+      "Common AWS CLI operations for setup, account context, S3, EC2, Lambda, ECS, ECR, CloudWatch, IAM, CloudFormation, integrations, reference, and troubleshooting.",
+  },
+  {
+    slug: "bash-operations",
+    dir: "11ai-bash-operations",
+    title: "Bash operations",
+    tagline:
+      "Shell inspection, strict-mode scripting, text processing, files, processes, linting, integrations, and troubleshooting.",
   },
   {
     slug: "benchmarks",
@@ -63,6 +70,13 @@ const PLUGIN_CONFIG = [
       "Safely find and remove abandoned local resources: worktrees, threads, ports, and node_modules.",
   },
   {
+    slug: "clerk-operations",
+    dir: "11ai-clerk-operations",
+    title: "Clerk operations",
+    tagline:
+      "Clerk setup, sign-in flows, server-side session protection, users, organizations, webhooks, integrations, and troubleshooting.",
+  },
+  {
     slug: "codebase",
     dir: "11ai-codebase",
     title: "Codebase",
@@ -70,18 +84,25 @@ const PLUGIN_CONFIG = [
       "Playwright setup, npm publishing, and fully automated releases for your repositories.",
   },
   {
+    slug: "convex-operations",
+    dir: "11ai-convex-operations",
+    title: "Convex operations",
+    tagline:
+      "Convex setup, schema and indexes, functions, actions and crons, auth, file storage, deployments, and troubleshooting.",
+  },
+  {
     slug: "docker-operations",
     dir: "11ai-docker-operations",
     title: "Docker operations",
     tagline:
-      "Common Docker CLI and Compose operations with safety-first cleanup, registry, storage, and troubleshooting workflows.",
+      "Common Docker CLI and Compose operations with setup, integrations, safety-first cleanup, registry, storage, and troubleshooting workflows.",
   },
   {
     slug: "git-operations",
     dir: "11ai-git-operations",
     title: "Git operations",
     tagline:
-      "Modular, safety-first Git skills for repository state, commits, branches, synchronization, recovery, and troubleshooting.",
+      "Modular, safety-first Git skills for setup, repository state, commits, branches, synchronization, integrations, recovery, and troubleshooting.",
   },
   {
     slug: "integrations",
@@ -89,6 +110,13 @@ const PLUGIN_CONFIG = [
     title: "Integrations",
     tagline:
       "Add Convex, WorkOS AuthKit, or both to Next.js applications the right way.",
+  },
+  {
+    slug: "jest-operations",
+    dir: "11ai-jest-operations",
+    title: "Jest operations",
+    tagline:
+      "Setting up, inspecting, running, integrating, configuring, and troubleshooting common Jest operations.",
   },
   {
     slug: "llm-costs",
@@ -102,7 +130,14 @@ const PLUGIN_CONFIG = [
     dir: "11ai-mongodb-operations",
     title: "MongoDB operations",
     tagline:
-      "Common MongoDB Shell and Database Tools work with read-first safety checks around data changes.",
+      "Common MongoDB Shell and Database Tools work with setup, driver integrations, and read-first safety checks around data changes.",
+  },
+  {
+    slug: "nodejs-api-operations",
+    dir: "11ai-nodejs-api-operations",
+    title: "Node.js API operations",
+    tagline:
+      "Scaffolding, inspecting, changing, testing, integrating, and troubleshooting Node.js APIs across common frameworks.",
   },
   {
     slug: "super",
@@ -119,11 +154,39 @@ const PLUGIN_CONFIG = [
       "Read-only dependency auditing with precise installed-version evidence and critical host-harm triage.",
   },
   {
+    slug: "ssh-operations",
+    dir: "11ai-ssh-operations",
+    title: "SSH operations",
+    tagline:
+      "OpenSSH client setup, keys, host configuration, sessions, tunnels, file transfer, integrations, and troubleshooting.",
+  },
+  {
+    slug: "stripe-operations",
+    dir: "11ai-stripe-operations",
+    title: "Stripe operations",
+    tagline:
+      "Stripe setup, customers, prices, Checkout, subscriptions, payments, webhooks, entitlements, and troubleshooting.",
+  },
+  {
+    slug: "supabase-operations",
+    dir: "11ai-supabase-operations",
+    title: "Supabase operations",
+    tagline:
+      "Supabase setup, Postgres data and migrations, row level security, auth, storage, edge functions, and troubleshooting.",
+  },
+  {
+    slug: "workos-operations",
+    dir: "11ai-workos-operations",
+    title: "WorkOS operations",
+    tagline:
+      "WorkOS setup, AuthKit sessions, enterprise single sign-on, directory sync, organizations, webhooks, and troubleshooting.",
+  },
+  {
     slug: "utils",
     dir: "11ai-utils",
     title: "Utilities",
     tagline:
-      "Markdown compression, reverse engineering, reviews, analytics, publication CMS, calls to action, and project sites.",
+      "Markdown compression, reverse engineering, reviews, analytics, publication CMS, calls to action, project sites, and operations-plugin scaffolding.",
   },
   {
     slug: "xharness",

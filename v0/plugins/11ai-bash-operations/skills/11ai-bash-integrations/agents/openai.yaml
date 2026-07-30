@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Bash Integrations"
+  short_description: "Connect Bash scripts to CI and hooks"
+  default_prompt: "Use $11ai-bash-integrations to wire a Bash script into a pipeline, a hook, a cron job, or a package script."

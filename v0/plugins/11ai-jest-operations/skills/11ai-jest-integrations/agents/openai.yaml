@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Jest Integrations"
+  short_description: "Connect Jest to CI, coverage, and tools"
+  default_prompt: "Use $11ai-jest-integrations to connect Jest to Testing Library, request interception, real dependencies, reporters, or coverage in this project."

@@ -1,13 +1,15 @@
 # 11ai MongoDB operations
 
-Ten standalone skills for common MongoDB Shell and Database Tools work, with read-first checks around writes, deletes, drops, restores, credentials, and production targets.
+Twelve standalone skills for common MongoDB Shell and Database Tools work, with read-first checks around writes, deletes, drops, restores, credentials, and production targets.
 
 ## Choose a skill
 
 | Skill | Use it for |
 | --- | --- |
 | [11ai-mongodb-cheatsheet](./skills/11ai-mongodb-cheatsheet/SKILL.md) | Looking up common mongosh commands, filters, update operators, aggregation stages, and Database Tools flags |
+| [11ai-mongodb-setup](./skills/11ai-mongodb-setup/SKILL.md) | Installing mongosh and Database Tools, standing up a local or Atlas deployment, and building a connection string |
 | [11ai-mongodb-environment](./skills/11ai-mongodb-environment/SKILL.md) | Checking mongosh, Database Tools, connection, server, authentication, and deployment health |
+| [11ai-mongodb-integrations](./skills/11ai-mongodb-integrations/SKILL.md) | Wiring the Node.js driver, Mongoose or Prisma, serverless pooling, migrations, change streams, tests, and backups |
 | [11ai-mongodb-databases](./skills/11ai-mongodb-databases/SKILL.md) | Listing databases, selecting a database, checking stats, and creating or dropping databases deliberately |
 | [11ai-mongodb-collections](./skills/11ai-mongodb-collections/SKILL.md) | Inspecting, creating, validating, renaming, and dropping collections |
 | [11ai-mongodb-crud](./skills/11ai-mongodb-crud/SKILL.md) | Inserting, finding, updating, and deleting documents with scoped filters and previews |
@@ -23,4 +25,4 @@ Start with read-only inspection and confirm the deployment, database, collection
 
 ## Suggested next skills
 
-Good v1 additions are transactions and sessions, schema migrations and data repair, performance profiling, users and roles, Atlas administration, driver integration for Node.js and Python, change streams and replication, and production backup or restore runbooks. Keep each as a separate skill so the common shell workflow stays easy to discover.
+Good v1 additions are transactions and sessions, performance profiling, users and roles, Atlas administration, and production backup or restore runbooks. Keep each as a separate skill so the common shell workflow stays easy to discover. Driver integration, schema migrations, and change streams now live in `11ai-mongodb-integrations`.

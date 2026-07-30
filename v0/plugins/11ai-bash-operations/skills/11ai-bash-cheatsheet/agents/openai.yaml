@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Bash Cheatsheet"
+  short_description: "Look up common Bash syntax and commands"
+  default_prompt: "Use $11ai-bash-cheatsheet to look up Bash syntax, a parameter expansion, a test operator, or a common command."

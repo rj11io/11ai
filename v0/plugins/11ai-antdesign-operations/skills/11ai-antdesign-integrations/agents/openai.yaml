@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Ant Design Integrations"
+  short_description: "Wire Ant Design into a React stack"
+  default_prompt: "Use $11ai-antdesign-integrations to connect Ant Design to this project's router, data library, dates, styling, or tests."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Git Integrations"
+  short_description: "Connect Git to remotes, CI, and hooks"
+  default_prompt: "Use $11ai-git-integrations to connect this repository to a remote, pipeline trigger, hook manager, commit gate, LFS, or submodule."

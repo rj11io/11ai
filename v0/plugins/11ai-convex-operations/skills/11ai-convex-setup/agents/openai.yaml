@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Convex Setup"
+  short_description: "Set up a Convex project and deployment"
+  default_prompt: "Use $11ai-convex-setup to set up a Convex project, link a deployment, and generate the API."

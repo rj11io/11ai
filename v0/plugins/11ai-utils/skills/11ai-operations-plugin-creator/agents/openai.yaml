@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Operations Plugin Creator"
+  short_description: "Scaffold a new 11ai operations plugin"
+  default_prompt: "Use $11ai-operations-plugin-creator to scaffold a new 11ai operations plugin for this tool and wire it into the repository catalogs."

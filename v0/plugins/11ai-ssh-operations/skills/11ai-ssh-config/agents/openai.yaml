@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai SSH Config"
+  short_description: "Manage SSH client config and hosts"
+  default_prompt: "Use $11ai-ssh-config to add or repair a host entry in the SSH client configuration."

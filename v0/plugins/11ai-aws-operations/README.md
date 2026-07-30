@@ -1,12 +1,14 @@
 # 11ai AWS operations
 
-Eleven standalone, AWS CLI-first skills for common cloud operations. The plugin is read-first and context-aware: identify the account, role, region, and resource before making a change, and require explicit approval for destructive or externally visible actions.
+Thirteen standalone, AWS CLI-first skills for common cloud operations. The plugin is read-first and context-aware: identify the account, role, region, and resource before making a change, and require explicit approval for destructive or externally visible actions.
 
 ## Choose a skill
 
 | Skill | Use it for |
 | --- | --- |
+| [`11ai-aws-setup`](./skills/11ai-aws-setup/SKILL.md) | Installing the AWS CLI and configuring profiles, SSO, regions, and role assumption from zero |
 | [`11ai-aws-environment`](./skills/11ai-aws-environment/SKILL.md) | Inspecting profiles, credentials, identity, region, SSO, and target context |
+| [`11ai-aws-integrations`](./skills/11ai-aws-integrations/SKILL.md) | Connecting AWS to CI pipelines, container registries, infrastructure-as-code, and application runtime configuration |
 | [`11ai-aws-s3`](./skills/11ai-aws-s3/SKILL.md) | Listing buckets, inspecting objects, copying data, syncing paths, and checking bucket safety |
 | [`11ai-aws-ec2`](./skills/11ai-aws-ec2/SKILL.md) | Inspecting instances, status, volumes, tags, and security groups; carefully changing instance state |
 | [`11ai-aws-lambda`](./skills/11ai-aws-lambda/SKILL.md) | Inspecting, invoking, updating, publishing, and diagnosing Lambda functions |

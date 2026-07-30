@@ -1,0 +1,21 @@
+{
+  "name": "11ai-bash-operations",
+  "version": "1.26.1",
+  "description": "Modular, safety-first skills for common Bash shell and scripting operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": ["bash", "shell", "scripting", "posix", "cli"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Bash Operations",
+    "shortDescription": "Write and run Bash safely and clearly.",
+    "longDescription": "A modular toolbox for inspecting the shell, writing strict-mode scripts, processing text, handling files and processes, linting and testing scripts, wiring them into pipelines, and diagnosing failures.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-bash-operations skills for this shell task."
+  }
+}

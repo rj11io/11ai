@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Supabase Troubleshooting"
+  short_description: "Diagnose Supabase failures from evidence"
+  default_prompt: "Use $11ai-supabase-troubleshooting to diagnose a Supabase connection, policy, migration, or function failure."

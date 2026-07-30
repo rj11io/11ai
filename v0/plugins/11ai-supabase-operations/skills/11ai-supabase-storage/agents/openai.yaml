@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Supabase Storage"
+  short_description: "Manage Supabase storage buckets"
+  default_prompt: "Use $11ai-supabase-storage to create or secure a Supabase storage bucket and move objects."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Clerk Users"
+  short_description: "Read and change Clerk user records"
+  default_prompt: "Use $11ai-clerk-users to read, update, or delete Clerk user records and their metadata."

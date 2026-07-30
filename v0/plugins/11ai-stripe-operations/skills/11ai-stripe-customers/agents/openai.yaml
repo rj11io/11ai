@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Stripe Customers"
+  short_description: "Create and reconcile Stripe customers"
+  default_prompt: "Use $11ai-stripe-customers to create, find, or reconcile a Stripe customer against a local user record."

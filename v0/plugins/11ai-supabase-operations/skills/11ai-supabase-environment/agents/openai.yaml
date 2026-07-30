@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Supabase Environment"
+  short_description: "Inspect Supabase CLI, links, and keys"
+  default_prompt: "Use $11ai-supabase-environment to inspect the Supabase CLI, the linked project, and which keys and URLs are in use."
