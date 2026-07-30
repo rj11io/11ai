@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-antdesign",
-  "version": "1.26.1",
+  "version": "1.27.0",
   "description": "Modular, version-aware skills for common Ant Design React operations.",
   "author": {
     "name": "rj11io"

@@ -1,13 +1,19 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-operator-workos",
-  "version": "1.26.1",
+  "version": "1.27.0",
   "description": "Modular, safety-first skills for common WorkOS authentication and directory operations.",
   "author": {
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
   "license": "Apache-2.0",
-  "keywords": ["workos", "authkit", "sso", "scim", "authentication"],
+  "keywords": [
+    "workos",
+    "authkit",
+    "sso",
+    "scim",
+    "authentication"
+  ],
   "skills": "./skills/"
 }

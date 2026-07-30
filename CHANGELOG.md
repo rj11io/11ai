@@ -1,3 +1,13 @@
+# [1.27.0](https://github.com/rj11io/11ai/compare/v1.26.1...v1.27.0) (2026-07-30)
+
+
+### Features
+
+* improve operator skills ([5961db8](https://github.com/rj11io/11ai/commit/5961db8db7eb2ffa9a4162dc334c19c31547dc90))
+* new operation skills ([8e010f6](https://github.com/rj11io/11ai/commit/8e010f6fbe8efa520b8e16197323c34be489eea3))
+* promote code quality to a super skill ([984d844](https://github.com/rj11io/11ai/commit/984d8443c21b28cdd037752551bf94e38000d6d5))
+* super visual a11y skill ([6e10681](https://github.com/rj11io/11ai/commit/6e106816f942aa3e3a4d862e48deef9aae2a3310))
+
 ## [1.26.1](https://github.com/rj11io/11ai/compare/v1.26.0...v1.26.1) (2026-07-29)
 
 
