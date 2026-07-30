@@ -254,7 +254,7 @@ await createTenant({
 
 Attach the subscription to the organization, not to the person who signed up — otherwise the plan follows them out of the company and the tenant loses it when their membership ends.
 
-Store the link in both directions: the customer id on your tenant row, and the organization id in the customer's metadata. That is what makes reconciliation possible later. See `11ai-operator-stripe-customers`.
+Store the link in both directions: the customer id on your tenant row, and the organization id in the customer's metadata. That is what makes reconciliation possible later.
 
 When a webhook reports a plan change, write it to your tenant row and, if the plan is read from a session claim, revoke affected sessions so the change takes effect immediately rather than at the next refresh.
 

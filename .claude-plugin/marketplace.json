@@ -47,10 +47,6 @@
       "source": "./v0/plugins/11ai-operator-git"
     },
     {
-      "name": "11ai-integrations",
-      "source": "./v0/plugins/11ai-integrations"
-    },
-    {
       "name": "11ai-operator-nodejs-api",
       "source": "./v0/plugins/11ai-operator-nodejs-api"
     },

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Operator Git Bisect"
+  short_description: "Find the commit that introduced a bug"
+  default_prompt: "Use $11ai-operator-git-bisect to find the commit that introduced a regression with git bisect."

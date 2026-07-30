@@ -93,7 +93,7 @@ levels use analyzer-owned aggregates and compact summaries with sample size.
 For websites, leave reviewed data canonical and delegate code/design/content/
 index synchronization to `$11ai-benchmark-sync`, which invokes
 `$11ai-benchmark-www` once at the end. Never hardcode values into components or
-touch the general `$11ai-www` skill.
+touch a general project-site workflow.
 
 After a successful gate, update `benchmark/current.json` atomically with cycle
 ID, release type, publication sequence, and review digest against

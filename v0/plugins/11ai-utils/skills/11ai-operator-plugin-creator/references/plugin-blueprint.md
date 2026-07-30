@@ -121,7 +121,7 @@ Five rules, restated in each skill's own vocabulary rather than pasted. The plug
 
 ## Cross-references
 
-Name sibling skills so a reader can hand off: "If Docker itself is not healthy, hand off to `11ai-operator-docker-environment` before diagnosing application behavior." Troubleshooting and environment skills should always do this. Domain skills should do it whenever a task realistically crosses a boundary, such as building an image and then pushing it.
+Name sibling skills in the same plugin so a reader can hand off: "If the tool itself is not healthy, hand off to `11ai-operator-TOOL-environment` before diagnosing application behavior." Keep every named reference inside the plugin — a skill must not depend on another plugin being installed. Troubleshooting and environment skills should always do this. Domain skills should do it whenever a task realistically crosses a boundary, such as building an image and then pushing it.
 
 ## The plugin README
 
@@ -134,7 +134,7 @@ N standalone skills for common TOOL work, with safety checks around state-changi
 
 | Skill | Use it for |
 | --- | --- |
-| [`11ai-TOOL-cheatsheet`](./skills/11ai-TOOL-cheatsheet/SKILL.md) | Looking up common commands, flags, and safe patterns |
+| [`11ai-operator-TOOL-cheatsheet`](./skills/11ai-operator-TOOL-cheatsheet/SKILL.md) | Looking up common commands, flags, and safe patterns |
 
 One sentence on combining skills when a task crosses boundaries.
 

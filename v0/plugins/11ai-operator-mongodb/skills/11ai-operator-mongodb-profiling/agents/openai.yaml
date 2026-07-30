@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Operator MongoDB Profiling"
+  short_description: "Find and fix slow MongoDB queries"
+  default_prompt: "Use $11ai-operator-mongodb-profiling to find slow queries and prove an index fixed them."

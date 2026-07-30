@@ -79,7 +79,7 @@ nohup command > /tmp/command.log 2>&1 &
 disown
 ```
 
-`nohup` detaches from the terminal's hangup signal and `disown` removes the job from the shell's table. Redirect both streams to a file, or output is lost. For work on a remote host, a terminal multiplexer is better than `nohup`; see `11ai-operator-ssh-sessions`.
+`nohup` detaches from the terminal's hangup signal and `disown` removes the job from the shell's table. Redirect both streams to a file, or output is lost. For work on a remote host, a terminal multiplexer such as tmux is better than `nohup`, because it survives a dropped connection.
 
 Job control in an interactive shell:
 

@@ -1,6 +1,6 @@
 # 11ai AWS operator
 
-Thirteen standalone, AWS CLI-first skills for common cloud operations. The plugin is read-first and context-aware: identify the account, role, region, and resource before making a change, and require explicit approval for destructive or externally visible actions.
+Twenty-one standalone, AWS CLI-first skills for common cloud operations. The plugin is read-first and context-aware: identify the account, role, region, and resource before making a change, and require explicit approval for destructive or externally visible actions.
 
 ## Choose a skill
 
@@ -17,6 +17,14 @@ Thirteen standalone, AWS CLI-first skills for common cloud operations. The plugi
 | [`11ai-operator-aws-cloudwatch`](./skills/11ai-operator-aws-cloudwatch/SKILL.md) | Querying logs, metrics, alarms, dashboards, and operational time windows |
 | [`11ai-operator-aws-iam`](./skills/11ai-operator-aws-iam/SKILL.md) | Inspecting users, roles, policies, permission boundaries, and simulated access |
 | [`11ai-operator-aws-cloudformation`](./skills/11ai-operator-aws-cloudformation/SKILL.md) | Validating templates and inspecting stacks, events, resources, and change sets |
+| [`11ai-operator-aws-ssm`](./skills/11ai-operator-aws-ssm/SKILL.md) | Reaching instances through Session Manager, running commands across a target set, and forwarding ports |
+| [`11ai-operator-aws-rds`](./skills/11ai-operator-aws-rds/SKILL.md) | Inspecting databases, snapshotting before changes, restoring, resizing, and reading maintenance state |
+| [`11ai-operator-aws-vpc`](./skills/11ai-operator-aws-vpc/SKILL.md) | Inspecting subnets, routes, security groups, and network ACLs, and proving a path with Reachability Analyzer |
+| [`11ai-operator-aws-route53`](./skills/11ai-operator-aws-route53/SKILL.md) | Reading and changing DNS records, planning a cutover with time-to-live, and diagnosing lookups |
+| [`11ai-operator-aws-secrets`](./skills/11ai-operator-aws-secrets/SKILL.md) | Reading, creating, and rotating secrets and parameters without printing their values |
+| [`11ai-operator-aws-cloudtrail`](./skills/11ai-operator-aws-cloudtrail/SKILL.md) | Attributing an account change to a person or service from audit events |
+| [`11ai-operator-aws-costs`](./skills/11ai-operator-aws-costs/SKILL.md) | Reporting spend by service or tag, finding what drove an increase, and setting budgets |
+| [`11ai-operator-aws-deployments`](./skills/11ai-operator-aws-deployments/SKILL.md) | Deploying an immutable artifact, verifying the user-visible objective, and rolling back |
 | [`11ai-operator-aws-cheatsheet`](./skills/11ai-operator-aws-cheatsheet/SKILL.md) | Answering quick AWS CLI command, flag, output, and safety questions |
 | [`11ai-operator-aws-troubleshooting`](./skills/11ai-operator-aws-troubleshooting/SKILL.md) | Diagnosing AWS CLI and service failures from reproducible evidence |
 
@@ -29,17 +37,3 @@ Thirteen standalone, AWS CLI-first skills for common cloud operations. The plugi
 - Never print credentials, tokens, secret values, private keys, signed URLs, or sensitive environment variables.
 - Verify the original objective after a change; do not infer success from a zero exit code alone.
 
-## Suggested v0.1 additions
-
-These are deliberately separate candidates rather than hidden scope in v0:
-
-- `11ai-aws-ssm` for Session Manager, Run Command, and port forwarding
-- `11ai-aws-rds` for instances, snapshots, parameter groups, and maintenance state
-- `11ai-aws-route53` for hosted zones, records, health checks, and DNS diagnosis
-- `11ai-aws-vpc` for subnets, routes, security groups, network ACLs, and reachability evidence
-- `11ai-aws-secrets` for Secrets Manager and SSM Parameter Store without exposing values
-- `11ai-aws-costs` for Cost Explorer, budgets, and spend triage
-- `11ai-aws-cloudtrail` for audit-event lookup and change attribution
-- `11ai-aws-deployments` for a provider-neutral deployment and rollback workflow
-
-Keep each addition standalone and service-focused. A future orchestration skill can compose them, but should not replace the narrow skills.

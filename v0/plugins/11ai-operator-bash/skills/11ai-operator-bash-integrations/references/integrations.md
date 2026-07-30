@@ -69,7 +69,7 @@ env -i PATH=/usr/local/bin:/usr/bin:/bin HOME="$HOME" bash ./scripts/check.sh
 
 ## Git hooks
 
-Hooks in `.git/hooks` are not committed, so a hook manager is what makes them shared. See `11ai-operator-git-integrations` for husky and lefthook setup; the script side is what matters here.
+Hooks in `.git/hooks` are not committed, so a hook manager such as husky or lefthook is what makes them shared. The script side is what matters here.
 
 ```bash
 #!/usr/bin/env bash

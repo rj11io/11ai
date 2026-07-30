@@ -1,6 +1,6 @@
 ---
 name: 11ai-operator-git-conventional-commits
-description: "Choose, compose, and validate Conventional Commits 1.0.0 messages for task commits created by Git operators or focused commit workflows. Use whenever an operator, agent, or user-authorized workflow needs to commit its work, including with 11ai-operator-git-commit, 11ai-operator-git-main-operator, or 11ai-operator-git-branch-operator. This skill governs the message only; it does not authorize staging, committing, amending, pushing, or rewriting history."
+description: "Choose, compose, and validate Conventional Commits 1.0.0 messages for task commits created by any commit workflow. Use whenever an agent or user-authorized workflow needs to commit its work, including alongside 11ai-operator-git-commit. This skill governs the message only; it does not authorize staging, committing, amending, pushing, or rewriting history."
 ---
 
 # 11ai Git conventional commits
@@ -71,4 +71,4 @@ feat(config)!: replace legacy environment keys
 BREAKING CHANGE: use APP_HOST and APP_PORT instead of HOST and PORT.
 ```
 
-Return the proposed message to the calling Git operator or `11ai-operator-git-commit`. Let that workflow perform its own authorization, staged-content review, commit creation, hook handling, and post-commit verification.
+Return the proposed message to the calling workflow, such as `11ai-operator-git-commit`. Let that workflow perform its own authorization, staged-content review, commit creation, hook handling, and post-commit verification.

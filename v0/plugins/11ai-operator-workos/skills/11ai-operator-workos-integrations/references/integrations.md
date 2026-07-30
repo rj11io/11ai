@@ -245,7 +245,7 @@ const customer = await stripe.customers.create({
 await createTenant({ workosOrganizationId: org.id, name, stripeCustomerId: customer.id })
 ```
 
-The `metadata` link in both directions is what makes reconciliation possible later. See `11ai-operator-stripe-customers`.
+The `metadata` link in both directions is what makes reconciliation possible later.
 
 ## Staging to production promotion
 

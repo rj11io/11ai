@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Operator AWS VPC"
+  short_description: "Inspect networking and prove reachability"
+  default_prompt: "Use $11ai-operator-aws-vpc to inspect subnets, routes, and security groups, or prove a network path."

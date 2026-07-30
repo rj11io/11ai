@@ -39,7 +39,7 @@ const PLUGIN_CONFIG = [
     dir: "11ai-operator-aws",
     title: "AWS operator",
     tagline:
-      "Common AWS CLI operations for setup, account context, S3, EC2, Lambda, ECS, ECR, CloudWatch, IAM, CloudFormation, integrations, reference, and troubleshooting.",
+      "AWS CLI operations for setup, account context, storage, compute, databases, networking, DNS, secrets, observability, audit, cost, deployments, and troubleshooting.",
   },
   {
     slug: "operator-bash",
@@ -102,21 +102,14 @@ const PLUGIN_CONFIG = [
     dir: "11ai-operator-git",
     title: "Git operator",
     tagline:
-      "Modular, safety-first Git skills for setup, repository state, commits, branches, synchronization, integrations, recovery, and troubleshooting.",
-  },
-  {
-    slug: "integrations",
-    dir: "11ai-integrations",
-    title: "Integrations",
-    tagline:
-      "Add Convex, WorkOS AuthKit, or both to Next.js applications the right way.",
+      "Focused, safety-first Git skills for setup, state, commits, branches, worktrees, tags, submodules, hooks, pull requests, bisect, recovery, and troubleshooting.",
   },
   {
     slug: "operator-jest",
     dir: "11ai-operator-jest",
     title: "Jest operator",
     tagline:
-      "Setting up, inspecting, running, integrating, configuring, and troubleshooting common Jest operations.",
+      "Setting up, inspecting, running, authoring, de-flaking, speeding up, integrating, and troubleshooting Jest suites.",
   },
   {
     slug: "llm-costs",
@@ -130,14 +123,14 @@ const PLUGIN_CONFIG = [
     dir: "11ai-operator-mongodb",
     title: "MongoDB operator",
     tagline:
-      "Common MongoDB Shell and Database Tools work with setup, driver integrations, and read-first safety checks around data changes.",
+      "MongoDB Shell and Database Tools work with setup, transactions, profiling, roles, Atlas, backups, and read-first safety checks around data changes.",
   },
   {
     slug: "operator-nodejs-api",
     dir: "11ai-operator-nodejs-api",
     title: "Node.js API operator",
     tagline:
-      "Scaffolding, inspecting, changing, testing, integrating, and troubleshooting Node.js APIs across common frameworks.",
+      "Scaffolding, routing, validation, auth, databases, paging, rate limiting, jobs, uploads, GraphQL, OpenAPI, versioning, and testing Node.js APIs.",
   },
   {
     slug: "super",
@@ -186,7 +179,7 @@ const PLUGIN_CONFIG = [
     dir: "11ai-utils",
     title: "Utilities",
     tagline:
-      "Markdown compression, reverse engineering, reviews, analytics, publication CMS, calls to action, project sites, and operator-plugin scaffolding.",
+      "Git task directors, Markdown compression, reverse engineering, reviews, analytics, publication CMS, calls to action, project sites, and operator-plugin scaffolding.",
   },
   {
     slug: "xharness",

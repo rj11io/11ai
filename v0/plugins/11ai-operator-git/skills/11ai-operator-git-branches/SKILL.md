@@ -4,7 +4,7 @@ description: "List, create, switch, rename, and delete local Git branches with u
 ---
 # 11ai Git branches
 
-Manage local branch names and pointers as a standalone operation. The existing `11ai-operator-git-branch-operator` owns an end-to-end branch-and-pull-request task; this skill handles the small branch command itself.
+Manage local branch names and pointers as a standalone operation. This skill handles the branch command itself, not an end-to-end branch-and-pull-request task.
 
 ## Inspect
 

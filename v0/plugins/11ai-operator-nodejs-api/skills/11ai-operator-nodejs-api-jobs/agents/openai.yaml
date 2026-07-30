@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Operator Node.js API Jobs"
+  short_description: "Run background jobs off the request"
+  default_prompt: "Use $11ai-operator-nodejs-api-jobs to move slow work into a background job or queue worker."

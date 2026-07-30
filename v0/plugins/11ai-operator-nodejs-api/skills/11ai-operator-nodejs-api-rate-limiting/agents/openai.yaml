@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Operator Node.js API Rate Limiting"
+  short_description: "Rate limit an API without false blocks"
+  default_prompt: "Use $11ai-operator-nodejs-api-rate-limiting to add rate limiting keyed correctly behind a proxy."

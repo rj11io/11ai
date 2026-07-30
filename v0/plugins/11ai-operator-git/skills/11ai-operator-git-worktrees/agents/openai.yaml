@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Operator Git Worktrees"
+  short_description: "Add and remove Git worktrees safely"
+  default_prompt: "Use $11ai-operator-git-worktrees to add, list, move, or remove a Git worktree without losing work."

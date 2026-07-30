@@ -7,8 +7,8 @@ description: "Build, upgrade, or synchronize repository-driven benchmark explora
 
 Build the public exploration layer for an 11ai benchmark tree. Focus on the
 benchmark catalog, progressively reveal every reviewed datum, and keep all
-levels synchronized across async cycles. This skill is distinct from the
-general `$11ai-www` project-site skill; never edit or invoke that skill here.
+levels synchronized across async cycles. This skill is distinct from any
+general project-site workflow; never edit or invoke one here.
 
 ## Non-negotiable scope boundary
 
@@ -38,8 +38,7 @@ finishing; a protected-path violation is a hard stop.
 Read [artifact contracts](../../references/artifact-contracts.md),
 [the website matrix](../../references/website-data-and-visualizations.md), and the
 [benchmark WWW visualization and table patterns](../../references/benchmark-www-visualization-patterns.md).
-Apply
-`$11ai-design-styleguides` to every site.
+Apply the 11ai design language to every site.
 
 ## 1. Inventory the complete tree
 
@@ -180,7 +179,7 @@ available links.
 
 ## 8. Apply the 11ai design language
 
-Follow `$11ai-design-styleguides`: neutral semantic OKLCH tokens, Inter/sans
+Follow the 11ai design language: neutral semantic OKLCH tokens, Inter/sans
 prose plus Geist-style mono metadata, thin borders, restrained radii/shadows,
 type-led hierarchy, uppercase mono kickers, one quiet accent, light/dark parity,
 subtle hover motion, and high information clarity. Reuse the target's semantic

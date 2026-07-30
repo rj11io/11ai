@@ -16,7 +16,7 @@ ls -la supabase/ 2>/dev/null
 
 Use `11ai-operator-supabase-environment` for the full inspection. If a `supabase/` directory already exists, this is not a fresh setup — change only what is missing rather than re-initializing over someone's migrations.
 
-Docker is a prerequisite for the local stack, not for the CLI. Install it first if the local stack is wanted; see `11ai-operator-docker-setup`.
+Docker is a prerequisite for the local stack, not for the CLI. Install and start it first if the local stack is wanted.
 
 ## Install and initialize
 

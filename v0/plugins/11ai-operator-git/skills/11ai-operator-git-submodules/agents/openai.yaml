@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Operator Git Submodules"
+  short_description: "Operate Git submodules predictably"
+  default_prompt: "Use $11ai-operator-git-submodules to add, update, pin, or remove a submodule without breaking clones."

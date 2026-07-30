@@ -1,6 +1,6 @@
 # 11ai Jest operator
 
-Fourteen standalone skills for setting up Jest, inspecting Jest projects, running
+Seventeen standalone skills for setting up Jest, inspecting Jest projects, running
 focused tests, connecting Jest to the tools around it, and diagnosing common test
 failures across JavaScript and TypeScript repositories.
 
@@ -20,6 +20,9 @@ failures across JavaScript and TypeScript repositories.
 | [`11ai-operator-jest-timers`](./skills/11ai-operator-jest-timers/SKILL.md) | Controlling fake timers and finding timer-related leaks or hangs |
 | [`11ai-operator-jest-config`](./skills/11ai-operator-jest-config/SKILL.md) | Inspecting or making deliberate changes to Jest configuration |
 | [`11ai-operator-jest-ci`](./skills/11ai-operator-jest-ci/SKILL.md) | Designing deterministic Jest commands for CI, reports, workers, and sharding |
+| [`11ai-operator-jest-test-authoring`](./skills/11ai-operator-jest-test-authoring/SKILL.md) | Writing focused tests from a behavior contract and proving each one can fail |
+| [`11ai-operator-jest-flaky-tests`](./skills/11ai-operator-jest-flaky-tests/SKILL.md) | Reproducing and fixing order-dependent, timing, and open-handle flakiness |
+| [`11ai-operator-jest-performance`](./skills/11ai-operator-jest-performance/SKILL.md) | Measuring and reducing suite runtime, worker cost, and memory growth |
 | [`11ai-operator-jest-cheatsheet`](./skills/11ai-operator-jest-cheatsheet/SKILL.md) | Looking up common Jest commands, flags, APIs, and decision rules |
 | [`11ai-operator-jest-troubleshooting`](./skills/11ai-operator-jest-troubleshooting/SKILL.md) | Diagnosing discovery, transform, environment, mock, timeout, coverage, and exit failures |
 
@@ -42,12 +45,3 @@ The skills are intentionally narrow. Combine them when a task crosses a
 boundary, such as inspecting the environment before fixing a transform error,
 or running a focused test before collecting coverage.
 
-## Follow-on skills worth adding
-
-- `11ai-jest-test-authoring` for adding focused unit tests from an existing behavior contract.
-- `11ai-jest-flaky-tests` for repeat runs, seeds, isolation, open handles, and order-dependent failures.
-- `11ai-jest-performance` for worker sizing, memory pressure, cache behavior, and slow-test triage.
-
-The transform and module-resolution choices once listed here now live in
-`11ai-operator-jest-setup`; jsdom gaps, Testing Library, reporters, and monorepo project
-selection live in `11ai-operator-jest-integrations`.

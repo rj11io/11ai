@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Operator Git Hooks"
+  short_description: "Write and debug local Git hooks"
+  default_prompt: "Use $11ai-operator-git-hooks to add, debug, or bypass a local Git hook."

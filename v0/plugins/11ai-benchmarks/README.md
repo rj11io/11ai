@@ -95,7 +95,7 @@ threads found.
 - `11ai-benchmark-reporter` — metadata-rich HTML/Markdown report and visuals.
 - `11ai-benchmark-www` — benchmark-specific recursive root/parent/benchmark/
   cycle/run websites, compact non-root pages, catalog controls, and shadcn data
-  visualizations. It is separate from the general `11ai-www` project-site skill.
+  visualizations. It is separate from any general project-site workflow.
 
 ### Across benchmarks
 

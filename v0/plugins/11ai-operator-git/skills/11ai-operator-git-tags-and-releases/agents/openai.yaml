@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Operator Git Tags and Releases"
+  short_description: "Create and publish Git tags safely"
+  default_prompt: "Use $11ai-operator-git-tags-and-releases to create, sign, push, or correct a tag and its release."

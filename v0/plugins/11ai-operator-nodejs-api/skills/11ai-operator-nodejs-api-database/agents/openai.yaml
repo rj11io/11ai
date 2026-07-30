@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Operator Node.js API Database"
+  short_description: "Wire a database and CRUD into an API"
+  default_prompt: "Use $11ai-operator-nodejs-api-database to add database access and CRUD endpoints with correct pooling."

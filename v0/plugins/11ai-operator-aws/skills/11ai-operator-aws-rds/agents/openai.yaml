@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Operator AWS RDS"
+  short_description: "Inspect and operate RDS databases"
+  default_prompt: "Use $11ai-operator-aws-rds to inspect an RDS instance, take a snapshot, or change its state safely."

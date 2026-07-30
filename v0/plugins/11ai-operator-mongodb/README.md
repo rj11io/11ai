@@ -1,6 +1,6 @@
 # 11ai MongoDB operator
 
-Twelve standalone skills for common MongoDB Shell and Database Tools work, with read-first checks around writes, deletes, drops, restores, credentials, and production targets.
+Seventeen standalone skills for common MongoDB Shell and Database Tools work, with read-first checks around writes, deletes, drops, restores, credentials, and production targets.
 
 ## Choose a skill
 
@@ -17,12 +17,14 @@ Twelve standalone skills for common MongoDB Shell and Database Tools work, with 
 | [11ai-operator-mongodb-aggregation](./skills/11ai-operator-mongodb-aggregation/SKILL.md) | Designing and testing aggregation pipelines with safe handling of $out and $merge |
 | [11ai-operator-mongodb-indexes](./skills/11ai-operator-mongodb-indexes/SKILL.md) | Inspecting indexes, creating useful single or compound indexes, and reading explain output |
 | [11ai-operator-mongodb-import-export](./skills/11ai-operator-mongodb-import-export/SKILL.md) | Using mongoimport, mongoexport, mongodump, mongorestore, and bsondump |
+| [11ai-operator-mongodb-transactions](./skills/11ai-operator-mongodb-transactions/SKILL.md) | Writing multi-document transactions with sessions, correct concerns, and retry handling |
+| [11ai-operator-mongodb-profiling](./skills/11ai-operator-mongodb-profiling/SKILL.md) | Finding slow queries, reading explain output, and proving an index changed the plan |
+| [11ai-operator-mongodb-users-and-roles](./skills/11ai-operator-mongodb-users-and-roles/SKILL.md) | Creating and auditing least-privilege database users, custom roles, and password rotation |
+| [11ai-operator-mongodb-atlas](./skills/11ai-operator-mongodb-atlas/SKILL.md) | Operating an Atlas cluster, its network access list, users, snapshots, and alerts |
+| [11ai-operator-mongodb-backups](./skills/11ai-operator-mongodb-backups/SKILL.md) | Taking dumps and proving they restore, plus the destructive restore boundaries |
 | [11ai-operator-mongodb-troubleshooting](./skills/11ai-operator-mongodb-troubleshooting/SKILL.md) | Diagnosing connection, authentication, TLS, duplicate-key, validation, timeout, and slow-query failures |
 
 ## Safety contract
 
 Start with read-only inspection and confirm the deployment, database, collection, and filter before changing data. Ask for explicit approval before executing deleteMany, collection or database drops, index drops, restores with --drop, $out, $merge, or any command against an unclear or production target. Never print passwords, full connection URIs, tokens, or credential-bearing command output.
 
-## Suggested next skills
-
-Good v1 additions are transactions and sessions, performance profiling, users and roles, Atlas administration, and production backup or restore runbooks. Keep each as a separate skill so the common shell workflow stays easy to discover. Driver integration, schema migrations, and change streams now live in `11ai-operator-mongodb-integrations`.

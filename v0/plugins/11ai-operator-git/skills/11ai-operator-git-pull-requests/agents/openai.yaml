@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Operator Git Pull Requests"
+  short_description: "Open and review pull requests by CLI"
+  default_prompt: "Use $11ai-operator-git-pull-requests to open, inspect, review, or land a pull request from the command line."

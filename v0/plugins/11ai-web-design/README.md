@@ -12,7 +12,5 @@ interface a deliberate, content-led design direction.
 | [`11ai-modern-clean-ui`](./skills/11ai-modern-clean-ui/SKILL.md) | A standalone, brand-neutral styleguide for the contemporary modern-clean look (neutral palette plus one accent, real whitespace, restrained motion) — tokens, components, and states for any codebase |
 | [`11ai-pimp-my-ui`](./skills/11ai-pimp-my-ui/SKILL.md) | Reaching one deliberate design direction for existing user-facing content and executing it with the codebase's own tools |
 
-The benchmark-specific website workflow remains in
-[`11ai-benchmark-www`](../11ai-benchmarks/skills/11ai-benchmark-www/SKILL.md). This
-plugin supplies the shared visual standard; it does not discover or publish
-benchmark data itself.
+This plugin supplies the shared visual standard; it does not discover or publish
+application or benchmark data itself.
