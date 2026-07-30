@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Convex Cheatsheet"
+  short_description: "Look up common Convex APIs and commands"
+  default_prompt: "Use $11ai-operator-convex-cheatsheet to look up a Convex command, function type, or client API."

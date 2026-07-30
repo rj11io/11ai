@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Stripe Environment"
-  short_description: "Inspect Stripe mode, keys, and version"
-  default_prompt: "Use $11ai-stripe-environment to confirm which Stripe account, mode, and API version an application is using."

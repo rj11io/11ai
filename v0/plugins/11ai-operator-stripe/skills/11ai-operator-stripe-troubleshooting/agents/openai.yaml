@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Stripe Troubleshooting"
+  short_description: "Diagnose Stripe payment failures"
+  default_prompt: "Use $11ai-operator-stripe-troubleshooting to diagnose a Stripe key, webhook, payment, or subscription failure from evidence."

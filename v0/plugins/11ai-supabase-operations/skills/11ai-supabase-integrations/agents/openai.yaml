@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Supabase Integrations"
-  short_description: "Connect Supabase to apps and CI"
-  default_prompt: "Use $11ai-supabase-integrations to connect Supabase to a client application, a server runtime, or a pipeline."

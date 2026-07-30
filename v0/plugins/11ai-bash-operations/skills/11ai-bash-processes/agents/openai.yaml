@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Bash Processes"
-  short_description: "Run, watch, and stop shell processes"
-  default_prompt: "Use $11ai-bash-processes to run, background, watch, or stop a process and read its exit status."

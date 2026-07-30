@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai WorkOS AuthKit"
+  short_description: "Wire AuthKit sign-in and sessions"
+  default_prompt: "Use $11ai-operator-workos-authkit to wire AuthKit sign-in, callback, session cookies, and sign-out."

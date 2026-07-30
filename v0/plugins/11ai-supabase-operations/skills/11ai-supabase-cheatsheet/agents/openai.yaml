@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Supabase Cheatsheet"
-  short_description: "Look up common Supabase CLI commands"
-  default_prompt: "Use $11ai-supabase-cheatsheet to look up a Supabase CLI command, client call, or SQL helper."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Bash Text Processing"
-  short_description: "Filter and transform text in the shell"
-  default_prompt: "Use $11ai-bash-text-processing to filter, extract, or transform text with grep, sed, awk, sort, and friends."

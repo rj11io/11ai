@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Convex Functions"
-  short_description: "Write Convex queries and mutations"
-  default_prompt: "Use $11ai-convex-functions to write or repair a Convex query or mutation with argument validators."

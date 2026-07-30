@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai SSH Environment"
+  short_description: "Inspect SSH client, keys, and agent"
+  default_prompt: "Use $11ai-operator-ssh-environment to inspect the SSH client, keys, agent, and effective host configuration without changing anything."

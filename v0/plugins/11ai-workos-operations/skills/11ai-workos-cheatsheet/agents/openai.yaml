@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai WorkOS Cheatsheet"
-  short_description: "Look up common WorkOS APIs and flows"
-  default_prompt: "Use $11ai-workos-cheatsheet to look up a WorkOS API call, environment value, or authentication flow."

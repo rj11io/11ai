@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai SSH Cheatsheet"
+  short_description: "Look up common SSH commands and flags"
+  default_prompt: "Use $11ai-operator-ssh-cheatsheet to look up an SSH command, flag, or config option."

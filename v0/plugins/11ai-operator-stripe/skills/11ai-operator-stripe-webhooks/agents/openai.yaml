@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Stripe Webhooks"
+  short_description: "Receive and verify Stripe events"
+  default_prompt: "Use $11ai-operator-stripe-webhooks to receive, verify, and handle Stripe webhook events idempotently."

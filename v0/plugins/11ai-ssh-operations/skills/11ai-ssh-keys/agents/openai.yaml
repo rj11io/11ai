@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai SSH Keys"
-  short_description: "Create and manage SSH key pairs"
-  default_prompt: "Use $11ai-ssh-keys to create, inspect, rotate, or authorize an SSH key pair."

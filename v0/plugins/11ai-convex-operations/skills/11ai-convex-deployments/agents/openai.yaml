@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Convex Deployments"
-  short_description: "Deploy Convex and manage environments"
-  default_prompt: "Use $11ai-convex-deployments to deploy Convex, manage its environments, and set deployment variables."

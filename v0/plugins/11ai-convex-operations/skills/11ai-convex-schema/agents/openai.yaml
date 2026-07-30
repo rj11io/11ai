@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Convex Schema"
-  short_description: "Define Convex tables, types, and indexes"
-  default_prompt: "Use $11ai-convex-schema to define or change a Convex table, its validators, and its indexes."

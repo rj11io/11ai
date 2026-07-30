@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Convex Actions"
+  short_description: "Write Convex actions, crons, and jobs"
+  default_prompt: "Use $11ai-operator-convex-actions to write a Convex action, scheduled job, or cron that reaches an external service."

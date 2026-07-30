@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai WorkOS Troubleshooting"
-  short_description: "Diagnose WorkOS auth and sync failures"
-  default_prompt: "Use $11ai-workos-troubleshooting to diagnose a WorkOS authentication, redirect, session, or directory sync failure."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Stripe Checkout"
+  short_description: "Build Stripe Checkout sessions"
+  default_prompt: "Use $11ai-operator-stripe-checkout to build a Stripe Checkout session and handle its success and cancel paths."

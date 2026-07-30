@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Convex Troubleshooting"
-  short_description: "Diagnose Convex failures from evidence"
-  default_prompt: "Use $11ai-convex-troubleshooting to diagnose a Convex function, schema, deployment, or authentication failure."

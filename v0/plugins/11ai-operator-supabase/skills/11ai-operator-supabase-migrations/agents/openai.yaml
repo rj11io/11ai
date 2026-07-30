@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Supabase Migrations"
+  short_description: "Create and apply Supabase migrations"
+  default_prompt: "Use $11ai-operator-supabase-migrations to create, review, and apply a Supabase migration without losing data."

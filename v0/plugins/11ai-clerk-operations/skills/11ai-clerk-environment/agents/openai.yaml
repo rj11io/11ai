@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Clerk Environment"
-  short_description: "Inspect Clerk keys and instance config"
-  default_prompt: "Use $11ai-clerk-environment to inspect which Clerk instance and keys an application uses without changing them."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Clerk Troubleshooting"
+  short_description: "Diagnose Clerk auth and session failures"
+  default_prompt: "Use $11ai-operator-clerk-troubleshooting to diagnose a Clerk key, redirect, middleware, session, or webhook failure."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai SSH Troubleshooting"
-  short_description: "Diagnose SSH connection and auth failures"
-  default_prompt: "Use $11ai-ssh-troubleshooting to diagnose an SSH connection, authentication, or host key failure from evidence."

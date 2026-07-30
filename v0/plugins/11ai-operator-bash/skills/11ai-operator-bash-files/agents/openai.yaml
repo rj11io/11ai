@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Bash Files"
+  short_description: "Find, move, and inspect files safely"
+  default_prompt: "Use $11ai-operator-bash-files to find, inspect, copy, move, or delete files with a previewed and scoped command."

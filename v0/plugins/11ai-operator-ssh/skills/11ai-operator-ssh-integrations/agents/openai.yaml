@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai SSH Integrations"
+  short_description: "Connect SSH to Git, CI, and deploys"
+  default_prompt: "Use $11ai-operator-ssh-integrations to connect SSH to Git hosting, a pipeline, a deploy step, a bastion, or a Docker context."

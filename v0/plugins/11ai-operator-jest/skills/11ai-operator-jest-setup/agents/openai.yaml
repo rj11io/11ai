@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Jest Setup"
+  short_description: "Install and configure Jest in a project"
+  default_prompt: "Use $11ai-operator-jest-setup to install Jest and configure the transform, environment, module mapping, and scripts for this project."

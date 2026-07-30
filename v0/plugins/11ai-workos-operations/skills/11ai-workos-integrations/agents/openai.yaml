@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai WorkOS Integrations"
-  short_description: "Connect WorkOS to apps and databases"
-  default_prompt: "Use $11ai-workos-integrations to connect WorkOS to an application framework, a local user table, or an API boundary."

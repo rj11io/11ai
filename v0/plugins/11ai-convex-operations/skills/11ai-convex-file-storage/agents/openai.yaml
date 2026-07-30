@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Convex File Storage"
-  short_description: "Store and serve files with Convex"
-  default_prompt: "Use $11ai-convex-file-storage to upload, serve, and delete files through Convex storage."

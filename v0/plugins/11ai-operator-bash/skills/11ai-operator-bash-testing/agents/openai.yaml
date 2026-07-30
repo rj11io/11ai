@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Bash Testing"
+  short_description: "Lint and test Bash scripts"
+  default_prompt: "Use $11ai-operator-bash-testing to lint a script with shellcheck and cover it with tests."

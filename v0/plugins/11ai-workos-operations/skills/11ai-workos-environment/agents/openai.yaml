@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai WorkOS Environment"
-  short_description: "Inspect WorkOS keys and redirect URIs"
-  default_prompt: "Use $11ai-workos-environment to inspect which WorkOS environment, keys, and redirect URIs an application uses."

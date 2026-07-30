@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Supabase Auth"
+  short_description: "Configure Supabase authentication"
+  default_prompt: "Use $11ai-operator-supabase-auth to configure Supabase authentication providers, sessions, and user records."

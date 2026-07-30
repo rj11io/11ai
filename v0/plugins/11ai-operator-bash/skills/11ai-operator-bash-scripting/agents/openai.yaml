@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Bash Scripting"
+  short_description: "Write safe Bash scripts with strict mode"
+  default_prompt: "Use $11ai-operator-bash-scripting to write or repair a Bash script with strict mode, quoting, and clear failure behavior."

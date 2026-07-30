@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Stripe Integrations"
+  short_description: "Connect Stripe to apps and databases"
+  default_prompt: "Use $11ai-operator-stripe-integrations to connect Stripe to an application, a local database, or a pipeline."

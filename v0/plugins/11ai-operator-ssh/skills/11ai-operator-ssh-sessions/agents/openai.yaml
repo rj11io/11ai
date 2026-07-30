@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai SSH Sessions"
+  short_description: "Open SSH sessions and run commands"
+  default_prompt: "Use $11ai-operator-ssh-sessions to open an SSH session or run a remote command safely."

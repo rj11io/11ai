@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Docker Setup"
+  short_description: "Install and configure Docker locally"
+  default_prompt: "Use $11ai-operator-docker-setup to install Docker and configure the context, Compose plugin, builder, and permissions, then verify the daemon responds."

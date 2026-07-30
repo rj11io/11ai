@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Supabase Database"
-  short_description: "Query and change Postgres in Supabase"
-  default_prompt: "Use $11ai-supabase-database to query or change Postgres data and schema in a Supabase project."

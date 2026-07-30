@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Stripe Payments"
+  short_description: "Take payments and issue refunds"
+  default_prompt: "Use $11ai-operator-stripe-payments to take a one-off payment, confirm it, or issue a refund."

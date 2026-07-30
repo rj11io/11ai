@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai WorkOS Setup"
+  short_description: "Set up a WorkOS environment and keys"
+  default_prompt: "Use $11ai-operator-workos-setup to set up a WorkOS environment, API key, client id, and redirect URI."

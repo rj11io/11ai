@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Bash Environment"
+  short_description: "Inspect the shell, version, and PATH"
+  default_prompt: "Use $11ai-operator-bash-environment to inspect which shell is running, its version, options, and PATH without changing anything."

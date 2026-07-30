@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Stripe Products and Prices"
-  short_description: "Model Stripe products and prices"
-  default_prompt: "Use $11ai-stripe-products-and-prices to model products, prices, and currencies, and change pricing safely."

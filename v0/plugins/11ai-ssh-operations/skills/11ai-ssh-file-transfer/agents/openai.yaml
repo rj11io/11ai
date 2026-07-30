@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai SSH File Transfer"
-  short_description: "Copy files over SSH with scp and rsync"
-  default_prompt: "Use $11ai-ssh-file-transfer to copy or synchronize files over SSH with an explicit direction and delete policy."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Supabase Row Level Security"
+  short_description: "Write and verify row level security"
+  default_prompt: "Use $11ai-operator-supabase-rls to write and verify row level security policies on a Supabase table."

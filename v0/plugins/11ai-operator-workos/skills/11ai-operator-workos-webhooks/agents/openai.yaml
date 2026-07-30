@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai WorkOS Webhooks"
+  short_description: "Receive and verify WorkOS events"
+  default_prompt: "Use $11ai-operator-workos-webhooks to receive, verify, and handle WorkOS webhook events idempotently."

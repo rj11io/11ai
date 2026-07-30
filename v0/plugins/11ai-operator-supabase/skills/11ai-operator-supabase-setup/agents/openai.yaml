@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Supabase Setup"
+  short_description: "Set up a Supabase project locally"
+  default_prompt: "Use $11ai-operator-supabase-setup to set up a Supabase project, link it, and start the local stack."

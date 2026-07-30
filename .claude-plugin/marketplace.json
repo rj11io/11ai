@@ -15,12 +15,12 @@
       "source": "./v0/plugins/11ai-ai-chat"
     },
     {
-      "name": "11ai-antdesign-operations",
-      "source": "./v0/plugins/11ai-antdesign-operations"
+      "name": "11ai-operator-antdesign",
+      "source": "./v0/plugins/11ai-operator-antdesign"
     },
     {
-      "name": "11ai-aws-operations",
-      "source": "./v0/plugins/11ai-aws-operations"
+      "name": "11ai-operator-aws",
+      "source": "./v0/plugins/11ai-operator-aws"
     },
     {
       "name": "11ai-benchmarks",
@@ -39,20 +39,20 @@
       "source": "./v0/plugins/11ai-codebase"
     },
     {
-      "name": "11ai-docker-operations",
-      "source": "./v0/plugins/11ai-docker-operations"
+      "name": "11ai-operator-docker",
+      "source": "./v0/plugins/11ai-operator-docker"
     },
     {
-      "name": "11ai-git-operations",
-      "source": "./v0/plugins/11ai-git-operations"
+      "name": "11ai-operator-git",
+      "source": "./v0/plugins/11ai-operator-git"
     },
     {
       "name": "11ai-integrations",
       "source": "./v0/plugins/11ai-integrations"
     },
     {
-      "name": "11ai-nodejs-api-operations",
-      "source": "./v0/plugins/11ai-nodejs-api-operations"
+      "name": "11ai-operator-nodejs-api",
+      "source": "./v0/plugins/11ai-operator-nodejs-api"
     },
     {
       "name": "11ai-super",
@@ -75,44 +75,44 @@
       "source": "./v0/plugins/11ai-xharness"
     },
     {
-      "name": "11ai-jest-operations",
-      "source": "./v0/plugins/11ai-jest-operations"
+      "name": "11ai-operator-jest",
+      "source": "./v0/plugins/11ai-operator-jest"
     },
     {
       "name": "11ai-llm-costs",
       "source": "./v0/plugins/11ai-llm-costs"
     },
     {
-      "name": "11ai-mongodb-operations",
-      "source": "./v0/plugins/11ai-mongodb-operations"
+      "name": "11ai-operator-mongodb",
+      "source": "./v0/plugins/11ai-operator-mongodb"
     },
     {
-      "name": "11ai-ssh-operations",
-      "source": "./v0/plugins/11ai-ssh-operations"
+      "name": "11ai-operator-ssh",
+      "source": "./v0/plugins/11ai-operator-ssh"
     },
     {
-      "name": "11ai-bash-operations",
-      "source": "./v0/plugins/11ai-bash-operations"
+      "name": "11ai-operator-bash",
+      "source": "./v0/plugins/11ai-operator-bash"
     },
     {
-      "name": "11ai-supabase-operations",
-      "source": "./v0/plugins/11ai-supabase-operations"
+      "name": "11ai-operator-supabase",
+      "source": "./v0/plugins/11ai-operator-supabase"
     },
     {
-      "name": "11ai-workos-operations",
-      "source": "./v0/plugins/11ai-workos-operations"
+      "name": "11ai-operator-workos",
+      "source": "./v0/plugins/11ai-operator-workos"
     },
     {
-      "name": "11ai-convex-operations",
-      "source": "./v0/plugins/11ai-convex-operations"
+      "name": "11ai-operator-convex",
+      "source": "./v0/plugins/11ai-operator-convex"
     },
     {
-      "name": "11ai-clerk-operations",
-      "source": "./v0/plugins/11ai-clerk-operations"
+      "name": "11ai-operator-clerk",
+      "source": "./v0/plugins/11ai-operator-clerk"
     },
     {
-      "name": "11ai-stripe-operations",
-      "source": "./v0/plugins/11ai-stripe-operations"
+      "name": "11ai-operator-stripe",
+      "source": "./v0/plugins/11ai-operator-stripe"
     }
   ]
 }

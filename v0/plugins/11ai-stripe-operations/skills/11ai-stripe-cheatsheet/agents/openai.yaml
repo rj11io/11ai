@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Stripe Cheatsheet"
-  short_description: "Look up common Stripe APIs and CLI use"
-  default_prompt: "Use $11ai-stripe-cheatsheet to look up a Stripe API call, CLI command, or test card."

@@ -28,23 +28,23 @@ const PLUGIN_CONFIG = [
       "End-to-end chat products: sessions, tools, models, providers, UI, and messaging-platform extensions.",
   },
   {
-    slug: "antdesign-operations",
-    dir: "11ai-antdesign-operations",
-    title: "Ant Design operations",
+    slug: "operator-antdesign",
+    dir: "11ai-operator-antdesign",
+    title: "Ant Design operator",
     tagline:
       "Common Ant Design React setup, layouts, forms, tables, navigation, overlays, display, theming, stack integrations, reference, and troubleshooting.",
   },
   {
-    slug: "aws-operations",
-    dir: "11ai-aws-operations",
-    title: "AWS operations",
+    slug: "operator-aws",
+    dir: "11ai-operator-aws",
+    title: "AWS operator",
     tagline:
       "Common AWS CLI operations for setup, account context, S3, EC2, Lambda, ECS, ECR, CloudWatch, IAM, CloudFormation, integrations, reference, and troubleshooting.",
   },
   {
-    slug: "bash-operations",
-    dir: "11ai-bash-operations",
-    title: "Bash operations",
+    slug: "operator-bash",
+    dir: "11ai-operator-bash",
+    title: "Bash operator",
     tagline:
       "Shell inspection, strict-mode scripting, text processing, files, processes, linting, integrations, and troubleshooting.",
   },
@@ -70,9 +70,9 @@ const PLUGIN_CONFIG = [
       "Safely find and remove abandoned local resources: worktrees, threads, ports, and node_modules.",
   },
   {
-    slug: "clerk-operations",
-    dir: "11ai-clerk-operations",
-    title: "Clerk operations",
+    slug: "operator-clerk",
+    dir: "11ai-operator-clerk",
+    title: "Clerk operator",
     tagline:
       "Clerk setup, sign-in flows, server-side session protection, users, organizations, webhooks, integrations, and troubleshooting.",
   },
@@ -84,23 +84,23 @@ const PLUGIN_CONFIG = [
       "Playwright setup, npm publishing, and fully automated releases for your repositories.",
   },
   {
-    slug: "convex-operations",
-    dir: "11ai-convex-operations",
-    title: "Convex operations",
+    slug: "operator-convex",
+    dir: "11ai-operator-convex",
+    title: "Convex operator",
     tagline:
       "Convex setup, schema and indexes, functions, actions and crons, auth, file storage, deployments, and troubleshooting.",
   },
   {
-    slug: "docker-operations",
-    dir: "11ai-docker-operations",
-    title: "Docker operations",
+    slug: "operator-docker",
+    dir: "11ai-operator-docker",
+    title: "Docker operator",
     tagline:
       "Common Docker CLI and Compose operations with setup, integrations, safety-first cleanup, registry, storage, and troubleshooting workflows.",
   },
   {
-    slug: "git-operations",
-    dir: "11ai-git-operations",
-    title: "Git operations",
+    slug: "operator-git",
+    dir: "11ai-operator-git",
+    title: "Git operator",
     tagline:
       "Modular, safety-first Git skills for setup, repository state, commits, branches, synchronization, integrations, recovery, and troubleshooting.",
   },
@@ -112,9 +112,9 @@ const PLUGIN_CONFIG = [
       "Add Convex, WorkOS AuthKit, or both to Next.js applications the right way.",
   },
   {
-    slug: "jest-operations",
-    dir: "11ai-jest-operations",
-    title: "Jest operations",
+    slug: "operator-jest",
+    dir: "11ai-operator-jest",
+    title: "Jest operator",
     tagline:
       "Setting up, inspecting, running, integrating, configuring, and troubleshooting common Jest operations.",
   },
@@ -126,16 +126,16 @@ const PLUGIN_CONFIG = [
       "Project-scoped and machine-wide LLM usage and cost reporting across local coding harnesses.",
   },
   {
-    slug: "mongodb-operations",
-    dir: "11ai-mongodb-operations",
-    title: "MongoDB operations",
+    slug: "operator-mongodb",
+    dir: "11ai-operator-mongodb",
+    title: "MongoDB operator",
     tagline:
       "Common MongoDB Shell and Database Tools work with setup, driver integrations, and read-first safety checks around data changes.",
   },
   {
-    slug: "nodejs-api-operations",
-    dir: "11ai-nodejs-api-operations",
-    title: "Node.js API operations",
+    slug: "operator-nodejs-api",
+    dir: "11ai-operator-nodejs-api",
+    title: "Node.js API operator",
     tagline:
       "Scaffolding, inspecting, changing, testing, integrating, and troubleshooting Node.js APIs across common frameworks.",
   },
@@ -154,30 +154,30 @@ const PLUGIN_CONFIG = [
       "Read-only dependency auditing with precise installed-version evidence and critical host-harm triage.",
   },
   {
-    slug: "ssh-operations",
-    dir: "11ai-ssh-operations",
-    title: "SSH operations",
+    slug: "operator-ssh",
+    dir: "11ai-operator-ssh",
+    title: "SSH operator",
     tagline:
       "OpenSSH client setup, keys, host configuration, sessions, tunnels, file transfer, integrations, and troubleshooting.",
   },
   {
-    slug: "stripe-operations",
-    dir: "11ai-stripe-operations",
-    title: "Stripe operations",
+    slug: "operator-stripe",
+    dir: "11ai-operator-stripe",
+    title: "Stripe operator",
     tagline:
       "Stripe setup, customers, prices, Checkout, subscriptions, payments, webhooks, entitlements, and troubleshooting.",
   },
   {
-    slug: "supabase-operations",
-    dir: "11ai-supabase-operations",
-    title: "Supabase operations",
+    slug: "operator-supabase",
+    dir: "11ai-operator-supabase",
+    title: "Supabase operator",
     tagline:
       "Supabase setup, Postgres data and migrations, row level security, auth, storage, edge functions, and troubleshooting.",
   },
   {
-    slug: "workos-operations",
-    dir: "11ai-workos-operations",
-    title: "WorkOS operations",
+    slug: "operator-workos",
+    dir: "11ai-operator-workos",
+    title: "WorkOS operator",
     tagline:
       "WorkOS setup, AuthKit sessions, enterprise single sign-on, directory sync, organizations, webhooks, and troubleshooting.",
   },
@@ -186,7 +186,7 @@ const PLUGIN_CONFIG = [
     dir: "11ai-utils",
     title: "Utilities",
     tagline:
-      "Markdown compression, reverse engineering, reviews, analytics, publication CMS, calls to action, project sites, and operations-plugin scaffolding.",
+      "Markdown compression, reverse engineering, reviews, analytics, publication CMS, calls to action, project sites, and operator-plugin scaffolding.",
   },
   {
     slug: "xharness",

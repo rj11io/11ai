@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Node.js API Setup"
+  short_description: "Scaffold and configure a Node.js API"
+  default_prompt: "Use $11ai-operator-nodejs-api-setup to scaffold this Node.js API's framework, TypeScript, validated configuration, health route, shutdown, and scripts."

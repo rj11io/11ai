@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Clerk Sessions"
+  short_description: "Protect routes with Clerk sessions"
+  default_prompt: "Use $11ai-operator-clerk-sessions to protect routes and read the session or token on the server."

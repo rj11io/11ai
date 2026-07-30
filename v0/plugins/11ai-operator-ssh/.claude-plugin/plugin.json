@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "11ai-operator-ssh",
+  "version": "1.26.1",
+  "description": "Modular, safety-first skills for common SSH client operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": ["ssh", "openssh", "keys", "tunnels", "devops"],
+  "skills": "./skills/"
+}

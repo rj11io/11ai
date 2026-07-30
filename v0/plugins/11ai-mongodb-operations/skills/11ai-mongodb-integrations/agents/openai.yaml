@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai MongoDB Integrations"
-  short_description: "Connect MongoDB to drivers and hosting"
-  default_prompt: "Use $11ai-mongodb-integrations to wire this application's MongoDB connection, schema layer, migrations, change streams, or tests."

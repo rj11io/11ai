@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Clerk Setup"
-  short_description: "Set up Clerk in an application"
-  default_prompt: "Use $11ai-clerk-setup to set up Clerk keys, provider, and middleware in this application."
