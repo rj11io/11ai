@@ -1,3 +1,10 @@
+# [1.28.0](https://github.com/rj11io/11ai/compare/v1.27.0...v1.28.0) (2026-07-31)
+
+
+### Features
+
+* poke api v2 operator ([6006dd6](https://github.com/rj11io/11ai/commit/6006dd6d176894ba2d4d8a3f58344eb04675c549))
+
 # [1.27.0](https://github.com/rj11io/11ai/compare/v1.26.1...v1.27.0) (2026-07-30)
 
 

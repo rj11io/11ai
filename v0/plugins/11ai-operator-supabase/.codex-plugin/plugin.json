@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-supabase",
-  "version": "1.27.0",
+  "version": "1.28.0",
   "description": "Modular, safety-first skills for common Supabase project and Postgres operations.",
   "author": {
     "name": "rj11io"
