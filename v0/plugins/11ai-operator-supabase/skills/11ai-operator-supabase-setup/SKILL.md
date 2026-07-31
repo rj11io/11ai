@@ -4,6 +4,8 @@ description: "Set up a Supabase project from zero, covering CLI installation, pr
 ---
 # 11ai supabase setup
 
+Version baseline: Supabase CLI v2, supabase-js v2, and the current CLI local Postgres 17 line. Inspect the linked project, installed client patch, CLI patch, and remote Postgres version before changing configuration or migrations.
+
 Two things here change shared state: linking a directory to a remote project, and writing environment files that hold keys. Confirm which remote project is intended before linking, because once a link exists several commands act on that project rather than on the local stack.
 
 ## Check what exists

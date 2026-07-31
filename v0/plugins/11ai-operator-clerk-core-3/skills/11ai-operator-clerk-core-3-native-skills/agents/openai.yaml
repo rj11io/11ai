@@ -1,0 +1,4 @@
+interface:
+  display_name: "Clerk Core 3 native skills"
+  short_description: "Check and install Core 3-compatible Clerk skills"
+  default_prompt: "Use $11ai-operator-clerk-core-3-native-skills to select and compatibility-check Clerk's first-party skills for this Core 3 project."

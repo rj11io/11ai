@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Sandbox v2 security and limits"
+  short_description: "Operate Vercel Sandbox security and limits safely"
+  default_prompt: "Use $11ai-operator-vercel-sandbox-v2-security-limits to handle this Vercel Sandbox security and limits task and verify the result."

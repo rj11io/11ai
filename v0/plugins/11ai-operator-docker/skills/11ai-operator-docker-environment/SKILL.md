@@ -4,6 +4,8 @@ description: "Inspect Docker installation, client and daemon health, active cont
 ---
 # 11ai Docker environment
 
+Version baseline: Current stable Docker tooling: Engine 29.x (29.6.2 at this review), Compose v5, and the matching current BuildKit/containerd supplied by the installation. Inspect each component independently because Docker Desktop, Engine, Compose, Buildx, and the API do not share one version.
+
 Establish what Docker endpoint the CLI is targeting before operating on resources. Keep the first pass read-only and report exact command output or the relevant error.
 
 ## Workflow

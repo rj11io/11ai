@@ -2,6 +2,8 @@
 
 Twelve standalone skills for common Docker CLI and Compose work, with safety checks around state-changing and destructive commands.
 
+Version baseline: Docker Engine 29.6.2 and Compose v5 at this review, with the BuildKit and containerd versions supplied by the installation. The plugin remains unversioned because Engine, Desktop, Compose, Buildx, API, and runtime components version independently.
+
 ## Choose a skill
 
 | Skill | Use it for |

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "11ai-operator-antdesign-v6",
+  "version": "1.28.0",
+  "description": "Modular Ant Design 6 skills for React operations and native-skill compatibility.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "skills": "./skills/"
+}

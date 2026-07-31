@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Operator AWS CloudTrail"
-  short_description: "Attribute account changes from audit logs"
-  default_prompt: "Use $11ai-operator-aws-cloudtrail to find who changed a resource and when, using audit events."

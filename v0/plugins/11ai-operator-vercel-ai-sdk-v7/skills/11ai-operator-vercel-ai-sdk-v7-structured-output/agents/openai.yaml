@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel AI SDK v7 structured output"
+  short_description: "Operate Vercel AI SDK structured output safely"
+  default_prompt: "Use $11ai-operator-vercel-ai-sdk-v7-structured-output to handle this Vercel AI SDK structured output task and verify the result."

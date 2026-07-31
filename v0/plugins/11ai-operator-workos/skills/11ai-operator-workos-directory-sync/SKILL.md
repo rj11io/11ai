@@ -4,6 +4,8 @@ description: "Set up and reconcile directory sync, covering the Admin Portal han
 ---
 # 11ai WorkOS directory sync
 
+Version baseline: Current WorkOS platform APIs and current GA SDKs; for Node.js examples use @workos-inc/node v8 on Node.js 22.11 or newer. Inspect the installed SDK and its migration guide before applying language-specific patterns.
+
 Directory sync makes the customer's identity provider the source of truth for who exists and who belongs to what. That means two obligations: process events as they arrive, and be able to reconcile from scratch when events were missed. A system that only handles the event stream drifts, and the drift stays invisible until someone who was deprovisioned still has access.
 
 ## Inspect first

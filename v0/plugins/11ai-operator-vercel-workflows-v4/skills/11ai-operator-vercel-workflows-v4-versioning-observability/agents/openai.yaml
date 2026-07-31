@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Workflows v4 versioning and observability"
+  short_description: "Operate Vercel Workflows versioning and observability safely"
+  default_prompt: "Use $11ai-operator-vercel-workflows-v4-versioning-observability to handle this Vercel Workflows versioning and observability task and verify the result."

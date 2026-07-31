@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai React v19 Cheatsheet"
+  short_description: "Operate React Cheatsheet safely"
+  default_prompt: "Use $11ai-operator-reactjs-v19-cheatsheet to handle this React cheatsheet task and verify the result."

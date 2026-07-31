@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai React v19 components and composition"
+  short_description: "Operate React components and composition safely"
+  default_prompt: "Use $11ai-operator-reactjs-v19-components-composition to handle this React components and composition task and verify the result."

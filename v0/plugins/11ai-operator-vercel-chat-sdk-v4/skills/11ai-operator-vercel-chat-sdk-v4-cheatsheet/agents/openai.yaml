@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Chat SDK v4 Cheatsheet"
+  short_description: "Operate Vercel Chat SDK Cheatsheet safely"
+  default_prompt: "Use $11ai-operator-vercel-chat-sdk-v4-cheatsheet to handle this Vercel Chat SDK cheatsheet task and verify the result."

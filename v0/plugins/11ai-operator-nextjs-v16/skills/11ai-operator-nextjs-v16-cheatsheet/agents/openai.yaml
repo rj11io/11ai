@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Next.js v16 Cheatsheet"
+  short_description: "Operate Next.js Cheatsheet safely"
+  default_prompt: "Use $11ai-operator-nextjs-v16-cheatsheet to handle this Next.js cheatsheet task and verify the result."

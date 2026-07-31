@@ -4,6 +4,8 @@ description: "Manage Docker images with pull, list, inspect, history, tag, remov
 ---
 # 11ai Docker images
 
+Version baseline: Current stable Docker tooling: Engine 29.x (29.6.2 at this review), Compose v5, and the matching current BuildKit/containerd supplied by the installation. Inspect each component independently because Docker Desktop, Engine, Compose, Buildx, and the API do not share one version.
+
 Treat image references as exact identifiers. Preserve registry, repository, tag, and digest information, and prefer inspection before changing local image state.
 
 ## Inspect and retrieve

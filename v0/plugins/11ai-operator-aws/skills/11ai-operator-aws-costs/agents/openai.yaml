@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Operator AWS Costs"
-  short_description: "Report AWS spend and triage increases"
-  default_prompt: "Use $11ai-operator-aws-costs to report AWS spend, set a budget, or find what drove a cost increase."

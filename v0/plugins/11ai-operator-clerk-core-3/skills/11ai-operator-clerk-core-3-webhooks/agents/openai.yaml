@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Clerk Webhooks"
+  short_description: "Receive and verify Clerk events"
+  default_prompt: "Use $11ai-operator-clerk-core-3-webhooks to receive, verify, and handle Clerk webhook events idempotently."

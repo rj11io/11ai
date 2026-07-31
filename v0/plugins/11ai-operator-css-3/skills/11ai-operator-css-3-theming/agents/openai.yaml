@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai CSS3 Theming"
+  short_description: "Operate Theming safely with clear checks"
+  default_prompt: "Use $11ai-operator-css-3-theming to handle this CSS3 theming task and verify the result."

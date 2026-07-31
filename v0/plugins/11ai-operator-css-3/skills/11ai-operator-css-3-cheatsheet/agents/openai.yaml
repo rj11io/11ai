@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai CSS3 Cheatsheet"
+  short_description: "Operate Cheatsheet safely"
+  default_prompt: "Use $11ai-operator-css-3-cheatsheet to handle this CSS3 cheatsheet task and verify the result."

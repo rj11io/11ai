@@ -1,0 +1,27 @@
+{
+  "name": "11ai-operator-typescript-v7",
+  "version": "1.28.0",
+  "description": "Modular, safety-first skills for TypeScript 7 operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "typescript",
+    "types",
+    "compiler",
+    "declarations",
+    "modules"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Operator TypeScript v7",
+    "shortDescription": "Run TypeScript 7 tasks safely.",
+    "longDescription": "A standalone TypeScript 7 native-compiler toolbox for configuration, type modeling, narrowing, generics, modules, declarations, migrations, and compiler-API compatibility.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-operator-typescript-v7 skills for this TypeScript 7 task."
+  }
+}

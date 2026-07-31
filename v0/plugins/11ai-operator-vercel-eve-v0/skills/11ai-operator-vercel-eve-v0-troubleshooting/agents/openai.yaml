@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel eve v0 Troubleshooting"
+  short_description: "Operate Vercel eve Troubleshooting safely"
+  default_prompt: "Use $11ai-operator-vercel-eve-v0-troubleshooting to handle this Vercel eve troubleshooting task and verify the result."

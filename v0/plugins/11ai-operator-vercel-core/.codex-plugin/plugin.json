@@ -1,0 +1,27 @@
+{
+  "name": "11ai-operator-vercel-core",
+  "version": "1.28.0",
+  "description": "Modular, safety-first skills for common Vercel Core Platform operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "vercel",
+    "platform",
+    "deployments",
+    "cdn",
+    "observability"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Operator Vercel Core",
+    "shortDescription": "Operate the Vercel core platform safely.",
+    "longDescription": "A standalone toolbox for Vercel security, content delivery, Fluid Compute, observability, CI/CD, setup, integrations, and troubleshooting.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-operator-vercel-core skills for this Vercel Core Platform task."
+  }
+}

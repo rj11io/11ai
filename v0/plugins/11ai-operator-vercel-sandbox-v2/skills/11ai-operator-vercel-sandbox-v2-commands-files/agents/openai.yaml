@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Sandbox v2 commands and files"
+  short_description: "Operate Vercel Sandbox commands and files safely"
+  default_prompt: "Use $11ai-operator-vercel-sandbox-v2-commands-files to handle this Vercel Sandbox commands and files task and verify the result."

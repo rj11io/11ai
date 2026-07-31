@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai React v19 performance and testing"
+  short_description: "Operate React performance and testing safely"
+  default_prompt: "Use $11ai-operator-reactjs-v19-performance-testing to handle this React performance and testing task and verify the result."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Operator AWS Route 53"
-  short_description: "Manage DNS records and diagnose lookups"
-  default_prompt: "Use $11ai-operator-aws-route53 to inspect a hosted zone, change a record, or diagnose a DNS failure."

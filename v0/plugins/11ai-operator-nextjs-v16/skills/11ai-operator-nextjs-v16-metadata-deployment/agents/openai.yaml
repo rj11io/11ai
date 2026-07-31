@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Next.js v16 metadata and deployment"
+  short_description: "Operate Next.js metadata and deployment safely"
+  default_prompt: "Use $11ai-operator-nextjs-v16-metadata-deployment to handle this Next.js metadata and deployment task and verify the result."

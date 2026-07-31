@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Core Setup"
+  short_description: "Operate Vercel Core Setup safely"
+  default_prompt: "Use $11ai-operator-vercel-core-setup to handle this Vercel Core setup task and verify the result."

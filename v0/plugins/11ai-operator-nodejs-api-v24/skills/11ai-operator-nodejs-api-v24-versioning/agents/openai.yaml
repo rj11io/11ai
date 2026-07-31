@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Operator Node.js API Versioning"
+  short_description: "Version an API without breaking clients"
+  default_prompt: "Use $11ai-operator-nodejs-api-v24-versioning to introduce an API version and retire an old one safely."

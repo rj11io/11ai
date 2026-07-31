@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai TypeScript v7 Cheatsheet"
+  short_description: "Operate TypeScript Cheatsheet safely"
+  default_prompt: "Use $11ai-operator-typescript-v7-cheatsheet to handle this TypeScript cheatsheet task and verify the result."

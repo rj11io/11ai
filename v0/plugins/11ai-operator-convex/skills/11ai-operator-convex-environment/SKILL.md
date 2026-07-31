@@ -4,6 +4,8 @@ description: "Inspect which Convex deployment is active, whether the project is 
 ---
 # 11ai Convex environment
 
+Version baseline: Current stable Convex platform and npm package, with Node.js 20, 22, and 24 supported for the configurable Node runtime. Inspect the installed convex package, generated API, deployment, and current docs before using newly released behavior.
+
 Every Convex project has at least two deployments — a personal development one and production — with separate data, separate environment variables, and separate function versions. Establish which one a command will reach before running anything, because `npx convex dev` and `npx convex deploy` target different places. Keep this pass read-only.
 
 ## Inspect the project and the link

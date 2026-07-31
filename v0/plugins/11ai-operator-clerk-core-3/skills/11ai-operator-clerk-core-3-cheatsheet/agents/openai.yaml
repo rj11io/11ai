@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Clerk Cheatsheet"
+  short_description: "Look up common Clerk APIs and helpers"
+  default_prompt: "Use $11ai-operator-clerk-core-3-cheatsheet to look up a Clerk component, helper, or backend API call."

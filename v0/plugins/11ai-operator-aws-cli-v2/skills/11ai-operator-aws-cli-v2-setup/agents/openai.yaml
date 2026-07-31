@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai AWS Setup"
+  short_description: "Install and configure the AWS CLI"
+  default_prompt: "Use $11ai-operator-aws-cli-v2-setup to install the AWS CLI and configure the profile, single sign-on, and region for this account, then verify the resolved identity."

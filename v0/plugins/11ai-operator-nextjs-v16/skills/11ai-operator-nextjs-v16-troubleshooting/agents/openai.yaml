@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Next.js v16 Troubleshooting"
+  short_description: "Operate Next.js Troubleshooting safely"
+  default_prompt: "Use $11ai-operator-nextjs-v16-troubleshooting to handle this Next.js troubleshooting task and verify the result."

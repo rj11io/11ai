@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Jest Watch"
-  short_description: "Run Jest watch mode for fast local feedback"
-  default_prompt: "Use $11ai-operator-jest-watch to start the appropriate interactive Jest watch mode for this repository."

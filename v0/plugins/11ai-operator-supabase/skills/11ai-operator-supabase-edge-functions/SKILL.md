@@ -4,6 +4,8 @@ description: "Write, run, and deploy Supabase edge functions, covering the Deno 
 ---
 # 11ai supabase edge functions
 
+Version baseline: Supabase CLI v2, supabase-js v2, and the current CLI local Postgres 17 line. Inspect the linked project, installed client patch, CLI patch, and remote Postgres version before changing configuration or migrations.
+
 Functions run on Deno, not Node, and `supabase functions deploy` publishes to the **linked remote project**. Establish both facts before writing: Node built-ins and `node_modules` are not available the way they are elsewhere, and a deploy is an externally visible change.
 
 ## Inspect first

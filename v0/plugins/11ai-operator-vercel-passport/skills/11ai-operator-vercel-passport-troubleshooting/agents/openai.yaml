@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Passport Troubleshooting"
+  short_description: "Operate Passport Troubleshooting safely"
+  default_prompt: "Use $11ai-operator-vercel-passport-troubleshooting to handle this Vercel Passport troubleshooting task and verify the result."

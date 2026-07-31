@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Passport Cheatsheet"
+  short_description: "Operate Passport Cheatsheet safely"
+  default_prompt: "Use $11ai-operator-vercel-passport-cheatsheet to handle this Vercel Passport cheatsheet task and verify the result."

@@ -4,6 +4,8 @@ description: "Take one-off payments and issue refunds, covering payment intents 
 ---
 # 11ai stripe payments
 
+Version baseline: Stripe API 2026-02-25.clover and the latest stable SDK for the project language. Preserve an existing account, endpoint, or SDK pin unless the user explicitly requests an upgrade, and validate the compatibility table before moving API versions.
+
 Two rules govern everything here. The amount is calculated on the server, never accepted from the client. And every create that moves money carries an idempotency key derived from something stable, because a retry without one charges twice.
 
 ## Inspect first

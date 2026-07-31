@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Chat SDK v4 events and handlers"
+  short_description: "Operate Vercel Chat SDK events and handlers safely"
+  default_prompt: "Use $11ai-operator-vercel-chat-sdk-v4-events-handlers to handle this Vercel Chat SDK events and handlers task and verify the result."

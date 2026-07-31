@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "11ai-operator-aws-cli-v2",
+  "version": "1.28.0",
+  "description": "Modular, safety-first skills for AWS CLI v2 operations, native skills, and troubleshooting.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "skills": "./skills/"
+}

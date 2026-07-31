@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Passport visitor identity"
+  short_description: "Operate Passport visitor identity safely"
+  default_prompt: "Use $11ai-operator-vercel-passport-visitor-identity to handle this Vercel Passport visitor identity task and verify the result."

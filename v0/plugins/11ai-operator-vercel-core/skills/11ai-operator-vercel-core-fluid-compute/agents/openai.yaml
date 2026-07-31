@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Core Fluid Compute"
+  short_description: "Operate Vercel Core Fluid Compute safely"
+  default_prompt: "Use $11ai-operator-vercel-core-fluid-compute to handle this Vercel Core fluid compute task and verify the result."

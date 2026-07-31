@@ -4,6 +4,8 @@ description: "Wire and repair AuthKit sign-in, covering the hosted sign-in and s
 ---
 # 11ai WorkOS AuthKit
 
+Version baseline: Current WorkOS platform APIs and current GA SDKs; for Node.js examples use @workos-inc/node v8 on Node.js 22.11 or newer. Inspect the installed SDK and its migration guide before applying language-specific patterns.
+
 Two mechanisms carry the whole flow: the callback that exchanges a code for a session, and the middleware that refreshes a short-lived access token. Almost every AuthKit report — sign-in loops, random sign-outs, a callback error — traces to one of them. Establish both before changing anything else.
 
 ## Inspect the current wiring

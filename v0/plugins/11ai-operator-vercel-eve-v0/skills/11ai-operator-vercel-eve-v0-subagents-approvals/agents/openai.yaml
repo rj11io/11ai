@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel eve v0 subagents and approvals"
+  short_description: "Operate Vercel eve subagents and approvals safely"
+  default_prompt: "Use $11ai-operator-vercel-eve-v0-subagents-approvals to handle this Vercel eve subagents and approvals task and verify the result."

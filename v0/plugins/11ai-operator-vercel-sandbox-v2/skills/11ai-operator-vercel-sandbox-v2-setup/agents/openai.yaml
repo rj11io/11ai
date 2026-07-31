@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Sandbox v2 Setup"
+  short_description: "Operate Vercel Sandbox Setup safely"
+  default_prompt: "Use $11ai-operator-vercel-sandbox-v2-setup to handle this Vercel Sandbox setup task and verify the result."

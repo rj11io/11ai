@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel eve v0 sessions and workflows"
+  short_description: "Operate Vercel eve sessions and workflows safely"
+  default_prompt: "Use $11ai-operator-vercel-eve-v0-sessions-workflows to handle this Vercel eve sessions and workflows task and verify the result."

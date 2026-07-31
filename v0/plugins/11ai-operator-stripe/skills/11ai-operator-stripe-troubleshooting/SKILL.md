@@ -4,6 +4,8 @@ description: "Diagnose Stripe failures from reproducible evidence, covering test
 ---
 # 11ai stripe troubleshooting
 
+Version baseline: Stripe API 2026-02-25.clover and the latest stable SDK for the project language. Preserve an existing account, endpoint, or SDK pin unless the user explicitly requests an upgrade, and validate the compatibility table before moving API versions.
+
 Separate observed facts from theories. The first question is always which mode and which account, because test and live are separate datasets and a missing object is usually the wrong one. Never disable signature verification, never issue a refund to clear a symptom, and never retry a charge without checking whether the first one succeeded.
 
 ## Evidence collection

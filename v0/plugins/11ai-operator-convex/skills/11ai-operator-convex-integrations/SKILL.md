@@ -4,6 +4,8 @@ description: "Connect Convex to the systems around it, covering React and Next.j
 ---
 # 11ai convex integrations
 
+Version baseline: Current stable Convex platform and npm package, with Node.js 20, 22, and 24 supported for the configurable Node runtime. Inspect the installed convex package, generated API, deployment, and current docs before using newly released behavior.
+
 Convex is both the database and the server, so every integration lands in one of three places: the client subscribing reactively, an action reaching outward, or an HTTP endpoint receiving something inbound. Decide which one before writing, because the constraints differ sharply — queries cannot call out, and actions have no transaction.
 
 ## Name the seam

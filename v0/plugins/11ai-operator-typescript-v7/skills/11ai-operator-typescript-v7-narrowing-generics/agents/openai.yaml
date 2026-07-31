@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai TypeScript v7 narrowing and generics"
+  short_description: "Operate TypeScript narrowing and generics safely"
+  default_prompt: "Use $11ai-operator-typescript-v7-narrowing-generics to handle this TypeScript narrowing and generics task and verify the result."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel AI SDK v7 providers and middleware"
+  short_description: "Operate Vercel AI SDK providers and middleware safely"
+  default_prompt: "Use $11ai-operator-vercel-ai-sdk-v7-providers-middleware to handle this Vercel AI SDK providers and middleware task and verify the result."

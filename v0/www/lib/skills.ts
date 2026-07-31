@@ -28,18 +28,18 @@ const PLUGIN_CONFIG = [
       "End-to-end chat products: sessions, tools, models, providers, UI, and messaging-platform extensions.",
   },
   {
-    slug: "operator-antdesign",
-    dir: "11ai-operator-antdesign",
-    title: "Ant Design operator",
+    slug: "operator-antdesign-v6",
+    dir: "11ai-operator-antdesign-v6",
+    title: "Ant Design v6 operator",
     tagline:
-      "Common Ant Design React setup, layouts, forms, tables, navigation, overlays, display, theming, stack integrations, reference, and troubleshooting.",
+      "Ant Design 6 React setup, components, theming, integrations, first-party native skills, reference, and troubleshooting.",
   },
   {
-    slug: "operator-aws",
-    dir: "11ai-operator-aws",
-    title: "AWS operator",
+    slug: "operator-aws-cli-v2",
+    dir: "11ai-operator-aws-cli-v2",
+    title: "AWS CLI v2 operator",
     tagline:
-      "AWS CLI operations for setup, account context, storage, compute, databases, networking, DNS, secrets, observability, audit, cost, deployments, and troubleshooting.",
+      "AWS CLI v2 operations for common services, deployments, first-party Agent Toolkit skills, integrations, and troubleshooting.",
   },
   {
     slug: "operator-bash",
@@ -70,11 +70,11 @@ const PLUGIN_CONFIG = [
       "Safely find and remove abandoned local resources: worktrees, threads, ports, and node_modules.",
   },
   {
-    slug: "operator-clerk",
-    dir: "11ai-operator-clerk",
-    title: "Clerk operator",
+    slug: "operator-clerk-core-3",
+    dir: "11ai-operator-clerk-core-3",
+    title: "Clerk Core 3 operator",
     tagline:
-      "Clerk setup, sign-in flows, server-side session protection, users, organizations, webhooks, integrations, and troubleshooting.",
+      "Clerk Core 3 setup, authentication, sessions, users, organizations, webhooks, native skills, and troubleshooting.",
   },
   {
     slug: "codebase",
@@ -88,7 +88,14 @@ const PLUGIN_CONFIG = [
     dir: "11ai-operator-convex",
     title: "Convex operator",
     tagline:
-      "Convex setup, schema and indexes, functions, actions and crons, auth, file storage, deployments, and troubleshooting.",
+      "Current Convex setup, schema, functions, auth, storage, deployments, first-party native skills, and troubleshooting.",
+  },
+  {
+    slug: "operator-css-3",
+    dir: "11ai-operator-css-3",
+    title: "CSS3 operator",
+    tagline:
+      "Current CSS3-family cascade, selectors, layout, responsive design, theming, motion, integrations, reference, and troubleshooting.",
   },
   {
     slug: "operator-docker",
@@ -105,11 +112,25 @@ const PLUGIN_CONFIG = [
       "Focused, safety-first Git skills for setup, state, commits, branches, worktrees, tags, submodules, hooks, pull requests, bisect, recovery, and troubleshooting.",
   },
   {
-    slug: "operator-jest",
-    dir: "11ai-operator-jest",
-    title: "Jest operator",
+    slug: "operator-html-5",
+    dir: "11ai-operator-html-5",
+    title: "HTML5 operator",
     tagline:
-      "Setting up, inspecting, running, authoring, de-flaking, speeding up, integrating, and troubleshooting Jest suites.",
+      "Current HTML5 documents, semantics, accessibility, forms, media, metadata, integrations, reference, and troubleshooting.",
+  },
+  {
+    slug: "operator-javascript-es2026",
+    dir: "11ai-operator-javascript-es2026",
+    title: "JavaScript ES2026 operator",
+    tagline:
+      "ECMAScript 2026 modules, async control flow, DOM events, data modeling, standard-library additions, performance, security, integrations, reference, and troubleshooting.",
+  },
+  {
+    slug: "operator-jest-v30",
+    dir: "11ai-operator-jest-v30",
+    title: "Jest v30 operator",
+    tagline:
+      "Setting up, inspecting, running, authoring, de-flaking, speeding up, integrating, and troubleshooting Jest 30 suites.",
   },
   {
     slug: "llm-costs",
@@ -119,18 +140,25 @@ const PLUGIN_CONFIG = [
       "Project-scoped and machine-wide LLM usage and cost reporting across local coding harnesses.",
   },
   {
-    slug: "operator-mongodb",
-    dir: "11ai-operator-mongodb",
-    title: "MongoDB operator",
+    slug: "operator-mongodb-v8",
+    dir: "11ai-operator-mongodb-v8",
+    title: "MongoDB v8 operator",
     tagline:
-      "MongoDB Shell and Database Tools work with setup, transactions, profiling, roles, Atlas, backups, and read-first safety checks around data changes.",
+      "MongoDB 8 Shell and Database Tools work with transactions, profiling, roles, Atlas, backups, integrations, and read-first safety checks.",
   },
   {
-    slug: "operator-nodejs-api",
-    dir: "11ai-operator-nodejs-api",
-    title: "Node.js API operator",
+    slug: "operator-nextjs-v16",
+    dir: "11ai-operator-nextjs-v16",
+    title: "Next.js v16 operator",
     tagline:
-      "Scaffolding, routing, validation, auth, databases, paging, rate limiting, jobs, uploads, GraphQL, OpenAPI, versioning, and testing Node.js APIs.",
+      "Next.js 16 App Router, Server and Client Components, Cache Components, mutations, handlers, metadata, deployment, integrations, reference, and troubleshooting.",
+  },
+  {
+    slug: "operator-nodejs-api-v24",
+    dir: "11ai-operator-nodejs-api-v24",
+    title: "Node.js API v24 operator",
+    tagline:
+      "Scaffolding, routing, validation, auth, data, jobs, GraphQL, OpenAPI, testing, and troubleshooting Node.js 24 LTS APIs.",
   },
   {
     slug: "operator-pokeapi-v2",
@@ -138,6 +166,13 @@ const PLUGIN_CONFIG = [
     title: "PokéAPI v2 operator",
     tagline:
       "Cache-first PokéAPI v2 setup, Pokémon, moves, items, locations, encounters, evolution, games, integrations, reference, and troubleshooting.",
+  },
+  {
+    slug: "operator-reactjs-v19",
+    dir: "11ai-operator-reactjs-v19",
+    title: "React v19 operator",
+    tagline:
+      "React 19.2 components, state, effects, Actions, Activity, forms, performance, testing, integrations, reference, and troubleshooting.",
   },
   {
     slug: "super",
@@ -172,14 +207,77 @@ const PLUGIN_CONFIG = [
     dir: "11ai-operator-supabase",
     title: "Supabase operator",
     tagline:
-      "Supabase setup, Postgres data and migrations, row level security, auth, storage, edge functions, and troubleshooting.",
+      "Current Supabase setup, Postgres, RLS, auth, storage, edge functions, first-party native skills, and troubleshooting.",
+  },
+  {
+    slug: "operator-typescript-v7",
+    dir: "11ai-operator-typescript-v7",
+    title: "TypeScript v7 operator",
+    tagline:
+      "TypeScript 7 native compiler configuration, type modeling, narrowing, generics, modules, packages, migrations, declarations, integrations, reference, and troubleshooting.",
+  },
+  {
+    slug: "operator-vercel-ai-gateway",
+    dir: "11ai-operator-vercel-ai-gateway",
+    title: "Vercel AI Gateway operator",
+    tagline:
+      "Models, routing, fallbacks, authentication, BYOK, budgets, usage, observability, security, integrations, reference, and troubleshooting.",
+  },
+  {
+    slug: "operator-vercel-ai-sdk-v7",
+    dir: "11ai-operator-vercel-ai-sdk-v7",
+    title: "Vercel AI SDK v7 operator",
+    tagline:
+      "AI SDK 7 multimodal generation, streaming UI, structured output, tools, durable agents, providers, telemetry, integrations, reference, and troubleshooting.",
+  },
+  {
+    slug: "operator-vercel-chat-sdk-v4",
+    dir: "11ai-operator-vercel-chat-sdk-v4",
+    title: "Vercel Chat SDK v4 operator",
+    tagline:
+      "Chat SDK 4 adapters, handlers, messages, UI, AI tools, state, concurrency, webhooks, deployment, integrations, reference, and troubleshooting.",
+  },
+  {
+    slug: "operator-vercel-core",
+    dir: "11ai-operator-vercel-core",
+    title: "Vercel Core Platform operator",
+    tagline:
+      "Security, content delivery, Fluid Compute, observability, CI/CD, integrations, reference, and troubleshooting.",
+  },
+  {
+    slug: "operator-vercel-eve-v0",
+    dir: "11ai-operator-vercel-eve-v0",
+    title: "Vercel eve v0 operator",
+    tagline:
+      "eve 0.27 definitions, tools, durable sessions, subagents, approvals, channels, schedules, evaluations, observability, integrations, reference, and troubleshooting.",
+  },
+  {
+    slug: "operator-vercel-passport",
+    dir: "11ai-operator-vercel-passport",
+    title: "Vercel Passport operator",
+    tagline:
+      "Identity providers, project protection, team policies, visitor identity, sessions, audit, integrations, reference, and troubleshooting.",
+  },
+  {
+    slug: "operator-vercel-sandbox-v2",
+    dir: "11ai-operator-vercel-sandbox-v2",
+    title: "Vercel Sandbox v2 operator",
+    tagline:
+      "Sandbox SDK 2 lifecycle, persistent compute, commands, files, runtimes, images, multi-user isolation, networking, integrations, reference, and troubleshooting.",
+  },
+  {
+    slug: "operator-vercel-workflows-v4",
+    dir: "11ai-operator-vercel-workflows-v4",
+    title: "Vercel Workflows v4 operator",
+    tagline:
+      "Workflow SDK 4 definitions, steps, durability, event-sourced runs, retries, events, approvals, encryption, observability, integrations, reference, and troubleshooting.",
   },
   {
     slug: "operator-workos",
     dir: "11ai-operator-workos",
     title: "WorkOS operator",
     tagline:
-      "WorkOS setup, AuthKit sessions, enterprise single sign-on, directory sync, organizations, webhooks, and troubleshooting.",
+      "Current WorkOS setup, AuthKit, SSO, directory sync, organizations, webhooks, first-party native skills, and troubleshooting.",
   },
   {
     slug: "utils",

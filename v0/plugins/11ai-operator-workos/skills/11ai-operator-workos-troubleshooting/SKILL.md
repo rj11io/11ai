@@ -4,6 +4,8 @@ description: "Diagnose WorkOS failures from reproducible evidence, covering wron
 ---
 # 11ai WorkOS troubleshooting
 
+Version baseline: Current WorkOS platform APIs and current GA SDKs; for Node.js examples use @workos-inc/node v8 on Node.js 22.11 or newer. Inspect the installed SDK and its migration guide before applying language-specific patterns.
+
 Separate observed facts from theories. The first question is always which environment and which key were in play, because staging and production share nothing and a missing object is usually a wrong key rather than a bug. Do not disable signature verification, widen a redirect allow list, or trust an unverified token to test an idea.
 
 ## Evidence collection

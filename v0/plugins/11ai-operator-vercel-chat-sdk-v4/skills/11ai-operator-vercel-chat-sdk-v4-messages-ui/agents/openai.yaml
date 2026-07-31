@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Chat SDK v4 messages and interactive UI"
+  short_description: "Operate Vercel Chat SDK messages and interactive UI safely"
+  default_prompt: "Use $11ai-operator-vercel-chat-sdk-v4-messages-ui to handle this Vercel Chat SDK messages and interactive ui task and verify the result."

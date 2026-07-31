@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Operator Node.js API Uploads"
+  short_description: "Accept file uploads safely"
+  default_prompt: "Use $11ai-operator-nodejs-api-v24-uploads to accept file uploads with size, type, and storage limits."

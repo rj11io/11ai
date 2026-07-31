@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Core content delivery"
+  short_description: "Operate Vercel Core content delivery safely"
+  default_prompt: "Use $11ai-operator-vercel-core-content-delivery to handle this Vercel Core content delivery task and verify the result."

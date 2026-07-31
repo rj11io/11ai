@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Operator AWS Secrets"
-  short_description: "Handle secrets without printing values"
-  default_prompt: "Use $11ai-operator-aws-secrets to read, create, or rotate a secret or parameter without exposing its value."

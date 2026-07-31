@@ -4,6 +4,8 @@ description: "Configure and debug Supabase authentication, covering email and pa
 ---
 # 11ai supabase auth
 
+Version baseline: Supabase CLI v2, supabase-js v2, and the current CLI local Postgres 17 line. Inspect the linked project, installed client patch, CLI patch, and remote Postgres version before changing configuration or migrations.
+
 Two things decide whether Supabase auth works: the redirect allow list, and where the session is stored and refreshed. Establish both before changing code, because a rejected redirect and a lost session produce nearly identical symptoms and neither error names the real cause.
 
 ## Inspect first

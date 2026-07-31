@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Core Environment"
+  short_description: "Operate Vercel Core Environment safely"
+  default_prompt: "Use $11ai-operator-vercel-core-environment to handle this Vercel Core environment task and verify the result."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai JavaScript ES2026 data modeling"
+  short_description: "Operate JavaScript data modeling safely"
+  default_prompt: "Use $11ai-operator-javascript-es2026-data-modeling to handle this JavaScript data modeling task and verify the result."

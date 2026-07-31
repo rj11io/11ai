@@ -1,0 +1,27 @@
+{
+  "name": "11ai-operator-jest-v30",
+  "version": "1.28.0",
+  "description": "Modular, standalone skills for common Jest testing operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "jest",
+    "testing",
+    "javascript",
+    "typescript",
+    "ci"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Operator Jest",
+    "shortDescription": "Run common Jest testing tasks safely and clearly.",
+    "longDescription": "A modular toolbox for inspecting Jest projects, targeting test runs, using watch mode, collecting coverage, managing snapshots and mocks, handling async code and timers, configuring Jest, preparing CI runs, and troubleshooting failures.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-operator-jest-v30 skills for this Jest task."
+  }
+}

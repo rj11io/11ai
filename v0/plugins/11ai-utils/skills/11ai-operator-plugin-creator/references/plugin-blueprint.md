@@ -1,15 +1,33 @@
 # Operator plugin blueprint
 
-The shape every `11ai-operator-TOOL` skill follows, and the six archetypes a plugin is built from.
+The shape every `11ai-operator-TOOL-ID` skill follows, and the core and conditional archetypes a plugin is built from. `TOOL-ID` is the normalized technology identifier, including its version suffix when applicable; `TOOL` is its human-readable display name.
+
+## Version and identity contract
+
+Choose one baseline before naming or writing anything:
+
+1. Use the user's requested version when one is explicit.
+2. Otherwise, browse current primary sources to verify the latest stable production version; do not trust model memory or copy a neighbouring plugin's baseline. Prefer official documentation, specifications, release notes, support policies, and publisher-owned registry metadata.
+3. Do not choose beta, RC, canary, or preview releases unless requested or no stable version exists. State preview-only status in every skill when it is unavoidable.
+4. Normalize the ecosystem's recognizable version form instead of mechanically prefixing every number with `v`:
+   - Use `-vMAJOR` for package, framework, compiler, runtime, CLI, or product release families (`reactjs-v19`, `typescript-v7`, `aws-cli-v2`).
+   - Use `-MAJOR` when the number is part of a named standard or language generation (`html-5`, `css-3`); do not insert a `v` before that number.
+   - Preserve a conventional edition or cross-SDK family label when one exists (`javascript-es2026`, `clerk-core-3`).
+5. Keep patch and minor releases out of the identity unless the ecosystem itself treats them as the public version. Record the exact researched release, stability status, research date, and official sources in the baseline and references; reflect it in setup pins.
+6. Omit the suffix for a living standard or hosted product with no requested or public version number (`vercel-ai-gateway`). Never infer a version from an SDK, API date, marketing generation, or implementation detail. When the user explicitly selects a recognized numbered family such as HTML 5 or CSS 3, the requested-version rule wins and the bare-number form applies.
+
+Renaming is atomic: update the plugin directory, every skill directory and frontmatter name, sibling cross-reference, Codex prompt, manifest, README link, marketplace entry, root catalog, and site slug/config. Do not leave compatibility aliases or duplicate plugins unless the user explicitly requests them.
 
 ## The canonical skill file
 
 ~~~markdown
 ---
-name: 11ai-operator-TOOL-AREA
+name: 11ai-operator-TOOL-ID-AREA
 description: "One sentence naming the operations this skill covers. One sentence starting 'Use when' that names the triggers."
 ---
 # 11ai TOOL AREA
+
+Version baseline: TOOL VERSION (STATUS), verified YYYY-MM-DD; use only commands, APIs, defaults, and runtime requirements supported by this baseline.
 
 One or two sentences of framing. Say what must be known before acting.
 
@@ -65,12 +83,12 @@ Avoid a description that only restates the title. `"Manage containers. Use for c
 interface:
   display_name: "11ai TOOL Area"
   short_description: "Verb phrase, 25 to 64 characters"
-  default_prompt: "Use $11ai-operator-TOOL-AREA to do the thing and verify the result."
+  default_prompt: "Use $11ai-operator-TOOL-ID-AREA to do the thing and verify the result."
 ```
 
 Three keys, two-space indent, every value double-quoted. `short_description` outside 25 to 64 characters fails the validator, and so does a `default_prompt` missing the literal `$` plus the exact skill name.
 
-## The six archetypes
+## The archetypes
 
 Every plugin has one of each of the first five. The rest are domain skills.
 
@@ -105,6 +123,22 @@ Four beats, in this order:
 
 Open with the separation of fact from theory and close by handing off to the environment skill when the tool itself is unhealthy. Long symptom tables go in `references/triage-matrix.md`.
 
+### Native skills (conditional)
+
+Search first-party product documentation and publisher-owned repositories for Agent Skills on every new or reviewed plugin. Add `11ai-operator-TOOL-ID-native-skills` only when the publisher actually distributes Agent Skills or a documented CLI installer for them. An MCP server, `llms.txt`, copied prompt, IDE rules file, or community repository does not qualify by itself.
+
+The bridge is a common operator skill, not a vendored copy of upstream content. It must:
+
+1. Name and link the authoritative documentation and first-party source repository.
+2. Inspect the host project's technology version, relevant SDK/runtime versions, existing skill directories, installed source metadata, and upstream release or revision before changing anything.
+3. Enforce the same requested/latest technology baseline as `TOOL-ID`. Compare upstream skill content and changelog with the plugin major/generation and the host project's installed version. Reject another-major guidance except when the user explicitly requests a migration.
+4. Treat an unversioned native-skill distribution as requiring compatibility evidence, not as automatically evergreen.
+5. Prefer selecting only relevant upstream skills over installing an entire catalog. Let the user choose agent and project/user scope.
+6. Install, update, overwrite, or remove native skills only on explicit request. Review `SKILL.md`, scripts, permissions, and source provenance before enabling execution.
+7. Report source, revision or release, selected skills, destination, agent/scope, technology and SDK versions, and the compatibility result.
+
+This is the one permitted kind of external skill reference: it may reference the technology publisher's native skills, but it must never depend on another `11ai-operator-*` plugin. Keep normal sibling handoffs inside the current plugin.
+
 ### Domain skills
 
 Five to eight per plugin, one per area that has its own commands, failure modes, and destructive operation. The body runs inspect, operate, then verify. Name every destructive command explicitly and gate it: `docker rm -f`, `deleteMany`, `aws s3 rb --force`, `git push --force`.
@@ -121,7 +155,7 @@ Five rules, restated in each skill's own vocabulary rather than pasted. The plug
 
 ## Cross-references
 
-Name sibling skills in the same plugin so a reader can hand off: "If the tool itself is not healthy, hand off to `11ai-operator-TOOL-environment` before diagnosing application behavior." Keep every named reference inside the plugin — a skill must not depend on another plugin being installed. Troubleshooting and environment skills should always do this. Domain skills should do it whenever a task realistically crosses a boundary, such as building an image and then pushing it.
+Name sibling skills in the same plugin so a reader can hand off: "If the tool itself is not healthy, hand off to `11ai-operator-TOOL-ID-environment` before diagnosing application behavior." Keep every named reference inside the plugin — a skill must not depend on another plugin being installed. Troubleshooting and environment skills should always do this. Domain skills should do it whenever a task realistically crosses a boundary, such as building an image and then pushing it. Every sibling reference must use the same versioned `TOOL-ID`.
 
 ## The plugin README
 
@@ -134,7 +168,7 @@ N standalone skills for common TOOL work, with safety checks around state-changi
 
 | Skill | Use it for |
 | --- | --- |
-| [`11ai-operator-TOOL-cheatsheet`](./skills/11ai-operator-TOOL-cheatsheet/SKILL.md) | Looking up common commands, flags, and safe patterns |
+| [`11ai-operator-TOOL-ID-cheatsheet`](./skills/11ai-operator-TOOL-ID-cheatsheet/SKILL.md) | Looking up common commands, flags, and safe patterns |
 
 One sentence on combining skills when a task crosses boundaries.
 
@@ -143,4 +177,4 @@ One sentence on combining skills when a task crosses boundaries.
 The five rules in this tool's vocabulary, naming the specific destructive commands the plugin guards.
 ```
 
-Every skill name must appear in the README or validation fails.
+Every skill name must appear in the README or validation fails. When native skills exist, include the conditional bridge and describe the technology-version compatibility gate; when none exist, do not create a placeholder skill.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai HTML5 Setup"
+  short_description: "Operate Setup safely with clear checks"
+  default_prompt: "Use $11ai-operator-html-5-setup to handle this HTML5 setup task and verify the result."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel AI Gateway models and capabilities"
+  short_description: "Operate Vercel AI Gateway models and capabilities safely"
+  default_prompt: "Use $11ai-operator-vercel-ai-gateway-models-capabilities to handle this Vercel AI Gateway models and capabilities task and verify the result."

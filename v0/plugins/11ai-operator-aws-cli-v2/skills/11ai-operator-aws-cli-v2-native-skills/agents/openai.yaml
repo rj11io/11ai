@@ -1,0 +1,4 @@
+interface:
+  display_name: "AWS CLI v2 native skills"
+  short_description: "Check and install AWS's CLI v2-compatible skills"
+  default_prompt: "Use $11ai-operator-aws-cli-v2-native-skills to select and compatibility-check first-party AWS Agent Toolkit skills for AWS CLI v2."

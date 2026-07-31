@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai TypeScript v7 type modeling"
+  short_description: "Operate TypeScript type modeling safely"
+  default_prompt: "Use $11ai-operator-typescript-v7-type-modeling to handle this TypeScript type modeling task and verify the result."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Next.js v16 server and client components"
+  short_description: "Operate Next.js server and client components safely"
+  default_prompt: "Use $11ai-operator-nextjs-v16-server-client to handle this Next.js server and client components task and verify the result."

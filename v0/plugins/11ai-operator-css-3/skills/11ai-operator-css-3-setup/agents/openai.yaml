@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai CSS3 Setup"
+  short_description: "Operate Setup safely with clear checks"
+  default_prompt: "Use $11ai-operator-css-3-setup to handle this CSS3 setup task and verify the result."

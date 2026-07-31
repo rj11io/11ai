@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel AI SDK v7 tools and agents"
+  short_description: "Operate Vercel AI SDK tools and agents safely"
+  default_prompt: "Use $11ai-operator-vercel-ai-sdk-v7-tools-agents to handle this Vercel AI SDK tools and agents task and verify the result."

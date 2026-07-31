@@ -52,7 +52,7 @@ schemas = ["public", "graphql_public"]
 
 [db]
 port = 54322
-major_version = 15
+major_version = 17
 
 [auth]
 site_url = "http://127.0.0.1:3000"

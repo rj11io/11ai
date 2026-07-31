@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai React v19 Integrations"
+  short_description: "Operate React Integrations safely"
+  default_prompt: "Use $11ai-operator-reactjs-v19-integrations to handle this React integrations task and verify the result."

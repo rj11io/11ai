@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai CSS3 Cascade Selectors"
+  short_description: "Operate Cascade Selectors safely"
+  default_prompt: "Use $11ai-operator-css-3-cascade-selectors to handle this CSS3 cascade selectors task and verify the result."

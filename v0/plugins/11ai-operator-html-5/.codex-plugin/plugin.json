@@ -1,0 +1,27 @@
+{
+  "name": "11ai-operator-html-5",
+  "version": "1.28.0",
+  "description": "Modular, safety-first skills for current HTML5 operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "html5",
+    "web",
+    "accessibility",
+    "forms",
+    "semantics"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Operator HTML5",
+    "shortDescription": "Run current HTML5 tasks safely and clearly.",
+    "longDescription": "A standalone HTML5 toolbox for authoring semantic documents, accessible forms, media, metadata, and browser-native structure, from setup and inspection through focused operations, integrations, and troubleshooting.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-operator-html-5 skills for this HTML5 task."
+  }
+}

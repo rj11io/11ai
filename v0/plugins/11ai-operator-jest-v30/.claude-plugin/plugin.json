@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "11ai-operator-jest-v30",
+  "version": "1.28.0",
+  "description": "Modular, standalone skills for Jest 30 testing operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "jest",
+    "testing",
+    "javascript",
+    "typescript",
+    "ci"
+  ],
+  "skills": "./skills/"
+}

@@ -4,6 +4,8 @@ description: "Inspect which WorkOS environment an application targets, which API
 ---
 # 11ai WorkOS environment
 
+Version baseline: Current WorkOS platform APIs and current GA SDKs; for Node.js examples use @workos-inc/node v8 on Node.js 22.11 or newer. Inspect the installed SDK and its migration guide before applying language-specific patterns.
+
 Staging and production are separate WorkOS environments with separate keys, connections, organizations, and users. An object created in one genuinely does not exist in the other, so establish which environment the application is pointed at before concluding anything is broken. Keep this pass read-only.
 
 ## Inspect what the application holds

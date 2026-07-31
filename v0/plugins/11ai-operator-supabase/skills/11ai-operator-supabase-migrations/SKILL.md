@@ -4,6 +4,8 @@ description: "Create, review, and apply Supabase migrations, covering handwritte
 ---
 # 11ai supabase migrations
 
+Version baseline: Supabase CLI v2, supabase-js v2, and the current CLI local Postgres 17 line. Inspect the linked project, installed client patch, CLI patch, and remote Postgres version before changing configuration or migrations.
+
 `supabase db push` applies migrations to the **linked remote project**, so it is a production-facing command whenever production is linked. Establish the link and the local-versus-remote state before anything else, and treat a push as a change needing explicit approval for that project.
 
 ## Establish state on both sides

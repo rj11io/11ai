@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Operator Jest Test Authoring"
-  short_description: "Write focused tests from a contract"
-  default_prompt: "Use $11ai-operator-jest-test-authoring to write focused unit tests for an existing behavior contract."

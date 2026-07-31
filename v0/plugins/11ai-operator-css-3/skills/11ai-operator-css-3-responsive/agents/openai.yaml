@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai CSS3 Responsive"
+  short_description: "Operate Responsive safely"
+  default_prompt: "Use $11ai-operator-css-3-responsive to handle this CSS3 responsive task and verify the result."

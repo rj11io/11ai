@@ -1,0 +1,27 @@
+{
+  "name": "11ai-operator-javascript-es2026",
+  "version": "1.28.0",
+  "description": "Modular, safety-first skills for ECMAScript 2026 operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "javascript",
+    "ecmascript",
+    "modules",
+    "async",
+    "dom"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Operator JavaScript ES2026",
+    "shortDescription": "Run JavaScript ES2026 tasks safely.",
+    "longDescription": "A standalone ECMAScript 2026 toolbox for modules, new standard-library APIs, data modeling, asynchronous control flow, DOM behavior, performance, and security.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-operator-javascript-es2026 skills for this JavaScript ES2026 task."
+  }
+}

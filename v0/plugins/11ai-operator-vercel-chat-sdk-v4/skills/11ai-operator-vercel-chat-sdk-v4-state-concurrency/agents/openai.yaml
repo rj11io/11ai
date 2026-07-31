@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Chat SDK v4 state and concurrency"
+  short_description: "Operate Vercel Chat SDK state and concurrency safely"
+  default_prompt: "Use $11ai-operator-vercel-chat-sdk-v4-state-concurrency to handle this Vercel Chat SDK state and concurrency task and verify the result."

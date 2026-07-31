@@ -4,6 +4,8 @@ description: "Connect Stripe to the systems around it, covering the local billin
 ---
 # 11ai stripe integrations
 
+Version baseline: Stripe API 2026-02-25.clover and the latest stable SDK for the project language. Preserve an existing account, endpoint, or SDK pin unless the user explicitly requests an upgrade, and validate the compatibility table before moving API versions.
+
 Stripe holds the money; your database holds access. The integration is the mirror between them, and one rule carries it: access is derived from the mirrored subscription status on every request, never from a flag set once when a payment succeeded. Everything else is plumbing around that.
 
 ## Name the seam

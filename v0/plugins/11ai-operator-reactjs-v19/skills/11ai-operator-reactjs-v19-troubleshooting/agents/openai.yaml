@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai React v19 Troubleshooting"
+  short_description: "Operate React Troubleshooting safely"
+  default_prompt: "Use $11ai-operator-reactjs-v19-troubleshooting to handle this React troubleshooting task and verify the result."

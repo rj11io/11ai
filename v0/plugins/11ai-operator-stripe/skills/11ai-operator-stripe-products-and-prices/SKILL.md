@@ -4,6 +4,8 @@ description: "Model Stripe products and prices and change pricing safely, coveri
 ---
 # 11ai stripe products and prices
 
+Version baseline: Stripe API 2026-02-25.clover and the latest stable SDK for the project language. Preserve an existing account, endpoint, or SDK pin unless the user explicitly requests an upgrade, and validate the compatibility table before moving API versions.
+
 The fact that shapes every decision here: a price is immutable. Its amount, currency, and interval cannot be edited, so changing a price means creating a new one and deciding what happens to everyone on the old one. Plan that before creating anything.
 
 ## Inspect first

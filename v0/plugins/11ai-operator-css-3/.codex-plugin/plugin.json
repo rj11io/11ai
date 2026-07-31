@@ -1,0 +1,27 @@
+{
+  "name": "11ai-operator-css-3",
+  "version": "1.28.0",
+  "description": "Modular, safety-first skills for current CSS3 operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "css3",
+    "web",
+    "layout",
+    "responsive-design",
+    "theming"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Operator CSS3",
+    "shortDescription": "Run current CSS3 tasks safely and clearly.",
+    "longDescription": "A standalone CSS3 toolbox for managing cascade, selectors, layout, responsive behavior, theming, and motion, from setup and inspection through focused operations, integrations, and troubleshooting.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-operator-css-3 skills for this CSS3 task."
+  }
+}

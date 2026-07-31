@@ -4,6 +4,8 @@ description: "Receive and handle Stripe webhook events safely, covering endpoint
 ---
 # 11ai stripe webhooks
 
+Version baseline: Stripe API 2026-02-25.clover and the latest stable SDK for the project language. Preserve an existing account, endpoint, or SDK pin unless the user explicitly requests an upgrade, and validate the compatibility table before moving API versions.
+
 This endpoint is where billing truth arrives, so three properties are non-negotiable: the route is public, verification runs over the raw body, and each event applies at most once. Miss the first and Stripe gets a redirect; miss the second and the endpoint is forgeable; miss the third and someone is charged once and provisioned twice.
 
 ## Inspect first

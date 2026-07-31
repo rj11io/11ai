@@ -4,6 +4,8 @@ description: "Inspect and manage Docker named volumes and user-defined networks,
 ---
 # 11ai Docker volumes and networks
 
+Version baseline: Current stable Docker tooling: Engine 29.x (29.6.2 at this review), Compose v5, and the matching current BuildKit/containerd supplied by the installation. Inspect each component independently because Docker Desktop, Engine, Compose, Buildx, and the API do not share one version.
+
 Separate persistent data from disposable containers. Before changing storage or connectivity, identify the project, attached containers, and whether the data can be recreated.
 
 ## Inspect

@@ -4,6 +4,8 @@ description: "Manage WorkOS organizations and their members, covering creating o
 ---
 # 11ai WorkOS organizations
 
+Version baseline: Current WorkOS platform APIs and current GA SDKs; for Node.js examples use @workos-inc/node v8 on Node.js 22.11 or newer. Inspect the installed SDK and its migration guide before applying language-specific patterns.
+
 An organization is the tenant boundary: connections, directories, and memberships all hang off it, and a user's permissions are scoped to one at a time. Establish which environment and which organization before any change, and treat a domain claim as something to verify rather than accept.
 
 ## Inspect first

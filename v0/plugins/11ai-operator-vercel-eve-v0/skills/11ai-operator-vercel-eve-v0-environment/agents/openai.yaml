@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel eve v0 Environment"
+  short_description: "Operate Vercel eve Environment safely"
+  default_prompt: "Use $11ai-operator-vercel-eve-v0-environment to handle this Vercel eve environment task and verify the result."

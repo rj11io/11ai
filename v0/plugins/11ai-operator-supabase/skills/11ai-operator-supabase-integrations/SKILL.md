@@ -4,6 +4,8 @@ description: "Connect Supabase to the systems around it, covering client librari
 ---
 # 11ai supabase integrations
 
+Version baseline: Supabase CLI v2, supabase-js v2, and the current CLI local Postgres 17 line. Inspect the linked project, installed client patch, CLI patch, and remote Postgres version before changing configuration or migrations.
+
 The question that decides every Supabase integration is which identity the connection carries: the anonymous key with the user's session, so row level security applies, or the service role key, which bypasses it entirely. Get that wrong and either nothing works or everything is exposed. Settle it before writing a line.
 
 ## Name the seam

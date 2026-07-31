@@ -4,6 +4,8 @@ description: "Inspect the Supabase CLI version, whether a project directory is i
 ---
 # 11ai supabase environment
 
+Version baseline: Supabase CLI v2, supabase-js v2, and the current CLI local Postgres 17 line. Inspect the linked project, installed client patch, CLI patch, and remote Postgres version before changing configuration or migrations.
+
 The most consequential thing to establish is which database a command will reach: the local Docker stack or the linked remote project. Several CLI commands quietly target the remote one, so confirm the link before anything that writes. Keep this pass read-only.
 
 ## Inspect the CLI and project

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Passport project protection"
+  short_description: "Operate Passport project protection safely"
+  default_prompt: "Use $11ai-operator-vercel-passport-project-protection to handle this Vercel Passport project protection task and verify the result."

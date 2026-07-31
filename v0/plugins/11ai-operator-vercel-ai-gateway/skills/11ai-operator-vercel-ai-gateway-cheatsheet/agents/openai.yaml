@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel AI Gateway Cheatsheet"
+  short_description: "Operate Vercel AI Gateway Cheatsheet safely"
+  default_prompt: "Use $11ai-operator-vercel-ai-gateway-cheatsheet to handle this Vercel AI Gateway cheatsheet task and verify the result."

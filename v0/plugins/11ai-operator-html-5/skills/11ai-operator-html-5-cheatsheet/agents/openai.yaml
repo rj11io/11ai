@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai HTML5 Cheatsheet"
+  short_description: "Operate Cheatsheet safely"
+  default_prompt: "Use $11ai-operator-html-5-cheatsheet to handle this HTML5 cheatsheet task and verify the result."

@@ -4,6 +4,8 @@ description: "Answer quick Stripe questions with a compact reference for keys an
 ---
 # 11ai stripe cheatsheet
 
+Version baseline: Stripe API 2026-02-25.clover and the latest stable SDK for the project language. Preserve an existing account, endpoint, or SDK pin unless the user explicitly requests an upgrade, and validate the compatibility table before moving API versions.
+
 A lookup surface for Stripe. Give the call, name what it changes and whether it moves money, and stop. For building a flow or diagnosing a failure, hand off to the matching operation skill.
 
 ## Keys and mode

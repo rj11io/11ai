@@ -1,0 +1,4 @@
+interface:
+  display_name: "Supabase native skills"
+  short_description: "Check and install compatible Supabase agent skills"
+  default_prompt: "Use $11ai-operator-supabase-native-skills to select and compatibility-check Supabase's first-party skills for this project."

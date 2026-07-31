@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel AI Gateway Setup"
+  short_description: "Operate Vercel AI Gateway Setup safely"
+  default_prompt: "Use $11ai-operator-vercel-ai-gateway-setup to handle this Vercel AI Gateway setup task and verify the result."

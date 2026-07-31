@@ -1,0 +1,4 @@
+interface:
+  display_name: "Convex native skills"
+  short_description: "Check and install compatible Convex agent skills"
+  default_prompt: "Use $11ai-operator-convex-native-skills to select and compatibility-check Convex's first-party skills for this project."

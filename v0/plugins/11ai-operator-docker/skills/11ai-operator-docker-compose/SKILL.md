@@ -4,6 +4,8 @@ description: "Operate Docker Compose applications by locating the project file, 
 ---
 # 11ai Docker Compose
 
+Version baseline: Current stable Docker tooling: Engine 29.x (29.6.2 at this review), Compose v5, and the matching current BuildKit/containerd supplied by the installation. Inspect each component independently because Docker Desktop, Engine, Compose, Buildx, and the API do not share one version.
+
 Treat the Compose file as the source of truth for service names, images, ports, environment, volumes, networks, health checks, and dependencies. Work from the directory containing the selected file unless the user specifies another project directory.
 
 ## Discover and validate

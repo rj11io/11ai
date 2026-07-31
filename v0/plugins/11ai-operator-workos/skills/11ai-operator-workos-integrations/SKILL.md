@@ -4,6 +4,8 @@ description: "Connect WorkOS to the systems around it, covering framework SDKs a
 ---
 # 11ai WorkOS integrations
 
+Version baseline: Current WorkOS platform APIs and current GA SDKs; for Node.js examples use @workos-inc/node v8 on Node.js 22.11 or newer. Inspect the installed SDK and its migration guide before applying language-specific patterns.
+
 WorkOS owns identity; your database owns everything else. The integration is the seam between them, and two rules carry it: the local record is keyed on the WorkOS id, and every query is scoped by the organization taken from the verified session rather than from the request. Get the second one wrong and one tenant reads another's data.
 
 ## Name the seam

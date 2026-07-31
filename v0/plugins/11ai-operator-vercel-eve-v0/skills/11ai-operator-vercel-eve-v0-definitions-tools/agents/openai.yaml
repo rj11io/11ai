@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel eve v0 definitions and tools"
+  short_description: "Operate Vercel eve definitions and tools safely"
+  default_prompt: "Use $11ai-operator-vercel-eve-v0-definitions-tools to handle this Vercel eve definitions and tools task and verify the result."

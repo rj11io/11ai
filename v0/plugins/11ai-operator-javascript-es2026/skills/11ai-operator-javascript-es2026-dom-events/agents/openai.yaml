@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai JavaScript ES2026 DOM and events"
+  short_description: "Operate JavaScript DOM and events safely"
+  default_prompt: "Use $11ai-operator-javascript-es2026-dom-events to handle this JavaScript dom and events task and verify the result."

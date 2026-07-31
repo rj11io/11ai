@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Operator AWS Deployments"
-  short_description: "Deploy and roll back a service safely"
-  default_prompt: "Use $11ai-operator-aws-deployments to deploy a change, verify it, or roll it back."

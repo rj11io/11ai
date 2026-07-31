@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Operator Jest Flaky Tests"
-  short_description: "Find and fix nondeterministic tests"
-  default_prompt: "Use $11ai-operator-jest-flaky-tests to reproduce and fix a flaky or order-dependent test."

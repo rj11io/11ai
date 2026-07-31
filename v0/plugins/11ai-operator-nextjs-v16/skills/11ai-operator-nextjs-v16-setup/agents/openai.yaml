@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Next.js v16 Setup"
+  short_description: "Operate Next.js Setup safely"
+  default_prompt: "Use $11ai-operator-nextjs-v16-setup to handle this Next.js setup task and verify the result."

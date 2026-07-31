@@ -4,6 +4,8 @@ description: "Define and change Convex tables, covering field validators, option
 ---
 # 11ai convex schema
 
+Version baseline: Current stable Convex platform and npm package, with Node.js 20, 22, and 24 supported for the configurable Node runtime. Inspect the installed convex package, generated API, deployment, and current docs before using newly released behavior.
+
 A schema push is validated against every document already in the table, so a change that is fine on an empty development deployment can be rejected on production. Read the existing documents before changing a field, and treat any reshape as a migration rather than an edit.
 
 ## Inspect first

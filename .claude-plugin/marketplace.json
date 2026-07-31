@@ -15,12 +15,12 @@
       "source": "./v0/plugins/11ai-ai-chat"
     },
     {
-      "name": "11ai-operator-antdesign",
-      "source": "./v0/plugins/11ai-operator-antdesign"
+      "name": "11ai-operator-antdesign-v6",
+      "source": "./v0/plugins/11ai-operator-antdesign-v6"
     },
     {
-      "name": "11ai-operator-aws",
-      "source": "./v0/plugins/11ai-operator-aws"
+      "name": "11ai-operator-aws-cli-v2",
+      "source": "./v0/plugins/11ai-operator-aws-cli-v2"
     },
     {
       "name": "11ai-benchmarks",
@@ -47,8 +47,8 @@
       "source": "./v0/plugins/11ai-operator-git"
     },
     {
-      "name": "11ai-operator-nodejs-api",
-      "source": "./v0/plugins/11ai-operator-nodejs-api"
+      "name": "11ai-operator-nodejs-api-v24",
+      "source": "./v0/plugins/11ai-operator-nodejs-api-v24"
     },
     {
       "name": "11ai-super",
@@ -71,16 +71,16 @@
       "source": "./v0/plugins/11ai-xharness"
     },
     {
-      "name": "11ai-operator-jest",
-      "source": "./v0/plugins/11ai-operator-jest"
+      "name": "11ai-operator-jest-v30",
+      "source": "./v0/plugins/11ai-operator-jest-v30"
     },
     {
       "name": "11ai-llm-costs",
       "source": "./v0/plugins/11ai-llm-costs"
     },
     {
-      "name": "11ai-operator-mongodb",
-      "source": "./v0/plugins/11ai-operator-mongodb"
+      "name": "11ai-operator-mongodb-v8",
+      "source": "./v0/plugins/11ai-operator-mongodb-v8"
     },
     {
       "name": "11ai-operator-ssh",
@@ -103,8 +103,8 @@
       "source": "./v0/plugins/11ai-operator-convex"
     },
     {
-      "name": "11ai-operator-clerk",
-      "source": "./v0/plugins/11ai-operator-clerk"
+      "name": "11ai-operator-clerk-core-3",
+      "source": "./v0/plugins/11ai-operator-clerk-core-3"
     },
     {
       "name": "11ai-operator-stripe",
@@ -113,6 +113,62 @@
     {
       "name": "11ai-operator-pokeapi-v2",
       "source": "./v0/plugins/11ai-operator-pokeapi-v2"
+    },
+    {
+      "name": "11ai-operator-html-5",
+      "source": "./v0/plugins/11ai-operator-html-5"
+    },
+    {
+      "name": "11ai-operator-css-3",
+      "source": "./v0/plugins/11ai-operator-css-3"
+    },
+    {
+      "name": "11ai-operator-javascript-es2026",
+      "source": "./v0/plugins/11ai-operator-javascript-es2026"
+    },
+    {
+      "name": "11ai-operator-typescript-v7",
+      "source": "./v0/plugins/11ai-operator-typescript-v7"
+    },
+    {
+      "name": "11ai-operator-reactjs-v19",
+      "source": "./v0/plugins/11ai-operator-reactjs-v19"
+    },
+    {
+      "name": "11ai-operator-nextjs-v16",
+      "source": "./v0/plugins/11ai-operator-nextjs-v16"
+    },
+    {
+      "name": "11ai-operator-vercel-ai-sdk-v7",
+      "source": "./v0/plugins/11ai-operator-vercel-ai-sdk-v7"
+    },
+    {
+      "name": "11ai-operator-vercel-chat-sdk-v4",
+      "source": "./v0/plugins/11ai-operator-vercel-chat-sdk-v4"
+    },
+    {
+      "name": "11ai-operator-vercel-eve-v0",
+      "source": "./v0/plugins/11ai-operator-vercel-eve-v0"
+    },
+    {
+      "name": "11ai-operator-vercel-ai-gateway",
+      "source": "./v0/plugins/11ai-operator-vercel-ai-gateway"
+    },
+    {
+      "name": "11ai-operator-vercel-sandbox-v2",
+      "source": "./v0/plugins/11ai-operator-vercel-sandbox-v2"
+    },
+    {
+      "name": "11ai-operator-vercel-workflows-v4",
+      "source": "./v0/plugins/11ai-operator-vercel-workflows-v4"
+    },
+    {
+      "name": "11ai-operator-vercel-passport",
+      "source": "./v0/plugins/11ai-operator-vercel-passport"
+    },
+    {
+      "name": "11ai-operator-vercel-core",
+      "source": "./v0/plugins/11ai-operator-vercel-core"
     }
   ]
 }

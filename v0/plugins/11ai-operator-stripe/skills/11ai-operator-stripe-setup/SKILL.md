@@ -4,6 +4,8 @@ description: "Set up Stripe in an application from zero, covering test mode keys
 ---
 # 11ai stripe setup
 
+Version baseline: Stripe API 2026-02-25.clover and the latest stable SDK for the project language. Preserve an existing account, endpoint, or SDK pin unless the user explicitly requests an upgrade, and validate the compatibility table before moving API versions.
+
 Start in test mode and stay there until the whole flow works end to end. Two pieces need care: the secret key must never reach the browser, and the webhook route must receive a raw body on a path that authentication middleware leaves alone.
 
 ## Check what exists

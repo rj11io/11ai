@@ -4,6 +4,8 @@ description: "Answer quick WorkOS questions with a compact reference for AuthKit
 ---
 # 11ai WorkOS cheatsheet
 
+Version baseline: Current WorkOS platform APIs and current GA SDKs; for Node.js examples use @workos-inc/node v8 on Node.js 22.11 or newer. Inspect the installed SDK and its migration guide before applying language-specific patterns.
+
 A lookup surface for WorkOS. Give the call, name what it changes and which environment it touches, and stop. For wiring a flow, configuring a connection, or diagnosing a failure, hand off to the matching operation skill.
 
 ## Environment values

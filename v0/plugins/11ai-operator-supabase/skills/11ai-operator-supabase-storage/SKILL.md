@@ -4,6 +4,8 @@ description: "Create and operate Supabase storage buckets, covering public versu
 ---
 # 11ai supabase storage
 
+Version baseline: Supabase CLI v2, supabase-js v2, and the current CLI local Postgres 17 line. Inspect the linked project, installed client patch, CLI patch, and remote Postgres version before changing configuration or migrations.
+
 Storage is a Postgres-backed object store, so access is controlled by row level security policies on `storage.objects` — the same mechanism as any table. Decide whether a bucket is public or private before creating it, because that choice determines how every file is served and it is awkward to reverse.
 
 ## Inspect first

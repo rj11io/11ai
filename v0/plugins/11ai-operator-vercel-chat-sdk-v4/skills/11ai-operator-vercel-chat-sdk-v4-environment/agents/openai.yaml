@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Chat SDK v4 Environment"
+  short_description: "Operate Vercel Chat SDK Environment safely"
+  default_prompt: "Use $11ai-operator-vercel-chat-sdk-v4-environment to handle this Vercel Chat SDK environment task and verify the result."

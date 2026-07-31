@@ -1,6 +1,6 @@
 # 11ai Supabase operator
 
-Eleven standalone skills for common Supabase project work, with read-first checks around data changes, migration pushes, row level security, and anything that touches a linked remote project.
+Twelve standalone skills for current Supabase project work, including first-party native-skill compatibility. The baseline is CLI v2, `supabase-js` v2, and the current CLI local Postgres 17 line; hosted Postgres versions remain project-specific.
 
 ## Choose a skill
 
@@ -8,6 +8,7 @@ Eleven standalone skills for common Supabase project work, with read-first check
 | --- | --- |
 | [`11ai-operator-supabase-cheatsheet`](./skills/11ai-operator-supabase-cheatsheet/SKILL.md) | Looking up CLI commands, client query syntax, filters, and the key and URL differences |
 | [`11ai-operator-supabase-setup`](./skills/11ai-operator-supabase-setup/SKILL.md) | Installing the CLI, initializing and linking a project, starting the local stack, and writing environment files |
+| [`11ai-operator-supabase-native-skills`](./skills/11ai-operator-supabase-native-skills/SKILL.md) | Selecting first-party Supabase agent skills after checking CLI, client, and local/hosted Postgres compatibility |
 | [`11ai-operator-supabase-environment`](./skills/11ai-operator-supabase-environment/SKILL.md) | Inspecting the CLI, the link, the local stack, which keys the application reads, and migration state |
 | [`11ai-operator-supabase-database`](./skills/11ai-operator-supabase-database/SKILL.md) | Querying and correcting Postgres data, inspecting schema, and writing functions and triggers |
 | [`11ai-operator-supabase-migrations`](./skills/11ai-operator-supabase-migrations/SKILL.md) | Creating, replaying, and pushing migrations, and resolving drift between local and remote |

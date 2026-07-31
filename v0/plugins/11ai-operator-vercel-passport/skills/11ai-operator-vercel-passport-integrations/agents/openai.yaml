@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Passport Integrations"
+  short_description: "Operate Passport Integrations safely"
+  default_prompt: "Use $11ai-operator-vercel-passport-integrations to handle this Vercel Passport integrations task and verify the result."

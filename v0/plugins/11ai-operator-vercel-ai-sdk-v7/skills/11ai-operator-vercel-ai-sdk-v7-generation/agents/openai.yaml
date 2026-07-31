@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel AI SDK v7 generation"
+  short_description: "Operate Vercel AI SDK generation safely"
+  default_prompt: "Use $11ai-operator-vercel-ai-sdk-v7-generation to handle this Vercel AI SDK generation task and verify the result."

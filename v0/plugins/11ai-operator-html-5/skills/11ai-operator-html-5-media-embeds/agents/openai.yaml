@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai HTML5 Media Embeds"
+  short_description: "Operate Media Embeds safely"
+  default_prompt: "Use $11ai-operator-html-5-media-embeds to handle this HTML5 media embeds task and verify the result."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai TypeScript v7 Troubleshooting"
+  short_description: "Operate TypeScript Troubleshooting safely"
+  default_prompt: "Use $11ai-operator-typescript-v7-troubleshooting to handle this TypeScript troubleshooting task and verify the result."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel AI SDK v7 Cheatsheet"
+  short_description: "Operate Vercel AI SDK Cheatsheet safely"
+  default_prompt: "Use $11ai-operator-vercel-ai-sdk-v7-cheatsheet to handle this Vercel AI SDK cheatsheet task and verify the result."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai React v19 effects and refs"
+  short_description: "Operate React effects and refs safely"
+  default_prompt: "Use $11ai-operator-reactjs-v19-effects-refs to handle this React effects and refs task and verify the result."

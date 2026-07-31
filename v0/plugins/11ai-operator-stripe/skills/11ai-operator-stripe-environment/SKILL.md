@@ -4,6 +4,8 @@ description: "Confirm which Stripe account and mode an application is using, whe
 ---
 # 11ai stripe environment
 
+Version baseline: Stripe API 2026-02-25.clover and the latest stable SDK for the project language. Preserve an existing account, endpoint, or SDK pin unless the user explicitly requests an upgrade, and validate the compatibility table before moving API versions.
+
 Test mode and live mode are separate datasets on the same account, and live mode moves real money. Confirm which one is in play before touching anything — this is the check that prevents the worst mistakes in this plugin. Keep this pass read-only.
 
 ## Confirm the mode and the keys

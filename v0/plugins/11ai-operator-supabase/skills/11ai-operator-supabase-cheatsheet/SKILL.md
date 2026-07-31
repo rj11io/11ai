@@ -4,6 +4,8 @@ description: "Answer quick Supabase questions with a compact reference for CLI c
 ---
 # 11ai Supabase cheatsheet
 
+Version baseline: Supabase CLI v2, supabase-js v2, and the current CLI local Postgres 17 line. Inspect the linked project, installed client patch, CLI patch, and remote Postgres version before changing configuration or migrations.
+
 A lookup surface for the Supabase CLI and client libraries. Give the command, name what it changes, and stop. For anything that migrates, deploys, or edits data, hand off to the matching operation skill.
 
 ## Project and local stack

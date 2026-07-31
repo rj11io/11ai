@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ant Design 6 native skills"
+  short_description: "Check and install Ant Design's v6-compatible skill"
+  default_prompt: "Use $11ai-operator-antdesign-v6-native-skills to inspect and compatibility-check Ant Design's first-party agent skill before installing it."

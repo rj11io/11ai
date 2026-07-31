@@ -4,6 +4,8 @@ description: "Set up a Convex project from zero, covering package install, proje
 ---
 # 11ai Convex setup
 
+Version baseline: Current stable Convex platform and npm package, with Node.js 20, 22, and 24 supported for the configurable Node runtime. Inspect the installed convex package, generated API, deployment, and current docs before using newly released behavior.
+
 Two things trip up a first Convex setup: the generated API only exists after the development watcher has run once, and the development deployment is a different database from production. Get both straight before writing functions.
 
 ## Check what exists

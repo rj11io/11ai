@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai React v19 state and context"
+  short_description: "Operate React state and context safely"
+  default_prompt: "Use $11ai-operator-reactjs-v19-state-context to handle this React state and context task and verify the result."

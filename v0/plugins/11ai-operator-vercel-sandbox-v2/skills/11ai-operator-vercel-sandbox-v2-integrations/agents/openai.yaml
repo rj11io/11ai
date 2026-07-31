@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Sandbox v2 Integrations"
+  short_description: "Operate Vercel Sandbox Integrations safely"
+  default_prompt: "Use $11ai-operator-vercel-sandbox-v2-integrations to handle this Vercel Sandbox integrations task and verify the result."

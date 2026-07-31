@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai CSS3 Troubleshooting"
+  short_description: "Operate Troubleshooting safely"
+  default_prompt: "Use $11ai-operator-css-3-troubleshooting to handle this CSS3 troubleshooting task and verify the result."

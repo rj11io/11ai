@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai JavaScript ES2026 Environment"
+  short_description: "Operate JavaScript Environment safely"
+  default_prompt: "Use $11ai-operator-javascript-es2026-environment to handle this JavaScript environment task and verify the result."

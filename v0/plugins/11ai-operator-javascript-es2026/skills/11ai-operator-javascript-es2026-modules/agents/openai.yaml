@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai JavaScript ES2026 modules"
+  short_description: "Operate JavaScript modules safely"
+  default_prompt: "Use $11ai-operator-javascript-es2026-modules to handle this JavaScript modules task and verify the result."

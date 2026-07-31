@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai MongoDB Setup"
-  short_description: "Install and configure MongoDB access"
-  default_prompt: "Use $11ai-operator-mongodb-setup to install the MongoDB tools, create a local or Atlas deployment, and verify the connection without exposing credentials."

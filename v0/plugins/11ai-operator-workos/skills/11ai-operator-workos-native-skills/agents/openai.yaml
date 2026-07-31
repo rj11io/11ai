@@ -1,0 +1,4 @@
+interface:
+  display_name: "WorkOS native skills"
+  short_description: "Check and manage WorkOS's compatible agent skills"
+  default_prompt: "Use $11ai-operator-workos-native-skills to inspect and compatibility-check WorkOS's first-party coding-agent skills before changing them."

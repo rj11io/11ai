@@ -4,6 +4,8 @@ description: "Deploy Convex and manage its environments, covering the difference
 ---
 # 11ai convex deployments
 
+Version baseline: Current stable Convex platform and npm package, with Node.js 20, 22, and 24 supported for the configurable Node runtime. Inspect the installed convex package, generated API, deployment, and current docs before using newly released behavior.
+
 `npx convex dev` and `npx convex deploy` target different deployments with different data. A deploy replaces the functions every connected client is calling, and those clients do not reload — so a deploy that removes or narrows a function breaks the browser tabs already open. Plan for that before pushing.
 
 ## Inspect first

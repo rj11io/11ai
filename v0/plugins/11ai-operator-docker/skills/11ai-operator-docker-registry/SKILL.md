@@ -4,6 +4,8 @@ description: "Handle Docker registry workflows for login, logout, pull, tag, and
 ---
 # 11ai Docker registry
 
+Version baseline: Current stable Docker tooling: Engine 29.x (29.6.2 at this review), Compose v5, and the matching current BuildKit/containerd supplied by the installation. Inspect each component independently because Docker Desktop, Engine, Compose, Buildx, and the API do not share one version.
+
 Treat registry operations as remote or credential-affecting actions. Confirm the registry hostname, repository, tag, active Docker context, and whether the user intends to pull or publish before changing anything.
 
 ## Inspect local state

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Core Cheatsheet"
+  short_description: "Operate Vercel Core Cheatsheet safely"
+  default_prompt: "Use $11ai-operator-vercel-core-cheatsheet to handle this Vercel Core cheatsheet task and verify the result."

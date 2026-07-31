@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Node.js API Integrations"
+  short_description: "Connect a Node.js API to dependencies"
+  default_prompt: "Use $11ai-operator-nodejs-api-v24-integrations to wire this API's database, queue, auth provider, webhooks, logging, tracing, container, or pipeline."

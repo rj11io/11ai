@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Clerk Authentication"
+  short_description: "Wire Clerk sign-in and sign-up flows"
+  default_prompt: "Use $11ai-operator-clerk-core-3-authentication to wire Clerk sign-in, sign-up, and redirect flows."

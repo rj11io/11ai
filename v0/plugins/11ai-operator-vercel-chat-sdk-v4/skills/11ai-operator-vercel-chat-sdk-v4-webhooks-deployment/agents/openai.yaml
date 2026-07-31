@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Chat SDK v4 webhooks and deployment"
+  short_description: "Operate Vercel Chat SDK webhooks and deployment safely"
+  default_prompt: "Use $11ai-operator-vercel-chat-sdk-v4-webhooks-deployment to handle this Vercel Chat SDK webhooks and deployment task and verify the result."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai JavaScript ES2026 async control flow"
+  short_description: "Operate JavaScript async control flow safely"
+  default_prompt: "Use $11ai-operator-javascript-es2026-async-control-flow to handle this JavaScript async control flow task and verify the result."

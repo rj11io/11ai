@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Core Troubleshooting"
+  short_description: "Operate Vercel Core Troubleshooting safely"
+  default_prompt: "Use $11ai-operator-vercel-core-troubleshooting to handle this Vercel Core troubleshooting task and verify the result."

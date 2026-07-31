@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Next.js v16 Environment"
+  short_description: "Operate Next.js Environment safely"
+  default_prompt: "Use $11ai-operator-nextjs-v16-environment to handle this Next.js environment task and verify the result."

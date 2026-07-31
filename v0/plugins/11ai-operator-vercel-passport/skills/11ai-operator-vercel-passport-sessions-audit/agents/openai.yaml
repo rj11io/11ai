@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Passport sessions and audit"
+  short_description: "Operate Passport sessions and audit safely"
+  default_prompt: "Use $11ai-operator-vercel-passport-sessions-audit to handle this Vercel Passport sessions and audit task and verify the result."

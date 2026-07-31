@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel AI Gateway Environment"
+  short_description: "Operate Vercel AI Gateway Environment safely"
+  default_prompt: "Use $11ai-operator-vercel-ai-gateway-environment to handle this Vercel AI Gateway environment task and verify the result."

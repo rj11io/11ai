@@ -4,6 +4,8 @@ description: "Receive and handle WorkOS webhook events safely, covering endpoint
 ---
 # 11ai WorkOS webhooks
 
+Version baseline: Current WorkOS platform APIs and current GA SDKs; for Node.js examples use @workos-inc/node v8 on Node.js 22.11 or newer. Inspect the installed SDK and its migration guide before applying language-specific patterns.
+
 Two things decide whether a webhook endpoint is correct: it verifies the signature over the raw body before parsing, and it applies each event at most once. Get either wrong and the endpoint is either forgeable or double-applying. Everything else is detail.
 
 ## Inspect first

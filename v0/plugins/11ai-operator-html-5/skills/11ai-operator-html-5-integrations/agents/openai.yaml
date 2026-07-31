@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai HTML5 Integrations"
+  short_description: "Operate Integrations safely"
+  default_prompt: "Use $11ai-operator-html-5-integrations to handle this HTML5 integrations task and verify the result."

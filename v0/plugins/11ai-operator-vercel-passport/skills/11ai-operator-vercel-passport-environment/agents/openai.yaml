@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Passport Environment"
+  short_description: "Operate Passport Environment safely"
+  default_prompt: "Use $11ai-operator-vercel-passport-environment to handle this Vercel Passport environment task and verify the result."

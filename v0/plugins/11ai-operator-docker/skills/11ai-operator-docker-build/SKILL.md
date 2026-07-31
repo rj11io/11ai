@@ -4,6 +4,8 @@ description: "Build Docker images from a repository Dockerfile with context, ign
 ---
 # 11ai Docker build
 
+Version baseline: Current stable Docker tooling: Engine 29.x (29.6.2 at this review), Compose v5, and the matching current BuildKit/containerd supplied by the installation. Inspect each component independently because Docker Desktop, Engine, Compose, Buildx, and the API do not share one version.
+
 Build from the repository's intended Dockerfile and context. Do not silently change the base image, build arguments, target stage, platform, tag, or cache behavior.
 
 ## Inspect inputs

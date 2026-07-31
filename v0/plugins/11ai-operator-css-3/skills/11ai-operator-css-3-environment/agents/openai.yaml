@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai CSS3 Environment"
+  short_description: "Operate Environment safely"
+  default_prompt: "Use $11ai-operator-css-3-environment to handle this CSS3 environment task and verify the result."

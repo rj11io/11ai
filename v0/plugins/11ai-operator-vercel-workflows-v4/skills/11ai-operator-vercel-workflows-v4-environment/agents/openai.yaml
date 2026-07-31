@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Workflows v4 Environment"
+  short_description: "Operate Vercel Workflows Environment safely"
+  default_prompt: "Use $11ai-operator-vercel-workflows-v4-environment to handle this Vercel Workflows environment task and verify the result."

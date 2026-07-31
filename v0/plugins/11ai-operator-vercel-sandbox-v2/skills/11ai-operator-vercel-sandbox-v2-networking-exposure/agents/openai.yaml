@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Sandbox v2 networking and exposure"
+  short_description: "Operate Vercel Sandbox networking and exposure safely"
+  default_prompt: "Use $11ai-operator-vercel-sandbox-v2-networking-exposure to handle this Vercel Sandbox networking and exposure task and verify the result."

@@ -4,6 +4,8 @@ description: "Diagnose Convex failures from reproducible evidence, covering a mi
 ---
 # 11ai convex troubleshooting
 
+Version baseline: Current stable Convex platform and npm package, with Node.js 20, 22, and 24 supported for the configurable Node runtime. Inspect the installed convex package, generated API, deployment, and current docs before using newly released behavior.
+
 Separate observed facts from theories. Two questions answer most Convex reports before any code is read: which deployment is this, and has the API been generated. Do not disable validators, widen a public function's access, or import production data into development to test an idea.
 
 ## Evidence collection

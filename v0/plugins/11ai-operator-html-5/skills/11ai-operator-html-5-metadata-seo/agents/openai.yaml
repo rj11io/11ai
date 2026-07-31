@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai HTML5 Metadata Seo"
+  short_description: "Operate Metadata Seo safely"
+  default_prompt: "Use $11ai-operator-html-5-metadata-seo to handle this HTML5 metadata seo task and verify the result."

@@ -4,6 +4,8 @@ description: "Build Stripe Checkout sessions and handle their outcome, covering 
 ---
 # 11ai stripe checkout
 
+Version baseline: Stripe API 2026-02-25.clover and the latest stable SDK for the project language. Preserve an existing account, endpoint, or SDK pin unless the user explicitly requests an upgrade, and validate the compatibility table before moving API versions.
+
 The rule that decides whether a Checkout integration is correct: **fulfil in the webhook, not on the success page**. A user can close the tab, lose their connection, or never return, and their payment still succeeded. A success page that provisions access will miss those, and a success page that provisions access without verifying the session can be visited by anyone.
 
 ## Inspect first

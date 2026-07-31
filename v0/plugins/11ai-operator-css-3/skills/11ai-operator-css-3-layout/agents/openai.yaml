@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai CSS3 Layout"
+  short_description: "Operate Layout safely with clear checks"
+  default_prompt: "Use $11ai-operator-css-3-layout to handle this CSS3 layout task and verify the result."

@@ -4,6 +4,8 @@ description: "Write and verify Postgres row level security policies in Supabase,
 ---
 # 11ai supabase rls
 
+Version baseline: Supabase CLI v2, supabase-js v2, and the current CLI local Postgres 17 line. Inspect the linked project, installed client patch, CLI patch, and remote Postgres version before changing configuration or migrations.
+
 Row level security is the only thing standing between a Supabase table and the internet, because the anon key is published in the browser. Establish the current state per table before writing anything, and verify every policy by trying to break it — a policy that has only been tested with the correct user has not been tested.
 
 ## Inspect the current state

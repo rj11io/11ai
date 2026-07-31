@@ -1,4 +1,0 @@
-interface:
-  display_name: "AWS ECR operations"
-  short_description: "Manage ECR container images safely"
-  default_prompt: "Help me use $11ai-operator-aws-ecr for this ECR operation."

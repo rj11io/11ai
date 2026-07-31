@@ -4,6 +4,8 @@ description: "Install Docker Engine or Docker Desktop and configure contexts, th
 ---
 # 11ai Docker setup
 
+Version baseline: Current stable Docker tooling: Engine 29.x (29.6.2 at this review), Compose v5, and the matching current BuildKit/containerd supplied by the installation. Inspect each component independently because Docker Desktop, Engine, Compose, Buildx, and the API do not share one version.
+
 This is the one Docker skill that changes the machine, so establish what is already there before installing anything. `11ai-operator-docker-environment` inspects without touching; use it first and let its findings decide what this skill needs to do.
 
 ## Check what exists

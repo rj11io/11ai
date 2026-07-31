@@ -4,6 +4,8 @@ description: "Query and change Postgres inside a Supabase project, covering psql
 ---
 # 11ai supabase database
 
+Version baseline: Supabase CLI v2, supabase-js v2, and the current CLI local Postgres 17 line. Inspect the linked project, installed client patch, CLI patch, and remote Postgres version before changing configuration or migrations.
+
 Confirm which database a statement will reach before running it: the local Docker stack or the linked remote project. Reads can run once the target is known; a write needs a scoped filter and a row count, and a schema change belongs in a migration rather than a live statement.
 
 ## Inspect first

@@ -1,0 +1,27 @@
+{
+  "name": "11ai-operator-vercel-eve-v0",
+  "version": "1.28.0",
+  "description": "Modular, safety-first skills for Vercel eve 0.27 operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "vercel",
+    "eve",
+    "agents",
+    "durable",
+    "workflows"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Operator Vercel eve v0",
+    "shortDescription": "Run Vercel eve v0 tasks safely.",
+    "longDescription": "A standalone eve 0.27 preview toolbox for filesystem-first durable agents, tools, sessions, subagents, approvals, channels, schedules, evals, and observability.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-operator-vercel-eve-v0 skills for this Vercel eve 0.27 task."
+  }
+}

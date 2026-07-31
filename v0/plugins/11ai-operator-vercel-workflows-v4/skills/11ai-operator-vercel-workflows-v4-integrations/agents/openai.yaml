@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Workflows v4 Integrations"
+  short_description: "Operate Vercel Workflows Integrations safely"
+  default_prompt: "Use $11ai-operator-vercel-workflows-v4-integrations to handle this Vercel Workflows integrations task and verify the result."

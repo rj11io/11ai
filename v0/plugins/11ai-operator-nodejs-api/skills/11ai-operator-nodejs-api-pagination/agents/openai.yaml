@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Operator Node.js API Pagination"
-  short_description: "Add paging, filtering, and sorting"
-  default_prompt: "Use $11ai-operator-nodejs-api-pagination to add pagination, filtering, and sorting to a list endpoint."

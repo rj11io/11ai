@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai JavaScript ES2026 performance and security"
+  short_description: "Operate JavaScript performance and security safely"
+  default_prompt: "Use $11ai-operator-javascript-es2026-performance-security to handle this JavaScript performance and security task and verify the result."

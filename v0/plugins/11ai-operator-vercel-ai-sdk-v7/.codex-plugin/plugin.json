@@ -1,0 +1,27 @@
+{
+  "name": "11ai-operator-vercel-ai-sdk-v7",
+  "version": "1.28.0",
+  "description": "Modular, safety-first skills for Vercel AI SDK 7 operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "vercel",
+    "ai-sdk",
+    "agents",
+    "streaming",
+    "llm"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Operator Vercel AI SDK v7",
+    "shortDescription": "Run Vercel AI SDK 7 tasks safely.",
+    "longDescription": "A standalone AI SDK 7 toolbox for multimodal and realtime generation, streaming UI, structured outputs, tools, durable agents, providers, telemetry, approvals, and bounded model use.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-operator-vercel-ai-sdk-v7 skills for this Vercel AI SDK 7 task."
+  }
+}

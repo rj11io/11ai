@@ -4,6 +4,8 @@ description: "Create, find, and reconcile Stripe customers against local user or
 ---
 # 11ai stripe customers
 
+Version baseline: Stripe API 2026-02-25.clover and the latest stable SDK for the project language. Preserve an existing account, endpoint, or SDK pin unless the user explicitly requests an upgrade, and validate the compatibility table before moving API versions.
+
 A customer is the anchor for every subscription, invoice, and payment method, so the important decision is what it maps to locally — a user or an organization — and how that link is stored. Duplicate customers are the characteristic failure here, and they come from creating one without checking first.
 
 ## Inspect first

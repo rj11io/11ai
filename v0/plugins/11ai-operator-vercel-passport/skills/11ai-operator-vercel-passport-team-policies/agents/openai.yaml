@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Passport team policies"
+  short_description: "Operate Passport team policies safely"
+  default_prompt: "Use $11ai-operator-vercel-passport-team-policies to handle this Vercel Passport team policies task and verify the result."

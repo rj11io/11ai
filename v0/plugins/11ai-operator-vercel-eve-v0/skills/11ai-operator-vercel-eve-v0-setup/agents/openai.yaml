@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel eve v0 Setup"
+  short_description: "Operate Vercel eve Setup safely"
+  default_prompt: "Use $11ai-operator-vercel-eve-v0-setup to handle this Vercel eve setup task and verify the result."

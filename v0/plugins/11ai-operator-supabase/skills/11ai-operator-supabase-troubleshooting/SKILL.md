@@ -4,6 +4,8 @@ description: "Diagnose Supabase failures from reproducible evidence, covering lo
 ---
 # 11ai supabase troubleshooting
 
+Version baseline: Supabase CLI v2, supabase-js v2, and the current CLI local Postgres 17 line. Inspect the linked project, installed client patch, CLI patch, and remote Postgres version before changing configuration or migrations.
+
 Separate observed facts from theories. The first question is always which target and which key were in play, because most Supabase symptoms come from a mismatch there rather than from the code. Do not disable row level security, swap in a service role key, or repair migration history to test an idea.
 
 ## Evidence collection

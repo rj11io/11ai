@@ -4,6 +4,8 @@ description: "Set up WorkOS in an application from zero, covering the environmen
 ---
 # 11ai WorkOS setup
 
+Version baseline: Current WorkOS platform APIs and current GA SDKs; for Node.js examples use @workos-inc/node v8 on Node.js 22.11 or newer. Inspect the installed SDK and its migration guide before applying language-specific patterns.
+
 Most WorkOS setup failures are one of two things: a redirect URI that does not match exactly, or a session that is never refreshed. Get both right first and the rest follows. Use `11ai-operator-workos-environment` to inspect what already exists before writing anything.
 
 ## Decide the environment and gather values

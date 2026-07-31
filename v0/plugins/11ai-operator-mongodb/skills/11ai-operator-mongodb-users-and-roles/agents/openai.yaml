@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Operator MongoDB Users and Roles"
-  short_description: "Grant least-privilege database access"
-  default_prompt: "Use $11ai-operator-mongodb-users-and-roles to create or audit a database user with the narrowest role."

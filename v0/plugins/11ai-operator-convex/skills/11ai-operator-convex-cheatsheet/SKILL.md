@@ -4,6 +4,8 @@ description: "Answer quick Convex questions with a compact reference for CLI com
 ---
 # 11ai Convex cheatsheet
 
+Version baseline: Current stable Convex platform and npm package, with Node.js 20, 22, and 24 supported for the configurable Node runtime. Inspect the installed convex package, generated API, deployment, and current docs before using newly released behavior.
+
 A lookup surface for Convex. Give the command or call, name what it changes and which deployment it touches, and stop. For writing functions, changing a schema, or diagnosing a failure, hand off to the matching operation skill.
 
 ## CLI

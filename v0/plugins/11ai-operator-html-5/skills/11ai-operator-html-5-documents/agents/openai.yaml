@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai HTML5 Documents"
+  short_description: "Operate Documents safely with clear checks"
+  default_prompt: "Use $11ai-operator-html-5-documents to handle this HTML5 documents task and verify the result."

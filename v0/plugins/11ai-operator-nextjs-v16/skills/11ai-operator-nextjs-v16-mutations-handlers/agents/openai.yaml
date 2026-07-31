@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Next.js v16 mutations and route handlers"
+  short_description: "Operate Next.js mutations and route handlers safely"
+  default_prompt: "Use $11ai-operator-nextjs-v16-mutations-handlers to handle this Next.js mutations and route handlers task and verify the result."

@@ -2,6 +2,8 @@
 
 Eleven standalone skills for common Stripe billing and payment work, with read-first checks around mode, amounts, and anything that moves money.
 
+Version baseline: Stripe API `2026-02-25.clover` and the latest stable SDK compatible with the host language. The plugin name remains unversioned because Stripe API dates, named release families, CLI, and language SDKs version independently.
+
 ## Choose a skill
 
 | Skill | Use it for |

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Chat SDK v4 adapters"
+  short_description: "Operate Vercel Chat SDK adapters safely"
+  default_prompt: "Use $11ai-operator-vercel-chat-sdk-v4-adapters to handle this Vercel Chat SDK adapters task and verify the result."

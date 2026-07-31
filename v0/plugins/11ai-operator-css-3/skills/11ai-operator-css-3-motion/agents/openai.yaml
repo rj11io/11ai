@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai CSS3 Motion"
+  short_description: "Operate Motion safely with clear checks"
+  default_prompt: "Use $11ai-operator-css-3-motion to handle this CSS3 motion task and verify the result."

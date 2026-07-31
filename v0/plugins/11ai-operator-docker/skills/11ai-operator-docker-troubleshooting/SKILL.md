@@ -4,6 +4,8 @@ description: "Diagnose Docker and Compose failures from reproducible evidence, c
 ---
 # 11ai Docker troubleshooting
 
+Version baseline: Current stable Docker tooling: Engine 29.x (29.6.2 at this review), Compose v5, and the matching current BuildKit/containerd supplied by the installation. Inspect each component independently because Docker Desktop, Engine, Compose, Buildx, and the API do not share one version.
+
 Separate observed facts from hypotheses. Start with read-only evidence, reproduce the smallest failing command, identify the boundary that failed, and recommend the least risky fix. Do not restart, delete, prune, alter credentials, or change firewall and port settings without explicit approval.
 
 ## Evidence collection

@@ -55,7 +55,7 @@ const key = process.env.STRIPE_SECRET_KEY
 if (!key) throw new Error("STRIPE_SECRET_KEY is not set")
 
 export const stripe = new Stripe(key, {
-  apiVersion: "2025-06-30.basil",
+  apiVersion: "2026-02-25.clover",
   typescript: true,
   maxNetworkRetries: 2,
   timeout: 20_000,

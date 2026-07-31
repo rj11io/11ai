@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel AI SDK v7 Integrations"
+  short_description: "Operate Vercel AI SDK Integrations safely"
+  default_prompt: "Use $11ai-operator-vercel-ai-sdk-v7-integrations to handle this Vercel AI SDK integrations task and verify the result."

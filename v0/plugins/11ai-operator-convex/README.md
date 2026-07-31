@@ -1,6 +1,6 @@
 # 11ai Convex operator
 
-Eleven standalone skills for common Convex backend work, with read-first checks around schema changes, deploys, public function surfaces, and anything that touches production data.
+Twelve standalone skills for the current stable Convex platform and package, including first-party native-skill compatibility. The configurable Node runtime supports Node.js 20, 22, and 24; inspect the installed package and deployment before applying new behavior.
 
 ## Choose a skill
 
@@ -8,6 +8,7 @@ Eleven standalone skills for common Convex backend work, with read-first checks 
 | --- | --- |
 | [`11ai-operator-convex-cheatsheet`](./skills/11ai-operator-convex-cheatsheet/SKILL.md) | Looking up CLI commands, the three function types, validators, database methods, and client hooks |
 | [`11ai-operator-convex-setup`](./skills/11ai-operator-convex-setup/SKILL.md) | Installing, linking a deployment, generating the API, and wiring the client provider |
+| [`11ai-operator-convex-native-skills`](./skills/11ai-operator-convex-native-skills/SKILL.md) | Selecting first-party Convex agent skills after checking package, generated API, and runtime compatibility |
 | [`11ai-operator-convex-environment`](./skills/11ai-operator-convex-environment/SKILL.md) | Inspecting which deployment is active, its variables, the schema, crons, and the public function surface |
 | [`11ai-operator-convex-schema`](./skills/11ai-operator-convex-schema/SKILL.md) | Defining tables and indexes, and migrating a field without losing data |
 | [`11ai-operator-convex-functions`](./skills/11ai-operator-convex-functions/SKILL.md) | Writing queries and mutations with validators, authorization, indexes, and pagination |

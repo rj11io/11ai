@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Sandbox v2 Environment"
+  short_description: "Operate Vercel Sandbox Environment safely"
+  default_prompt: "Use $11ai-operator-vercel-sandbox-v2-environment to handle this Vercel Sandbox environment task and verify the result."

@@ -4,6 +4,8 @@ description: "Manage Stripe subscription lifecycles and mirror their state local
 ---
 # 11ai stripe subscriptions
 
+Version baseline: Stripe API 2026-02-25.clover and the latest stable SDK for the project language. Preserve an existing account, endpoint, or SDK pin unless the user explicitly requests an upgrade, and validate the compatibility table before moving API versions.
+
 Access should be derived from the subscription's status, not from the fact that a checkout once succeeded. A subscription moves through states on its own — a card expires, a payment fails, a trial ends — and an application that grants access at purchase and never revisits it keeps giving away the product.
 
 ## Inspect first

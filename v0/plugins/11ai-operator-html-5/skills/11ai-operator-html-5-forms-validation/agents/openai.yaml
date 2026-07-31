@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai HTML5 Forms Validation"
+  short_description: "Operate Forms Validation safely"
+  default_prompt: "Use $11ai-operator-html-5-forms-validation to handle this HTML5 forms validation task and verify the result."

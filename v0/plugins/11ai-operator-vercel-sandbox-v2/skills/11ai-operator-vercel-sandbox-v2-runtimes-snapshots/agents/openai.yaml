@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Sandbox v2 runtimes and snapshots"
+  short_description: "Operate Vercel Sandbox runtimes and snapshots safely"
+  default_prompt: "Use $11ai-operator-vercel-sandbox-v2-runtimes-snapshots to handle this Vercel Sandbox runtimes and snapshots task and verify the result."

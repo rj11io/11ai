@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai JavaScript ES2026 Cheatsheet"
+  short_description: "Operate JavaScript Cheatsheet safely"
+  default_prompt: "Use $11ai-operator-javascript-es2026-cheatsheet to handle this JavaScript cheatsheet task and verify the result."

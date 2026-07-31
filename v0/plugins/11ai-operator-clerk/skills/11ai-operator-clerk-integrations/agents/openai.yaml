@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Clerk Integrations"
-  short_description: "Connect Clerk to databases and APIs"
-  default_prompt: "Use $11ai-operator-clerk-integrations to connect Clerk to a local user table, an API boundary, or another service."

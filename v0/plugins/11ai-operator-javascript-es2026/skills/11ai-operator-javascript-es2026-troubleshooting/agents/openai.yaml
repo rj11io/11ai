@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai JavaScript ES2026 Troubleshooting"
+  short_description: "Operate JavaScript Troubleshooting safely"
+  default_prompt: "Use $11ai-operator-javascript-es2026-troubleshooting to handle this JavaScript troubleshooting task and verify the result."

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "11ai-operator-vercel-eve-v0",
+  "version": "1.28.0",
+  "description": "Modular, safety-first skills for Vercel eve 0.27 operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "vercel",
+    "eve",
+    "agents",
+    "durable",
+    "workflows"
+  ],
+  "skills": "./skills/"
+}

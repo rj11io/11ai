@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai React v19 Setup"
+  short_description: "Operate React Setup safely"
+  default_prompt: "Use $11ai-operator-reactjs-v19-setup to handle this React setup task and verify the result."

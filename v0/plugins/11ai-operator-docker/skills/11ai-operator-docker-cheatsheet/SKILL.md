@@ -4,6 +4,8 @@ description: "Answer Docker command questions with a compact, safety-aware refer
 ---
 # 11ai Docker cheatsheet
 
+Version baseline: Current stable Docker tooling: Engine 29.x (29.6.2 at this review), Compose v5, and the matching current BuildKit/containerd supplied by the installation. Inspect each component independently because Docker Desktop, Engine, Compose, Buildx, and the API do not share one version.
+
 Use this skill as a reference, not as permission to run commands. Give the smallest command that answers the question, explain the important flag in one sentence, and call out whether it only reads state or changes it.
 
 ## Read-only inspection

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai React v19 forms and actions"
+  short_description: "Operate React forms and actions safely"
+  default_prompt: "Use $11ai-operator-reactjs-v19-forms-actions to handle this React forms and actions task and verify the result."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Operator Jest Performance"
-  short_description: "Make a slow Jest suite faster"
-  default_prompt: "Use $11ai-operator-jest-performance to diagnose and reduce Jest suite runtime and memory use."

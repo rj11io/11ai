@@ -4,6 +4,8 @@ description: "Write Convex actions and scheduled work, covering the Node runtime
 ---
 # 11ai convex actions
 
+Version baseline: Current stable Convex platform and npm package, with Node.js 20, 22, and 24 supported for the configurable Node runtime. Inspect the installed convex package, generated API, deployment, and current docs before using newly released behavior.
+
 An action is the only place Convex can reach the outside world, and it is the one place with no transaction. Every `ctx.runMutation` inside it commits independently, so an action that fails halfway leaves earlier writes in place. Design for that before writing the external call.
 
 ## Inspect first

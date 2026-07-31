@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai AWS Integrations"
-  short_description: "Connect AWS to CI, IaC, and local tools"
-  default_prompt: "Use $11ai-operator-aws-integrations to connect AWS to this pipeline, registry, infrastructure tool, or application runtime with short-lived credentials."

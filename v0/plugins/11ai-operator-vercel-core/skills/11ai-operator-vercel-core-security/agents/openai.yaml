@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Core security"
+  short_description: "Operate Vercel Core security safely"
+  default_prompt: "Use $11ai-operator-vercel-core-security to handle this Vercel Core security task and verify the result."

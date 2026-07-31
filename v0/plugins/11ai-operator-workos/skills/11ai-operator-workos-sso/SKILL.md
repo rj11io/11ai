@@ -4,6 +4,8 @@ description: "Configure and test enterprise single sign-on connections, covering
 ---
 # 11ai WorkOS SSO
 
+Version baseline: Current WorkOS platform APIs and current GA SDKs; for Node.js examples use @workos-inc/node v8 on Node.js 22.11 or newer. Inspect the installed SDK and its migration guide before applying language-specific patterns.
+
 A single sign-on connection is configured by the customer's identity provider administrator, not by you. Your job is to create the organization, hand over a portal link, and verify what comes back. Establish which organization and which environment before anything else, because connections are environment-scoped and do not cross over.
 
 ## Inspect first

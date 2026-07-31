@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai JavaScript ES2026 Integrations"
+  short_description: "Operate JavaScript Integrations safely"
+  default_prompt: "Use $11ai-operator-javascript-es2026-integrations to handle this JavaScript integrations task and verify the result."

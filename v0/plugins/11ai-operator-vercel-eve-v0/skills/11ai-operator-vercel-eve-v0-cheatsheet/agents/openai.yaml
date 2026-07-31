@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel eve v0 Cheatsheet"
+  short_description: "Operate Vercel eve Cheatsheet safely"
+  default_prompt: "Use $11ai-operator-vercel-eve-v0-cheatsheet to handle this Vercel eve cheatsheet task and verify the result."

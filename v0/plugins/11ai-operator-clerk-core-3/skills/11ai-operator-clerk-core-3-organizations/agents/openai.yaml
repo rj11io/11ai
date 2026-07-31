@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Clerk Organizations"
+  short_description: "Manage Clerk organizations and roles"
+  default_prompt: "Use $11ai-operator-clerk-core-3-organizations to manage Clerk organizations, memberships, roles, and permissions."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai React v19 Environment"
+  short_description: "Operate React Environment safely"
+  default_prompt: "Use $11ai-operator-reactjs-v19-environment to handle this React environment task and verify the result."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai TypeScript v7 Environment"
+  short_description: "Operate TypeScript Environment safely"
+  default_prompt: "Use $11ai-operator-typescript-v7-environment to handle this TypeScript environment task and verify the result."

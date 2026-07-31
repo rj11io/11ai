@@ -4,6 +4,8 @@ description: "Write and repair Convex queries and mutations, covering argument v
 ---
 # 11ai convex functions
 
+Version baseline: Current stable Convex platform and npm package, with Node.js 20, 22, and 24 supported for the configurable Node runtime. Inspect the installed convex package, generated API, deployment, and current docs before using newly released behavior.
+
 Two facts govern every function here. Each mutation runs in a transaction, so it either fully applies or not at all. And every non-internal function is callable by any client that knows its name — so authorization belongs in the handler, never in the component that calls it.
 
 ## Inspect first

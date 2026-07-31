@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai CSS3 Integrations"
+  short_description: "Operate Integrations safely"
+  default_prompt: "Use $11ai-operator-css-3-integrations to handle this CSS3 integrations task and verify the result."

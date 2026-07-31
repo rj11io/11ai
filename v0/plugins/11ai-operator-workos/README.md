@@ -1,6 +1,6 @@
 # 11ai WorkOS operator
 
-Ten standalone skills for common WorkOS authentication and directory work, with read-first checks around environments, tenant scoping, and anything that changes a customer's access.
+Eleven standalone skills for current WorkOS authentication and directory work, including first-party native-skill compatibility. SDKs version independently; Node.js examples use `@workos-inc/node` v8 on Node.js 22.11 or newer.
 
 ## Choose a skill
 
@@ -8,6 +8,7 @@ Ten standalone skills for common WorkOS authentication and directory work, with 
 | --- | --- |
 | [`11ai-operator-workos-cheatsheet`](./skills/11ai-operator-workos-cheatsheet/SKILL.md) | Looking up AuthKit calls, API methods, environment values, and event types |
 | [`11ai-operator-workos-setup`](./skills/11ai-operator-workos-setup/SKILL.md) | Configuring keys, the cookie password, redirect URIs, the callback route, and session middleware |
+| [`11ai-operator-workos-native-skills`](./skills/11ai-operator-workos-native-skills/SKILL.md) | Checking and managing WorkOS's first-party coding-agent skills against the project's framework and SDK |
 | [`11ai-operator-workos-environment`](./skills/11ai-operator-workos-environment/SKILL.md) | Inspecting which environment is targeted, which values are set, and the state of connections and directories |
 | [`11ai-operator-workos-authkit`](./skills/11ai-operator-workos-authkit/SKILL.md) | Wiring sign-in, session refresh, default-deny route protection, server-side authorization, and sign-out |
 | [`11ai-operator-workos-sso`](./skills/11ai-operator-workos-sso/SKILL.md) | Setting up enterprise single sign-on connections and verifying the profile that comes back |

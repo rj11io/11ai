@@ -4,6 +4,8 @@ description: "Connect Docker to the systems around it, covering continuous integ
 ---
 # 11ai Docker integrations
 
+Version baseline: Current stable Docker tooling: Engine 29.x (29.6.2 at this review), Compose v5, and the matching current BuildKit/containerd supplied by the installation. Inspect each component independently because Docker Desktop, Engine, Compose, Buildx, and the API do not share one version.
+
 Each Docker integration is a contract about an image: how it is built, how it is named, and what the thing running it expects of it. Establish which side already owns the build, the tags, and the configuration before adding a second owner.
 
 ## Name the seam

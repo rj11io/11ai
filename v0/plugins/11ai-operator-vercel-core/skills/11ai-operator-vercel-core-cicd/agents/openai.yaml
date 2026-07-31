@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Core CI and CD"
+  short_description: "Operate Vercel Core CI and CD safely"
+  default_prompt: "Use $11ai-operator-vercel-core-cicd to handle this Vercel Core ci and cd task and verify the result."

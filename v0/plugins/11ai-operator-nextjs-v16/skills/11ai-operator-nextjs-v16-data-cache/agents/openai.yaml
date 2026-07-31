@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Next.js v16 data and caching"
+  short_description: "Operate Next.js data and caching safely"
+  default_prompt: "Use $11ai-operator-nextjs-v16-data-cache to handle this Next.js data and caching task and verify the result."

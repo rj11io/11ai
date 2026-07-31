@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Operator MongoDB Atlas"
-  short_description: "Operate an Atlas cluster and its access"
-  default_prompt: "Use $11ai-operator-mongodb-atlas to inspect or change an Atlas cluster, its network access, or its users."

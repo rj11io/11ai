@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai HTML5 Semantics Accessibility"
+  short_description: "Operate Semantics Accessibility safely"
+  default_prompt: "Use $11ai-operator-html-5-semantics-accessibility to handle this HTML5 semantics accessibility task and verify the result."

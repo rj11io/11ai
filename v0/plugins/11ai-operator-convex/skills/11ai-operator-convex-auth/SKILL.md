@@ -4,6 +4,8 @@ description: "Wire authentication into Convex and enforce access inside function
 ---
 # 11ai convex auth
 
+Version baseline: Current stable Convex platform and npm package, with Node.js 20, 22, and 24 supported for the configurable Node runtime. Inspect the installed convex package, generated API, deployment, and current docs before using newly released behavior.
+
 Every non-internal Convex function is a public endpoint. A client that knows a function name can call it with any arguments, so hiding a button changes nothing — authorization has to happen inside the handler. Establish how identity reaches the function before writing any check.
 
 ## Inspect first

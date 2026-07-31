@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel eve v0 Integrations"
+  short_description: "Operate Vercel eve Integrations safely"
+  default_prompt: "Use $11ai-operator-vercel-eve-v0-integrations to handle this Vercel eve integrations task and verify the result."

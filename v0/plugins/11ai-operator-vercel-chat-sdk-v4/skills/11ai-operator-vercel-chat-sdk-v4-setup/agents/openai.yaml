@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Chat SDK v4 Setup"
+  short_description: "Operate Vercel Chat SDK Setup safely"
+  default_prompt: "Use $11ai-operator-vercel-chat-sdk-v4-setup to handle this Vercel Chat SDK setup task and verify the result."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Operator Node.js API GraphQL"
-  short_description: "Add a GraphQL surface to an API"
-  default_prompt: "Use $11ai-operator-nodejs-api-graphql to add a GraphQL endpoint with depth, cost, and auth controls."

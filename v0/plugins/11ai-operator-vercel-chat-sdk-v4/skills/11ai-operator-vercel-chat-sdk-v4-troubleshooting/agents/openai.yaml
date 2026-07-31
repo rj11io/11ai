@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel Chat SDK v4 Troubleshooting"
+  short_description: "Operate Vercel Chat SDK Troubleshooting safely"
+  default_prompt: "Use $11ai-operator-vercel-chat-sdk-v4-troubleshooting to handle this Vercel Chat SDK troubleshooting task and verify the result."

@@ -4,6 +4,8 @@ description: "Store and serve files through Convex storage, covering upload URLs
 ---
 # 11ai convex file storage
 
+Version baseline: Current stable Convex platform and npm package, with Node.js 20, 22, and 24 supported for the configurable Node runtime. Inspect the installed convex package, generated API, deployment, and current docs before using newly released behavior.
+
 A stored file has two halves: the bytes, identified by a storage id, and the document that references it. They are stored independently, so every operation here has to keep them in step — an upload that never records its id leaves an unreachable file, and a deleted row leaves the bytes behind.
 
 ## Inspect first

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Vercel eve v0 channels and schedules"
+  short_description: "Operate Vercel eve channels and schedules safely"
+  default_prompt: "Use $11ai-operator-vercel-eve-v0-channels-schedules to handle this Vercel eve channels and schedules task and verify the result."

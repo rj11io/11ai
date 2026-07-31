@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Operator AWS SSM"
+  short_description: "Reach instances through Session Manager"
+  default_prompt: "Use $11ai-operator-aws-cli-v2-ssm to reach an instance with Session Manager, run a command, or forward a port."

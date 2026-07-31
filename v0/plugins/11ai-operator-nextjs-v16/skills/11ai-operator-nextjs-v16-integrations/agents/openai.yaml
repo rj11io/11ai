@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Next.js v16 Integrations"
+  short_description: "Operate Next.js Integrations safely"
+  default_prompt: "Use $11ai-operator-nextjs-v16-integrations to handle this Next.js integrations task and verify the result."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Operator Node.js API OpenAPI"
-  short_description: "Generate and serve an OpenAPI spec"
-  default_prompt: "Use $11ai-operator-nodejs-api-openapi to generate, serve, and check an OpenAPI description of this API."

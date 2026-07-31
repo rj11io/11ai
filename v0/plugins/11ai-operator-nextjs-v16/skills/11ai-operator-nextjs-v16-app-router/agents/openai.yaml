@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Next.js v16 App Router"
+  short_description: "Operate Next.js App Router safely"
+  default_prompt: "Use $11ai-operator-nextjs-v16-app-router to handle this Next.js app router task and verify the result."
