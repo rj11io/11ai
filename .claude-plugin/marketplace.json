@@ -169,6 +169,22 @@
     {
       "name": "11ai-operator-vercel-core",
       "source": "./v0/plugins/11ai-operator-vercel-core"
+    },
+    {
+      "name": "11ai-operator-tailwind-v3",
+      "source": "./v0/plugins/11ai-operator-tailwind-v3"
+    },
+    {
+      "name": "11ai-operator-tailwind-v4",
+      "source": "./v0/plugins/11ai-operator-tailwind-v4"
+    },
+    {
+      "name": "11ai-operator-mui-v9",
+      "source": "./v0/plugins/11ai-operator-mui-v9"
+    },
+    {
+      "name": "11ai-operator-shadcn-v4",
+      "source": "./v0/plugins/11ai-operator-shadcn-v4"
     }
   ]
 }

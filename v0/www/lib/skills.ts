@@ -140,6 +140,13 @@ const PLUGIN_CONFIG = [
       "Project-scoped and machine-wide LLM usage and cost reporting across local coding harnesses.",
   },
   {
+    slug: "operator-mui-v9",
+    dir: "11ai-operator-mui-v9",
+    title: "Material UI v9 operator",
+    tagline:
+      "Material UI 9.2 setup, components, forms, navigation, theming, styling, migration, first-party Agent Skills, integrations, reference, and troubleshooting.",
+  },
+  {
     slug: "operator-mongodb-v8",
     dir: "11ai-operator-mongodb-v8",
     title: "MongoDB v8 operator",
@@ -175,6 +182,13 @@ const PLUGIN_CONFIG = [
       "React 19.2 components, state, effects, Actions, Activity, forms, performance, testing, integrations, reference, and troubleshooting.",
   },
   {
+    slug: "operator-shadcn-v4",
+    dir: "11ai-operator-shadcn-v4",
+    title: "shadcn v4 operator",
+    tagline:
+      "shadcn CLI 4.14 components, charts, registries, presets, forms, blocks, updates, first-party Agent Skills, integrations, reference, and troubleshooting.",
+  },
+  {
     slug: "super",
     dir: "11ai-super",
     title: "Super",
@@ -208,6 +222,20 @@ const PLUGIN_CONFIG = [
     title: "Supabase operator",
     tagline:
       "Current Supabase setup, Postgres, RLS, auth, storage, edge functions, first-party native skills, and troubleshooting.",
+  },
+  {
+    slug: "operator-tailwind-v3",
+    dir: "11ai-operator-tailwind-v3",
+    title: "Tailwind CSS v3 operator",
+    tagline:
+      "Tailwind CSS 3.4 content scanning, builds, JavaScript configuration, themes, utilities, variants, plugins, integrations, reference, and troubleshooting.",
+  },
+  {
+    slug: "operator-tailwind-v4",
+    dir: "11ai-operator-tailwind-v4",
+    title: "Tailwind CSS v4 operator",
+    tagline:
+      "Tailwind CSS 4.3 sources, build adapters, CSS-first themes, utilities, variants, compatibility, migration, integrations, reference, and troubleshooting.",
   },
   {
     slug: "operator-typescript-v7",

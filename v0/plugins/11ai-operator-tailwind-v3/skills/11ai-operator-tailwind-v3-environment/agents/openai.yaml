@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Tailwind CSS v3 Environment"
+  short_description: "Inspect a Tailwind CSS v3 environment"
+  default_prompt: "Use $11ai-operator-tailwind-v3-environment to inspect this Tailwind CSS v3 setup without changing it."

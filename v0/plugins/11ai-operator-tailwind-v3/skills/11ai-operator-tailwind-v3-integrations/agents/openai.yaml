@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Tailwind CSS v3 Integrations"
+  short_description: "Connect Tailwind CSS v3 to other tools"
+  default_prompt: "Use $11ai-operator-tailwind-v3-integrations to wire this Tailwind CSS v3 integration and verify it end to end."

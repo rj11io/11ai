@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Tailwind CSS v3 Troubleshooting"
+  short_description: "Diagnose Tailwind CSS v3 failures"
+  default_prompt: "Use $11ai-operator-tailwind-v3-troubleshooting to diagnose this Tailwind CSS v3 failure from exact evidence."

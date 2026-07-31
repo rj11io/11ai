@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Tailwind CSS v3 Cheatsheet"
+  short_description: "Look up safe Tailwind CSS v3 patterns"
+  default_prompt: "Use $11ai-operator-tailwind-v3-cheatsheet to answer this Tailwind CSS v3 reference question concisely."

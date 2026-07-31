@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai shadcn v4 Troubleshooting"
+  short_description: "Diagnose shadcn CLI v4 failures"
+  default_prompt: "Use $11ai-operator-shadcn-v4-troubleshooting to diagnose this shadcn CLI v4 failure from exact evidence."

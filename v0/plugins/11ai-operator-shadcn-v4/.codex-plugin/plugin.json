@@ -1,0 +1,25 @@
+{
+  "name": "11ai-operator-shadcn-v4",
+  "version": "1.28.0",
+  "description": "Modular, safety-first skills for common shadcn CLI v4 operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "shadcn",
+    "components",
+    "charts"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Operator shadcn v4",
+    "shortDescription": "Operate shadcn v4 components and registries.",
+    "longDescription": "A modular toolbox for shadcn CLI v4 setup, components, charts, forms, data, blocks, registries, presets, themes, updates, migrations, integrations, native Agent Skills, and troubleshooting.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-operator-shadcn-v4 skills for this shadcn v4 task."
+  }
+}

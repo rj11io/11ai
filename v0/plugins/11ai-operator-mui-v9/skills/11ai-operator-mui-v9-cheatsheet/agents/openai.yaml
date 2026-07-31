@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Material UI v9 Cheatsheet"
+  short_description: "Look up safe Material UI v9 patterns"
+  default_prompt: "Use $11ai-operator-mui-v9-cheatsheet to answer this Material UI v9 reference question concisely."

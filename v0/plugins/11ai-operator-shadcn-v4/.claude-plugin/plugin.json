@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "11ai-operator-shadcn-v4",
+  "version": "1.28.0",
+  "description": "Modular, safety-first skills for common shadcn CLI v4 operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "shadcn",
+    "components",
+    "charts"
+  ],
+  "skills": "./skills/"
+}

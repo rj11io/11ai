@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Material UI v9 Environment"
+  short_description: "Inspect a Material UI v9 environment"
+  default_prompt: "Use $11ai-operator-mui-v9-environment to inspect this Material UI v9 setup without changing it."

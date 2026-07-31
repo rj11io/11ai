@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Tailwind CSS v4 Theme Variables"
+  short_description: "Manage Tailwind CSS v4 theme variables"
+  default_prompt: "Use $11ai-operator-tailwind-v4-theme-variables to make this Tailwind CSS v4 theme change and verify its impact."

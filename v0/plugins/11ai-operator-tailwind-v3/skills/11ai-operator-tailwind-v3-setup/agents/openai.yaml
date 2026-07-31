@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Tailwind CSS v3 Setup"
+  short_description: "Install and configure Tailwind CSS v3"
+  default_prompt: "Use $11ai-operator-tailwind-v3-setup to install and verify Tailwind CSS v3 in this project."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Material UI v9 Theming"
+  short_description: "Manage Material UI v9 themes and schemes"
+  default_prompt: "Use $11ai-operator-mui-v9-theming-color-schemes to implement and verify this Material UI v9 theme change."

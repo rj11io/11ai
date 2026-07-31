@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Material UI v9 Migration"
+  short_description: "Migrate Material UI v7 projects to v9"
+  default_prompt: "Use $11ai-operator-mui-v9-migration-codemods to plan and verify this Material UI v7-to-v9 upgrade safely."

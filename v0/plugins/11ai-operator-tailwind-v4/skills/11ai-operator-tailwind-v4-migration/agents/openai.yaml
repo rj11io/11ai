@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Tailwind CSS v4 Migration"
+  short_description: "Migrate Tailwind CSS v3 projects to v4"
+  default_prompt: "Use $11ai-operator-tailwind-v4-migration to plan and verify this Tailwind CSS v3-to-v4 upgrade safely."

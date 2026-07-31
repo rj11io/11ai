@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Tailwind CSS v3 Variants"
+  short_description: "Control v3 variants and responsive states"
+  default_prompt: "Use $11ai-operator-tailwind-v3-variants-responsive to implement and verify this Tailwind CSS v3 state behavior."

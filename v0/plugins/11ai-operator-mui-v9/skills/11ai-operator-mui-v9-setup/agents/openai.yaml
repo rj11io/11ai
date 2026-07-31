@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Material UI v9 Setup"
+  short_description: "Install and configure Material UI v9"
+  default_prompt: "Use $11ai-operator-mui-v9-setup to install and verify Material UI v9 in this project."

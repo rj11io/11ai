@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai shadcn v4 Integrations"
+  short_description: "Connect shadcn v4 to frameworks and tools"
+  default_prompt: "Use $11ai-operator-shadcn-v4-integrations to wire this shadcn v4 integration and verify it end to end."

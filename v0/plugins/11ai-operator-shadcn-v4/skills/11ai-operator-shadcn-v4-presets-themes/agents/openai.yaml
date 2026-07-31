@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai shadcn v4 Presets and Themes"
+  short_description: "Apply shadcn presets and themes safely"
+  default_prompt: "Use $11ai-operator-shadcn-v4-presets-themes to resolve, compare, apply, and verify this shadcn visual-system change."

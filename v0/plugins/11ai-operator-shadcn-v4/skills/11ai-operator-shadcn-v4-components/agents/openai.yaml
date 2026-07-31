@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai shadcn v4 Components"
+  short_description: "Build and update shadcn v4 components"
+  default_prompt: "Use $11ai-operator-shadcn-v4-components to research, preview, implement, and verify this shadcn component safely."

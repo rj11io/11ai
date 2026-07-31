@@ -1,0 +1,25 @@
+{
+  "name": "11ai-operator-tailwind-v3",
+  "version": "1.28.0",
+  "description": "Modular, safety-first skills for common Tailwind CSS v3 operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "tailwindcss",
+    "css",
+    "frontend"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Operator Tailwind CSS v3",
+    "shortDescription": "Operate Tailwind CSS v3 projects safely.",
+    "longDescription": "A modular toolbox for Tailwind CSS v3 setup, build and content configuration, theme customization, utilities, variants, plugins, integrations, and troubleshooting.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-operator-tailwind-v3 skills for this Tailwind CSS v3 task."
+  }
+}

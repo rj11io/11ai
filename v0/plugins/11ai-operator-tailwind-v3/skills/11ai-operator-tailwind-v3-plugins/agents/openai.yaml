@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Tailwind CSS v3 Plugins"
+  short_description: "Operate Tailwind CSS v3 plugins safely"
+  default_prompt: "Use $11ai-operator-tailwind-v3-plugins to inspect or change this Tailwind CSS v3 plugin and verify its output."

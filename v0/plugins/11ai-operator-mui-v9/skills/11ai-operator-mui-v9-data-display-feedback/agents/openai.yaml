@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Material UI v9 Data Display"
+  short_description: "Present MUI v9 data and feedback safely"
+  default_prompt: "Use $11ai-operator-mui-v9-data-display-feedback to implement and verify this Material UI v9 data or feedback state."

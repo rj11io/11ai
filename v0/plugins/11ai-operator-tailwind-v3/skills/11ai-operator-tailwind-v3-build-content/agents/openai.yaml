@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Tailwind CSS v3 Build and Content"
+  short_description: "Control v3 builds and content scanning"
+  default_prompt: "Use $11ai-operator-tailwind-v3-build-content to adjust this Tailwind CSS v3 build or content boundary safely."

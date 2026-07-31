@@ -14,7 +14,7 @@ Install the collection from GitHub with the [skills CLI](https://skills.sh/docs/
 npx skills add rj11io/11ai --full-depth
 ```
 
-The CLI runs through `npx`, discovers the repository's skills, and configures the skills you select for your agent. `--full-depth` is required because this collection organizes skills into forty-one workflow plugins instead of one top-level `skills/` directory.
+The CLI runs through `npx`, discovers the repository's skills, and configures the skills you select for your agent. `--full-depth` is required because this collection organizes skills into forty-five workflow plugins instead of one top-level `skills/` directory.
 
 The repository follows the open Agent Skills format. Every skill also includes Codex UI metadata in `agents/openai.yaml`, and every plugin is packaged for Claude Code. To add the Claude marketplace, run:
 
@@ -42,7 +42,7 @@ The files are installed at `node_modules/@rj11io/11ai/v0/plugins/`. You can also
 
 ## Skill catalog
 
-The repository currently contains 428 skills in 41 plugins.
+The repository currently contains 474 skills in 45 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
@@ -64,6 +64,7 @@ The repository currently contains 428 skills in 41 plugins.
 | [JavaScript ES2026 operator](./v0/plugins/11ai-operator-javascript-es2026/README.md) | 10 | ECMAScript 2026 modules, async control flow, DOM events, data modeling, standard-library additions, performance, security, integrations, reference, and troubleshooting |
 | [Jest v30 operator](./v0/plugins/11ai-operator-jest-v30/README.md) | 17 | Setting up, inspecting, running, authoring, integrating, configuring, de-flaking, speeding up, and troubleshooting Jest 30 suites |
 | [LLM costs](./v0/plugins/11ai-llm-costs/README.md) | 4 | Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports |
+| [Material UI v9 operator](./v0/plugins/11ai-operator-mui-v9/README.md) | 13 | Material UI 9.2 setup, components, forms, navigation, theming, styling, migration, first-party Agent Skills, integrations, reference, and troubleshooting |
 | [MongoDB v8 operator](./v0/plugins/11ai-operator-mongodb-v8/README.md) | 17 | MongoDB 8 Shell and Database Tools work with transactions, profiling, roles, Atlas, backups, integrations, and safety checks |
 | [Next.js v16 operator](./v0/plugins/11ai-operator-nextjs-v16/README.md) | 10 | Next.js 16 App Router, Server and Client Components, Cache Components, mutations, handlers, metadata, deployment, integrations, reference, and troubleshooting |
 | [Node.js API v24 operator](./v0/plugins/11ai-operator-nodejs-api-v24/README.md) | 20 | Scaffolding, routing, validation, auth, data, jobs, GraphQL, OpenAPI, testing, and troubleshooting Node.js 24 LTS APIs |
@@ -71,9 +72,12 @@ The repository currently contains 428 skills in 41 plugins.
 | [React v19 operator](./v0/plugins/11ai-operator-reactjs-v19/README.md) | 10 | React 19.2 components, state, effects, Actions, Activity, forms, performance, testing, integrations, reference, and troubleshooting |
 | [Super](./v0/plugins/11ai-super/README.md) | 9 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
 | [Security](./v0/plugins/11ai-security/README.md) | 1 | Read-only dependency vulnerability and supply-chain auditing with critical host-harm triage |
+| [shadcn v4 operator](./v0/plugins/11ai-operator-shadcn-v4/README.md) | 13 | shadcn CLI 4.14 components, charts, registries, presets, forms, blocks, updates, native skills, integrations, reference, and troubleshooting |
 | [SSH operator](./v0/plugins/11ai-operator-ssh/README.md) | 10 | OpenSSH client setup, keys, host configuration, sessions, tunnels, file transfer, and troubleshooting |
 | [Stripe operator](./v0/plugins/11ai-operator-stripe/README.md) | 11 | Stripe setup, customers, prices, Checkout, subscriptions, payments, webhooks, entitlements, and troubleshooting |
 | [Supabase operator](./v0/plugins/11ai-operator-supabase/README.md) | 12 | Current Supabase setup, Postgres, RLS, auth, storage, edge functions, first-party native skills, and troubleshooting |
+| [Tailwind CSS v3 operator](./v0/plugins/11ai-operator-tailwind-v3/README.md) | 10 | Tailwind CSS 3.4 content scanning, builds, JavaScript configuration, themes, utilities, variants, plugins, integrations, reference, and troubleshooting |
+| [Tailwind CSS v4 operator](./v0/plugins/11ai-operator-tailwind-v4/README.md) | 10 | Tailwind CSS 4.3 sources, build adapters, CSS-first themes, utilities, variants, compatibility, migration, integrations, reference, and troubleshooting |
 | [TypeScript v7 operator](./v0/plugins/11ai-operator-typescript-v7/README.md) | 10 | TypeScript 7 native compiler configuration, type modeling, narrowing, generics, modules, packages, migrations, declarations, integrations, reference, and troubleshooting |
 | [Utilities](./v0/plugins/11ai-utils/README.md) | 10 | Git task directors, Markdown compression, reverse engineering, critique, analytics, publication CMS, calls to action, project sites, and operator-plugin scaffolding |
 | [Vercel AI Gateway operator](./v0/plugins/11ai-operator-vercel-ai-gateway/README.md) | 10 | Models, routing, fallbacks, authentication, BYOK, budgets, usage, observability, security, integrations, reference, and troubleshooting |
@@ -116,13 +120,17 @@ v0/
     11ai-operator-javascript-es2026/ 10 JavaScript ES2026 operation skills under skills/
     11ai-operator-jest-v30/       17 Jest operation skills under skills/
     11ai-operator-mongodb-v8/    17 MongoDB operation skills under skills/
+    11ai-operator-mui-v9/        13 Material UI v9 operation skills under skills/
     11ai-operator-nextjs-v16/     10 Next.js v16 operation skills under skills/
     11ai-operator-nodejs-api-v24/ 20 Node.js API operation skills under skills/
     11ai-operator-pokeapi-v2/ 12 cache-first PokéAPI v2 operation skills under skills/
     11ai-operator-reactjs-v19/    10 React v19 operation skills under skills/
+    11ai-operator-shadcn-v4/      13 shadcn v4 operation skills under skills/
     11ai-operator-ssh/        10 OpenSSH client operation skills under skills/
     11ai-operator-stripe/     11 Stripe billing operation skills under skills/
     11ai-operator-supabase/   12 Supabase project operation skills under skills/
+    11ai-operator-tailwind-v3/ 10 Tailwind CSS v3 operation skills under skills/
+    11ai-operator-tailwind-v4/ 10 Tailwind CSS v4 operation skills under skills/
     11ai-operator-typescript-v7/ 10 TypeScript v7 operation skills under skills/
     11ai-operator-vercel-ai-gateway/ 10 Vercel AI Gateway operation skills under skills/
     11ai-operator-vercel-ai-sdk-v7/ 10 Vercel AI SDK v7 operation skills under skills/

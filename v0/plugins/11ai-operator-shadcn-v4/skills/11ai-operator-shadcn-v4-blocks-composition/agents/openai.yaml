@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai shadcn v4 Blocks and Composition"
+  short_description: "Adapt shadcn blocks into owned pages"
+  default_prompt: "Use $11ai-operator-shadcn-v4-blocks-composition to preview, adapt, and verify this shadcn block or page composition."

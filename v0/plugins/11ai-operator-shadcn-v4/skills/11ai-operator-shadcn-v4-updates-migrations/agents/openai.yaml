@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai shadcn v4 Updates and Migrations"
+  short_description: "Reconcile shadcn updates and migrations"
+  default_prompt: "Use $11ai-operator-shadcn-v4-updates-migrations to inventory, stage, verify, and report this shadcn update or migration."

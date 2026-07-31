@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai shadcn v4 Setup"
+  short_description: "Initialize and verify shadcn CLI v4"
+  default_prompt: "Use $11ai-operator-shadcn-v4-setup to initialize and verify this shadcn CLI v4 project safely."

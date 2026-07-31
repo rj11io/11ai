@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai shadcn v4 Charts"
+  short_description: "Build rigorous shadcn Recharts v3 charts"
+  default_prompt: "Use $11ai-operator-shadcn-v4-charts to design, implement, and verify this shadcn chart from its data contract."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai shadcn v4 Environment"
+  short_description: "Inspect a shadcn CLI v4 environment"
+  default_prompt: "Use $11ai-operator-shadcn-v4-environment to inspect this shadcn CLI v4 project without changing it."

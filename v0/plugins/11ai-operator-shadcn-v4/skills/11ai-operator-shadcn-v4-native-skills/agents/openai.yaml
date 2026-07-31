@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai shadcn v4 Native Skills"
+  short_description: "Manage shadcn's first-party Agent Skill"
+  default_prompt: "Use $11ai-operator-shadcn-v4-native-skills to compatibility-check shadcn's first-party Agent Skill before changing it."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Material UI v9 Troubleshooting"
+  short_description: "Diagnose Material UI v9 failures"
+  default_prompt: "Use $11ai-operator-mui-v9-troubleshooting to diagnose this Material UI v9 failure from exact evidence."

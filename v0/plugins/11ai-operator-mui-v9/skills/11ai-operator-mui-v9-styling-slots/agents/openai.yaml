@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Material UI v9 Styling"
+  short_description: "Style MUI v9 components and slots safely"
+  default_prompt: "Use $11ai-operator-mui-v9-styling-slots to implement and verify this Material UI v9 styling change."

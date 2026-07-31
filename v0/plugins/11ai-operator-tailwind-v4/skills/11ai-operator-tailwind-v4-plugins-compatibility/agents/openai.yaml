@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Tailwind CSS v4 Compatibility"
+  short_description: "Operate v4 plugins and legacy seams"
+  default_prompt: "Use $11ai-operator-tailwind-v4-plugins-compatibility to inspect or change this Tailwind CSS v4 plugin or compatibility seam."

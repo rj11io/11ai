@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Tailwind CSS v4 Setup"
+  short_description: "Install and configure Tailwind CSS v4"
+  default_prompt: "Use $11ai-operator-tailwind-v4-setup to install and verify Tailwind CSS v4 with the correct adapter."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai shadcn v4 Cheatsheet"
+  short_description: "Look up safe shadcn CLI v4 patterns"
+  default_prompt: "Use $11ai-operator-shadcn-v4-cheatsheet to answer this shadcn CLI v4 reference question concisely."

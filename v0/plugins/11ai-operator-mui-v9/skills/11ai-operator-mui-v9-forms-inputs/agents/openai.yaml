@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Material UI v9 Forms"
+  short_description: "Build accessible Material UI v9 forms"
+  default_prompt: "Use $11ai-operator-mui-v9-forms-inputs to implement and verify this Material UI v9 form behavior."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Tailwind CSS v4 Builds and Sources"
+  short_description: "Control v4 builds and source detection"
+  default_prompt: "Use $11ai-operator-tailwind-v4-build-sources to adjust this Tailwind CSS v4 build or source boundary safely."

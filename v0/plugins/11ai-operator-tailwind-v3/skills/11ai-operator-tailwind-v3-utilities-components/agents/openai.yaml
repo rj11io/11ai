@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Tailwind CSS v3 Utilities"
+  short_description: "Build v3 utilities and component styles"
+  default_prompt: "Use $11ai-operator-tailwind-v3-utilities-components to implement this Tailwind CSS v3 styling change safely."

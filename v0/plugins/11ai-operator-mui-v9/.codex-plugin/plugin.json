@@ -1,0 +1,25 @@
+{
+  "name": "11ai-operator-mui-v9",
+  "version": "1.28.0",
+  "description": "Modular, safety-first skills for common Material UI v9 operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "mui",
+    "material-ui",
+    "react"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Operator Material UI v9",
+    "shortDescription": "Build and operate Material UI v9 safely.",
+    "longDescription": "A modular toolbox for Material UI v9 setup, components, forms, data display, navigation, overlays, theming, styling, migrations, integrations, native Agent Skills, and troubleshooting.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-operator-mui-v9 skills for this Material UI v9 task."
+  }
+}

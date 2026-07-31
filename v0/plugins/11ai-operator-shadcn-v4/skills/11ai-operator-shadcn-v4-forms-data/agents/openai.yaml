@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai shadcn v4 Forms and Data"
+  short_description: "Build accessible shadcn forms and tables"
+  default_prompt: "Use $11ai-operator-shadcn-v4-forms-data to implement and verify this shadcn form or data workflow."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai shadcn v4 Registries"
+  short_description: "Operate and validate shadcn v4 registries"
+  default_prompt: "Use $11ai-operator-shadcn-v4-registries to inspect, validate, consume, or author this shadcn registry safely."

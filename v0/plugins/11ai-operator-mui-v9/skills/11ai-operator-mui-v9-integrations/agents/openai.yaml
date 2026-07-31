@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Material UI v9 Integrations"
+  short_description: "Connect Material UI v9 to other tools"
+  default_prompt: "Use $11ai-operator-mui-v9-integrations to wire this Material UI v9 integration and verify it end to end."

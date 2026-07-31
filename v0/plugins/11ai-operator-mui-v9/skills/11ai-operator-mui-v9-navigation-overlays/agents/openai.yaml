@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Material UI v9 Navigation"
+  short_description: "Build MUI v9 navigation and overlays"
+  default_prompt: "Use $11ai-operator-mui-v9-navigation-overlays to implement and verify this Material UI v9 navigation or overlay flow."

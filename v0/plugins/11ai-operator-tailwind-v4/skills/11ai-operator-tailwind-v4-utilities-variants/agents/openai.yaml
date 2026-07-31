@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Tailwind CSS v4 Utilities"
+  short_description: "Build v4 utilities and custom variants"
+  default_prompt: "Use $11ai-operator-tailwind-v4-utilities-variants to implement and verify this Tailwind CSS v4 styling behavior."

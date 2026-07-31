@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Tailwind CSS v3 Theme Config"
+  short_description: "Manage Tailwind CSS v3 theme config"
+  default_prompt: "Use $11ai-operator-tailwind-v3-theme-config to make this Tailwind CSS v3 configuration change and verify its impact."
