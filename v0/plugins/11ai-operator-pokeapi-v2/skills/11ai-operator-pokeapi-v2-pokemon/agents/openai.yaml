@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai PokéAPI v2 Pokémon"
+  short_description: "Query Pokémon, species, forms, and types"
+  default_prompt: "Use $11ai-operator-pokeapi-v2-pokemon to query the correct Pokémon, species, or form resources and cache every followed link."

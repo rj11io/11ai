@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai PokéAPI v2 Troubleshooting"
+  short_description: "Diagnose PokéAPI requests and cache failures"
+  default_prompt: "Use $11ai-operator-pokeapi-v2-troubleshooting to diagnose this PokéAPI v2 failure with cache evidence and the smallest bounded live check."

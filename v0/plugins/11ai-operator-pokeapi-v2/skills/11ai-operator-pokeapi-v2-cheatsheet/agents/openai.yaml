@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai PokéAPI v2 Cheatsheet"
+  short_description: "Look up PokéAPI v2 paths and patterns"
+  default_prompt: "Use $11ai-operator-pokeapi-v2-cheatsheet to identify the smallest cache-first PokéAPI v2 request for this task."

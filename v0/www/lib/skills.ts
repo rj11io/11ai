@@ -133,6 +133,13 @@ const PLUGIN_CONFIG = [
       "Scaffolding, routing, validation, auth, databases, paging, rate limiting, jobs, uploads, GraphQL, OpenAPI, versioning, and testing Node.js APIs.",
   },
   {
+    slug: "operator-pokeapi-v2",
+    dir: "11ai-operator-pokeapi-v2",
+    title: "PokéAPI v2 operator",
+    tagline:
+      "Cache-first PokéAPI v2 setup, Pokémon, moves, items, locations, encounters, evolution, games, integrations, reference, and troubleshooting.",
+  },
+  {
     slug: "super",
     dir: "11ai-super",
     title: "Super",

@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai PokéAPI v2 Integrations"
+  short_description: "Connect PokéAPI to apps, builds, and tests"
+  default_prompt: "Use $11ai-operator-pokeapi-v2-integrations to connect a shared cache-first PokéAPI v2 adapter to this application's servers, builds, jobs, or tests."

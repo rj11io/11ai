@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai PokéAPI v2 Items"
+  short_description: "Query items, berries, pockets, and effects"
+  default_prompt: "Use $11ai-operator-pokeapi-v2-items to query item or berry resources with version-aware filtering and cache-first linked lookups."

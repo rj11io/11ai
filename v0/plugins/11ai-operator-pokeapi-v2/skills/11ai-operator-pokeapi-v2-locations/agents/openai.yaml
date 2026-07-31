@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai PokéAPI v2 Locations"
+  short_description: "Query locations, regions, and encounters"
+  default_prompt: "Use $11ai-operator-pokeapi-v2-locations to query regions, location areas, or encounters with exact version filtering and cache-first requests."

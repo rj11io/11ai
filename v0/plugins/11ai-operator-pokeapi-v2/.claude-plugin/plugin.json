@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "11ai-operator-pokeapi-v2",
+  "version": "1.27.0",
+  "description": "Modular, cache-first skills for fair-use PokéAPI v2 operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "pokeapi",
+    "pokemon",
+    "rest-api",
+    "caching",
+    "fair-use"
+  ],
+  "skills": "./skills/"
+}

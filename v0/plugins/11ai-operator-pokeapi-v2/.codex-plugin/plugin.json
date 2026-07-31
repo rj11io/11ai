@@ -1,0 +1,27 @@
+{
+  "name": "11ai-operator-pokeapi-v2",
+  "version": "1.27.0",
+  "description": "Modular, cache-first skills for fair-use PokéAPI v2 operations.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "pokeapi",
+    "pokemon",
+    "rest-api",
+    "caching",
+    "fair-use"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Operator PokéAPI v2",
+    "shortDescription": "Query PokéAPI v2 safely with local caching.",
+    "longDescription": "A cache-first toolbox for PokéAPI v2 setup, request planning, Pokémon, moves, items, locations, encounters, evolution, game metadata, integrations, and troubleshooting under the service's fair-use policy.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Help me use the 11ai-operator-pokeapi-v2 skills for this PokéAPI v2 task while honoring fair use and reusing cached responses."
+  }
+}

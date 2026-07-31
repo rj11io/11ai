@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai PokéAPI v2 Setup"
+  short_description: "Set up a fair-use cache-first client"
+  default_prompt: "Use $11ai-operator-pokeapi-v2-setup to configure a persistent cache-first PokéAPI v2 client and verify the second read makes no network request."

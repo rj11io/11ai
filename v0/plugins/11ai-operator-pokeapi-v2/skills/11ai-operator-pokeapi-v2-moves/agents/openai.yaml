@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai PokéAPI v2 Moves"
+  short_description: "Query moves, machines, and contest data"
+  default_prompt: "Use $11ai-operator-pokeapi-v2-moves to query move, machine, or contest resources with version-aware filtering and cache-first links."

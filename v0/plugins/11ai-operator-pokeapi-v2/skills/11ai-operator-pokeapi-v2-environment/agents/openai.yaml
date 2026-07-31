@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai PokéAPI v2 Environment"
+  short_description: "Inspect PokéAPI v2 clients and caches"
+  default_prompt: "Use $11ai-operator-pokeapi-v2-environment to inspect this PokéAPI v2 client's target, cache, retry policy, and fair-use posture without changing anything."

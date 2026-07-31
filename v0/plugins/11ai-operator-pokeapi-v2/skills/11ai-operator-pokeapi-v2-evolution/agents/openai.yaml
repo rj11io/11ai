@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai PokéAPI v2 Evolution"
+  short_description: "Resolve and explain evolution chains"
+  default_prompt: "Use $11ai-operator-pokeapi-v2-evolution to resolve species-linked evolution chains, preserve branching conditions, and cache each requested link."

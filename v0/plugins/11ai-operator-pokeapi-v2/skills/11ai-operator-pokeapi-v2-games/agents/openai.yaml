@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai PokéAPI v2 Games"
+  short_description: "Query games, Pokédexes, and languages"
+  default_prompt: "Use $11ai-operator-pokeapi-v2-games to select the exact version, version group, generation, Pokédex, or language and cache each request."

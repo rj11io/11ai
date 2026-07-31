@@ -42,7 +42,7 @@ The files are installed at `node_modules/@rj11io/11ai/v0/plugins/`. You can also
 
 ## Skill catalog
 
-The repository currently contains 270 skills in 26 plugins.
+The repository currently contains 282 skills in 27 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
@@ -63,6 +63,7 @@ The repository currently contains 270 skills in 26 plugins.
 | [LLM costs](./v0/plugins/11ai-llm-costs/README.md) | 4 | Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports |
 | [MongoDB operator](./v0/plugins/11ai-operator-mongodb/README.md) | 17 | MongoDB Shell and Database Tools work with setup, transactions, profiling, users and roles, Atlas, backups, integrations, and read-first safety checks |
 | [Node.js API operator](./v0/plugins/11ai-operator-nodejs-api/README.md) | 20 | Scaffolding, routing, validation, auth, databases, paging, rate limiting, jobs, uploads, GraphQL, OpenAPI, versioning, testing, and troubleshooting Node.js APIs |
+| [PokéAPI v2 operator](./v0/plugins/11ai-operator-pokeapi-v2/README.md) | 12 | Cache-first PokéAPI v2 setup, Pokémon, moves, items, locations, encounters, evolution, games, integrations, fair-use reference, and troubleshooting |
 | [Super](./v0/plugins/11ai-super/README.md) | 9 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
 | [Security](./v0/plugins/11ai-security/README.md) | 1 | Read-only dependency vulnerability and supply-chain auditing with critical host-harm triage |
 | [SSH operator](./v0/plugins/11ai-operator-ssh/README.md) | 10 | OpenSSH client setup, keys, host configuration, sessions, tunnels, file transfer, and troubleshooting |
@@ -99,6 +100,7 @@ v0/
     11ai-operator-jest/       17 Jest operation skills under skills/
     11ai-operator-mongodb/    17 MongoDB operation skills under skills/
     11ai-operator-nodejs-api/ 20 Node.js API operation skills under skills/
+    11ai-operator-pokeapi-v2/ 12 cache-first PokéAPI v2 operation skills under skills/
     11ai-operator-ssh/        10 OpenSSH client operation skills under skills/
     11ai-operator-stripe/     11 Stripe billing operation skills under skills/
     11ai-operator-supabase/   11 Supabase project operation skills under skills/

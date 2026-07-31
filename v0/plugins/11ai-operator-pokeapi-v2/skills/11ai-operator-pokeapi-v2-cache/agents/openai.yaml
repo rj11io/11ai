@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai PokéAPI v2 Cache"
+  short_description: "Manage persistent PokéAPI response caches"
+  default_prompt: "Use $11ai-operator-pokeapi-v2-cache to inspect or change this PokéAPI v2 cache with query-aware keys, single-flight requests, and a safe eviction preview."

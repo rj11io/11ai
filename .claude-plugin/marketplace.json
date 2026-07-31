@@ -109,6 +109,10 @@
     {
       "name": "11ai-operator-stripe",
       "source": "./v0/plugins/11ai-operator-stripe"
+    },
+    {
+      "name": "11ai-operator-pokeapi-v2",
+      "source": "./v0/plugins/11ai-operator-pokeapi-v2"
     }
   ]
 }
