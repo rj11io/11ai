@@ -1,3 +1,11 @@
+# [1.29.0](https://github.com/rj11io/11ai/compare/v1.28.0...v1.29.0) (2026-07-31)
+
+
+### Features
+
+* styling libs ([704c113](https://github.com/rj11io/11ai/commit/704c11312fc04ee25289beb1b34465d2cc48ab29))
+* version operator skills ([165a12d](https://github.com/rj11io/11ai/commit/165a12d602fafac0ea27870b367c40ed9c57f140))
+
 # [1.28.0](https://github.com/rj11io/11ai/compare/v1.27.0...v1.28.0) (2026-07-31)
 
 
