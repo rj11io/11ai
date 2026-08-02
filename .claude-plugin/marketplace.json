@@ -55,8 +55,8 @@
       "source": "./v0/plugins/11ai-super"
     },
     {
-      "name": "11ai-security",
-      "source": "./v0/plugins/11ai-security"
+      "name": "11ai-audit",
+      "source": "./v0/plugins/11ai-audit"
     },
     {
       "name": "11ai-utils",

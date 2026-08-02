@@ -28,6 +28,13 @@ const PLUGIN_CONFIG = [
       "End-to-end chat products: sessions, tools, models, providers, UI, and messaging-platform extensions.",
   },
   {
+    slug: "audit",
+    dir: "11ai-audit",
+    title: "Audit",
+    tagline:
+      "Evidence-backed, read-only dependency audits for vulnerabilities, malware, supply-chain compromise, and host-computer risks.",
+  },
+  {
     slug: "operator-antdesign-v6",
     dir: "11ai-operator-antdesign-v6",
     title: "Ant Design v6 operator",
@@ -194,13 +201,6 @@ const PLUGIN_CONFIG = [
     title: "Super",
     tagline:
       "Long-running general and specialist routines that perform, audit, fix, and verify repeatedly until a high quality bar is met.",
-  },
-  {
-    slug: "security",
-    dir: "11ai-security",
-    title: "Security",
-    tagline:
-      "Read-only dependency auditing with precise installed-version evidence and critical host-harm triage.",
   },
   {
     slug: "operator-ssh",

@@ -48,6 +48,7 @@ The repository currently contains 474 skills in 45 plugins.
 | --- | ---: | --- |
 | [Agent automation](./v0/plugins/11ai-agent-automation/README.md) | 8 | Scheduled autonomous work using the Ledger + Conductor + Routine pattern |
 | [AI chat](./v0/plugins/11ai-ai-chat/README.md) | 9 | End-to-end chat, sessions, tools, models, providers, UI, and messaging-platform extensions |
+| [Audit](./v0/plugins/11ai-audit/README.md) | 1 | Read-only dependency vulnerability, malware, supply-chain, and host-computer risk auditing |
 | [Ant Design v6 operator](./v0/plugins/11ai-operator-antdesign-v6/README.md) | 12 | Ant Design 6 React setup, components, theming, integrations, first-party native skills, reference, and troubleshooting |
 | [AWS CLI v2 operator](./v0/plugins/11ai-operator-aws-cli-v2/README.md) | 22 | AWS CLI v2 operations for common services, deployments, first-party Agent Toolkit skills, integrations, and troubleshooting |
 | [Bash operator](./v0/plugins/11ai-operator-bash/README.md) | 10 | Shell inspection, strict-mode scripting, text processing, files, processes, linting, and troubleshooting |
@@ -71,7 +72,6 @@ The repository currently contains 474 skills in 45 plugins.
 | [PokéAPI v2 operator](./v0/plugins/11ai-operator-pokeapi-v2/README.md) | 12 | Cache-first PokéAPI v2 setup, Pokémon, moves, items, locations, encounters, evolution, games, integrations, fair-use reference, and troubleshooting |
 | [React v19 operator](./v0/plugins/11ai-operator-reactjs-v19/README.md) | 10 | React 19.2 components, state, effects, Actions, Activity, forms, performance, testing, integrations, reference, and troubleshooting |
 | [Super](./v0/plugins/11ai-super/README.md) | 9 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
-| [Security](./v0/plugins/11ai-security/README.md) | 1 | Read-only dependency vulnerability and supply-chain auditing with critical host-harm triage |
 | [shadcn v4 operator](./v0/plugins/11ai-operator-shadcn-v4/README.md) | 13 | shadcn CLI 4.14 components, charts, registries, presets, forms, blocks, updates, native skills, integrations, reference, and troubleshooting |
 | [SSH operator](./v0/plugins/11ai-operator-ssh/README.md) | 10 | OpenSSH client setup, keys, host configuration, sessions, tunnels, file transfer, and troubleshooting |
 | [Stripe operator](./v0/plugins/11ai-operator-stripe/README.md) | 11 | Stripe setup, customers, prices, Checkout, subscriptions, payments, webhooks, entitlements, and troubleshooting |
@@ -103,6 +103,7 @@ v0/
   plugins/
     11ai-agent-automation/     8 automation skills under skills/
     11ai-ai-chat/              9 AI chat skills under skills/
+    11ai-audit/                1 evidence-backed dependency audit skill under skills/
     11ai-benchmarks/          19 benchmark skills under skills/
     11ai-blog-builder/         8 editorial blog skills under skills/
     11ai-cleanup/              5 cleanup skills under skills/
@@ -141,7 +142,6 @@ v0/
     11ai-operator-vercel-sandbox-v2/ 10 Vercel Sandbox v2 operation skills under skills/
     11ai-operator-vercel-workflows-v4/ 10 Vercel Workflows v4 operation skills under skills/
     11ai-operator-workos/     11 WorkOS authentication operation skills under skills/
-    11ai-security/             1 dependency security audit skill under skills/
     11ai-super/                9 iterative task and improvement skills under skills/
     11ai-utils/               10 utility and Git-director skills under skills/
     11ai-web-design/           3 web design skills under skills/
