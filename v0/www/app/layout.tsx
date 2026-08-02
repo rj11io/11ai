@@ -23,6 +23,35 @@ export const metadata: Metadata = {
   },
   description:
     "Playbooks, routines, automations, and long running tasks for building software and more.",
+  icons: {
+    icon: [
+      {
+        url: "/static/favicon-16x16.png",
+        sizes: "16x16",
+        type: "image/png",
+      },
+      {
+        url: "/static/favicon-32x32.png",
+        sizes: "32x32",
+        type: "image/png",
+      },
+      {
+        url: "/static/icon-192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        url: "/static/icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+    apple: {
+      url: "/static/apple-touch-icon.png",
+      sizes: "180x180",
+      type: "image/png",
+    },
+  },
   openGraph: {
     title: "11ai · Open source AI agent skills and plugins",
     description:
@@ -30,6 +59,18 @@ export const metadata: Metadata = {
     url: "https://ai.rj11.io",
     siteName: "11ai",
     type: "website",
+    images: [
+      {
+        url: "/static/ai-rj11io-web-og.png",
+        width: 1200,
+        height: 630,
+        alt: "11ai · Open source AI agent skills and plugins",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/static/ai-rj11io-web-og.png"],
   },
 }
 
