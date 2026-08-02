@@ -1,3 +1,11 @@
+# [1.30.0](https://github.com/rj11io/11ai/compare/v1.29.1...v1.30.0) (2026-08-02)
+
+
+### Features
+
+* branding assets ([0fc1ab8](https://github.com/rj11io/11ai/commit/0fc1ab8aff894b36eeeed4cf7fc63d2e237564be))
+* favicon and og images ([ea831a9](https://github.com/rj11io/11ai/commit/ea831a9e711c8de97ca96673cec9bc2364b66e7a))
+
 ## [1.29.1](https://github.com/rj11io/11ai/compare/v1.29.0...v1.29.1) (2026-08-02)
 
 
