@@ -42,7 +42,7 @@ The files are installed at `node_modules/@rj11io/11ai/v0/plugins/`. You can also
 
 ## Skill catalog
 
-The repository currently contains 474 skills in 45 plugins.
+The repository currently contains 475 skills in 46 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
@@ -71,6 +71,7 @@ The repository currently contains 474 skills in 45 plugins.
 | [Node.js API v24 operator](./v0/plugins/11ai-operator-nodejs-api-v24/README.md) | 20 | Scaffolding, routing, validation, auth, data, jobs, GraphQL, OpenAPI, testing, and troubleshooting Node.js 24 LTS APIs |
 | [PokéAPI v2 operator](./v0/plugins/11ai-operator-pokeapi-v2/README.md) | 12 | Cache-first PokéAPI v2 setup, Pokémon, moves, items, locations, encounters, evolution, games, integrations, fair-use reference, and troubleshooting |
 | [React v19 operator](./v0/plugins/11ai-operator-reactjs-v19/README.md) | 10 | React 19.2 components, state, effects, Actions, Activity, forms, performance, testing, integrations, reference, and troubleshooting |
+| [Security](./v0/plugins/11ai-security/README.md) | 1 | Read-only dependency security auditing with critical vulnerability and host-harm triage |
 | [Super](./v0/plugins/11ai-super/README.md) | 9 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
 | [shadcn v4 operator](./v0/plugins/11ai-operator-shadcn-v4/README.md) | 13 | shadcn CLI 4.14 components, charts, registries, presets, forms, blocks, updates, native skills, integrations, reference, and troubleshooting |
 | [SSH operator](./v0/plugins/11ai-operator-ssh/README.md) | 10 | OpenSSH client setup, keys, host configuration, sessions, tunnels, file transfer, and troubleshooting |
@@ -126,6 +127,7 @@ v0/
     11ai-operator-nodejs-api-v24/ 20 Node.js API operation skills under skills/
     11ai-operator-pokeapi-v2/ 12 cache-first PokéAPI v2 operation skills under skills/
     11ai-operator-reactjs-v19/    10 React v19 operation skills under skills/
+    11ai-security/              1 dependency security audit skill under skills/
     11ai-operator-shadcn-v4/      13 shadcn v4 operation skills under skills/
     11ai-operator-ssh/        10 OpenSSH client operation skills under skills/
     11ai-operator-stripe/     11 Stripe billing operation skills under skills/
