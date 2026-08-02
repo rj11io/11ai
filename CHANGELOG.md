@@ -1,3 +1,11 @@
+## [1.29.1](https://github.com/rj11io/11ai/compare/v1.29.0...v1.29.1) (2026-08-02)
+
+
+### Bug Fixes
+
+* init audit plugin ([bc5215c](https://github.com/rj11io/11ai/commit/bc5215ce0a66b3f7bd23c605192a3e890a57d462))
+* skill qa ([f996866](https://github.com/rj11io/11ai/commit/f996866c313e19a55585b27c2f21e4f1ed1f88ce))
+
 # [1.29.0](https://github.com/rj11io/11ai/compare/v1.28.0...v1.29.0) (2026-07-31)
 
 

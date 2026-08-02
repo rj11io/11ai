@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-vercel-eve-v0",
-  "version": "1.29.0",
+  "version": "1.29.1",
   "description": "Modular, safety-first skills for Vercel eve 0.27 operations.",
   "author": {
     "name": "rj11io"

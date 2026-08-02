@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-javascript-es2026",
-  "version": "1.29.0",
+  "version": "1.29.1",
   "description": "Modular, safety-first skills for ECMAScript 2026 operations.",
   "author": {
     "name": "rj11io"

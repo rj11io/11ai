@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-aws-cli-v2",
-  "version": "1.29.0",
+  "version": "1.29.1",
   "description": "Modular, safety-first skills for common AWS CLI operations and troubleshooting.",
   "author": {
     "name": "rj11io"
