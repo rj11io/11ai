@@ -6,10 +6,16 @@ const scriptDir = dirname(fileURLToPath(import.meta.url))
 const skillRoot = dirname(scriptDir)
 const skillsRoot = dirname(skillRoot)
 const canonicalPath = resolve(skillRoot, "references/pricing.json")
+const canonicalResolverPath = resolve(skillRoot, "scripts/pricing-history.mjs")
 const reportCatalogs = [
   resolve(skillsRoot, "11ai-llm-cost-project/references/pricing.json"),
   resolve(skillsRoot, "11ai-llm-cost-global/references/pricing.json"),
   resolve(skillsRoot, "11ai-llm-cost-single-thread/references/pricing.json"),
+]
+const reportResolvers = [
+  resolve(skillsRoot, "11ai-llm-cost-project/scripts/pricing-history.mjs"),
+  resolve(skillsRoot, "11ai-llm-cost-global/scripts/pricing-history.mjs"),
+  resolve(skillsRoot, "11ai-llm-cost-single-thread/scripts/pricing-history.mjs"),
 ]
 
 const args = process.argv.slice(2)
@@ -28,13 +34,18 @@ if (errors.length) {
 }
 
 const canonicalText = JSON.stringify(catalog, null, 2) + "\n"
+const resolverText = readFileSync(canonicalResolverPath, "utf8")
 if (write) {
   for (const target of [canonicalPath, ...reportCatalogs]) writeFileSync(target, canonicalText)
+  for (const target of reportResolvers) writeFileSync(target, resolverText)
 }
 
 const divergent = []
 for (const target of [canonicalPath, ...reportCatalogs]) {
   if (!existsSync(target) || readFileSync(target, "utf8") !== canonicalText) divergent.push(target)
+}
+for (const target of reportResolvers) {
+  if (!existsSync(target) || readFileSync(target, "utf8") !== resolverText) divergent.push(target)
 }
 if (divergent.length) {
   console.error("Catalogs are not synchronized:")
@@ -46,13 +57,16 @@ if (divergent.length) {
 const providers = [...new Set(catalog.models.map((entry) => entry.provider))].sort()
 console.log("Pricing catalog valid and synchronized.")
 console.log("Models: " + catalog.models.length)
+console.log("Rate periods: " + catalog.models.reduce((sum, entry) => sum + (Array.isArray(entry.rates) ? entry.rates.length : 1), 0))
 console.log("Providers (" + providers.length + "): " + providers.join(", "))
 console.log("Updated: " + catalog.updatedAt)
 
 function validateCatalog(value) {
   const failures = []
   const datePattern = /^\d{4}-\d{2}-\d{2}$/
+  const timestampPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/
   const supportedRates = new Set(["input", "cachedInput", "output", "cacheWrite5m", "cacheWrite1h", "cacheRead"])
+  const changeTypes = new Set(["initial-observation", "launch", "temporary-discount", "promotion-successor", "permanent-change", "correction"])
   const officialDomains = new Map([
     ["anthropic", ["anthropic.com", "claude.com"]],
     ["openai", ["openai.com"]],
@@ -65,10 +79,41 @@ function validateCatalog(value) {
   ])
   const globRegex = (pattern) => new RegExp("^" + pattern.split("*").map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join(".*") + "$", "i")
   const sampleFor = (pattern) => pattern.replaceAll("*", "shadow")
-  if (!Number.isInteger(value?.version) || value.version < 1) failures.push("version must be a positive integer")
+  const rateTime = (rate) => new Date(rate.effectiveDate ?? rate.detectedAt ?? value.detectedAt ?? rate.verifiedAt).getTime()
+  if (!Number.isInteger(value?.version) || value.version < 3) failures.push("version must be at least 3 for temporal pricing histories")
   if (!datePattern.test(value?.updatedAt ?? "")) failures.push("updatedAt must use YYYY-MM-DD")
+  if (!timestampPattern.test(value?.detectedAt ?? "")) failures.push("detectedAt must use an ISO-8601 UTC timestamp")
   if (typeof value?.comment !== "string" || !value.comment.trim()) failures.push("comment is required")
   if (!Array.isArray(value?.models) || value.models.length === 0) failures.push("models must be a non-empty array")
+
+  const validateRate = (rate, label, provider, requireOwnDetection) => {
+    if (!rate?.per1M || typeof rate.per1M !== "object" || Array.isArray(rate.per1M)) {
+      failures.push(label + ".per1M must be an object")
+    } else {
+      for (const required of ["input", "output"]) {
+        if (!Number.isFinite(rate.per1M[required]) || rate.per1M[required] < 0) failures.push(label + ".per1M." + required + " must be a non-negative number")
+      }
+      for (const [name, amount] of Object.entries(rate.per1M)) {
+        if (!supportedRates.has(name)) failures.push(label + ".per1M contains unsupported rate " + name)
+        if (amount !== null && (!Number.isFinite(amount) || amount < 0)) failures.push(label + ".per1M." + name + " must be null or a non-negative number")
+      }
+    }
+    if (rate.effectiveDate !== undefined && !datePattern.test(rate.effectiveDate)) failures.push(label + ".effectiveDate must use YYYY-MM-DD")
+    if (rate.detectedAt !== undefined && !timestampPattern.test(rate.detectedAt)) failures.push(label + ".detectedAt must use an ISO-8601 UTC timestamp")
+    if (rate.effectiveDate === undefined && requireOwnDetection && rate.detectedAt === undefined) failures.push(label + " requires detectedAt when no official effectiveDate is available")
+    if (!Number.isFinite(rateTime(rate))) failures.push(label + " has no usable effective or detection timestamp")
+    if (!datePattern.test(rate?.verifiedAt ?? "")) failures.push(label + ".verifiedAt must use YYYY-MM-DD")
+    if (rate.changeType !== undefined && !changeTypes.has(rate.changeType)) failures.push(label + ".changeType is unsupported")
+    try {
+      const url = new URL(rate?.sourceUrl)
+      if (url.protocol !== "https:") failures.push(label + ".sourceUrl must use HTTPS")
+      const allowed = officialDomains.get(provider) ?? []
+      if (allowed.length && !allowed.some((domain) => url.hostname === domain || url.hostname.endsWith("." + domain))) failures.push(label + ".sourceUrl is not on an official " + provider + " domain")
+    } catch {
+      failures.push(label + ".sourceUrl must be a valid URL")
+    }
+    if (rate.notes !== undefined && (typeof rate.notes !== "string" || !rate.notes.trim())) failures.push(label + ".notes must be a non-empty string when present")
+  }
 
   const patterns = new Set()
   for (const [index, entry] of (value?.models ?? []).entries()) {
@@ -85,28 +130,19 @@ function validateCatalog(value) {
         patterns.add(key)
       }
     }
-    if (!entry?.per1M || typeof entry.per1M !== "object" || Array.isArray(entry.per1M)) {
-      failures.push(label + ".per1M must be an object")
+    if (Array.isArray(entry.rates)) {
+      if (entry.rates.length < 2) failures.push(label + ".rates must contain at least two periods; use the compact single-rate form otherwise")
+      for (const field of ["per1M", "effectiveDate", "detectedAt", "sourceUrl", "verifiedAt", "changeType", "notes"]) {
+        if (entry[field] !== undefined) failures.push(label + " must not mix top-level " + field + " with rates[]")
+      }
+      entry.rates.forEach((rate, rateIndex) => validateRate(rate, label + ".rates[" + rateIndex + "]", entry.provider, true))
+      const times = entry.rates.map(rateTime)
+      for (let rateIndex = 1; rateIndex < times.length; rateIndex += 1) {
+        if (Number.isFinite(times[rateIndex - 1]) && Number.isFinite(times[rateIndex]) && times[rateIndex] <= times[rateIndex - 1]) failures.push(label + ".rates must be ordered by strictly increasing effective time")
+      }
     } else {
-      for (const required of ["input", "output"]) {
-        if (!Number.isFinite(entry.per1M[required]) || entry.per1M[required] < 0) failures.push(label + ".per1M." + required + " must be a non-negative number")
-      }
-      for (const [name, rate] of Object.entries(entry.per1M)) {
-        if (!supportedRates.has(name)) failures.push(label + ".per1M contains unsupported rate " + name)
-        if (rate !== null && (!Number.isFinite(rate) || rate < 0)) failures.push(label + ".per1M." + name + " must be null or a non-negative number")
-      }
+      validateRate(entry, label, entry.provider, false)
     }
-    if (entry.effectiveDate !== undefined && !datePattern.test(entry.effectiveDate)) failures.push(label + ".effectiveDate must use YYYY-MM-DD")
-    if (!datePattern.test(entry?.verifiedAt ?? "")) failures.push(label + ".verifiedAt must use YYYY-MM-DD")
-    try {
-      const url = new URL(entry?.sourceUrl)
-      if (url.protocol !== "https:") failures.push(label + ".sourceUrl must use HTTPS")
-      const allowed = officialDomains.get(entry?.provider) ?? []
-      if (allowed.length && !allowed.some((domain) => url.hostname === domain || url.hostname.endsWith("." + domain))) failures.push(label + ".sourceUrl is not on an official " + entry.provider + " domain")
-    } catch {
-      failures.push(label + ".sourceUrl must be a valid URL")
-    }
-    if (entry.notes !== undefined && (typeof entry.notes !== "string" || !entry.notes.trim())) failures.push(label + ".notes must be a non-empty string when present")
   }
   for (let laterIndex = 0; laterIndex < (value?.models ?? []).length; laterIndex += 1) {
     const later = value.models[laterIndex]

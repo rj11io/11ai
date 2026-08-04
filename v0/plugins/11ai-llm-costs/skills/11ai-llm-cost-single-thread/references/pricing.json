@@ -1,6 +1,7 @@
 {
-  "version": 2,
-  "updatedAt": "2026-07-26",
+  "version": 3,
+  "updatedAt": "2026-08-04",
+  "detectedAt": "2026-07-21T14:12:15Z",
   "comment": "Rates are standard, real-time USD prices per 1M text tokens. Cached input is a subset of input; Anthropic input, cache writes, and cache reads are disjoint. Long-context, batch, priority, regional, tool, request, storage, media, subscription, enterprise, and negotiated charges are excluded unless a note says otherwise.",
   "models": [
     {
@@ -32,7 +33,9 @@
         "cacheWrite1h": 10,
         "cacheRead": 0.5
       },
-      "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "effectiveDate": "2026-07-24",
+      "detectedAt": "2026-07-26T12:33:31Z",
+      "sourceUrl": "https://platform.claude.com/docs/en/release-notes/overview",
       "verifiedAt": "2026-07-26",
       "notes": "Standard Claude API rates. Fast mode, batch processing, and platform-specific pricing are excluded because current report inputs do not attribute those request classes."
     },
@@ -60,17 +63,36 @@
         "claude-sonnet-5*"
       ],
       "provider": "anthropic",
-      "per1M": {
-        "input": 2,
-        "output": 10,
-        "cacheWrite5m": 2.5,
-        "cacheWrite1h": 4,
-        "cacheRead": 0.2
-      },
-      "effectiveDate": "2026-06-24",
-      "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "verifiedAt": "2026-07-21",
-      "notes": "Introductory pricing through 2026-08-31; refresh before 2026-09-01, when published rates become input=3, output=15, cacheWrite5m=3.75, cacheWrite1h=6, cacheRead=0.3."
+      "rates": [
+        {
+          "per1M": {
+            "input": 2,
+            "output": 10,
+            "cacheWrite5m": 2.5,
+            "cacheWrite1h": 4,
+            "cacheRead": 0.2
+          },
+          "effectiveDate": "2026-06-30",
+          "sourceUrl": "https://platform.claude.com/docs/en/release-notes/overview",
+          "verifiedAt": "2026-07-21",
+          "changeType": "temporary-discount",
+          "notes": "Published introductory pricing through 2026-08-31."
+        },
+        {
+          "per1M": {
+            "input": 3,
+            "output": 15,
+            "cacheWrite5m": 3.75,
+            "cacheWrite1h": 6,
+            "cacheRead": 0.3
+          },
+          "effectiveDate": "2026-09-01",
+          "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
+          "verifiedAt": "2026-07-21",
+          "changeType": "promotion-successor",
+          "notes": "Published successor rates after the introductory pricing period."
+        }
+      ]
     },
     {
       "match": [
@@ -160,8 +182,8 @@
         "cachedInput": null,
         "output": 180
       },
-      "effectiveDate": "2026-07-09",
-      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "effectiveDate": "2026-04-24",
+      "sourceUrl": "https://openai.com/index/introducing-gpt-5-5/",
       "verifiedAt": "2026-07-21",
       "notes": "Standard-context rates. Prompts over 272K input tokens use published long-context rates."
     },
@@ -175,8 +197,8 @@
         "cachedInput": 0.5,
         "output": 30
       },
-      "effectiveDate": "2026-07-09",
-      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "effectiveDate": "2026-04-24",
+      "sourceUrl": "https://openai.com/index/introducing-gpt-5-5/",
       "verifiedAt": "2026-07-21",
       "notes": "Standard-context rates. Prompts over 272K input tokens use published long-context rates."
     },
@@ -190,8 +212,8 @@
         "cachedInput": 0.075,
         "output": 4.5
       },
-      "effectiveDate": "2026-07-09",
-      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "effectiveDate": "2026-03-17",
+      "sourceUrl": "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/",
       "verifiedAt": "2026-07-21"
     },
     {
@@ -204,8 +226,8 @@
         "cachedInput": 0.02,
         "output": 1.25
       },
-      "effectiveDate": "2026-07-09",
-      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "effectiveDate": "2026-03-17",
+      "sourceUrl": "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/",
       "verifiedAt": "2026-07-21"
     },
     {
@@ -218,8 +240,8 @@
         "cachedInput": 0.25,
         "output": 15
       },
-      "effectiveDate": "2026-07-09",
-      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "effectiveDate": "2026-03-05",
+      "sourceUrl": "https://openai.com/index/introducing-gpt-5-4/",
       "verifiedAt": "2026-07-21",
       "notes": "Standard-context rates. Prompts over 272K input tokens use published long-context rates."
     },

@@ -6,6 +6,7 @@ import { homedir } from "node:os"
 import { basename, dirname, extname, join, relative, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import { HARNESS_SURFACE_COVERAGE, classifyThread, readOpenCodeUsageRows } from "./harness-support.mjs"
+import { pricingAgeDays, resolveHistoricalPrice } from "./pricing-history.mjs"
 
 const argv = process.argv.slice(2)
 const option = (name) => {
@@ -84,10 +85,6 @@ const sumKnown = (values) => values.filter(finite).reduce((sum, value) => sum + 
 const sumAvailable = (values) => values.some(finite) ? sumKnown(values) : null
 const sumNullable = (values) => values.every(finite) ? values.reduce((sum, value) => sum + value, 0) : null
 const sumReported = (values) => values.filter(finite).length ? sumKnown(values) : null
-
-function globRegex(pattern) {
-  return new RegExp(`^${String(pattern).split("*").map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join(".*")}$`, "i")
-}
 
 function sourceLabel(file) {
   const external = externalSessions.get(resolve(file))
@@ -1052,17 +1049,6 @@ function parseGeneric(file, records, claudeDedup) {
   })
 }
 
-function priceFor(model, provider) {
-  const entries = Array.isArray(pricing.models) ? pricing.models : []
-  return entries.find((entry) => (!entry.provider || entry.provider === provider) && (entry.match ?? []).some((pattern) => globRegex(pattern).test(model ?? ""))) ?? null
-}
-
-function pricingAgeDays(entry) {
-  if (!entry?.verifiedAt) return null
-  const time = new Date(entry.verifiedAt).getTime()
-  return Number.isFinite(time) ? Math.max(0, (Date.now() - time) / 86400000) : null
-}
-
 function costPart(tokens, rate) {
   if (!finite(tokens)) return null
   if (tokens === 0) return 0
@@ -1070,11 +1056,30 @@ function costPart(tokens, rate) {
 }
 
 function priceThread(thread) {
-  const rate = priceFor(thread.model, thread.provider)
+  const resolved = resolveHistoricalPrice(pricing, { provider: thread.provider, model: thread.model, startedAt: thread.startedAt, finishedAt: thread.finishedAt, now: generatedAt })
+  const rate = resolved?.rate ?? null
+  const pricingInfo = resolved ? {
+    provider: resolved.entry.provider ?? thread.provider,
+    match: resolved.entry.match,
+    per1M: rate.per1M ?? {},
+    effectiveDate: rate.effectiveDate ?? null,
+    detectedAt: rate.detectedAt ?? pricing.detectedAt ?? null,
+    effectiveFrom: resolved.effectiveFrom,
+    effectiveTo: resolved.effectiveTo,
+    dateBasis: resolved.dateBasis,
+    temporalStatus: resolved.temporalStatus,
+    attributedAt: resolved.attributedAt,
+    crossedBoundary: resolved.crossedBoundary,
+    changeType: rate.changeType ?? null,
+    sourceUrl: rate.sourceUrl ?? null,
+    verifiedAt: rate.verifiedAt ?? null,
+    notes: rate.notes ?? null,
+    ageDays: pricingAgeDays(rate, generatedAt),
+  } : null
   if (thread.tokenIssues.length) {
     return {
       cost: { inputUncachedUsd: null, cachedInputReadUsd: null, cacheWrite5mUsd: null, cacheWrite1hUsd: null, outputUsd: null, totalUsd: null },
-      pricing: rate ? { provider: rate.provider ?? thread.provider, match: rate.match, per1M: rate.per1M ?? {}, effectiveDate: rate.effectiveDate ?? null, sourceUrl: rate.sourceUrl ?? null, verifiedAt: rate.verifiedAt ?? null, notes: rate.notes ?? null, ageDays: pricingAgeDays(rate) } : null,
+      pricing: pricingInfo,
       pricingStatus: "invalid",
       costMethod: "unavailable",
     }
@@ -1102,15 +1107,15 @@ function priceThread(thread) {
     cost.totalUsd = thread.reportedCostUsd
     return {
       cost,
-      pricing: { provider: rate.provider ?? thread.provider, match: rate.match, per1M: p, effectiveDate: rate.effectiveDate ?? null, sourceUrl: rate.sourceUrl ?? null, verifiedAt: rate.verifiedAt ?? null, notes: rate.notes ?? null, ageDays: pricingAgeDays(rate) },
+      pricing: pricingInfo,
       pricingStatus: "reported",
       costMethod: "reported",
     }
   }
-  const age = pricingAgeDays(rate)
+  const age = pricingAgeDays(rate, generatedAt)
   return {
     cost,
-    pricing: { provider: rate.provider ?? thread.provider, match: rate.match, per1M: p, effectiveDate: rate.effectiveDate ?? null, sourceUrl: rate.sourceUrl ?? null, verifiedAt: rate.verifiedAt ?? null, notes: rate.notes ?? null, ageDays: age },
+    pricing: pricingInfo,
     pricingStatus: cost.totalUsd === null ? "partial" : age !== null && age > 30 ? "matched-stale" : "matched",
     costMethod: cost.totalUsd === null ? "partial" : "derived",
   }
@@ -1516,8 +1521,9 @@ function report({ threads, stats, malformed, duplicateIds }) {
   const actionableUnmatched = [...groupBy(unmatchedSlices.filter((thread) =>
     thread.model !== "unknown" && thread.model !== "<synthetic>" && finite(thread.tokens.providerTotal) && thread.tokens.providerTotal > 0
   ), (thread) => `${thread.provider} / ${thread.model}`).entries()].sort((a, b) => a[0].localeCompare(b[0]))
-  const pricingRows = [...groupBy(threads.filter((thread) => thread.pricing), (thread) => `${thread.provider} / ${thread.model}`).entries()]
+  const pricingRows = [...groupBy(threads.filter((thread) => thread.pricing), (thread) => `${thread.provider} / ${thread.model}\u0000${thread.pricing.effectiveFrom ?? "n/a"}\u0000${thread.pricing.temporalStatus ?? "n/a"}`).entries()]
     .sort((a, b) => a[0].localeCompare(b[0]))
+  const temporalCount = (status) => logicalRows.filter((thread) => thread.pricing?.temporalStatus === status).length
   const anomalies = []
   for (const thread of threads) {
     for (const issue of thread.tokenIssues) anomalies.push(`${thread.sourceFile}: invalid usage counters: ${issue}`)
@@ -1638,6 +1644,16 @@ function report({ threads, stats, malformed, duplicateIds }) {
       ["Unmatched", fmtInt(unmatched.length), "No model pattern matched the pricing catalog"],
     ]),
     "",
+    "### Historical pricing selection",
+    "",
+    table(["Selection", "Threads", "Treatment"], [
+      ["Effective-period price", fmtInt(temporalCount("effective-period")), "Rate effective at the thread attribution timestamp"],
+      ["Main-price boundary fallback", fmtInt(temporalCount("main-price-boundary-fallback")), "Aggregated usage crossed a price boundary; the rate effective at the thread finish timestamp was applied to the whole thread"],
+      ["Earliest available fallback", fmtInt(temporalCount("earliest-available-fallback")), "Usage predates known history; the earliest available rate was applied while the pricing-update workflow seeks an official historical rate"],
+      ["Latest available fallback", fmtInt(temporalCount("latest-available-fallback")), "Usage is undated; the latest rate active when the report was generated was applied"],
+    ]),
+    "",
+    ...(temporalCount("earliest-available-fallback") > 0 ? [`**Historical pricing backfill recommended:** ${fmtInt(temporalCount("earliest-available-fallback"))} thread(s) use the earliest available rate because their usage predates the known catalog history. Run [11ai-llm-cost-pricing-update](${pricingUpdateSkillUrl}) to search official historical sources; totals remain numeric using the documented fallback.`, ""] : []),
     ...(actionableUnmatched.length ? [
       "### Models requiring a pricing update",
       "",
@@ -1655,10 +1671,10 @@ function report({ threads, stats, malformed, duplicateIds }) {
     ] : []),
     "### Pricing catalog match detail",
     "",
-    pricingRows.length ? table(["Provider / model", "Match", "Rates per 1M", "Effective", "Verified", "Notes", "Source"], pricingRows.map(([key, items]) => {
+    pricingRows.length ? table(["Provider / model", "Applied period", "Date basis", "Selection", "Match", "Rates per 1M", "Verified", "Change", "Notes", "Source"], pricingRows.map(([key, items]) => {
       const pricing = items[0].pricing
       const rates = Object.entries(pricing.per1M ?? {}).map(([name, value]) => `${name}=${value === null ? "n/a" : value}`).join(", ")
-      return [key, (pricing.match ?? []).join(", "), rates, pricing.effectiveDate ?? "n/a", pricing.verifiedAt ?? "n/a", pricing.notes ?? "Standard real-time text-token rates.", pricing.sourceUrl ?? "n/a"]
+      return [key.split("\u0000")[0], `${pricing.effectiveFrom ?? "n/a"} to ${pricing.effectiveTo ?? "current"}`, pricing.dateBasis ?? "n/a", pricing.temporalStatus ?? "n/a", (pricing.match ?? []).join(", "), rates, pricing.verifiedAt ?? "n/a", pricing.changeType ?? "n/a", pricing.notes ?? "Standard real-time text-token rates.", pricing.sourceUrl ?? "n/a"]
     })) : "No model matched the bundled pricing catalog.",
     "",
     "Unmatched models remain unpriced until the bundled catalog is updated through the pricing-update skill.",
@@ -1678,6 +1694,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "- Use the last cumulative Codex token-count event; deduplicate Claude usage globally across files by message ID and non-output billing fields, retaining the highest-output snapshot for each billing variant; aggregate Gemini per-message counters and Cline/Roo API request metrics; read OpenCode's session ledger in read-only mode; aggregate generic usage records by provider and model.",
     "- Attribute a whole thread to its finish timestamp, falling back to its start timestamp. All time includes undated threads; dated periods exclude them. Today and calendar-to-date/archive reports use the machine's local boundaries. Past 24 hours and Past 7/30/60/90 days are rolling 24/168/720/1,440/2,160-hour windows.",
     "- Preserve provider-native usage semantics: OpenAI cached input is a subset of input, while Anthropic cache buckets are disjoint. Reasoning tokens are a subset of output.",
+    "- Select the catalog rate effective at each thread's finish timestamp, falling back to its start timestamp. When aggregated usage crosses a price boundary, apply that main attribution-time price to the whole thread. When usage predates known history, apply the earliest available rate; when usage is undated, apply the latest rate active at report generation time. Surface every fallback in Historical pricing selection.",
     "- Read effort only from discoverable request, message, payload, metadata, or settings fields and group Claude usage by model and recorded effort. Normalize Claude Code ultracode to xhigh. Never infer a missing effort from current settings or model defaults; report it as n/a.",
     "- Measure wall time from the first to last distinct timestamp observed for a thread. Estimate active time by summing consecutive timestamp gaps with each gap capped at five minutes; report both as unavailable when fewer than two distinct timestamps exist.",
     "- Calculate cost per wall hour and cost per active hour by dividing known cost by the corresponding summed measurable duration. Report the rate as unavailable when cost or duration is unavailable or duration is zero.",

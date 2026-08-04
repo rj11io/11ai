@@ -1,4 +1,4 @@
 interface:
   display_name: "11ai LLM Cost Pricing Update"
-  short_description: "Refresh and synchronize LLM pricing catalogs"
-  default_prompt: "Use $11ai-llm-cost-pricing-update to verify current official LLM token pricing, update the canonical catalog, synchronize all 11ai cost-report skills, and validate the result."
+  short_description: "Maintain synchronized LLM pricing histories"
+  default_prompt: "Use $11ai-llm-cost-pricing-update to verify current and historical official LLM token pricing, append dated rate changes without losing prior prices, synchronize all 11ai cost-report skills, and validate the result."

@@ -91,7 +91,11 @@ try {
   assert.match(markdown, /^# Single-Thread LLM Cost Report\n\n_powered by \[11ai-llm-cost-single-thread\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-single-thread\)\._\n\n/)
   assert.match(markdown, /^# Single-Thread LLM Cost Report$/m)
   assert.match(markdown, /^## Cost by model by effort$/m)
-  assert.match(markdown, /\| Pricing catalog \| bundled default \(version 2, updated 2026-07-26\) \|/)
+  assert.match(markdown, /\| Pricing catalog \| bundled default \(version 3, updated 2026-08-04\) \|/)
+  assert.match(markdown, /^### Historical pricing selection$/m)
+  assert.match(markdown, /\| Effective-period price \| \d+ \| Rate effective at the thread attribution timestamp \|/)
+  assert.match(markdown, /\| Earliest available fallback \| \d+ \| Usage predates known history;/)
+  assert.match(markdown, /\| Provider \/ model \| Applied period \| Date basis \| Selection \| Match \| Rates per 1M \| Verified \| Change \| Notes \| Source \|/)
   assert.doesNotMatch(markdown, /^### Models requiring a pricing update$/m)
   const levelTwoHeadings = markdown.match(/^## .+$/gm) ?? []
   assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Cost by model") + 1], "## Cost by model by effort")

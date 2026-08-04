@@ -27,37 +27,45 @@ function findRate(pricing, provider, model) {
   }))
 }
 
+function currentRate(entry, at = "2026-08-04T00:00:00Z") {
+  if (!Array.isArray(entry.rates)) return entry
+  return entry.rates.filter((rate) => new Date(rate.effectiveDate ?? rate.detectedAt).getTime() <= new Date(at).getTime()).at(-1) ?? entry.rates[0]
+}
+
 test("canonical catalog is synchronized and covers current common providers", () => {
   const pricing = catalog(canonicalPath)
   for (const path of targetPaths) assert.deepEqual(catalog(path), pricing)
 
   const providers = new Set(pricing.models.map((entry) => entry.provider))
   assert.deepEqual([...providers].sort(), ["anthropic", "cohere", "deepseek", "google", "mistral", "openai", "perplexity", "xai"])
-  assert.deepEqual(findRate(pricing, "anthropic", "claude-opus-5").per1M, {
+  assert.equal(pricing.version, 3)
+  assert.deepEqual(currentRate(findRate(pricing, "anthropic", "claude-opus-5")).per1M, {
     input: 5,
     output: 25,
     cacheWrite5m: 6.25,
     cacheWrite1h: 10,
     cacheRead: 0.5,
   })
-  assert.deepEqual(findRate(pricing, "anthropic", "claude-sonnet-5").per1M, {
+  const sonnetHistory = findRate(pricing, "anthropic", "claude-sonnet-5")
+  assert.equal(sonnetHistory.rates.length, 2)
+  assert.deepEqual(currentRate(sonnetHistory).per1M, {
     input: 2,
     output: 10,
     cacheWrite5m: 2.5,
     cacheWrite1h: 4,
     cacheRead: 0.2,
   })
-  assert.deepEqual(findRate(pricing, "google", "gemini-3.1-pro-preview").per1M, {
+  assert.deepEqual(currentRate(findRate(pricing, "google", "gemini-3.1-pro-preview")).per1M, {
     input: 2,
     cachedInput: 0.2,
     output: 12,
   })
-  assert.deepEqual(findRate(pricing, "xai", "grok-4.5").per1M, {
+  assert.deepEqual(currentRate(findRate(pricing, "xai", "grok-4.5")).per1M, {
     input: 2,
     cachedInput: 0.3,
     output: 6,
   })
-  assert.equal(findRate(pricing, "deepseek", "deepseek-v4-pro").per1M.output, 0.87)
+  assert.equal(currentRate(findRate(pricing, "deepseek", "deepseek-v4-pro")).per1M.output, 0.87)
 })
 
 test("catalog validator succeeds without rewriting files", () => {
@@ -71,8 +79,9 @@ test("catalog validator rejects shadowed patterns and unofficial sources", () =>
   try {
     const seed = join(fixture, "pricing.json")
     writeFileSync(seed, JSON.stringify({
-      version: 2,
+      version: 3,
       updatedAt: "2026-08-03",
+      detectedAt: "2026-08-03T00:00:00Z",
       comment: "Validation fixture.",
       models: [
         { provider: "openai", match: ["gpt-5*"], per1M: { input: 1, output: 2 }, sourceUrl: "https://developers.openai.com/api/docs/pricing", verifiedAt: "2026-08-03" },

@@ -17,31 +17,37 @@ Use these primary pages as the starting point. Re-open them on every refresh bec
 
 ```json
 {
-  "version": 2,
+  "version": 3,
   "updatedAt": "YYYY-MM-DD",
+  "detectedAt": "YYYY-MM-DDTHH:mm:ssZ",
   "comment": "Scope and exclusions.",
   "models": [
     {
       "match": ["specific-model-id*", "documented-alias"],
       "provider": "provider-key",
-      "per1M": {
-        "input": 0,
-        "cachedInput": null,
-        "output": 0,
-        "cacheWrite5m": 0,
-        "cacheWrite1h": 0,
-        "cacheRead": 0
-      },
-      "effectiveDate": "YYYY-MM-DD",
-      "sourceUrl": "https://official-provider.example/pricing",
-      "verifiedAt": "YYYY-MM-DD",
-      "notes": "Material tiers, promotions, and exclusions."
+      "rates": [
+        {
+          "per1M": { "input": 0, "cachedInput": null, "output": 0 },
+          "effectiveDate": "YYYY-MM-DD",
+          "sourceUrl": "https://official-provider.example/pricing",
+          "verifiedAt": "YYYY-MM-DD",
+          "changeType": "temporary-discount",
+          "notes": "Material tiers, promotions, and exclusions."
+        },
+        {
+          "per1M": { "input": 0, "cachedInput": null, "output": 0 },
+          "detectedAt": "YYYY-MM-DDTHH:mm:ssZ",
+          "sourceUrl": "https://official-provider.example/pricing",
+          "verifiedAt": "YYYY-MM-DD",
+          "changeType": "permanent-change"
+        }
+      ]
     }
   ]
 }
 ```
 
-Only `input` and `output` are mandatory in `per1M`. Include optional keys only when the provider and report inputs support that token class.
+Use the compact top-level `per1M` form while only one price is known. Convert to ordered `rates` when a price changes. Only `input` and `output` are mandatory in `per1M`. Include optional keys only when the provider and report inputs support that token class. A period uses an official `effectiveDate` when published; otherwise it requires the first UTC `detectedAt`.
 
 ## Review checklist
 
@@ -50,5 +56,7 @@ Only `input` and `output` are mandatory in `per1M`. Include optional keys only w
 - Specific patterns precede generic wildcard patterns.
 - Model patterns do not accidentally cover a differently priced sibling.
 - Promotions include an end date and the next known rate.
+- Rate periods are strictly ordered, non-overlapping, and retain every prior price.
+- Changed prices without an official effective date use their first UTC detection time.
 - Unsupported per-request tiers and non-token fees are explicit in `notes`.
 - All report catalogs are synchronized and all tests pass.
