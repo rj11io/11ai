@@ -29,6 +29,7 @@ Generate both reports from the same analysis so their facts, tables, ordering, l
 - `--output <folder>` or `--output-dir <folder>` only when the user explicitly requests a different reports directory;
 - `--codex-home <dir>` or `CODEX_HOME` to replace automatic Codex home discovery;
 - `--claude-home <dir>` or `CLAUDE_CONFIG_DIR` to replace automatic Claude Code home discovery;
+- `--claude-desktop-home <dir>` to replace Claude Desktop's `claude-code-sessions` metadata discovery without treating metadata as usage;
 - `--cowork-home <dir>` to replace automatic Claude Cowork desktop-session discovery;
 - `--gemini-home <dir>` or `GEMINI_CLI_HOME` to replace Gemini CLI discovery (`--gemini-home` points directly to `.gemini`);
 - `--cline-tasks <dir>` and `--roo-tasks <dir>` to replace their automatic task-root discovery;
@@ -39,7 +40,7 @@ Without overrides, inspect conventional native stores under every readable local
 
 Read [references/harnesses.md](references/harnesses.md) when native discovery, version compatibility, token semantics, or an override path needs explanation.
 
-For `--include` directories, recurse through JSON-family files while skipping dependency, VCS, cache, virtual-environment, and build directories. Include a file only when it contains a recognized usage record.
+For `--include` directories, recurse through JSON-family files while skipping dependency, VCS, cache, virtual-environment, and build directories. Include a file only when it contains a recognized usage record. Prefer selected-folder arrays, cwd/project/workspace path fields, or an explicit workspace label declared by a supplemental record; fall back to the included root only when attribution is absent.
 
 ## Workflow
 
@@ -79,8 +80,8 @@ Attribute a whole thread to its finish timestamp, falling back to its start time
 The bundled parser handles:
 
 - Codex session JSONL: final cumulative `token_count` usage and the latest model/effort context;
-- Claude session JSONL: assistant usage, cache creation/read buckets, global cross-file message deduplication, and per-model/per-effort grouping;
-- Claude Cowork audit and sub-agent JSONL: the same usage schema and global deduplication, with session title and selected-folder attribution from adjacent desktop metadata;
+- Claude session JSONL: assistant usage, cache creation/read buckets, global cross-file message deduplication, per-model/per-effort grouping, and optional metadata-only enrichment from Claude Desktop `claude-code-sessions` joined by `cliSessionId`;
+- Claude Cowork audit and sub-agent JSONL: the same usage schema and global deduplication, with session title and selected-folder attribution from adjacent desktop metadata; group all transcripts under one logical Cowork session and count distinct sub-agent transcript identities separately;
 - Claude effort: recorded request/configuration fields when present, with `ultracode` normalized to `xhigh`. Native transcript omissions remain `n/a`; never rewrite missing historical effort as the current setting or a model default;
 - Gemini CLI chat JSONL: per-response input, output, cached, thought, tool, and total counters;
 - Cline and Roo Code task `ui_messages.json`: API request, deleted-request, and subagent usage counters plus harness-reported cost;

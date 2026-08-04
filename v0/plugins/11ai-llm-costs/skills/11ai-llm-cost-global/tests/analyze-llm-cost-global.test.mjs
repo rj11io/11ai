@@ -24,6 +24,7 @@ function run(args, env = {}, cwd = undefined) {
 try {
   const codexHome = join(fixtureRoot, "codex")
   const claudeHome = join(fixtureRoot, "claude")
+  const claudeDesktopHome = join(fixtureRoot, "claude-desktop")
   const coworkHome = join(fixtureRoot, "cowork")
   const geminiHome = join(fixtureRoot, "gemini")
   const clineTasks = join(fixtureRoot, "cline-tasks")
@@ -49,6 +50,8 @@ try {
     { timestamp: "2020-01-15T12:01:00.000Z", cwd: join(fixtureRoot, "workspace-b"), sessionId: "claude-old", message: { id: "message-1", model: "claude-sonnet-4-6", usage: { input_tokens: 200, cache_creation_input_tokens: 20, cache_read_input_tokens: 80, output_tokens: 50 } } },
     { timestamp: "2020-01-15T12:03:00.000Z", cwd: join(fixtureRoot, "workspace-b"), sessionId: "claude-old", message: { id: "message-2", model: "claude-sonnet-4-6", usage: { input_tokens: 100, cache_creation_input_tokens: 10, cache_read_input_tokens: 40, output_tokens: 25 } } },
   ])
+  mkdirSync(claudeDesktopHome, { recursive: true })
+  writeFileSync(join(claudeDesktopHome, "desktop-session.json"), JSON.stringify({ cliSessionId: "claude-old", sessionId: "desktop-claude-old", title: "Desktop Claude fixture", cwd: join(fixtureRoot, "workspace-b"), effort: "high" }))
   writeJsonl(join(geminiHome, "tmp", "hash", "chats", "recent.jsonl"), [
     { sessionId: "gemini-recent", projectHash: "hash", startTime: recent, directories: [join(fixtureRoot, "workspace-c")] },
     { id: "gemini-message", timestamp: recent, type: "gemini", model: "gemini-2.5-pro", tokens: { input: 300, output: 40, cached: 100, thoughts: 10, total: 350 } },
@@ -80,7 +83,7 @@ try {
     usage: { input_tokens: 100, output_tokens: 20, total_tokens: 120 },
   }))
 
-  const harnessArgs = ["--codex-home", codexHome, "--claude-home", claudeHome, "--cowork-home", coworkHome, "--gemini-home", geminiHome, "--cline-tasks", clineTasks, "--roo-tasks", rooTasks, "--opencode-db", opencodeDb]
+  const harnessArgs = ["--codex-home", codexHome, "--claude-home", claudeHome, "--claude-desktop-home", claudeDesktopHome, "--cowork-home", coworkHome, "--gemini-home", geminiHome, "--cline-tasks", clineTasks, "--roo-tasks", rooTasks, "--opencode-db", opencodeDb]
   const summary = run([...harnessArgs, "--include", supplemental, "--output", reportDir])
   assert.equal(summary.outputDirectory, reportDir)
   assert.equal(dirname(summary.markdownReport), reportDir)
@@ -89,6 +92,8 @@ try {
   assert.equal(summary.scope, "Codex: explicit override; Claude: explicit override; Cowork: explicit override; Gemini: explicit override; Cline: explicit override; Roo: explicit override; OpenCode: explicit override")
   assert.equal(summary.codexSessions, 2)
   assert.equal(summary.claudeSessions, 1)
+  assert.equal(summary.claudeDesktopMetadataFiles, 1)
+  assert.equal(summary.claudeDesktopMetadataMatches, 1)
   assert.equal(summary.geminiSessions, 1)
   assert.equal(summary.clineSessions, 1)
   assert.equal(summary.rooSessions, 1)
@@ -108,6 +113,8 @@ try {
   const markdown = readFileSync(summary.markdownReport, "utf8")
   const html = readFileSync(summary.htmlReport, "utf8")
   assert.match(markdown, /^# Global LLM Cost Report\n\n_powered by \[11ai-llm-cost-global\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-global\)\._\n\n/)
+  assert.match(markdown, /Desktop Claude fixture/)
+  assert.match(markdown, /claude-desktop-code \/ subscription-or-api-equivalent/)
   const recentMonth = new Date(recent).toLocaleString("en-US", { month: "long", year: "numeric" })
   const recentDate = new Date(recent)
   const recentQuarter = `Q${Math.floor(recentDate.getMonth() / 3) + 1} ${recentDate.getFullYear()}`
@@ -167,12 +174,12 @@ try {
   }
   assert.match(markdown, /\| openai \/ gpt-5\.6-sol \| high \|/)
   assert.match(markdown, /\| anthropic \/ claude-sonnet-4-6 \| n\/a \|/)
-  assert.match(markdown, /\| Harness \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Reported-cost sum \| Average tokens \/ thread \| Priced \| Unpriced \|/)
+  assert.match(markdown, /\| Harness \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Cowork sessions \| Sub-agent runs \| Reported-cost sum \| Average tokens \/ thread \| Priced \| Unpriced \|/)
   assert.match(markdown, /\| Provider \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Priced \| Unpriced \|/)
   assert.match(markdown, /\| Provider \/ model \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \|/)
   assert.match(markdown, /\| Provider \/ model \| Effort \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \|/)
-  assert.match(markdown, /\| Workspace \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Priced \| Unpriced \|/)
-  assert.match(markdown, /\| Thread \| Source \| Surface \/ billing \| Workspace \| Provider \/ model \/ effort \| Attributed at \| Input \| Cached \| Output \| Tokens \| Selected cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Harness reported \| Method \|/)
+  assert.match(markdown, /\| Workspace \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Cowork sessions \| Sub-agent runs \| Priced \| Unpriced \|/)
+  assert.match(markdown, /\| Thread \| Source \| Surface \/ billing \| Workspace \| Sub-agents \| Provider \/ model \/ effort \| Attributed at \| Input \| Cached \| Output \| Tokens \| Selected cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Harness reported \| Method \|/)
   assert.match(markdown, /\| Cost \/ thread \| \$[\d,]+\./)
   assert.match(markdown, /\| Total \| \$[\d,]+\.\d+ \| [\d,]+ \| [\d,]+ \| \$[\d,]+\.\d+ \| [\d,]+ \| \$[\d,]+\.\d+ \| [\d,]+ \| \$[\d,]+\.\d+ \| 8 \|/)
   assert.match(markdown, /\$1,234\.\d{4}/)
@@ -383,6 +390,7 @@ try {
   const coworkRecord = (output, timestamp) => ({ timestamp, sessionId: "cowork-1", message: { id: "cowork-message-1", model: "claude-sonnet-4-6", usage: { input_tokens: 2, cache_creation_input_tokens: 10, cache_read_input_tokens: 20, output_tokens: output } } })
   writeJsonl(join(coworkSessionDir, "audit.jsonl"), [coworkRecord(5, "2026-01-01T10:00:00.000Z"), coworkRecord(255, "2026-01-01T10:01:00.000Z")])
   writeJsonl(join(coworkSessionDir, ".claude", "projects", "fixture", "subagents", "agent.jsonl"), [coworkRecord(255, "2026-01-01T10:01:00.000Z")])
+  writeJsonl(join(coworkSessionDir, ".claude", "projects", "fixture", "subagents", "agent-two.jsonl"), [{ timestamp: "2026-01-01T10:02:00.000Z", sessionId: "cowork-1", message: { id: "cowork-message-2", model: "claude-sonnet-4-6", usage: { input_tokens: 3, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 10 } } }])
   const emptyOpenCodeDb = join(fixtureRoot, "empty-opencode.db")
   const emptyDatabase = new DatabaseSync(emptyOpenCodeDb)
   emptyDatabase.exec("CREATE TABLE session (id TEXT, directory TEXT, cost REAL, tokens_input INTEGER, tokens_output INTEGER, tokens_reasoning INTEGER, tokens_cache_read INTEGER, tokens_cache_write INTEGER, model TEXT, time_created INTEGER, time_updated INTEGER)")
@@ -392,14 +400,31 @@ try {
     "--gemini-home", join(fixtureRoot, "cowork-empty-gemini"), "--cline-tasks", join(fixtureRoot, "cowork-empty-cline"), "--roo-tasks", join(fixtureRoot, "cowork-empty-roo"),
     "--opencode-db", emptyOpenCodeDb, "--output", join(fixtureRoot, "cowork-report"),
   ])
-  assert.equal(coworkSummary.coworkSessions, 2)
+  assert.equal(coworkSummary.coworkSessions, 1)
+  assert.equal(coworkSummary.coworkTranscriptFiles, 3)
+  assert.equal(coworkSummary.coworkSubagentRuns, 2)
   assert.equal(coworkSummary.threads, 1)
   assert.equal(coworkSummary.claudeDuplicatesRemoved, 2)
   const coworkMarkdown = readFileSync(coworkSummary.markdownReport, "utf8")
-  assert.match(coworkMarkdown, /\| Measured\/provider tokens \| 287 \|/)
+  assert.match(coworkMarkdown, /\| Measured\/provider tokens \| 300 \|/)
   assert.match(coworkMarkdown, /\| cowork \|/)
   assert.match(coworkMarkdown, /Cowork fixture title/)
   assert.match(coworkMarkdown, /claude-cowork \/ subscription-or-api-equivalent/)
+  assert.match(coworkMarkdown, /\| Cowork sessions \| 1 \|/)
+  assert.match(coworkMarkdown, /\| Cowork sub-agent runs \| 2 \|/)
+
+  const declaredExports = join(fixtureRoot, "declared-exports")
+  const declaredUsage = (id, workspace) => ({ id, provider: "openai", model: "gpt-5.6-sol", ...workspace, usage: { input_tokens: 10, output_tokens: 1, total_tokens: 11 } })
+  mkdirSync(declaredExports, { recursive: true })
+  writeFileSync(join(declaredExports, "one.json"), JSON.stringify(declaredUsage("declared-one", { workspacePath: join(fixtureRoot, "declared-workspace") })))
+  writeFileSync(join(declaredExports, "multi.json"), JSON.stringify(declaredUsage("declared-multi", { userSelectedFolders: [join(fixtureRoot, "a"), join(fixtureRoot, "b")] })))
+  writeFileSync(join(declaredExports, "none.json"), JSON.stringify(declaredUsage("declared-none", { userSelectedFolders: [] })))
+  const declaredSummary = run(["--codex-home", join(fixtureRoot, "declared-empty-codex"), "--claude-home", join(fixtureRoot, "declared-empty-claude"), "--cowork-home", join(fixtureRoot, "declared-empty-cowork"), "--gemini-home", join(fixtureRoot, "declared-empty-gemini"), "--cline-tasks", join(fixtureRoot, "declared-empty-cline"), "--roo-tasks", join(fixtureRoot, "declared-empty-roo"), "--opencode-db", emptyOpenCodeDb, "--include", declaredExports, "--output", join(fixtureRoot, "declared-report")])
+  assert.equal(declaredSummary.threads, 3)
+  const declaredMarkdown = readFileSync(declaredSummary.markdownReport, "utf8")
+  assert.match(declaredMarkdown, new RegExp(join(fixtureRoot, "declared-workspace").replace(/[.*+?^${}()|[\]\\]/g, "\\$&")))
+  assert.match(declaredMarkdown, /multi-project session \(2 folders\)/)
+  assert.match(declaredMarkdown, /session with no selected folder/)
 
   const legacyHome = join(fixtureRoot, "legacy-home")
   const legacyCwd = join(fixtureRoot, "legacy-cwd")

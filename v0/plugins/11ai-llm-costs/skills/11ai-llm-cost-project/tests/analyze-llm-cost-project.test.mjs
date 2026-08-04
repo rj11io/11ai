@@ -27,6 +27,7 @@ try {
   const threadRoot = join(fixtureRoot, "thread-root")
   const codexHome = join(fixtureRoot, "codex")
   const claudeHome = join(fixtureRoot, "claude")
+  const claudeDesktopHome = join(fixtureRoot, "claude-desktop")
   const coworkHome = join(fixtureRoot, "cowork-empty")
   const geminiHome = join(fixtureRoot, "gemini")
   const clineTasks = join(fixtureRoot, "cline-tasks")
@@ -47,6 +48,7 @@ try {
 
   writeFileSync(join(project, "other-harness.json"), JSON.stringify({
     id: "generic-1",
+    workspacePath: join(project, "declared-child"),
     provider: "other",
     model: "custom-model",
     cost_usd: 1234.5,
@@ -66,6 +68,8 @@ try {
   writeJsonl(join(claudeHome, "projects", "fixture", "matching.jsonl"), [
     { cwd: project, sessionId: "claude-matching", message: { id: "message-1", model: "claude-sonnet-4-6", output_config: { effort: "medium" }, usage: { input_tokens: 200, cache_creation_input_tokens: 20, cache_read_input_tokens: 80, output_tokens: 50 } } },
   ])
+  mkdirSync(claudeDesktopHome, { recursive: true })
+  writeFileSync(join(claudeDesktopHome, "desktop-session.json"), JSON.stringify({ cliSessionId: "claude-matching", sessionId: "desktop-claude-matching", title: "Project Desktop Claude", cwd: project, effort: "high" }))
 
   writeJsonl(join(geminiHome, "tmp", "project-hash", "chats", "session.jsonl"), [
     { sessionId: "gemini-matching", projectHash: createHash("sha256").update(project).digest("hex"), startTime: "2026-07-18T09:00:00.000Z", directories: [project] },
@@ -89,7 +93,7 @@ try {
   database.prepare("INSERT INTO message VALUES (?, ?, ?, ?, ?)").run("message-user", "opencode-1", 1752829290000, 1752829290000, JSON.stringify({ role: "user", tokens: { input: 999, output: 999 } }))
   database.close()
 
-  const harnessArgs = ["--codex-home", codexHome, "--claude-home", claudeHome, "--cowork-home", coworkHome, "--gemini-home", geminiHome, "--cline-tasks", clineTasks, "--roo-tasks", rooTasks, "--opencode-db", opencodeDb]
+  const harnessArgs = ["--codex-home", codexHome, "--claude-home", claudeHome, "--claude-desktop-home", claudeDesktopHome, "--cowork-home", coworkHome, "--gemini-home", geminiHome, "--cline-tasks", clineTasks, "--roo-tasks", rooTasks, "--opencode-db", opencodeDb]
   const summary = run([project, ...harnessArgs, "--output", report])
   assert.equal(summary.output, report)
   assert.equal(summary.markdownReport, report)
@@ -98,6 +102,8 @@ try {
   assert.equal(summary.nativeSessionsMatched, 6)
   assert.equal(summary.codexSessions, 1)
   assert.equal(summary.claudeSessions, 1)
+  assert.equal(summary.claudeDesktopMetadataFiles, 1)
+  assert.equal(summary.claudeDesktopMetadataMatches, 1)
   assert.equal(summary.geminiSessions, 1)
   assert.equal(summary.clineSessions, 1)
   assert.equal(summary.rooSessions, 1)
@@ -111,6 +117,9 @@ try {
   const markdown = readFileSync(report, "utf8")
   const html = readFileSync(summary.htmlReport, "utf8")
   assert.match(markdown, /^# Project LLM Cost Report\n\n_powered by \[11ai-llm-cost-project\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-project\)\._\n\n/)
+  assert.match(markdown, /Project Desktop Claude/)
+  assert.match(markdown, /claude-desktop-code \/ subscription-or-api-equivalent/)
+  assert.match(markdown, /\| declared-child \|/)
   assert.match(markdown, /^# Project LLM Cost Report$/m)
   assert.match(markdown, /^## Totals$/m)
   assert.match(markdown, /^## Cost by harness$/m)
@@ -128,12 +137,12 @@ try {
   assert.match(markdown, /\| anthropic \/ claude-sonnet-4-6 \| medium \|/)
   assert.match(markdown, /\| Sum of thread wall time \| 22m \|/)
   assert.match(markdown, /\| Estimated active time \| 12m \|/)
-  assert.match(markdown, /\| Harness \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Reported-cost sum \| Average tokens \/ thread \| Priced \| Unpriced \|/)
+  assert.match(markdown, /\| Harness \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Cowork sessions \| Sub-agent runs \| Reported-cost sum \| Average tokens \/ thread \| Priced \| Unpriced \|/)
   assert.match(markdown, /\| Provider \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Priced \| Unpriced \|/)
   assert.match(markdown, /\| Provider \/ model \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \|/)
   assert.match(markdown, /\| Provider \/ model \| Effort \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \|/)
-  assert.match(markdown, /\| Folder \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Priced \| Unpriced \|/)
-  assert.match(markdown, /\| Thread \| Source \| Surface \/ billing \| Provider \/ model \/ effort \| Input \| Cached \| Output \| Tokens \| Selected cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Harness reported \| Method \|/)
+  assert.match(markdown, /\| Folder \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Cowork sessions \| Sub-agent runs \| Priced \| Unpriced \|/)
+  assert.match(markdown, /\| Thread \| Source \| Surface \/ billing \| Sub-agents \| Provider \/ model \/ effort \| Input \| Cached \| Output \| Tokens \| Selected cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Harness reported \| Method \|/)
   assert.match(markdown, /\| Total \| \$[\d,]+\.\d+ \| 1,805 \| 792 \| \$[\d,]+\.\d+ \| 241 \| \$[\d,]+\.\d+ \| 2,046 \| \$[\d,]+\.\d+ \| 7 \|/)
   assert.match(markdown, /\$1,234\.\d{4}/)
   assert.match(markdown, /\| Cost \/ thread \| \$[\d,]+\./)
@@ -330,19 +339,24 @@ try {
   const coworkRecord = (output, timestamp) => ({ timestamp, sessionId: "project-cowork", message: { id: "project-cowork-message", model: "claude-sonnet-4-6", usage: { input_tokens: 2, cache_creation_input_tokens: 10, cache_read_input_tokens: 20, output_tokens: output } } })
   writeJsonl(join(coworkSessionDir, "audit.jsonl"), [coworkRecord(5, "2026-01-01T10:00:00.000Z"), coworkRecord(255, "2026-01-01T10:01:00.000Z")])
   writeJsonl(join(coworkSessionDir, ".claude", "projects", "fixture", "subagents", "agent.jsonl"), [coworkRecord(255, "2026-01-01T10:01:00.000Z")])
+  writeJsonl(join(coworkSessionDir, ".claude", "projects", "fixture", "subagents", "agent-two.jsonl"), [{ timestamp: "2026-01-01T10:02:00.000Z", sessionId: "project-cowork", message: { id: "project-cowork-message-2", model: "claude-sonnet-4-6", usage: { input_tokens: 3, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 10 } } }])
   const emptyOpenCodeDb = join(fixtureRoot, "empty-opencode.db")
   const emptyDatabase = new DatabaseSync(emptyOpenCodeDb)
   emptyDatabase.exec("CREATE TABLE session (id TEXT, directory TEXT, cost REAL, tokens_input INTEGER, tokens_output INTEGER, tokens_reasoning INTEGER, tokens_cache_read INTEGER, tokens_cache_write INTEGER, model TEXT, time_created INTEGER, time_updated INTEGER)")
   emptyDatabase.close()
   const coworkReport = join(fixtureRoot, "cowork-project-report.md")
   const coworkSummary = run([coworkProject, "--codex-home", join(fixtureRoot, "cowork-empty-codex"), "--claude-home", join(fixtureRoot, "cowork-empty-claude"), "--cowork-home", coworkNativeHome, "--gemini-home", join(fixtureRoot, "cowork-empty-gemini"), "--cline-tasks", join(fixtureRoot, "cowork-empty-cline"), "--roo-tasks", join(fixtureRoot, "cowork-empty-roo"), "--opencode-db", emptyOpenCodeDb, "--output", coworkReport], threadRoot)
-  assert.equal(coworkSummary.coworkSessions, 2)
+  assert.equal(coworkSummary.coworkSessions, 1)
+  assert.equal(coworkSummary.coworkTranscriptFiles, 3)
+  assert.equal(coworkSummary.coworkSubagentRuns, 2)
   assert.equal(coworkSummary.threads, 1)
   assert.equal(coworkSummary.claudeDuplicatesRemoved, 2)
   const coworkMarkdown = readFileSync(coworkReport, "utf8")
-  assert.match(coworkMarkdown, /\| Measured\/provider tokens \| 287 \|/)
+  assert.match(coworkMarkdown, /\| Measured\/provider tokens \| 300 \|/)
   assert.match(coworkMarkdown, /Project Cowork fixture/)
   assert.match(coworkMarkdown, /claude-cowork \/ subscription-or-api-equivalent/)
+  assert.match(coworkMarkdown, /\| Cowork sessions \| 1 \|/)
+  assert.match(coworkMarkdown, /\| Cowork sub-agent runs \| 2 \|/)
 } finally {
   rmSync(fixtureRoot, { recursive: true, force: true })
 }

@@ -16,6 +16,7 @@ The analyzer reads these stores without modifying them. Layouts are implementati
 
 - Default data root: `~/.claude`; `CLAUDE_CONFIG_DIR` replaces that root.
 - Project transcripts: `$CLAUDE_CONFIG_DIR/projects/<encoded-project-path>/<session-id>.jsonl`, with subagent transcripts potentially nested below the parent session.
+- Claude Desktop metadata: conventional `claude-code-sessions` directories beside the desktop app's Cowork store; use `--claude-desktop-home` for another location. Join `cliSessionId` to an existing transcript to enrich title, workspace, effort, and surface. Never treat these metadata files as token usage.
 - Project matching: use the transcript's recorded `cwd`; the directory's encoded name is not treated as authoritative.
 - Counters: assistant `message.usage` supplies uncached `input_tokens`, `output_tokens`, `cache_creation_input_tokens`, and `cache_read_input_tokens`. Where present, split cache creation into its 5-minute and 1-hour buckets.
 - Effort: prefer an explicit `effort`, `effort_level`, `effortLevel`, or `output_config.effort` value from request, message, payload, metadata, or settings objects. Normalize Claude Code `ultracode` to API effort `xhigh` and group by model plus recorded effort. Native assistant-response transcripts generally omit the active request effort; leave that history as `n/a` because current settings and model defaults cannot reconstruct an earlier session.
@@ -25,8 +26,13 @@ The analyzer reads these stores without modifying them. Layouts are implementati
 ## Claude Cowork
 
 - Conventional roots: macOS `~/Library/Application Support/Claude/local-agent-mode-sessions`, Linux `~/.config/Claude/local-agent-mode-sessions`, and Windows `%APPDATA%/Claude/local-agent-mode-sessions`; use `--cowork-home` for another location.
-- Read `audit.jsonl` and nested sub-agent JSONL. Match any selected folder under the requested root, attribute one folder directly, and keep multiple folders as an unsplit multi-project session.
+- Read `audit.jsonl` and nested sub-agent JSONL. Match any selected folder under the requested root, attribute one folder directly, and keep multiple folders as an unsplit multi-project session. Group all transcripts below one `local_*` directory as one logical session and count distinct nested sub-agent transcript identities.
 - Deduplicate Cowork and Claude Code responses together by message ID and billing fingerprint, retaining the highest-output streaming snapshot.
+
+## Supplemental workspace attribution
+
+- Prefer `userSelectedFolders`, `directories`, `cwd`, project/workspace path fields, or an explicit workspace label declared in each usage record.
+- Keep multiple folders as one unsplit multi-project label and label an explicitly empty selected-folder array as a session with no selected folder. Fall back to the containing root only when the record declares no attribution.
 
 ## Gemini CLI
 

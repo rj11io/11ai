@@ -29,6 +29,7 @@ Generate both files from the same analysis. The HTML must be self-contained with
 - `--output <file>` only when the user explicitly requests a different Markdown report path; the analyzer writes the matching HTML sibling automatically;
 - `--codex-home <dir>` or `CODEX_HOME` to override the native Codex data directory;
 - `--claude-home <dir>` or `CLAUDE_CONFIG_DIR` to override the native Claude Code data directory;
+- `--claude-desktop-home <dir>` to override Claude Desktop's metadata-only `claude-code-sessions` directory;
 - `--cowork-home <dir>` to override the native Claude Cowork desktop-session directory;
 - `--gemini-home <dir>` or `GEMINI_CLI_HOME` to override Gemini CLI discovery (`--gemini-home` points directly to `.gemini`);
 - `--cline-tasks <dir>` and `--roo-tasks <dir>` to override their task roots;
@@ -36,7 +37,7 @@ Generate both files from the same analysis. The HTML must be self-contained with
 - `--thread <id-or-source>` to restrict the report to one exact logical thread, report thread ID, source label, source filename, or transcript path;
 - `--project-only` to disable native session discovery and inspect only the requested root.
 
-The analyzer reads JSON, JSONL, and NDJSON files recursively, while skipping dependency, VCS, cache, and build directories. It also discovers seven harnesses from their native stores. It includes a native record only when its working directory, Cowork selected folders, Gemini project hash/directory, task metadata, or OpenCode session directory associates it with the requested root. It only reports files containing recognized usage.
+The analyzer reads JSON, JSONL, and NDJSON files recursively, while skipping dependency, VCS, cache, and build directories. It also discovers seven harnesses from their native stores. It includes a native record only when its working directory, Cowork selected folders, Gemini project hash/directory, task metadata, or OpenCode session directory associates it with the requested root. Supplemental records may declare attribution through selected-folder arrays, cwd/project/workspace path fields, or an explicit workspace label. It only reports files containing recognized usage.
 
 Read [references/harnesses.md](references/harnesses.md) when native discovery, version compatibility, token semantics, or an override path needs explanation.
 
@@ -71,7 +72,7 @@ Provider-native raw usage is retained in the analyzer's in-memory record and nor
 - reasoning output is a subset of output;
 - missing data is `n/a`, never zero.
 
-Before aggregating Claude usage, deduplicate records across every in-scope project and native file. Prefer `message.id`, fall back to a top-level record ID, group each ID by stable non-output billing fields, and retain the record with the highest output-token count in each group. If one message ID has conflicting model or input/cache billing fields, retain one highest-output record per conflicting variant and surface the conflict in scan coverage and limitations. Leave records without a usable message ID unchanged.
+Before aggregating Claude usage, deduplicate records across every in-scope project and native file. Prefer `message.id`, fall back to a top-level record ID, group each ID by stable non-output billing fields, and retain the record with the highest output-token count in each group. If one message ID has conflicting model or input/cache billing fields, retain one highest-output record per conflicting variant and surface the conflict in scan coverage and limitations. Leave records without a usable message ID unchanged. Join Claude Desktop metadata to existing Claude transcripts by `cliSessionId`; never count a metadata file as usage. Group Cowork root and sub-agent transcripts as one logical session and count distinct sub-agent transcript identities separately.
 
 ## Timing
 

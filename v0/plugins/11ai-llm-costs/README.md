@@ -4,6 +4,8 @@ Four skills for single-thread, project-scoped, and machine-wide LLM usage report
 
 The reporting skills distinguish user-facing surface, underlying runtime, billing mode, usage source, and confidence. They count authoritative local token ledgers once, preserve wrapper provenance, and never convert product credits, quotas, or context snapshots into invented API-token costs.
 
+Claude reporting groups Cowork root and sub-agent transcripts into logical sessions, reports distinct sub-agent runs, honors declared workspace metadata in supplemental records, and joins Claude Desktop Code metadata to existing transcripts without counting usage twice.
+
 ## Choose a skill
 
 | Skill | Use it for |

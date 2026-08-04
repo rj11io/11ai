@@ -13,7 +13,7 @@ const option = (name) => {
   return index >= 0 ? argv[index + 1] : null
 }
 
-const VALUE_OPTIONS = new Set(["--output", "--codex-home", "--claude-home", "--cowork-home", "--gemini-home", "--cline-tasks", "--roo-tasks", "--opencode-db", "--thread"])
+const VALUE_OPTIONS = new Set(["--output", "--codex-home", "--claude-home", "--claude-desktop-home", "--cowork-home", "--gemini-home", "--cline-tasks", "--roo-tasks", "--opencode-db", "--thread"])
 const FLAG_OPTIONS = new Set(["--project-only", "--single-thread-report", "--help"])
 let positional = null
 for (let index = 0; index < argv.length; index += 1) {
@@ -30,7 +30,7 @@ for (let index = 0; index < argv.length; index += 1) {
 }
 
 if (argv.includes("--help")) {
-  console.log("usage: node analyze-llm-cost-project.mjs [root-folder] [--output report.md] [--codex-home dir] [--claude-home dir] [--cowork-home dir] [--gemini-home dir] [--cline-tasks dir] [--roo-tasks dir] [--opencode-db file] [--thread id-or-source] [--project-only]")
+  console.log("usage: node analyze-llm-cost-project.mjs [root-folder] [--output report.md] [--codex-home dir] [--claude-home dir] [--claude-desktop-home dir] [--cowork-home dir] [--gemini-home dir] [--cline-tasks dir] [--roo-tasks dir] [--opencode-db file] [--thread id-or-source] [--project-only]")
   process.exit(0)
 }
 
@@ -75,7 +75,9 @@ const JSON_EXTENSIONS = new Set([".json", ".jsonl", ".ndjson"])
 const SESSION_EXTENSIONS = new Set([".json", ".jsonl", ".ndjson"])
 const ACTIVE_GAP_MS = 5 * 60 * 1000
 const externalSessions = new Map()
-const discovery = { nativeFilesConsidered: 0, nativeSessionsMatched: 0, codexSessions: 0, claudeSessions: 0, coworkSessions: 0, geminiSessions: 0, clineSessions: 0, rooSessions: 0, opencodeSessions: 0, limitations: [] }
+const claudeDesktopSessions = new Map()
+const matchedClaudeDesktopSessions = new Set()
+const discovery = { nativeFilesConsidered: 0, nativeSessionsMatched: 0, codexSessions: 0, claudeSessions: 0, coworkSessions: 0, coworkTranscriptFiles: 0, coworkSubagentRuns: 0, claudeDesktopMetadataFiles: 0, geminiSessions: 0, clineSessions: 0, rooSessions: 0, opencodeSessions: 0, limitations: [] }
 const finite = (value) => typeof value === "number" && Number.isFinite(value)
 const number = (value) => {
   if (finite(value)) return value
@@ -110,11 +112,30 @@ function sourceLabel(file) {
   return relative(root, file).replaceAll("\\", "/") || "."
 }
 
-function folderLabel(file) {
+function declaredWorkspace(records) {
+  for (const record of records) {
+    const directories = firstValue(record?.userSelectedFolders, record?.directories, record?.workspace?.folders)
+    if (Array.isArray(directories)) {
+      const resolved = directories.filter((value) => typeof value === "string" && value.trim()).map((value) => resolve(value))
+      if (resolved.length === 1) return { cwd: resolved[0], workspaceLabel: null }
+      if (resolved.length > 1) return { cwd: null, workspaceLabel: `multi-project session (${resolved.length} folders)` }
+      return { cwd: null, workspaceLabel: "session with no selected folder" }
+    }
+    const cwd = firstValue(record?.cwd, record?.workspacePath, record?.workspace_path, record?.projectPath, record?.project_path, record?.workspace?.path, record?.metadata?.cwd, record?.payload?.cwd)
+    if (typeof cwd === "string" && cwd.trim()) return { cwd: resolve(cwd), workspaceLabel: null }
+    const label = firstValue(record?.workspaceLabel, record?.workspace_label)
+    if (typeof label === "string" && label.trim()) return { cwd: null, workspaceLabel: label.trim() }
+  }
+  return null
+}
+
+function folderLabel(file, records = []) {
   const external = externalSessions.get(resolve(file))
   if (external?.workspaceLabel) return external.workspaceLabel
-  if (external?.cwd) {
-    const rel = relative(root, external.cwd).replaceAll("\\", "/")
+  const declared = external?.cwd ? { cwd: external.cwd } : declaredWorkspace(records)
+  if (declared?.workspaceLabel) return declared.workspaceLabel
+  if (declared?.cwd) {
+    const rel = relative(root, declared.cwd).replaceAll("\\", "/")
     return !rel || rel === "." ? "." : rel.split("/")[0]
   }
   const rel = sourceLabel(file)
@@ -213,7 +234,51 @@ function coworkSessionMetadata(file) {
   let metadata = {}
   try { metadata = JSON.parse(readFileSync(`${sessionDir}.json`, "utf8")) } catch { /* audit records remain usable without metadata */ }
   const directories = Array.isArray(metadata.userSelectedFolders) ? metadata.userSelectedFolders.filter((value) => typeof value === "string").map((value) => resolve(value)) : []
-  return { id: firstValue(metadata.sessionId, basename(sessionDir)), title: typeof metadata.title === "string" ? metadata.title : null, cwd: directories.length === 1 ? directories[0] : null, directories, workspaceLabel: directories.length > 1 ? `multi-project session (${directories.length} folders)` : directories.length === 0 ? "session with no selected folder" : null }
+  const sessionId = firstValue(metadata.sessionId, basename(sessionDir))
+  const transcript = relative(sessionDir, file).replaceAll("\\", "/")
+  const subagentMatch = transcript.match(/(?:^|\/)subagents\/([^/]+)\.jsonl$/i)
+  return { id: sessionId, coworkSessionId: String(sessionId), coworkTranscriptRole: transcript === "audit.jsonl" ? "root" : subagentMatch ? "sub-agent" : "auxiliary", coworkSubagentId: subagentMatch?.[1] ?? null, title: typeof metadata.title === "string" ? metadata.title : null, cwd: directories.length === 1 ? directories[0] : null, directories, workspaceLabel: directories.length > 1 ? `multi-project session (${directories.length} folders)` : directories.length === 0 ? "session with no selected folder" : null }
+}
+
+function claudeDesktopRoots(userHome) {
+  return [join(userHome, "Library", "Application Support", "Claude", "claude-code-sessions"), join(userHome, ".config", "Claude", "claude-code-sessions"), join(userHome, "AppData", "Roaming", "Claude", "claude-code-sessions")]
+}
+
+function indexClaudeDesktopSessions(explicitRoot = null) {
+  for (const desktopRoot of explicitRoot ? [resolve(explicitRoot)] : claudeDesktopRoots(homedir())) {
+    for (const file of walkSessionFiles(desktopRoot)) {
+      if (extname(file).toLowerCase() !== ".json") continue
+      let metadata
+      try { metadata = JSON.parse(readFileSync(file, "utf8")) } catch { continue }
+      if (typeof metadata?.cliSessionId !== "string" || !metadata.cliSessionId) continue
+      discovery.claudeDesktopMetadataFiles += 1
+      claudeDesktopSessions.set(metadata.cliSessionId, { sessionId: typeof metadata.sessionId === "string" ? metadata.sessionId : null, title: typeof metadata.title === "string" ? metadata.title : null, cwd: typeof metadata.cwd === "string" ? resolve(metadata.cwd) : typeof metadata.originCwd === "string" ? resolve(metadata.originCwd) : null, effort: typeof metadata.effort === "string" ? metadata.effort : null })
+    }
+  }
+}
+
+function enrichCoworkFiles(files) {
+  for (const file of files) {
+    if (extname(file).toLowerCase() !== ".jsonl") continue
+    const existing = externalSessions.get(resolve(file))
+    if (existing?.harness && existing.harness !== "cowork") continue
+    const metadata = coworkSessionMetadata(file)
+    if (!metadata) continue
+    externalSessions.set(resolve(file), { ...existing, ...metadata, harness: "cowork", label: existing?.label ?? (relative(root, file).replaceAll("\\", "/") || basename(file)) })
+  }
+  const sessions = new Map()
+  for (const [file, metadata] of externalSessions) {
+    if (metadata.harness !== "cowork" || !metadata.coworkSessionId) continue
+    const session = sessions.get(metadata.coworkSessionId) ?? { files: new Set(), subagents: new Set(), metadata: [] }
+    session.files.add(file)
+    if (metadata.coworkSubagentId) session.subagents.add(metadata.coworkSubagentId)
+    session.metadata.push(metadata)
+    sessions.set(metadata.coworkSessionId, session)
+  }
+  discovery.coworkSessions = sessions.size
+  discovery.coworkTranscriptFiles = [...sessions.values()].reduce((sum, session) => sum + session.files.size, 0)
+  discovery.coworkSubagentRuns = [...sessions.values()].reduce((sum, session) => sum + session.subagents.size, 0)
+  for (const session of sessions.values()) for (const metadata of session.metadata) metadata.coworkSubagentRuns = session.subagents.size
 }
 
 function taskWorkspace(file) {
@@ -239,8 +304,11 @@ function vscodeTaskRoots(userHome, extensionId) {
 
 function discoverNativeSessions() {
   if (argv.includes("--project-only")) return []
+  const explicitClaude = option("--claude-home") ?? process.env.CLAUDE_CONFIG_DIR ?? null
+  const explicitClaudeDesktop = option("--claude-desktop-home") ?? null
+  if (explicitClaudeDesktop || !explicitClaude) indexClaudeDesktopSessions(explicitClaudeDesktop)
   const codexHome = resolve(option("--codex-home") ?? process.env.CODEX_HOME ?? join(homedir(), ".codex"))
-  const claudeHome = resolve(option("--claude-home") ?? process.env.CLAUDE_CONFIG_DIR ?? join(homedir(), ".claude"))
+  const claudeHome = resolve(explicitClaude ?? join(homedir(), ".claude"))
   const coworkRoots = option("--cowork-home") ? [resolve(option("--cowork-home"))] : [
     join(homedir(), "Library", "Application Support", "Claude", "local-agent-mode-sessions"),
     join(homedir(), ".config", "Claude", "local-agent-mode-sessions"),
@@ -298,7 +366,6 @@ function discoverNativeSessions() {
         discovery.nativeSessionsMatched += 1
         if (source.harness === "codex") discovery.codexSessions += 1
         if (source.harness === "claude") discovery.claudeSessions += 1
-        if (source.harness === "cowork") discovery.coworkSessions += 1
         if (source.harness === "gemini") discovery.geminiSessions += 1
         if (source.harness === "cline") discovery.clineSessions += 1
         if (source.harness === "roo") discovery.rooSessions += 1
@@ -555,17 +622,25 @@ function baseThread(file, index, provider, harness, model, tokens, records, usag
   const timing = timingFrom(records)
   const external = externalSessions.get(resolve(file))
   const effectiveHarness = external?.harness ?? harness
+  const desktopMetadata = effectiveHarness === "claude" && logicalId ? claudeDesktopSessions.get(String(logicalId)) : null
+  if (desktopMetadata && logicalId) matchedClaudeDesktopSessions.add(String(logicalId))
   const meta = records.find((record) => record?.type === "session_meta")?.payload ?? {}
   const threadKey = `${sourceLabel(file)}|${provider}|${effectiveHarness}|${model}|${index}`
-  const logicalThreadKey = `${effectiveHarness}:${sourceLabel(file)}:${logicalId ? String(logicalId) : "n/a"}`
-  const recordedEffort = records.map(effortFrom).filter(Boolean).at(-1) ?? null
+  const logicalThreadKey = effectiveHarness === "cowork" && external?.coworkSessionId ? `cowork:${external.coworkSessionId}` : `${effectiveHarness}:${sourceLabel(file)}:${logicalId ? String(logicalId) : "n/a"}`
+  const recordedEffort = records.map(effortFrom).filter(Boolean).at(-1) ?? (desktopMetadata?.effort ? effortFrom({ effort: desktopMetadata.effort }) : null)
   return {
     threadId: `${provider}:${sha(threadKey).slice(0, 20)}`,
     provider,
     harness: effectiveHarness,
     originator: firstValue(meta.originator, meta.client, meta.app),
     source: typeof meta.source === "string" ? meta.source : firstValue(meta.thread_source, meta.source?.type),
-    title: external?.title ?? null,
+    title: external?.title ?? desktopMetadata?.title ?? null,
+    desktopClaudeSession: Boolean(desktopMetadata),
+    desktopClaudeSessionId: desktopMetadata?.sessionId ?? null,
+    coworkSessionId: external?.coworkSessionId ?? null,
+    coworkTranscriptRole: external?.coworkTranscriptRole ?? null,
+    coworkSubagentId: external?.coworkSubagentId ?? null,
+    coworkSubagentRuns: external?.coworkSubagentRuns ?? 0,
     declaredSurface: records.map((record) => firstValue(record?.surface, record?.harness_surface, record?.harnessSurface)).find(Boolean) ?? null,
     declaredBillingMode: records.map((record) => firstValue(record?.billing_mode, record?.billingMode)).find(Boolean) ?? null,
     declaredUsageSource: records.map((record) => firstValue(record?.usage_source, record?.usageSource)).find(Boolean) ?? null,
@@ -575,10 +650,10 @@ function baseThread(file, index, provider, harness, model, tokens, records, usag
     effortSource: recordedEffort ? "recorded" : null,
     logicalId: logicalId ? String(logicalId) : null,
     logicalThreadKey,
-    logicalThreadId: `${harness}:${sha(logicalThreadKey).slice(0, 20)}`,
+    logicalThreadId: `${effectiveHarness}:${sha(logicalThreadKey).slice(0, 20)}`,
     sourcePath: resolve(file),
     sourceFile: sourceLabel(file),
-    folder: folderLabel(file),
+    folder: external?.cwd || external?.workspaceLabel ? folderLabel(file, records) : desktopMetadata?.cwd ? folderLabel(file, [{ cwd: desktopMetadata.cwd }]) : folderLabel(file, records),
     ...timing,
     recordCount: records.length,
     usageRecordCount: usageList.length,
@@ -1070,6 +1145,16 @@ function groupBy(items, selector) {
 
 const logicalCount = (items) => new Set(items.map((item) => item.logicalThreadKey ?? item.threadId)).size
 
+function coworkRunStats(items) {
+  const sessions = new Map()
+  for (const item of items) {
+    if (!item.coworkSessionId) continue
+    const key = item.logicalThreadKey ?? item.coworkSessionId
+    sessions.set(key, Math.max(sessions.get(key) ?? 0, item.coworkSubagentRuns ?? 0))
+  }
+  return { sessions: sessions.size, subagents: [...sessions.values()].reduce((sum, count) => sum + count, 0) }
+}
+
 function logicalThreadRows(items) {
   return [...groupBy(items, (item) => item.logicalThreadKey ?? item.threadId).values()].map((group) => {
     const first = group[0]
@@ -1153,10 +1238,11 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "",
     "## Cost by harness",
     "",
-    table(["Harness", ...COST_BY_HEADERS, "Reported-cost sum", "Average tokens / thread", "Priced", "Unpriced"], [...harnesses.map(([key, items]) => {
+    table(["Harness", ...COST_BY_HEADERS, "Cowork sessions", "Sub-agent runs", "Reported-cost sum", "Average tokens / thread", "Priced", "Unpriced"], [...harnesses.map(([key, items]) => {
       const r = rollup(items)
-      return [key, ...costByValues(items), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount ? r.tokens / r.threadCount : null), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
-    }), ["Total", ...costByValues(threads), fmtUsd(sumReported(threads.map((item) => item.reportedCostUsd))), fmtInt(total.threadCount ? total.tokens / total.threadCount : null), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
+      const cowork = coworkRunStats(items)
+      return [key, ...costByValues(items), fmtInt(cowork.sessions), fmtInt(cowork.subagents), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount ? r.tokens / r.threadCount : null), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
+    }), ["Total", ...costByValues(threads), fmtInt(coworkRunStats(threads).sessions), fmtInt(coworkRunStats(threads).subagents), fmtUsd(sumReported(threads.map((item) => item.reportedCostUsd))), fmtInt(total.threadCount ? total.tokens / total.threadCount : null), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
     "## Cost by model",
     "",
@@ -1173,15 +1259,18 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "",
     "The folder is the direct child of the scanned root; files directly in the root are grouped as `.`.",
     "",
-    table(["Folder", ...COST_BY_HEADERS, "Priced", "Unpriced"], [...folders.map(([key, items]) => {
+    table(["Folder", ...COST_BY_HEADERS, "Cowork sessions", "Sub-agent runs", "Priced", "Unpriced"], [...folders.map(([key, items]) => {
       const r = rollup(items)
-      return [key, ...costByValues(items), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
-    }), ["Total", ...costByValues(threads), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
+      const cowork = coworkRunStats(items)
+      return [key, ...costByValues(items), fmtInt(cowork.sessions), fmtInt(cowork.subagents), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
+    }), ["Total", ...costByValues(threads), fmtInt(coworkRunStats(threads).sessions), fmtInt(coworkRunStats(threads).subagents), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
     "## Totals",
     "",
     table(["Metric", "Value"], [
       ["Threads recognized", fmtInt(total.threadCount)],
+      ["Cowork sessions", fmtInt(coworkRunStats(threads).sessions)],
+      ["Cowork sub-agent runs", fmtInt(coworkRunStats(threads).subagents)],
       ["Threads with measured tokens", `${fmtInt(total.knownTokenThreads)} / ${fmtInt(total.threadCount)}`],
       ["Threads with derived cost", `${fmtInt(priced.length)} / ${fmtInt(total.threadCount)}`],
       ["Threads with reported-only cost", fmtInt(reported.length)],
@@ -1218,10 +1307,11 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "",
     "## Thread detail",
     "",
-    table(["Thread", "Source", "Surface / billing", "Provider / model / effort", "Input", "Cached", "Output", "Tokens", "Selected cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Harness reported", "Method"], sortedThreads.map((thread) => [
+    table(["Thread", "Source", "Surface / billing", "Sub-agents", "Provider / model / effort", "Input", "Cached", "Output", "Tokens", "Selected cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Harness reported", "Method"], sortedThreads.map((thread) => [
       thread.threadId,
       thread.title ? `${thread.title} (${thread.sourceFile})` : thread.sourceFile,
       `${thread.surface} / ${thread.billingMode}`,
+      fmtInt(thread.coworkSubagentRuns ?? 0),
       thread.modelLabel,
       fmtInt(thread.tokens.inputTotal),
       fmtInt(thread.tokens.cachedInputRead),
@@ -1256,7 +1346,11 @@ function report({ threads, stats, malformed, duplicateIds }) {
       ["Project-associated native sessions", fmtInt(stats.nativeSessionsMatched)],
       ["Codex sessions", fmtInt(stats.codexSessions)],
       ["Claude sessions", fmtInt(stats.claudeSessions)],
-      ["Claude Cowork transcript files", fmtInt(stats.coworkSessions)],
+      ["Claude desktop metadata files", fmtInt(stats.claudeDesktopMetadataFiles)],
+      ["Claude desktop metadata matches", fmtInt(stats.claudeDesktopMetadataMatches)],
+      ["Claude Cowork sessions", fmtInt(stats.coworkSessions)],
+      ["Claude Cowork transcript files", fmtInt(stats.coworkTranscriptFiles)],
+      ["Claude Cowork sub-agent runs", fmtInt(stats.coworkSubagentRuns)],
       ["Gemini CLI sessions", fmtInt(stats.geminiSessions)],
       ["Cline tasks", fmtInt(stats.clineSessions)],
       ["Roo Code tasks", fmtInt(stats.rooSessions)],
@@ -1317,6 +1411,9 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "",
     "- Recursively inspect JSON, JSONL, and NDJSON files below the requested root, excluding dependency, VCS, cache, virtual-environment, and build directories.",
     "- Discover Codex, Claude Code, Gemini CLI, Cline, Roo Code, and OpenCode usage from their native local stores. Include only sessions whose recorded project directory or project hash belongs to the requested root.",
+    "- Honor supplemental records that declare a workspace through selected-folder arrays, cwd/project/workspace path fields, or an explicit workspace label; use the containing project path only when no attribution is declared.",
+    "- Treat Claude desktop `claude-code-sessions` files as metadata only. Join them to native Claude transcripts by `cliSessionId` without adding usage a second time.",
+    "- Group Cowork root and sub-agent transcripts by their containing local session and count distinct sub-agent transcript identities separately from billable messages.",
     "- Use the last cumulative Codex token-count event; deduplicate Claude usage across all in-scope files by message ID and non-output billing fields, retaining the highest-output snapshot for each billing variant; aggregate Gemini per-message counters and Cline/Roo API request metrics; read OpenCode's session ledger in read-only mode; aggregate generic usage records by provider and model.",
     "- Preserve provider-native usage semantics: OpenAI cached input is a subset of input, while Anthropic cache buckets are disjoint. Reasoning tokens are a subset of output.",
     "- Read effort only from discoverable request, message, payload, metadata, or settings fields and group Claude usage by model and recorded effort. Normalize Claude Code ultracode to xhigh. Never infer a missing effort from current settings or model defaults; report it as n/a.",
@@ -1580,6 +1677,7 @@ ${body.join("\n")}
 const projectFiles = walk(root)
 const nativeFiles = discoverNativeSessions()
 const files = [...new Set([...projectFiles, ...nativeFiles].map((file) => resolve(file)))]
+enrichCoworkFiles(files)
 const stats = {
   filesVisited: 0,
   candidateFiles: files.length,
@@ -1589,6 +1687,10 @@ const stats = {
   codexSessions: discovery.codexSessions,
   claudeSessions: discovery.claudeSessions,
   coworkSessions: discovery.coworkSessions,
+  coworkTranscriptFiles: discovery.coworkTranscriptFiles,
+  coworkSubagentRuns: discovery.coworkSubagentRuns,
+  claudeDesktopMetadataFiles: discovery.claudeDesktopMetadataFiles,
+  claudeDesktopMetadataMatches: 0,
   geminiSessions: discovery.geminiSessions,
   clineSessions: discovery.clineSessions,
   rooSessions: discovery.rooSessions,
@@ -1658,6 +1760,7 @@ for (const [file, parsed] of parsedFiles) {
     if (thread.logicalId) logicalSources.set(thread.logicalId, [...(logicalSources.get(thread.logicalId) ?? []), thread.sourceFile])
   }
 }
+stats.claudeDesktopMetadataMatches = matchedClaudeDesktopSessions.size
 
 const duplicateIds = [...logicalSources.entries()]
   .filter(([, sources]) => new Set(sources).size > 1)
@@ -1695,6 +1798,10 @@ console.log(JSON.stringify({
   codexSessions: stats.codexSessions,
   claudeSessions: stats.claudeSessions,
   coworkSessions: stats.coworkSessions,
+  coworkTranscriptFiles: stats.coworkTranscriptFiles,
+  coworkSubagentRuns: stats.coworkSubagentRuns,
+  claudeDesktopMetadataFiles: stats.claudeDesktopMetadataFiles,
+  claudeDesktopMetadataMatches: stats.claudeDesktopMetadataMatches,
   geminiSessions: stats.geminiSessions,
   clineSessions: stats.clineSessions,
   rooSessions: stats.rooSessions,
