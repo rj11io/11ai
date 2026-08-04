@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-vercel-passport",
-  "version": "1.30.0",
+  "version": "1.31.0",
   "description": "Modular, safety-first skills for common Vercel Passport operations.",
   "author": {
     "name": "rj11io"

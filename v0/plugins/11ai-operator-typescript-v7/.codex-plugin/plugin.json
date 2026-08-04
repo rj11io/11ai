@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-typescript-v7",
-  "version": "1.30.0",
+  "version": "1.31.0",
   "description": "Modular, safety-first skills for TypeScript 7 operations.",
   "author": {
     "name": "rj11io"

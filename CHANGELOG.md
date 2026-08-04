@@ -1,3 +1,19 @@
+# [1.31.0](https://github.com/rj11io/11ai/compare/v1.30.0...v1.31.0) (2026-08-04)
+
+
+### Bug Fixes
+
+* **llm-costs:** harden accounting and report generation ([6209896](https://github.com/rj11io/11ai/commit/62098968583b68e10d6d0df16d6d47cebb9db51e))
+
+
+### Features
+
+* **llm-costs:** add date-aware pricing histories ([686f178](https://github.com/rj11io/11ai/commit/686f178442e4518122eb0b4cc53d09f83d89664b))
+* **llm-costs:** deduplicate Claude usage across reporting skills ([01b1501](https://github.com/rj11io/11ai/commit/01b1501cee3a90c58353ae4f01d6e037ff6e0839))
+* **llm-costs:** expand harness discovery and usage attribution ([81ae609](https://github.com/rj11io/11ai/commit/81ae609316c762ae84ad6bdeef51c54e0fdae5be))
+* **llm-costs:** improve Cowork and Claude Desktop attribution ([75ac2f6](https://github.com/rj11io/11ai/commit/75ac2f65c495dd10f1ffaf3ec3c6a43c909ccf6f))
+* **llm-costs:** report remote Cowork coverage states ([92a1c5e](https://github.com/rj11io/11ai/commit/92a1c5ef005db4d0f89146a3fe00dfed82722046))
+
 # [1.30.0](https://github.com/rj11io/11ai/compare/v1.29.1...v1.30.0) (2026-08-02)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-jest-v30",
-  "version": "1.30.0",
+  "version": "1.31.0",
   "description": "Modular, standalone skills for common Jest testing operations.",
   "author": {
     "name": "rj11io"
