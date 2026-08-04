@@ -609,13 +609,91 @@ function isClaudeUsage(record, usage) {
   return String(model).toLowerCase().startsWith("claude") || usage?.cache_creation_input_tokens !== undefined || usage?.cache_read_input_tokens !== undefined || record?.isSidechain !== undefined
 }
 
-function parseClaude(file, records) {
+function claudeMessageId(record) {
+  const value = firstValue(record?.message?.id, record?.id)
+  if (value === null) return null
+  const id = String(value).trim()
+  return id || null
+}
+
+function claudeBillingFingerprint(record, usage) {
+  const tokens = normalizeUsage(usage, "anthropic")
+  return JSON.stringify([
+    modelFrom(record, usage),
+    tokens.inputUncached,
+    tokens.cachedInputRead,
+    tokens.cacheWrite5m,
+    tokens.cacheWrite1h,
+  ])
+}
+
+function buildClaudeDedupState(parsedFiles) {
+  const candidates = new Set()
+  const retained = new Set()
+  const recordKeys = new Map()
+  const byMessage = new Map()
+  let ordinal = 0
+
+  for (const parsed of parsedFiles.values()) {
+    for (const record of parsed.records) {
+      const usage = record?.usage ?? record?.message?.usage
+      if (!usage || !isClaudeUsage(record, usage)) continue
+      const messageId = claudeMessageId(record)
+      if (!messageId) continue
+      const fingerprint = claudeBillingFingerprint(record, usage)
+      const fingerprints = byMessage.get(messageId) ?? new Map()
+      const entries = fingerprints.get(fingerprint) ?? []
+      const timestamp = timeFrom(record)
+      entries.push({
+        record,
+        fingerprint,
+        outputTokens: firstFinite(usage?.output_tokens, usage?.completion_tokens, usage?.output) ?? -1,
+        timestampMs: timestamp ? new Date(timestamp).getTime() : -1,
+        ordinal,
+      })
+      fingerprints.set(fingerprint, entries)
+      byMessage.set(messageId, fingerprints)
+      candidates.add(record)
+      ordinal += 1
+    }
+  }
+
+  const conflicts = []
+  let retainedResponses = 0
+  for (const [messageId, fingerprints] of byMessage) {
+    if (fingerprints.size > 1) conflicts.push({ messageHash: sha(messageId).slice(0, 12), variants: fingerprints.size })
+    for (const [fingerprint, entries] of fingerprints) {
+      const winner = entries.reduce((best, entry) => {
+        if (entry.outputTokens !== best.outputTokens) return entry.outputTokens > best.outputTokens ? entry : best
+        if (entry.timestampMs !== best.timestampMs) return entry.timestampMs > best.timestampMs ? entry : best
+        return entry.ordinal > best.ordinal ? entry : best
+      })
+      retained.add(winner.record)
+      recordKeys.set(winner.record, `${messageId}\u0000${fingerprint}`)
+      retainedResponses += 1
+    }
+  }
+
+  return {
+    candidates,
+    retained,
+    recordKeys,
+    conflicts,
+    recordsWithMessageId: candidates.size,
+    uniqueMessageIds: byMessage.size,
+    retainedResponses,
+    duplicatesRemoved: candidates.size - retainedResponses,
+  }
+}
+
+function parseClaude(file, records, dedup) {
   const byKey = new Map()
-  for (const record of records) {
+  for (const [recordIndex, record] of records.entries()) {
     const usage = record?.usage ?? record?.message?.usage
     if (!usage || !isClaudeUsage(record, usage)) continue
+    if (dedup.candidates.has(record) && !dedup.retained.has(record)) continue
     const model = modelFrom(record, usage)
-    const key = firstValue(record?.id, record?.message?.id) ?? sha(JSON.stringify({ model, usage }))
+    const key = dedup.recordKeys.get(record) ?? `no-id:${recordIndex}:${sha(JSON.stringify({ model, usage }))}`
     byKey.set(key, { record, usage, model, provider: "anthropic", effort: effortFrom(record) })
   }
   const entries = [...byKey.values()]
@@ -771,9 +849,10 @@ function opencodeDatabaseCandidates() {
   return candidates
 }
 
-function parseGeneric(file, records) {
+function parseGeneric(file, records, claudeDedup) {
   const byKey = new Map()
   for (const record of records) {
+    if (claudeDedup.candidates.has(record) && !claudeDedup.retained.has(record)) continue
     const usage = usageObject(record)
     if (!usage) continue
     const model = modelFrom(record, usage)
@@ -1300,6 +1379,11 @@ function report({ threads, stats, malformed, duplicateIds }) {
       ["OpenCode sessions", fmtInt(stats.opencodeSessions)],
       ["Supplemental JSON-family files", fmtInt(stats.includedFiles)],
       ["Files containing usage records", fmtInt(stats.recognizedFiles)],
+      ["Claude usage records with message IDs", fmtInt(stats.claudeRecordsWithMessageId)],
+      ["Unique Claude message IDs", fmtInt(stats.claudeUniqueMessageIds)],
+      ["Claude billable response variants retained", fmtInt(stats.claudeRetainedResponses)],
+      ["Claude duplicate records removed", fmtInt(stats.claudeDuplicatesRemoved)],
+      ["Claude message IDs with billing conflicts", fmtInt(stats.claudeConflictingMessageIds)],
       ["Malformed records", fmtInt(malformed.length)],
       ["Unreadable native files skipped", fmtInt(stats.unreadableFiles)],
       ["Pricing catalog", `bundled default (version ${pricing.version ?? "n/a"}, updated ${pricing.updatedAt ?? "n/a"})`],
@@ -1351,7 +1435,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "",
     "- Discover Codex, Claude Code, Gemini CLI, Cline, Roo Code, and OpenCode usage in conventional native local stores for every readable local account. Do not filter by project or recorded working directory.",
     "- Recursively inspect JSON, JSONL, and NDJSON files below each explicit `--include` path, excluding dependency, VCS, cache, virtual-environment, and build directories.",
-    "- Use the last cumulative Codex token-count event; deduplicate Claude streaming records; aggregate Gemini per-message counters and Cline/Roo API request metrics; read OpenCode's session ledger in read-only mode; aggregate generic usage records by provider and model.",
+    "- Use the last cumulative Codex token-count event; deduplicate Claude usage globally across files by message ID and non-output billing fields, retaining the highest-output snapshot for each billing variant; aggregate Gemini per-message counters and Cline/Roo API request metrics; read OpenCode's session ledger in read-only mode; aggregate generic usage records by provider and model.",
     "- Attribute a whole thread to its finish timestamp, falling back to its start timestamp. All time includes undated threads; dated periods exclude them. Today and calendar-to-date/archive reports use the machine's local boundaries. Past 24 hours and Past 7/30/60/90 days are rolling 24/168/720/1,440/2,160-hour windows.",
     "- Preserve provider-native usage semantics: OpenAI cached input is a subset of input, while Anthropic cache buckets are disjoint. Reasoning tokens are a subset of output.",
     "- Read effort only from discoverable request, message, payload, metadata, or settings fields and group Claude usage by model and recorded effort. Normalize Claude Code ultracode to xhigh. Never infer a missing effort from current settings or model defaults; report it as n/a.",
@@ -1632,6 +1716,11 @@ const stats = {
   includedFiles: supplementalFiles.length,
   unreadableFiles: discovery.unreadableFiles,
   recognizedFiles: 0,
+  claudeRecordsWithMessageId: 0,
+  claudeUniqueMessageIds: 0,
+  claudeRetainedResponses: 0,
+  claudeDuplicatesRemoved: 0,
+  claudeConflictingMessageIds: 0,
 }
 let malformed = []
 const threads = []
@@ -1649,6 +1738,7 @@ for (const candidate of opencodeDatabaseCandidates()) {
 }
 stats.nativeFilesConsidered = discovery.nativeFilesConsidered
 stats.opencodeSessions = discovery.opencodeSessions
+const parsedFiles = new Map()
 for (const file of files) {
   stats.filesVisited += 1
   if (resolve(file) === markdownOutput || resolve(file) === htmlOutput) continue
@@ -1658,14 +1748,26 @@ for (const file of files) {
     continue
   }
   malformed = malformed.concat(parsed.malformed)
+  parsedFiles.set(file, parsed)
+}
+const claudeDedup = buildClaudeDedupState(parsedFiles)
+stats.claudeRecordsWithMessageId = claudeDedup.recordsWithMessageId
+stats.claudeUniqueMessageIds = claudeDedup.uniqueMessageIds
+stats.claudeRetainedResponses = claudeDedup.retainedResponses
+stats.claudeDuplicatesRemoved = claudeDedup.duplicatesRemoved
+stats.claudeConflictingMessageIds = claudeDedup.conflicts.length
+for (const conflict of claudeDedup.conflicts) {
+  discovery.limitations.push(`Claude message ${conflict.messageHash} had ${conflict.variants} conflicting non-output billing variants; retained one highest-output record per variant.`)
+}
+for (const [file, parsed] of parsedFiles) {
   if (!parsed.records.length) continue
   const harness = externalSessions.get(resolve(file))?.harness
   let parsedThreads = harness === "gemini" ? parseGemini(file, parsed.records) : []
   if (!parsedThreads.length && harness === "cline") parsedThreads = parseClineFamily(file, parsed.records, "cline")
   if (!parsedThreads.length && harness === "roo") parsedThreads = parseClineFamily(file, parsed.records, "roo")
   if (!parsedThreads.length) parsedThreads = parseCodex(file, parsed.records)
-  if (!parsedThreads.length) parsedThreads = parseClaude(file, parsed.records)
-  if (!parsedThreads.length) parsedThreads = parseGeneric(file, parsed.records)
+  if (!parsedThreads.length) parsedThreads = parseClaude(file, parsed.records, claudeDedup)
+  if (!parsedThreads.length) parsedThreads = parseGeneric(file, parsed.records, claudeDedup)
   if (!parsedThreads.length) continue
   stats.recognizedFiles += 1
   for (const thread of parsedThreads) {
@@ -1702,6 +1804,11 @@ console.log(JSON.stringify({
   supplementalFilesInspected: stats.includedFiles,
   unreadableNativeFiles: stats.unreadableFiles,
   recognizedFiles: stats.recognizedFiles,
+  claudeRecordsWithMessageId: stats.claudeRecordsWithMessageId,
+  claudeUniqueMessageIds: stats.claudeUniqueMessageIds,
+  claudeRetainedResponses: stats.claudeRetainedResponses,
+  claudeDuplicatesRemoved: stats.claudeDuplicatesRemoved,
+  claudeConflictingMessageIds: stats.claudeConflictingMessageIds,
   threads: rollup(threads).threadCount,
   knownTokens: rollup(threads).knownTokenThreads,
   knownCosts: rollup(threads).knownCostThreads,

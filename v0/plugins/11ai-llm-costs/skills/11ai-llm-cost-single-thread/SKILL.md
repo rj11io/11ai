@@ -48,6 +48,8 @@ Measure wall time independently for the selected root and every included sub-age
 
 Capture Claude effort only from recorded request/configuration fields when present, normalize Claude Code `ultracode` to `xhigh`, and group native usage by both model and recorded effort. Native transcript omissions remain unavailable; never substitute the current setting or a model default for missing history.
 
+Before selecting and aggregating Claude usage, deduplicate records across every in-scope project and native file. Prefer `message.id`, fall back to a top-level record ID, group each ID by stable non-output billing fields, and retain the record with the highest output-token count in each group. Preserve suppressed copies as selector aliases so exact logical IDs and transcript paths continue to resolve. If one message ID has conflicting model or input/cache billing fields, retain one highest-output record per conflicting variant and surface the conflict in scan coverage and limitations. Leave records without a usable message ID unchanged.
+
 ## Report requirements
 
 Place `Totals` immediately after `Cost by root and child folder`, and place `Scan coverage` immediately before `Pricing coverage`, in both report formats.

@@ -77,7 +77,7 @@ Attribute a whole thread to its finish timestamp, falling back to its start time
 The bundled parser handles:
 
 - Codex session JSONL: final cumulative `token_count` usage and the latest model/effort context;
-- Claude session JSONL: assistant usage, cache creation/read buckets, and per-model/per-effort grouping;
+- Claude session JSONL: assistant usage, cache creation/read buckets, global cross-file message deduplication, and per-model/per-effort grouping;
 - Claude effort: recorded request/configuration fields when present, with `ultracode` normalized to `xhigh`. Native transcript omissions remain `n/a`; never rewrite missing historical effort as the current setting or a model default;
 - Gemini CLI chat JSONL: per-response input, output, cached, thought, tool, and total counters;
 - Cline and Roo Code task `ui_messages.json`: API request, deleted-request, and subagent usage counters plus harness-reported cost;
@@ -92,6 +92,8 @@ Retain provider-native usage with these semantics:
 - Claude-style uncached input, cache writes, and cache reads are disjoint;
 - reasoning output is a subset of output;
 - missing data is `n/a`, never zero.
+
+Before aggregating Claude usage, deduplicate records across every parsed native and supplemental file. Prefer `message.id`, fall back to a top-level record ID, group each ID by stable non-output billing fields, and retain the record with the highest output-token count in each group. If one message ID has conflicting model or input/cache billing fields, retain one highest-output record per conflicting variant and surface the conflict in scan coverage and limitations. Leave records without a usable message ID unchanged.
 
 ## Timing
 

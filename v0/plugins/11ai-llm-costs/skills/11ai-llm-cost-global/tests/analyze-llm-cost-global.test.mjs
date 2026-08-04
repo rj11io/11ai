@@ -253,6 +253,64 @@ try {
     .replace(/<p>Threads attributed from .*? through .*?\.<\/p>/g, "<p>Threads attributed from &lt;period-start&gt; through &lt;run-time&gt;.</p>")
   assert.equal(normalizeHtmlRunTime(readFileSync(secondSummary.htmlReport, "utf8")), normalizeHtmlRunTime(html))
 
+  const dedupSupplemental = join(fixtureRoot, "cowork-export")
+  const dedupOpenCodeDb = join(fixtureRoot, "dedup-opencode.db")
+  const dedupDatabase = new DatabaseSync(dedupOpenCodeDb)
+  dedupDatabase.exec("CREATE TABLE session (id TEXT, directory TEXT, cost REAL, tokens_input INTEGER, tokens_output INTEGER, tokens_reasoning INTEGER, tokens_cache_read INTEGER, tokens_cache_write INTEGER, model TEXT, time_created INTEGER, time_updated INTEGER)")
+  dedupDatabase.close()
+  const claudeUsage = (id, inputTokens, outputTokens, timestamp) => ({
+    timestamp,
+    cwd: join(fixtureRoot, "cowork-workspace"),
+    sessionId: "cowork-parent",
+    message: {
+      ...(id ? { id } : {}),
+      model: "claude-sonnet-4-6",
+      usage: { input_tokens: inputTokens, cache_creation_input_tokens: id === "message-1" ? 10 : 0, cache_read_input_tokens: id === "message-1" ? 20 : 0, output_tokens: outputTokens },
+    },
+  })
+  writeJsonl(join(dedupSupplemental, "cowork", "session.jsonl"), [
+    claudeUsage("message-1", 2, 5, "2026-08-01T10:00:00.000Z"),
+    claudeUsage("message-1", 2, 255, "2026-08-01T10:01:00.000Z"),
+    claudeUsage("message-2", 3, 10, "2026-08-01T10:02:00.000Z"),
+    claudeUsage(null, 1, 7, "2026-08-01T10:03:00.000Z"),
+    claudeUsage(null, 1, 7, "2026-08-01T10:03:30.000Z"),
+  ])
+  writeJsonl(join(dedupSupplemental, "cowork", "subagents", "agent.jsonl"), [
+    claudeUsage("message-1", 2, 255, "2026-08-01T10:01:00.000Z"),
+    claudeUsage("message-2", 3, 10, "2026-08-01T10:02:00.000Z"),
+  ])
+  writeJsonl(join(dedupSupplemental, "cowork", "conflict.jsonl"), [
+    claudeUsage("message-conflict", 1, 2, "2026-08-01T10:04:00.000Z"),
+    claudeUsage("message-conflict", 2, 3, "2026-08-01T10:05:00.000Z"),
+  ])
+  const dedupSummary = run([
+    "--codex-home", join(fixtureRoot, "dedup-empty-codex"),
+    "--claude-home", join(fixtureRoot, "dedup-empty-claude"),
+    "--gemini-home", join(fixtureRoot, "dedup-empty-gemini"),
+    "--cline-tasks", join(fixtureRoot, "dedup-empty-cline"),
+    "--roo-tasks", join(fixtureRoot, "dedup-empty-roo"),
+    "--opencode-db", dedupOpenCodeDb,
+    "--include", dedupSupplemental,
+    "--output", join(fixtureRoot, "dedup-report"),
+  ])
+  assert.equal(dedupSummary.supplementalFilesInspected, 3)
+  assert.equal(dedupSummary.recognizedFiles, 3)
+  assert.equal(dedupSummary.threads, 3)
+  assert.equal(dedupSummary.periods["All time"].knownTokens, 324)
+  assert.equal(dedupSummary.claudeRecordsWithMessageId, 7)
+  assert.equal(dedupSummary.claudeUniqueMessageIds, 3)
+  assert.equal(dedupSummary.claudeRetainedResponses, 4)
+  assert.equal(dedupSummary.claudeDuplicatesRemoved, 3)
+  assert.equal(dedupSummary.claudeConflictingMessageIds, 1)
+  const dedupMarkdown = readFileSync(dedupSummary.markdownReport, "utf8")
+  assert.match(dedupMarkdown, /\| Claude usage records with message IDs \| 7 \|/)
+  assert.match(dedupMarkdown, /\| Unique Claude message IDs \| 3 \|/)
+  assert.match(dedupMarkdown, /\| Claude billable response variants retained \| 4 \|/)
+  assert.match(dedupMarkdown, /\| Claude duplicate records removed \| 3 \|/)
+  assert.match(dedupMarkdown, /\| Claude message IDs with billing conflicts \| 1 \|/)
+  assert.match(dedupMarkdown, /Claude message [0-9a-f]{12} had 2 conflicting non-output billing variants; retained one highest-output record per variant\./)
+  assert.doesNotMatch(dedupMarkdown, /message-conflict/)
+
   const canonicalEfforts = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra"]
   const capturedEfforts = [...canonicalEfforts, "light"]
   const effortClaudeHome = join(fixtureRoot, "effort-claude")

@@ -137,6 +137,50 @@ try {
   assert.equal(claudeSummary.threads, 1)
   assert.match(readFileSync(claudeSummary.markdownReport, "utf8"), /\| anthropic \/ claude-sonnet-5 \| xhigh \|/)
 
+  const dedupProject = join(fixtureRoot, "dedup-project")
+  const dedupParent = join(dedupProject, "cowork", "session.jsonl")
+  const dedupClaudeUsage = (id, inputTokens, outputTokens, timestamp) => ({
+    timestamp,
+    cwd: dedupProject,
+    sessionId: "cowork-parent",
+    message: {
+      ...(id ? { id } : {}),
+      model: "claude-sonnet-4-6",
+      usage: { input_tokens: inputTokens, cache_creation_input_tokens: id === "message-1" ? 10 : 0, cache_read_input_tokens: id === "message-1" ? 20 : 0, output_tokens: outputTokens },
+    },
+  })
+  writeJsonl(dedupParent, [
+    dedupClaudeUsage("message-1", 2, 5, "2026-08-01T10:00:00.000Z"),
+    dedupClaudeUsage("message-1", 2, 255, "2026-08-01T10:01:00.000Z"),
+    dedupClaudeUsage("message-2", 3, 10, "2026-08-01T10:02:00.000Z"),
+  ])
+  writeJsonl(join(dedupProject, "cowork", "subagents", "agent.jsonl"), [
+    dedupClaudeUsage("message-1", 2, 255, "2026-08-01T10:01:00.000Z"),
+    dedupClaudeUsage("message-2", 3, 10, "2026-08-01T10:02:00.000Z"),
+  ])
+  writeJsonl(join(dedupProject, "cowork", "conflict.jsonl"), [
+    dedupClaudeUsage("message-conflict", 1, 2, "2026-08-01T10:04:00.000Z"),
+    dedupClaudeUsage("message-conflict", 2, 3, "2026-08-01T10:05:00.000Z"),
+    dedupClaudeUsage(null, 1, 7, "2026-08-01T10:06:00.000Z"),
+    dedupClaudeUsage(null, 1, 7, "2026-08-01T10:07:00.000Z"),
+  ])
+  const dedupSummary = run([dedupProject, "--project-only", "--thread", "cowork-parent", "--output", join(fixtureRoot, "dedup-single-report.md")], threadRoot)
+  assert.equal(dedupSummary.recognizedFiles, 2)
+  assert.equal(dedupSummary.threads, 2)
+  assert.equal(dedupSummary.claudeRecordsWithMessageId, 7)
+  assert.equal(dedupSummary.claudeUniqueMessageIds, 3)
+  assert.equal(dedupSummary.claudeRetainedResponses, 4)
+  assert.equal(dedupSummary.claudeDuplicatesRemoved, 3)
+  assert.equal(dedupSummary.claudeConflictingMessageIds, 1)
+  const dedupMarkdown = readFileSync(dedupSummary.markdownReport, "utf8")
+  assert.match(dedupMarkdown, /\| Measured\/provider tokens \| 324 \|/)
+  assert.match(dedupMarkdown, /\| Claude duplicate records removed \| 3 \|/)
+  assert.match(dedupMarkdown, /Claude message [0-9a-f]{12} had 2 conflicting non-output billing variants/)
+  assert.doesNotMatch(dedupMarkdown, /message-conflict/)
+  const dedupPathSummary = run([dedupProject, "--project-only", "--thread", dedupParent, "--output", join(fixtureRoot, "dedup-single-path-report.md")], threadRoot)
+  assert.equal(dedupPathSummary.threads, 2)
+  assert.match(readFileSync(dedupPathSummary.markdownReport, "utf8"), /\| Measured\/provider tokens \| 324 \|/)
+
   writeJsonl(join(claudeHome, "projects", "fixture", "unpriced.jsonl"), [
     { timestamp: "2026-07-19T12:10:00.000Z", cwd: project, sessionId: "claude-unpriced", message: { id: "claude-unpriced-message", model: "claude-unpriced-9", usage: { input_tokens: 100, cache_creation_input_tokens: 0, cache_read_input_tokens: 50, output_tokens: 10 } } },
   ])

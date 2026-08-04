@@ -14,3 +14,7 @@ Four skills for single-thread, project-scoped, and machine-wide LLM usage report
 All standalone HTML reports use native disclosure controls. Every report section is collapsed by default, while the report title and linked skill signature remain visible.
 
 The three reporting skills always use their synchronized bundled pricing catalog. They do not accept or discover local pricing overrides. When measured usage has no bundled model match, reports leave that cost unavailable and link to `11ai-llm-cost-pricing-update` for a provider-verified catalog refresh.
+
+## Cross-skill maintenance
+
+When fixing or extending one skill, evaluate whether the behavior applies to every sibling skill in this plugin. Apply the equivalent change wherever it is applicable, document intentional exceptions, run the affected skill tests plus the complete plugin test set, and compare newly generated reports with prior reports to confirm existing features and output contracts remain intact.
