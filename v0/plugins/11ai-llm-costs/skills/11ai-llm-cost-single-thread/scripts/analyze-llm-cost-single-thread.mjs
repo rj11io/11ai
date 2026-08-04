@@ -90,6 +90,7 @@ const iso = (value) => {
 const firstFinite = (...values) => values.map(number).find(finite) ?? null
 const firstValue = (...values) => values.find((value) => value !== undefined && value !== null) ?? null
 const sumKnown = (values) => values.filter(finite).reduce((sum, value) => sum + value, 0)
+const sumAvailable = (values) => values.some(finite) ? sumKnown(values) : null
 const sumNullable = (values) => values.every(finite) ? values.reduce((sum, value) => sum + value, 0) : null
 const sumReported = (values) => values.filter(finite).length ? sumKnown(values) : null
 
@@ -120,7 +121,12 @@ function folderLabel(file) {
 }
 
 function walk(dir, files = []) {
-  for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+  let entries
+  try { entries = readdirSync(dir, { withFileTypes: true }) } catch (error) {
+    discovery.limitations.push(`Directory could not be scanned: ${dir} (${error.message})`)
+    return files
+  }
+  for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
     if (entry.isDirectory() && SKIP_DIRS.has(entry.name)) continue
     const file = join(dir, entry.name)
     if (entry.isDirectory()) walk(file, files)
@@ -130,8 +136,18 @@ function walk(dir, files = []) {
 }
 
 function walkSessionFiles(dir, files = []) {
-  if (!existsSync(dir) || !statSync(dir).isDirectory()) return files
-  for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+  try {
+    if (!existsSync(dir) || !statSync(dir).isDirectory()) return files
+  } catch (error) {
+    discovery.limitations.push(`Native session directory could not be inspected: ${dir} (${error.message})`)
+    return files
+  }
+  let entries
+  try { entries = readdirSync(dir, { withFileTypes: true }) } catch (error) {
+    discovery.limitations.push(`Native session directory could not be scanned: ${dir} (${error.message})`)
+    return files
+  }
+  for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
     const file = join(dir, entry.name)
     if (entry.isDirectory()) walkSessionFiles(file, files)
     else if (entry.isFile() && SESSION_EXTENSIONS.has(extname(entry.name).toLowerCase())) files.push(file)
@@ -231,17 +247,22 @@ function discoverNativeSessions() {
         discovery.nativeFilesConsidered += 1
         let metadata
         let matches = false
-        if (source.harness === "gemini") {
-          metadata = geminiSessionMetadata(file)
-          matches = Boolean(metadata && (metadata.projectHash === sha(root) || metadata.directories.some((directory) => isWithin(root, directory))))
-          if (metadata && !metadata.cwd) metadata.cwd = root
-        } else if (source.harness === "cline" || source.harness === "roo") {
-          const cwd = taskWorkspace(file)
-          metadata = cwd ? { cwd, id: basename(dirname(file)) } : null
-          matches = Boolean(cwd && isWithin(root, cwd))
-        } else {
-          metadata = nativeSessionMetadata(file)
-          matches = Boolean(metadata && isWithin(root, metadata.cwd))
+        try {
+          if (source.harness === "gemini") {
+            metadata = geminiSessionMetadata(file)
+            matches = Boolean(metadata && (metadata.projectHash === sha(root) || metadata.directories.some((directory) => isWithin(root, directory))))
+            if (metadata && !metadata.cwd) metadata.cwd = root
+          } else if (source.harness === "cline" || source.harness === "roo") {
+            const cwd = taskWorkspace(file)
+            metadata = cwd ? { cwd, id: basename(dirname(file)) } : null
+            matches = Boolean(cwd && isWithin(root, cwd))
+          } else {
+            metadata = nativeSessionMetadata(file)
+            matches = Boolean(metadata && isWithin(root, metadata.cwd))
+          }
+        } catch (error) {
+          discovery.limitations.push(`Native session could not be inspected: ${file} (${error.message})`)
+          continue
         }
         if (!matches) continue
         const rel = relative(source.home, file).replaceAll("\\", "/") || basename(file)
@@ -490,9 +511,18 @@ function addTokens(items) {
   return Object.fromEntries(fields.map((field) => [field, sumNullable(items.map((item) => item[field]))]))
 }
 
+function tokenIssues(tokens, reportedCostUsd) {
+  const issues = []
+  for (const [name, value] of Object.entries(tokens)) if (finite(value) && value < 0) issues.push(`${name} is negative (${value})`)
+  if (finite(tokens.reasoningOutput) && finite(tokens.outputTotal) && tokens.reasoningOutput > tokens.outputTotal) issues.push(`reasoning output (${tokens.reasoningOutput}) exceeds total output (${tokens.outputTotal})`)
+  if (finite(reportedCostUsd) && reportedCostUsd < 0) issues.push(`reported cost is negative (${reportedCostUsd})`)
+  return issues
+}
+
 function baseThread(file, index, provider, harness, model, tokens, records, usageList, reportedCostUsd = null, logicalId = null) {
   const timing = timingFrom(records)
   const threadKey = `${sourceLabel(file)}|${provider}|${harness}|${model}|${index}`
+  const logicalThreadKey = `${harness}:${sourceLabel(file)}:${logicalId ? String(logicalId) : "n/a"}`
   const recordedEffort = records.map(effortFrom).filter(Boolean).at(-1) ?? null
   return {
     threadId: `${provider}:${sha(threadKey).slice(0, 20)}`,
@@ -502,6 +532,9 @@ function baseThread(file, index, provider, harness, model, tokens, records, usag
     effort: recordedEffort,
     effortSource: recordedEffort ? "recorded" : null,
     logicalId: logicalId ? String(logicalId) : null,
+    logicalThreadKey,
+    logicalThreadId: `${harness}:${sha(logicalThreadKey).slice(0, 20)}`,
+    sourcePath: resolve(file),
     parentThreadId: null,
     nativeAgentDepth: null,
     selectionRole: null,
@@ -514,6 +547,7 @@ function baseThread(file, index, provider, harness, model, tokens, records, usag
     rawUsage: usageList.length === 1 ? usageList[0] : usageList,
     tokens,
     reportedCostUsd,
+    tokenIssues: tokenIssues(tokens, reportedCostUsd),
   }
 }
 
@@ -575,9 +609,10 @@ function parseClaude(file, records) {
     group.tokens.push(normalizeUsage(entry.usage, entry.provider))
     groups.set(key, group)
   }
+  const fullTiming = timingFrom(records)
   return [...groups.values()].map((group, index) => {
     const groupRecords = group.entries.map((entry) => entry.record)
-    return baseThread(file, index, "anthropic", "claude", group.entries[0].model || "unknown", addTokens(group.tokens), groupRecords, group.entries.map((entry) => entry.usage), sumReported(group.entries.map((entry) => reportedCostFrom(entry.record, entry.usage))), logicalIdFrom(group.entries[0].record))
+    return Object.assign(baseThread(file, index, "anthropic", "claude", group.entries[0].model || "unknown", addTokens(group.tokens), groupRecords, group.entries.map((entry) => entry.usage), sumReported(group.entries.map((entry) => reportedCostFrom(entry.record, entry.usage))), logicalIdFrom(group.entries[0].record)), fullTiming)
   })
 }
 
@@ -610,7 +645,8 @@ function parseGemini(file, records) {
     group.tokens.push(normalized)
     groups.set(model, group)
   }
-  return [...groups.entries()].map(([model, group], index) => baseThread(file, index, "google", "gemini", model, addTokens(group.tokens), [metadata, ...group.records].filter(Boolean), group.usages, null, metadata?.sessionId))
+  const fullTiming = timingFrom(records)
+  return [...groups.entries()].map(([model, group], index) => Object.assign(baseThread(file, index, "google", "gemini", model, addTokens(group.tokens), [metadata, ...group.records].filter(Boolean), group.usages, null, metadata?.sessionId), fullTiming))
 }
 
 function parseClineFamily(file, records, harness) {
@@ -650,7 +686,8 @@ function parseClineFamily(file, records, harness) {
     const key = `${entry.provider}|${entry.model}`
     groups.set(key, [...(groups.get(key) ?? []), entry])
   }
-  return [...groups.values()].map((group, index) => baseThread(
+  const fullTiming = timingFrom(entries.map((entry) => entry.record))
+  return [...groups.values()].map((group, index) => Object.assign(baseThread(
     file,
     index,
     group[0].provider,
@@ -661,7 +698,7 @@ function parseClineFamily(file, records, harness) {
     group.map((entry) => entry.usage),
     sumReported(group.map((entry) => entry.cost)),
     externalSessions.get(resolve(file))?.id,
-  ))
+  ), fullTiming))
 }
 
 async function parseOpenCodeDatabase(file) {
@@ -774,6 +811,14 @@ function costPart(tokens, rate) {
 
 function priceThread(thread) {
   const rate = priceFor(thread.model, thread.provider)
+  if (thread.tokenIssues.length) {
+    return {
+      cost: { inputUncachedUsd: null, cachedInputReadUsd: null, cacheWrite5mUsd: null, cacheWrite1hUsd: null, outputUsd: null, totalUsd: null },
+      pricing: rate ? { provider: rate.provider ?? thread.provider, match: rate.match, per1M: rate.per1M ?? {}, effectiveDate: rate.effectiveDate ?? null, sourceUrl: rate.sourceUrl ?? null, verifiedAt: rate.verifiedAt ?? null, notes: rate.notes ?? null, ageDays: pricingAgeDays(rate) } : null,
+      pricingStatus: "invalid",
+      costMethod: "unavailable",
+    }
+  }
   if (!rate) {
     return {
       cost: { inputUncachedUsd: null, cachedInputReadUsd: null, cacheWrite5mUsd: null, cacheWrite1hUsd: null, outputUsd: null, totalUsd: finite(thread.reportedCostUsd) ? thread.reportedCostUsd : null },
@@ -812,6 +857,7 @@ function priceThread(thread) {
 }
 
 function rollup(items) {
+  const logical = [...groupBy(items, (item) => item.logicalThreadKey ?? item.threadId).values()]
   const tokenValues = items.map((item) => item.tokens.providerTotal)
   const costValues = items.map((item) => item.cost.totalUsd)
   const inputCostValues = items.map((item) => {
@@ -819,12 +865,12 @@ function rollup(items) {
     return values.some(finite) ? sumKnown(values) : null
   })
   const outputCostValues = items.map((item) => item.cost.outputUsd)
-  const wallValues = items.map((item) => item.wallTimeMs)
-  const activeValues = items.map((item) => item.activeTimeMs)
+  const wallValues = logical.map((group) => group.map((item) => item.wallTimeMs).find(finite) ?? null)
+  const activeValues = logical.map((group) => group.map((item) => item.activeTimeMs).find(finite) ?? null)
   return {
-    threadCount: items.length,
-    knownTokenThreads: tokenValues.filter(finite).length,
-    knownCostThreads: costValues.filter(finite).length,
+    threadCount: logical.length,
+    knownTokenThreads: logical.filter((group) => group.some((item) => finite(item.tokens.providerTotal))).length,
+    knownCostThreads: logical.filter((group) => group.length > 0 && group.every((item) => finite(item.cost.totalUsd))).length,
     tokens: tokenValues.some(finite) ? sumKnown(tokenValues) : null,
     costUsd: costValues.some(finite) ? sumKnown(costValues) : null,
     inputCostUsd: inputCostValues.some(finite) ? sumKnown(inputCostValues) : null,
@@ -881,10 +927,10 @@ function costByValues(items) {
   const result = rollup(items)
   return [
     fmtUsd(result.costUsd),
-    fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))),
-    fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))),
+    fmtInt(sumAvailable(items.map((item) => item.tokens.inputTotal))),
+    fmtInt(sumAvailable(items.map((item) => item.tokens.cachedInputRead))),
     fmtUsd(result.inputCostUsd),
-    fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))),
+    fmtInt(sumAvailable(items.map((item) => item.tokens.outputTotal))),
     fmtUsd(result.outputCostUsd),
     fmtInt(result.tokens),
     fmtUsdPerMillionTokens(result.costUsd, result.tokens),
@@ -910,13 +956,39 @@ function groupBy(items, selector) {
   return groups
 }
 
+const logicalCount = (items) => new Set(items.map((item) => item.logicalThreadKey ?? item.threadId)).size
+
+function logicalThreadRows(items) {
+  return [...groupBy(items, (item) => item.logicalThreadKey ?? item.threadId).values()].map((group) => {
+    const first = group[0]
+    const methods = new Set(group.map((item) => item.costMethod))
+    const statuses = new Set(group.map((item) => item.pricingStatus))
+    const pricingStatus = statuses.has("invalid") ? "invalid"
+      : statuses.has("partial") || (statuses.has("unmatched") && statuses.size > 1) ? "partial"
+        : statuses.has("unmatched") ? "unmatched"
+          : statuses.has("reported") ? "reported"
+            : statuses.has("matched-stale") ? "matched-stale" : "matched"
+    return {
+      ...first,
+      threadId: first.logicalThreadId ?? first.threadId,
+      modelLabel: [...new Set(group.map((item) => `${item.provider} / ${item.model} / ${item.effort ?? "n/a"}`))].join("; "),
+      tokens: addTokens(group.map((item) => item.tokens)),
+      cost: { totalUsd: sumNullable(group.map((item) => item.cost.totalUsd)) },
+      reportedCostUsd: sumReported(group.map((item) => item.reportedCostUsd)),
+      costMethod: methods.size === 1 ? [...methods][0] : group.every((item) => finite(item.cost.totalUsd)) ? "mixed" : "unavailable",
+      pricingStatus,
+    }
+  })
+}
+
 function report({ threads, stats, malformed, duplicateIds }) {
   const total = rollup(threads)
-  const selectedRoots = threads.filter((thread) => thread.selectionDepth === 0)
-  const includedSubagents = threads.filter((thread) => finite(thread.selectionDepth) && thread.selectionDepth > 0)
-  const priced = threads.filter((thread) => thread.costMethod === "derived")
-  const reported = threads.filter((thread) => thread.costMethod === "reported")
-  const unknown = threads.filter((thread) => !finite(thread.cost.totalUsd))
+  const logicalRows = logicalThreadRows(threads)
+  const selectedRoots = logicalRows.filter((thread) => thread.selectionDepth === 0)
+  const includedSubagents = logicalRows.filter((thread) => finite(thread.selectionDepth) && thread.selectionDepth > 0)
+  const priced = logicalRows.filter((thread) => thread.costMethod === "derived")
+  const reported = logicalRows.filter((thread) => thread.costMethod === "reported")
+  const unknown = logicalRows.filter((thread) => !finite(thread.cost.totalUsd))
   const providers = [...groupBy(threads, (thread) => thread.provider).entries()]
     .sort((a, b) => rollup(b[1]).costUsd - rollup(a[1]).costUsd)
   const harnesses = [...groupBy(threads, (thread) => thread.harness).entries()]
@@ -927,21 +999,24 @@ function report({ threads, stats, malformed, duplicateIds }) {
     .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1) || a[0].localeCompare(b[0]))
   const folders = [...groupBy(threads, (thread) => thread.folder).entries()]
     .sort((a, b) => rollup(b[1]).costUsd - rollup(a[1]).costUsd)
-  const sortedThreads = [...threads].sort((a, b) => (b.cost.totalUsd ?? -1) - (a.cost.totalUsd ?? -1) || (b.tokens.providerTotal ?? -1) - (a.tokens.providerTotal ?? -1) || a.sourceFile.localeCompare(b.sourceFile))
-  const inputTotal = sumKnown(threads.map((thread) => thread.tokens.inputTotal))
-  const cachedInput = sumKnown(threads.map((thread) => thread.tokens.cachedInputRead))
-  const outputTotal = sumKnown(threads.map((thread) => thread.tokens.outputTotal))
-  const reasoningTotal = sumKnown(threads.map((thread) => thread.tokens.reasoningOutput))
-  const stale = threads.filter((thread) => thread.pricingStatus === "matched-stale")
-  const unmatched = threads.filter((thread) => thread.pricingStatus === "unmatched")
-  const partial = threads.filter((thread) => thread.pricingStatus === "partial")
-  const actionableUnmatched = [...groupBy(unmatched.filter((thread) =>
+  const sortedThreads = logicalRows.sort((a, b) => (b.cost.totalUsd ?? -1) - (a.cost.totalUsd ?? -1) || (b.tokens.providerTotal ?? -1) - (a.tokens.providerTotal ?? -1) || a.sourceFile.localeCompare(b.sourceFile))
+  const inputTotal = sumAvailable(threads.map((thread) => thread.tokens.inputTotal))
+  const cachedInput = sumAvailable(threads.map((thread) => thread.tokens.cachedInputRead))
+  const outputTotal = sumAvailable(threads.map((thread) => thread.tokens.outputTotal))
+  const reasoningTotal = sumAvailable(threads.map((thread) => thread.tokens.reasoningOutput))
+  const stale = logicalRows.filter((thread) => thread.pricingStatus === "matched-stale")
+  const unmatched = logicalRows.filter((thread) => thread.pricingStatus === "unmatched")
+  const partial = logicalRows.filter((thread) => thread.pricingStatus === "partial")
+  const invalid = logicalRows.filter((thread) => thread.pricingStatus === "invalid")
+  const unmatchedSlices = threads.filter((thread) => thread.pricingStatus === "unmatched")
+  const actionableUnmatched = [...groupBy(unmatchedSlices.filter((thread) =>
     thread.model !== "unknown" && thread.model !== "<synthetic>" && finite(thread.tokens.providerTotal) && thread.tokens.providerTotal > 0
   ), (thread) => `${thread.provider} / ${thread.model}`).entries()].sort((a, b) => a[0].localeCompare(b[0]))
   const pricingRows = [...groupBy(threads.filter((thread) => thread.pricing), (thread) => `${thread.provider} / ${thread.model}`).entries()]
     .sort((a, b) => a[0].localeCompare(b[0]))
   const anomalies = []
   for (const thread of threads) {
+    for (const issue of thread.tokenIssues) anomalies.push(`${thread.sourceFile}: invalid usage counters: ${issue}`)
     if (thread.model === "unknown") anomalies.push(`${thread.sourceFile}: model is unavailable`)
     if (thread.provider === "unknown") anomalies.push(`${thread.sourceFile}: provider is unavailable`)
     if (!thread.startedAt || !thread.finishedAt) anomalies.push(`${thread.sourceFile}: timestamps are unavailable`)
@@ -1024,10 +1099,10 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "## Token composition",
     "",
     table(["Token class", "Tokens", "Share of available total", "Meaning"], [
-      ["Uncached input", fmtInt(sumKnown(threads.map((thread) => thread.tokens.inputUncached))), fmtPct(sumKnown(threads.map((thread) => thread.tokens.inputUncached)), inputTotal), "Input billed at the base input rate"],
+      ["Uncached input", fmtInt(sumAvailable(threads.map((thread) => thread.tokens.inputUncached))), fmtPct(sumAvailable(threads.map((thread) => thread.tokens.inputUncached)), inputTotal), "Input billed at the base input rate"],
       ["Cached input read", fmtInt(cachedInput), fmtPct(cachedInput, inputTotal), "Provider cache-hit tokens"],
-      ["5-minute cache write", fmtInt(sumKnown(threads.map((thread) => thread.tokens.cacheWrite5m))), "n/a", "Anthropic-style ephemeral cache writes"],
-      ["1-hour cache write", fmtInt(sumKnown(threads.map((thread) => thread.tokens.cacheWrite1h))), "n/a", "Anthropic-style extended cache writes"],
+      ["5-minute cache write", fmtInt(sumAvailable(threads.map((thread) => thread.tokens.cacheWrite5m))), "n/a", "Anthropic-style ephemeral cache writes"],
+      ["1-hour cache write", fmtInt(sumAvailable(threads.map((thread) => thread.tokens.cacheWrite1h))), "n/a", "Anthropic-style extended cache writes"],
       ["Output", fmtInt(outputTotal), fmtPct(outputTotal, total.tokens), "Generated output, including reasoning where exposed"],
       ["Reasoning output", fmtInt(reasoningTotal), fmtPct(reasoningTotal, outputTotal), "Subset of output, never added twice"],
     ]),
@@ -1039,7 +1114,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
       thread.selectionDepth === 0 ? "Selected task" : `Sub-agent (depth ${thread.selectionDepth})`,
       thread.selectionDepth === 0 ? "n/a" : thread.parentThreadId ?? "n/a",
       thread.sourceFile,
-      `${thread.provider} / ${thread.model} / ${thread.effort ?? "n/a"}`,
+      thread.modelLabel,
       fmtInt(thread.tokens.inputTotal),
       fmtInt(thread.tokens.cachedInputRead),
       fmtInt(thread.tokens.outputTotal),
@@ -1077,9 +1152,10 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "## Pricing coverage",
     "",
     table(["Status", "Threads", "Meaning"], [
-      ["Matched", fmtInt(threads.filter((thread) => thread.pricingStatus === "matched").length), "Model matched and all required token classes were priced"],
+      ["Matched", fmtInt(logicalRows.filter((thread) => thread.pricingStatus === "matched").length), "Model matched and all required token classes were priced"],
       ["Matched but stale", fmtInt(stale.length), "Matched rate is more than 30 days past verification"],
       ["Partial", fmtInt(partial.length), "A model matched, but one or more required rates or token classes are unavailable"],
+      ["Invalid", fmtInt(invalid.length), "Usage counters violated provider accounting invariants and were not priced"],
       ["Reported", fmtInt(reported.length), "Cost came from the harness record rather than bundled pricing"],
       ["Unmatched", fmtInt(unmatched.length), "No model pattern matched the pricing catalog"],
     ]),
@@ -1089,11 +1165,11 @@ function report({ threads, stats, malformed, duplicateIds }) {
       "",
       table(["Provider / model", "Threads", "Input", "Cached", "Output", "Tokens"], actionableUnmatched.map(([key, items]) => [
         key,
-        fmtInt(items.length),
-        fmtInt(sumKnown(items.map((item) => item.tokens.inputTotal))),
-        fmtInt(sumKnown(items.map((item) => item.tokens.cachedInputRead))),
-        fmtInt(sumKnown(items.map((item) => item.tokens.outputTotal))),
-        fmtInt(sumKnown(items.map((item) => item.tokens.providerTotal))),
+        fmtInt(logicalCount(items)),
+        fmtInt(sumAvailable(items.map((item) => item.tokens.inputTotal))),
+        fmtInt(sumAvailable(items.map((item) => item.tokens.cachedInputRead))),
+        fmtInt(sumAvailable(items.map((item) => item.tokens.outputTotal))),
+        fmtInt(sumAvailable(items.map((item) => item.tokens.providerTotal))),
       ])),
       "",
       `**Pricing update required:** Known-cost totals exclude the models above. Run [11ai-llm-cost-pricing-update](${pricingUpdateSkillUrl}) to verify official rates and update the bundled catalog, then regenerate this report.`,
@@ -1416,7 +1492,11 @@ stats.opencodeSessions = discovery.opencodeSessions
 for (const file of files) {
   stats.filesVisited += 1
   if (resolve(file) === markdownOutput || resolve(file) === htmlOutput) continue
-  const parsed = readRecords(file)
+  let parsed
+  try { parsed = readRecords(file) } catch (error) {
+    malformed.push(`${sourceLabel(file)}: unreadable (${error.message})`)
+    continue
+  }
   malformed = malformed.concat(parsed.malformed)
   if (!parsed.records.length) continue
   const harness = externalSessions.get(resolve(file))?.harness
@@ -1442,8 +1522,12 @@ const duplicateIds = [...logicalSources.entries()]
 let reportThreads = threads
 if (threadSelector) {
   const selector = String(threadSelector)
-  const selectorBase = basename(selector)
-  const directMatches = threads.filter((thread) => [thread.threadId, thread.logicalId, thread.sourceFile, basename(thread.sourceFile)].filter(Boolean).includes(selector) || basename(thread.sourceFile) === selectorBase)
+  const pathLike = isAbsolute(selector) || selector.includes("/") || selector.includes("\\")
+  const resolvedSelector = pathLike ? resolve(selector) : null
+  const directMatches = threads.filter((thread) => {
+    if (pathLike) return thread.sourceFile === selector || thread.sourcePath === resolvedSelector
+    return [thread.threadId, thread.logicalThreadId, thread.logicalId, thread.sourceFile, basename(thread.sourceFile)].filter(Boolean).includes(selector)
+  })
   if (!directMatches.length) throw new Error(`no recognized thread matched selector: ${selector}`)
   const identities = new Set(directMatches.map((thread) => thread.logicalId ?? thread.sourceFile))
   if (identities.size > 1) throw new Error(`thread selector is ambiguous across ${identities.size} logical threads: ${selector}`)
@@ -1493,12 +1577,12 @@ console.log(JSON.stringify({
   opencodeSessions: stats.opencodeSessions,
   recognizedFiles: stats.recognizedFiles,
   threadSelector,
-  threads: reportThreads.length,
-  rootThreads: reportThreads.filter((thread) => thread.selectionDepth === 0).length,
-  subagentThreads: reportThreads.filter((thread) => finite(thread.selectionDepth) && thread.selectionDepth > 0).length,
-  knownTokens: reportThreads.filter((thread) => finite(thread.tokens.providerTotal)).length,
-  knownCosts: reportThreads.filter((thread) => finite(thread.cost.totalUsd)).length,
-  costUsd: sumKnown(reportThreads.map((thread) => thread.cost.totalUsd)),
+  threads: rollup(reportThreads).threadCount,
+  rootThreads: logicalCount(reportThreads.filter((thread) => thread.selectionDepth === 0)),
+  subagentThreads: logicalCount(reportThreads.filter((thread) => finite(thread.selectionDepth) && thread.selectionDepth > 0)),
+  knownTokens: rollup(reportThreads).knownTokenThreads,
+  knownCosts: rollup(reportThreads).knownCostThreads,
+  costUsd: sumAvailable(reportThreads.map((thread) => thread.cost.totalUsd)),
   wallTimeMs: rollup(reportThreads).wallTimeMs,
   activeTimeMs: rollup(reportThreads).activeTimeMs,
   malformedRecords: malformed.length,

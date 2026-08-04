@@ -1,7 +1,8 @@
 import assert from "node:assert/strict"
-import { execFileSync } from "node:child_process"
-import { readFileSync } from "node:fs"
-import { dirname, resolve } from "node:path"
+import { execFileSync, spawnSync } from "node:child_process"
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs"
+import { tmpdir } from "node:os"
+import { dirname, join, resolve } from "node:path"
 import test from "node:test"
 import { fileURLToPath } from "node:url"
 
@@ -63,4 +64,26 @@ test("catalog validator succeeds without rewriting files", () => {
   const output = execFileSync(process.execPath, [resolve(skillRoot, "scripts/sync-pricing-catalog.mjs")], { encoding: "utf8" })
   assert.match(output, /Pricing catalog valid and synchronized\./)
   assert.match(output, /Providers \(8\):/)
+})
+
+test("catalog validator rejects shadowed patterns and unofficial sources", () => {
+  const fixture = mkdtempSync(join(tmpdir(), "11ai-pricing-validation-"))
+  try {
+    const seed = join(fixture, "pricing.json")
+    writeFileSync(seed, JSON.stringify({
+      version: 2,
+      updatedAt: "2026-08-03",
+      comment: "Validation fixture.",
+      models: [
+        { provider: "openai", match: ["gpt-5*"], per1M: { input: 1, output: 2 }, sourceUrl: "https://developers.openai.com/api/docs/pricing", verifiedAt: "2026-08-03" },
+        { provider: "openai", match: ["gpt-5.6*"], per1M: { input: 3, output: 4 }, sourceUrl: "https://example.com/pricing", verifiedAt: "2026-08-03" },
+      ],
+    }))
+    const result = spawnSync(process.execPath, [resolve(skillRoot, "scripts/sync-pricing-catalog.mjs"), "--seed", seed], { encoding: "utf8" })
+    assert.notEqual(result.status, 0)
+    assert.match(result.stderr, /sourceUrl is not on an official openai domain/)
+    assert.match(result.stderr, /gpt-5\.6\* is shadowed by earlier openai\/gpt-5\*/)
+  } finally {
+    rmSync(fixture, { recursive: true, force: true })
+  }
 })

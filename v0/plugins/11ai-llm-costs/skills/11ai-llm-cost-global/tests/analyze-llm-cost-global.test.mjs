@@ -273,6 +273,7 @@ try {
     "--opencode-db", opencodeDb,
     "--output", join(fixtureRoot, "effort-report"),
   ])
+  assert.equal(effortSummary.periods["All time"].threads, effortSummary.threads)
   const effortMarkdown = readFileSync(effortSummary.markdownReport, "utf8")
   for (const effort of canonicalEfforts) assert.match(effortMarkdown, new RegExp(`\\| anthropic \\/ claude-sonnet-4-6 \\| ${effort} \\|`))
   assert.doesNotMatch(effortMarkdown, /\| anthropic \/ claude-sonnet-4-6 \| light \|/)

@@ -152,6 +152,16 @@ try {
   assert.notEqual(removedPricingOption.status, 0)
   assert.match(removedPricingOption.stderr, /unknown argument: --pricing/)
 
+  const selectorProject = join(fixtureRoot, "selector-project")
+  const selectedPath = join(selectorProject, "a", "session.jsonl")
+  const duplicateBasenamePath = join(selectorProject, "b", "session.jsonl")
+  writeJsonl(selectedPath, [{ id: "path-thread-a", provider: "openai", model: "gpt-5.6-sol", usage: { input_tokens: 1, output_tokens: 1, total_tokens: 2 } }])
+  writeJsonl(duplicateBasenamePath, [{ id: "path-thread-b", provider: "openai", model: "gpt-5.6-sol", usage: { input_tokens: 2, output_tokens: 1, total_tokens: 3 } }])
+  const pathSummary = run([selectorProject, "--project-only", "--thread", selectedPath, "--output", join(fixtureRoot, "path-selector.md")], threadRoot)
+  assert.equal(pathSummary.threads, 1)
+  assert.match(readFileSync(pathSummary.markdownReport, "utf8"), /a\/session\.jsonl/)
+  assert.doesNotMatch(readFileSync(pathSummary.markdownReport, "utf8"), /b\/session\.jsonl/)
+
   const unmatched = spawnSync(process.execPath, [analyzer, project, "--thread", "missing-thread", "--codex-home", codexHome], { encoding: "utf8", cwd: threadRoot })
   assert.notEqual(unmatched.status, 0)
   assert.match(unmatched.stderr, /no recognized thread matched selector: missing-thread/)

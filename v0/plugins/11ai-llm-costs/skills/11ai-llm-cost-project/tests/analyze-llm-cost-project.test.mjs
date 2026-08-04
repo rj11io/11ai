@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
-import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs"
+import { chmodSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { basename, dirname, join } from "node:path"
 import { spawnSync } from "node:child_process"
@@ -207,6 +207,54 @@ try {
   const removedPricingOption = spawnSync(process.execPath, [analyzer, unmatchedProject, "--pricing", join(unmatchedProject, "llm-pricing.json")], { encoding: "utf8", cwd: threadRoot })
   assert.notEqual(removedPricingOption.status, 0)
   assert.match(removedPricingOption.stderr, /unknown argument: --pricing/)
+
+  const slicedProject = join(fixtureRoot, "sliced-project")
+  mkdirSync(slicedProject, { recursive: true })
+  writeJsonl(join(slicedProject, "claude.jsonl"), [
+    { timestamp: "2026-07-18T10:00:00.000Z", sessionId: "one-logical-session", message: { id: "slice-low", model: "claude-sonnet-5", output_config: { effort: "low" }, usage: { input_tokens: 10, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 1 } } },
+    { timestamp: "2026-07-18T10:01:00.000Z", sessionId: "one-logical-session", message: { id: "slice-high", model: "claude-sonnet-5", output_config: { effort: "high" }, usage: { input_tokens: 10, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 1 } } },
+  ])
+  const slicedReport = join(fixtureRoot, "sliced-report.md")
+  const slicedSummary = run([slicedProject, "--project-only", "--output", slicedReport])
+  assert.equal(slicedSummary.threads, 1)
+  assert.equal(slicedSummary.wallTimeMs, 60000)
+  assert.equal(slicedSummary.activeTimeMs, 60000)
+  const slicedMarkdown = readFileSync(slicedReport, "utf8")
+  assert.match(slicedMarkdown, /\| Threads recognized \| 1 \|/)
+  assert.match(slicedMarkdown, /anthropic \/ claude-sonnet-5 \/ low; anthropic \/ claude-sonnet-5 \/ high/)
+
+  const invalidProject = join(fixtureRoot, "invalid-project")
+  mkdirSync(invalidProject, { recursive: true })
+  writeFileSync(join(invalidProject, "usage.json"), JSON.stringify({ id: "invalid-counters", provider: "openai", model: "gpt-5.6-sol", usage: { input_tokens: 10, cached_input_tokens: 20, output_tokens: 1, total_tokens: 11 } }))
+  const invalidReport = join(fixtureRoot, "invalid-report.md")
+  const invalidSummary = run([invalidProject, "--project-only", "--output", invalidReport])
+  assert.equal(invalidSummary.knownCosts, 0)
+  assert.equal(invalidSummary.costUsd, null)
+  const invalidMarkdown = readFileSync(invalidReport, "utf8")
+  assert.match(invalidMarkdown, /\| Invalid \| 1 \|/)
+  assert.match(invalidMarkdown, /invalid usage counters: inputUncached is negative/)
+  assert.doesNotMatch(invalidMarkdown, /\$-/)
+
+  const incompleteProject = join(fixtureRoot, "incomplete-project")
+  mkdirSync(incompleteProject, { recursive: true })
+  writeFileSync(join(incompleteProject, "usage.json"), JSON.stringify({ id: "incomplete", provider: "openai", model: "gpt-5.6-sol", usage: { output_tokens: 1, total_tokens: 1 } }))
+  const incompleteReport = join(fixtureRoot, "incomplete-report.md")
+  run([incompleteProject, "--project-only", "--output", incompleteReport])
+  assert.match(readFileSync(incompleteReport, "utf8"), /\| openai \| n\/a \| n\/a \| 0 \|/)
+
+  const unreadableProject = join(fixtureRoot, "unreadable-project")
+  const blockedDirectory = join(unreadableProject, "blocked")
+  mkdirSync(blockedDirectory, { recursive: true })
+  writeFileSync(join(unreadableProject, "usage.json"), JSON.stringify({ id: "readable", provider: "openai", model: "gpt-5.6-sol", usage: { input_tokens: 1, output_tokens: 1, total_tokens: 2 } }))
+  chmodSync(blockedDirectory, 0o000)
+  try {
+    const unreadableReport = join(fixtureRoot, "unreadable-report.md")
+    const unreadableSummary = run([unreadableProject, "--project-only", "--output", unreadableReport])
+    assert.equal(unreadableSummary.threads, 1)
+    assert.match(readFileSync(unreadableReport, "utf8"), /Directory could not be scanned:/)
+  } finally {
+    chmodSync(blockedDirectory, 0o700)
+  }
 
   const defaultSummary = run([project, ...harnessArgs, "--project-only"], threadRoot)
   const resolvedThreadRoot = realpathSync(threadRoot)

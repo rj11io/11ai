@@ -53,6 +53,18 @@ function validateCatalog(value) {
   const failures = []
   const datePattern = /^\d{4}-\d{2}-\d{2}$/
   const supportedRates = new Set(["input", "cachedInput", "output", "cacheWrite5m", "cacheWrite1h", "cacheRead"])
+  const officialDomains = new Map([
+    ["anthropic", ["anthropic.com", "claude.com"]],
+    ["openai", ["openai.com"]],
+    ["google", ["google.dev", "google.com"]],
+    ["xai", ["x.ai"]],
+    ["deepseek", ["deepseek.com"]],
+    ["mistral", ["mistral.ai"]],
+    ["cohere", ["cohere.com"]],
+    ["perplexity", ["perplexity.ai"]],
+  ])
+  const globRegex = (pattern) => new RegExp("^" + pattern.split("*").map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join(".*") + "$", "i")
+  const sampleFor = (pattern) => pattern.replaceAll("*", "shadow")
   if (!Number.isInteger(value?.version) || value.version < 1) failures.push("version must be a positive integer")
   if (!datePattern.test(value?.updatedAt ?? "")) failures.push("updatedAt must use YYYY-MM-DD")
   if (typeof value?.comment !== "string" || !value.comment.trim()) failures.push("comment is required")
@@ -62,10 +74,12 @@ function validateCatalog(value) {
   for (const [index, entry] of (value?.models ?? []).entries()) {
     const label = "models[" + index + "]"
     if (typeof entry?.provider !== "string" || !entry.provider.trim()) failures.push(label + ".provider is required")
+    else if (!officialDomains.has(entry.provider)) failures.push(label + ".provider has no official source-domain allowlist")
     if (!Array.isArray(entry?.match) || entry.match.length === 0 || entry.match.some((pattern) => typeof pattern !== "string" || !pattern)) {
       failures.push(label + ".match must contain non-empty strings")
     } else {
       for (const pattern of entry.match) {
+        if (pattern.includes("?")) failures.push(label + ".match uses unsupported wildcard ?: " + pattern)
         const key = entry.provider + "\u0000" + pattern
         if (patterns.has(key)) failures.push(label + ".match duplicates " + entry.provider + "/" + pattern)
         patterns.add(key)
@@ -87,10 +101,25 @@ function validateCatalog(value) {
     try {
       const url = new URL(entry?.sourceUrl)
       if (url.protocol !== "https:") failures.push(label + ".sourceUrl must use HTTPS")
+      const allowed = officialDomains.get(entry?.provider) ?? []
+      if (allowed.length && !allowed.some((domain) => url.hostname === domain || url.hostname.endsWith("." + domain))) failures.push(label + ".sourceUrl is not on an official " + entry.provider + " domain")
     } catch {
       failures.push(label + ".sourceUrl must be a valid URL")
     }
     if (entry.notes !== undefined && (typeof entry.notes !== "string" || !entry.notes.trim())) failures.push(label + ".notes must be a non-empty string when present")
+  }
+  for (let laterIndex = 0; laterIndex < (value?.models ?? []).length; laterIndex += 1) {
+    const later = value.models[laterIndex]
+    for (let earlierIndex = 0; earlierIndex < laterIndex; earlierIndex += 1) {
+      const earlier = value.models[earlierIndex]
+      if (earlier.provider !== later.provider) continue
+      for (const earlierPattern of earlier.match ?? []) {
+        const expression = globRegex(earlierPattern)
+        for (const laterPattern of later.match ?? []) {
+          if (expression.test(sampleFor(laterPattern))) failures.push(`models[${laterIndex}].match ${laterPattern} is shadowed by earlier ${earlier.provider}/${earlierPattern}`)
+        }
+      }
+    }
   }
   return failures
 }
