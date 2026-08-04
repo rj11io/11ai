@@ -64,7 +64,8 @@ const externalSessions = new Map()
 const includedFiles = new Map()
 const claudeDesktopSessions = new Map()
 const matchedClaudeDesktopSessions = new Set()
-const discovery = { accountsConsidered: 0, nativeFilesConsidered: 0, codexSessions: 0, claudeSessions: 0, coworkSessions: 0, coworkTranscriptFiles: 0, coworkSubagentRuns: 0, claudeDesktopMetadataFiles: 0, geminiSessions: 0, clineSessions: 0, rooSessions: 0, opencodeSessions: 0, unreadableFiles: 0, limitations: [], scopeDescription: "" }
+const remoteCoworkSessions = new Map()
+const discovery = { accountsConsidered: 0, nativeFilesConsidered: 0, codexSessions: 0, claudeSessions: 0, coworkSessions: 0, coworkLocalSessionsMeasured: 0, coworkRemoteSessionsDetected: 0, coworkRemoteSessionsMeasured: 0, coworkRemoteSessionsUnavailable: 0, coworkRemoteIndexFiles: 0, coworkTranscriptFiles: 0, coworkSubagentRuns: 0, claudeDesktopMetadataFiles: 0, geminiSessions: 0, clineSessions: 0, rooSessions: 0, opencodeSessions: 0, unreadableFiles: 0, limitations: [], scopeDescription: "" }
 const finite = (value) => typeof value === "number" && Number.isFinite(value)
 const number = (value) => {
   if (finite(value)) return value
@@ -254,6 +255,22 @@ function indexClaudeDesktopSessions(userHomes, explicitRoot = null) {
   }
 }
 
+function indexRemoteCoworkSessions(file, account) {
+  let metadata
+  try { metadata = JSON.parse(readFileSync(file, "utf8")) } catch (error) {
+    discovery.limitations.push(`Remote Cowork session index could not be inspected: ${file} (${error.message})`)
+    return
+  }
+  if (!Array.isArray(metadata?.entries)) return
+  discovery.coworkRemoteIndexFiles += 1
+  for (const entry of metadata.entries) {
+    if (typeof entry?.sessionId !== "string" || !entry.sessionId) continue
+    const directories = Array.isArray(entry.folders) ? entry.folders.filter((value) => typeof value === "string" && value.trim()).map((value) => resolve(value)) : []
+    const key = `${account ?? ""}\u0000${entry.sessionId}`
+    remoteCoworkSessions.set(key, { sessionId: entry.sessionId, directories })
+  }
+}
+
 function enrichCoworkFiles(files) {
   for (const file of files) {
     if (extname(file).toLowerCase() !== ".jsonl") continue
@@ -281,7 +298,14 @@ function enrichCoworkFiles(files) {
     session.metadata.push(metadata)
     sessions.set(key, session)
   }
-  discovery.coworkSessions = sessions.size
+  const remoteKeys = new Set(remoteCoworkSessions.keys())
+  const measuredKeys = new Set(sessions.keys())
+  discovery.coworkSessions = measuredKeys.size
+  discovery.coworkLocalSessionsMeasured = [...measuredKeys].filter((key) => !remoteKeys.has(key)).length
+  discovery.coworkRemoteSessionsDetected = remoteKeys.size
+  discovery.coworkRemoteSessionsMeasured = [...remoteKeys].filter((key) => measuredKeys.has(key)).length
+  discovery.coworkRemoteSessionsUnavailable = discovery.coworkRemoteSessionsDetected - discovery.coworkRemoteSessionsMeasured
+  if (discovery.coworkRemoteSessionsUnavailable > 0) discovery.limitations.push(`${discovery.coworkRemoteSessionsUnavailable} remote Cowork session(s) were detected without readable usage; measured token and cost totals exclude them.`)
   discovery.coworkTranscriptFiles = [...sessions.values()].reduce((sum, session) => sum + session.files.size, 0)
   discovery.coworkSubagentRuns = [...sessions.values()].reduce((sum, session) => sum + session.subagents.size, 0)
   for (const session of sessions.values()) for (const metadata of session.metadata) metadata.coworkSubagentRuns = session.subagents.size
@@ -394,7 +418,15 @@ function discoverNativeSessions() {
   const discovered = []
   for (const source of sources) {
     for (const sessionRoot of source.roots) {
-      for (const file of walkSessionFiles(sessionRoot)) {
+      const sessionFiles = walkSessionFiles(sessionRoot)
+      if (source.harness === "cowork") {
+        for (const file of sessionFiles) {
+          if (basename(file) !== "remote-session-spaces.json") continue
+          discovery.nativeFilesConsidered += 1
+          indexRemoteCoworkSessions(file, source.account)
+        }
+      }
+      for (const file of sessionFiles) {
         if (source.harness === "cowork" && extname(file).toLowerCase() !== ".jsonl") continue
         if ((source.harness === "cline" || source.harness === "roo") && basename(file) !== "ui_messages.json") continue
         if (source.harness === "gemini" && !file.replaceAll("\\", "/").includes("/chats/")) continue
@@ -1196,6 +1228,28 @@ function coworkRunStats(items) {
   return { sessions: sessions.size, subagents: [...sessions.values()].reduce((sum, count) => sum + count, 0) }
 }
 
+function coworkCoverageLines(stats) {
+  const states = []
+  if (stats.coworkLocalSessionsMeasured > 0) states.push("local measured")
+  if (stats.coworkRemoteSessionsMeasured > 0) states.push("remote measured")
+  if (stats.coworkRemoteSessionsUnavailable > 0) states.push("remote detected, usage unavailable")
+  if (!states.length) states.push("none detected")
+  return [
+    "## Cowork coverage",
+    "",
+    table(["Cowork state", "Sessions", "Token and cost treatment"], [
+      ["Local measured", fmtInt(stats.coworkLocalSessionsMeasured), "Included in measured totals"],
+      ["Remote detected", fmtInt(stats.coworkRemoteSessionsDetected), "Detection count; divided into measured and unavailable states below"],
+      ["Remote measured", fmtInt(stats.coworkRemoteSessionsMeasured), "Included in measured totals from readable usage records"],
+      ["Remote detected, usage unavailable", fmtInt(stats.coworkRemoteSessionsUnavailable), "Excluded from measured totals; never treated as zero usage"],
+    ]),
+    "",
+    `Coverage state: **${states.join("; ")}**.`,
+    "",
+    ...(stats.coworkRemoteSessionsUnavailable > 0 ? [`> **Cowork coverage warning:** ${fmtInt(stats.coworkRemoteSessionsUnavailable)} remote Cowork session(s) were detected, but their token usage and cost are unavailable. All token and cost totals in this report remain measured totals and exclude that unavailable usage.`, ""] : []),
+  ]
+}
+
 function logicalThreadRows(items) {
   return [...groupBy(items, (item) => item.logicalThreadKey ?? item.threadId).values()].map((group) => {
     const first = group[0]
@@ -1358,7 +1412,7 @@ function windowSection(definition, threads, headingLevel = 2) {
     "",
     `${subheading} Cost by harness`,
     "",
-    noRows("No threads fall in this period.") ?? table(["Harness", ...COST_BY_HEADERS, "Cowork sessions", "Sub-agent runs", "Reported-cost sum", "Average tokens / thread", "Priced", "Unpriced"], [...harnesses.map(([key, items]) => {
+    noRows("No threads fall in this period.") ?? table(["Harness", ...COST_BY_HEADERS, "Measured Cowork sessions", "Sub-agent runs", "Reported-cost sum", "Average tokens / thread", "Priced", "Unpriced"], [...harnesses.map(([key, items]) => {
       const r = rollup(items)
       const cowork = coworkRunStats(items)
       return [key, ...costByValues(items), fmtInt(cowork.sessions), fmtInt(cowork.subagents), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount ? r.tokens / r.threadCount : null), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
@@ -1379,7 +1433,7 @@ function windowSection(definition, threads, headingLevel = 2) {
     "",
     "Workspace comes from native metadata or a supplemental record's declared workspace fields; only unattributed supplemental logs fall back to the included root.",
     "",
-    noRows("No threads fall in this period.") ?? table(["Workspace", ...COST_BY_HEADERS, "Cowork sessions", "Sub-agent runs", "Priced", "Unpriced"], [...workspaces.map(([key, items]) => {
+    noRows("No threads fall in this period.") ?? table(["Workspace", ...COST_BY_HEADERS, "Measured Cowork sessions", "Sub-agent runs", "Priced", "Unpriced"], [...workspaces.map(([key, items]) => {
       const r = rollup(items)
       const cowork = coworkRunStats(items)
       return [key, ...costByValues(items), fmtInt(cowork.sessions), fmtInt(cowork.subagents), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
@@ -1389,8 +1443,8 @@ function windowSection(definition, threads, headingLevel = 2) {
     "",
     table(["Metric", "Value"], [
       ["Threads recognized", fmtInt(total.threadCount)],
-      ["Cowork sessions", fmtInt(coworkRunStats(threads).sessions)],
-      ["Cowork sub-agent runs", fmtInt(coworkRunStats(threads).subagents)],
+      ["Measured Cowork sessions", fmtInt(coworkRunStats(threads).sessions)],
+      ["Measured Cowork sub-agent runs", fmtInt(coworkRunStats(threads).subagents)],
       ["Threads with measured tokens", `${fmtInt(total.knownTokenThreads)} / ${fmtInt(total.threadCount)}`],
       ["Threads with derived cost", `${fmtInt(priced.length)} / ${fmtInt(total.threadCount)}`],
       ["Threads with reported-only cost", fmtInt(reported.length)],
@@ -1533,6 +1587,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "",
     table(["Surface", "Runtime", "Billing mode", "Usage source", "Confidence", "Threads"], [...groupBy(threads, (thread) => `${thread.surface}\u0000${thread.runtime}\u0000${thread.billingMode}\u0000${thread.usageSource}\u0000${thread.confidence}`).entries()].map(([key, items]) => [...key.split("\u0000"), fmtInt(logicalThreadRows(items).length)])),
     "",
+    ...coworkCoverageLines(stats),
     "## Scan coverage",
     "",
     table(["Coverage", "Value"], [
@@ -1545,9 +1600,15 @@ function report({ threads, stats, malformed, duplicateIds }) {
       ["Claude sessions", fmtInt(stats.claudeSessions)],
       ["Claude desktop metadata files", fmtInt(stats.claudeDesktopMetadataFiles)],
       ["Claude desktop metadata matches", fmtInt(stats.claudeDesktopMetadataMatches)],
-      ["Claude Cowork sessions", fmtInt(stats.coworkSessions)],
-      ["Claude Cowork transcript files", fmtInt(stats.coworkTranscriptFiles)],
-      ["Claude Cowork sub-agent runs", fmtInt(stats.coworkSubagentRuns)],
+      ["Cowork coverage state", stats.coworkRemoteSessionsUnavailable > 0 ? "remote usage incomplete" : stats.coworkSessions > 0 ? "measured" : "none detected"],
+      ["Claude Cowork sessions measured", fmtInt(stats.coworkSessions)],
+      ["Claude Cowork local sessions measured", fmtInt(stats.coworkLocalSessionsMeasured)],
+      ["Claude Cowork remote sessions detected", fmtInt(stats.coworkRemoteSessionsDetected)],
+      ["Claude Cowork remote sessions measured", fmtInt(stats.coworkRemoteSessionsMeasured)],
+      ["Claude Cowork remote sessions unavailable", fmtInt(stats.coworkRemoteSessionsUnavailable)],
+      ["Claude Cowork remote index files", fmtInt(stats.coworkRemoteIndexFiles)],
+      ["Claude Cowork local transcript files", fmtInt(stats.coworkTranscriptFiles)],
+      ["Claude Cowork local sub-agent runs", fmtInt(stats.coworkSubagentRuns)],
       ["Gemini CLI sessions", fmtInt(stats.geminiSessions)],
       ["Cline tasks", fmtInt(stats.clineSessions)],
       ["Roo Code tasks", fmtInt(stats.rooSessions)],
@@ -1612,6 +1673,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "- Recursively inspect JSON, JSONL, and NDJSON files below each explicit `--include` path, excluding dependency, VCS, cache, virtual-environment, and build directories.",
     "- Honor supplemental records that declare a workspace through selected-folder arrays, cwd/project/workspace path fields, or an explicit workspace label; use the included root only when no attribution is declared.",
     "- Treat Claude desktop `claude-code-sessions` files as metadata only. Join them to native Claude transcripts by `cliSessionId` to enrich title, workspace, effort, and surface without adding usage a second time.",
+    "- Detect remote Cowork session indexes separately from readable local transcripts. Keep measured totals numeric, exclude unavailable remote usage, and never reinterpret an unavailable remote session as zero tokens or zero cost.",
     "- Group Cowork root and sub-agent transcripts by their containing local session. Count distinct sub-agent transcript identities separately while preserving global message-level billing deduplication.",
     "- Use the last cumulative Codex token-count event; deduplicate Claude usage globally across files by message ID and non-output billing fields, retaining the highest-output snapshot for each billing variant; aggregate Gemini per-message counters and Cline/Roo API request metrics; read OpenCode's session ledger in read-only mode; aggregate generic usage records by provider and model.",
     "- Attribute a whole thread to its finish timestamp, falling back to its start timestamp. All time includes undated threads; dated periods exclude them. Today and calendar-to-date/archive reports use the machine's local boundaries. Past 24 hours and Past 7/30/60/90 days are rolling 24/168/720/1,440/2,160-hour windows.",
@@ -1889,6 +1951,11 @@ const stats = {
   codexSessions: discovery.codexSessions,
   claudeSessions: discovery.claudeSessions,
   coworkSessions: discovery.coworkSessions,
+  coworkLocalSessionsMeasured: discovery.coworkLocalSessionsMeasured,
+  coworkRemoteSessionsDetected: discovery.coworkRemoteSessionsDetected,
+  coworkRemoteSessionsMeasured: discovery.coworkRemoteSessionsMeasured,
+  coworkRemoteSessionsUnavailable: discovery.coworkRemoteSessionsUnavailable,
+  coworkRemoteIndexFiles: discovery.coworkRemoteIndexFiles,
   coworkTranscriptFiles: discovery.coworkTranscriptFiles,
   coworkSubagentRuns: discovery.coworkSubagentRuns,
   claudeDesktopMetadataFiles: discovery.claudeDesktopMetadataFiles,
@@ -1985,6 +2052,11 @@ console.log(JSON.stringify({
   codexSessions: stats.codexSessions,
   claudeSessions: stats.claudeSessions,
   coworkSessions: stats.coworkSessions,
+  coworkLocalSessionsMeasured: stats.coworkLocalSessionsMeasured,
+  coworkRemoteSessionsDetected: stats.coworkRemoteSessionsDetected,
+  coworkRemoteSessionsMeasured: stats.coworkRemoteSessionsMeasured,
+  coworkRemoteSessionsUnavailable: stats.coworkRemoteSessionsUnavailable,
+  coworkRemoteIndexFiles: stats.coworkRemoteIndexFiles,
   coworkTranscriptFiles: stats.coworkTranscriptFiles,
   coworkSubagentRuns: stats.coworkSubagentRuns,
   claudeDesktopMetadataFiles: stats.claudeDesktopMetadataFiles,

@@ -135,7 +135,7 @@ export const HARNESS_SURFACE_COVERAGE = [
   ["ChatGPT Work", "Inherited", "Local Work rollouts are classified separately; cloud-only work requires workspace analytics/export"],
   ["ChatGPT Chat", "Export only", "No trustworthy local per-message token ledger"],
   ["Claude Code / Desktop Code", "Native", "Claude project transcripts with global message-ID deduplication; desktop metadata is joined without adding usage"],
-  ["Claude Cowork", "Native", "Desktop audit transcripts plus session folder/title attribution"],
+  ["Claude Cowork", "Native + detected remote", "Local audit transcripts are measured; remote indexes are detected and unavailable usage is excluded with a warning"],
   ["Gemini CLI", "Native", "Project chat recordings"],
   ["Google Antigravity", "Quota only", "Quota/credit accounting is not converted into tokens"],
   ["Cline", "Native", "Task API metrics"],

@@ -27,6 +27,8 @@ The analyzer reads these stores without modifying them. Layouts are implementati
 ## Claude Cowork
 
 - Conventional roots: macOS `~/Library/Application Support/Claude/local-agent-mode-sessions`, Linux `~/.config/Claude/local-agent-mode-sessions`, and Windows `%APPDATA%/Claude/local-agent-mode-sessions`; use `--cowork-home` for another location.
+- Local measured sessions expose `local_*/audit.jsonl` and optional nested sub-agent JSONL. Remote sessions may instead appear only in `remote-session-spaces.json`; count project-associated references as detected, not as zero-token threads.
+- Report local measured, remote measured, and remote detected-but-unavailable states separately. Preserve numeric measured totals and add a prominent warning whenever unavailable remote usage is excluded. Anthropic documents [remote Cowork as account-side by default](https://support.claude.com/en/articles/14479288-claude-cowork-architecture-overview) and exposes per-request tokens through [Cowork OpenTelemetry](https://support.claude.com/en/articles/14477985-monitor-claude-cowork-activity-with-opentelemetry) only for supported Team and Enterprise configurations.
 - Read `audit.jsonl` and nested sub-agent JSONL. Match any selected folder under the requested root, attribute one folder directly, and keep multiple folders as an unsplit multi-project session. Group all transcripts below one `local_*` directory as one logical session and count distinct nested sub-agent transcript identities.
 - Deduplicate Cowork and Claude Code responses together by message ID and billing fingerprint, retaining the highest-output streaming snapshot.
 

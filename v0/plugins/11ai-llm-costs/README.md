@@ -4,7 +4,7 @@ Four skills for single-thread, project-scoped, and machine-wide LLM usage report
 
 The reporting skills distinguish user-facing surface, underlying runtime, billing mode, usage source, and confidence. They count authoritative local token ledgers once, preserve wrapper provenance, and never convert product credits, quotas, or context snapshots into invented API-token costs.
 
-Claude reporting groups Cowork root and sub-agent transcripts into logical sessions, reports distinct sub-agent runs, honors declared workspace metadata in supplemental records, and joins Claude Desktop Code metadata to existing transcripts without counting usage twice.
+Claude reporting groups local Cowork root and sub-agent transcripts into logical sessions, reports distinct sub-agent runs, detects remote Cowork session indexes, honors declared workspace metadata in supplemental records, and joins Claude Desktop Code metadata to existing transcripts without counting usage twice. Reports keep measured totals numeric while warning that detected remote sessions without readable usage are excluded rather than treated as zero.
 
 ## Choose a skill
 
@@ -22,3 +22,10 @@ The three reporting skills always use their synchronized bundled pricing catalog
 ## Cross-skill maintenance
 
 When fixing or extending one skill, evaluate whether the behavior applies to every sibling skill in this plugin. Apply the equivalent change wherever it is applicable, document intentional exceptions, run the affected skill tests plus the complete plugin test set, and compare newly generated reports with prior reports to confirm existing features and output contracts remain intact.
+
+Treat report comparison as a required regression gate for every skill-behavior change:
+
+1. Before editing, identify older Markdown and HTML reports for every affected reporting scope. Global report baselines are stored under `~/Desktop/11ai-llm-cost-global-reports/`.
+2. If an affected scope has no older report, generate and preserve a baseline with the unmodified skill before making the change.
+3. After editing, generate the same reports and compare them with their baselines. Verify that existing sections, tables, thread rows, totals, pricing states, warnings, and HTML interactions were not lost or broken; explain any intentional difference.
+4. Do not consider the behavior change complete until both the automated tests and the report regression comparison pass.

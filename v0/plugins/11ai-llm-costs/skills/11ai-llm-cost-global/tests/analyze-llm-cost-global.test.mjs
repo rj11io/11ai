@@ -140,6 +140,7 @@ try {
     "## Yearly reports",
     "## All time",
     "## Harness surface coverage",
+    "## Cowork coverage",
     "## Scan coverage",
     "## Pricing coverage",
     "## Anomalies and limitations",
@@ -174,11 +175,11 @@ try {
   }
   assert.match(markdown, /\| openai \/ gpt-5\.6-sol \| high \|/)
   assert.match(markdown, /\| anthropic \/ claude-sonnet-4-6 \| n\/a \|/)
-  assert.match(markdown, /\| Harness \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Cowork sessions \| Sub-agent runs \| Reported-cost sum \| Average tokens \/ thread \| Priced \| Unpriced \|/)
+  assert.match(markdown, /\| Harness \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Measured Cowork sessions \| Sub-agent runs \| Reported-cost sum \| Average tokens \/ thread \| Priced \| Unpriced \|/)
   assert.match(markdown, /\| Provider \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Priced \| Unpriced \|/)
   assert.match(markdown, /\| Provider \/ model \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \|/)
   assert.match(markdown, /\| Provider \/ model \| Effort \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \|/)
-  assert.match(markdown, /\| Workspace \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Cowork sessions \| Sub-agent runs \| Priced \| Unpriced \|/)
+  assert.match(markdown, /\| Workspace \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Measured Cowork sessions \| Sub-agent runs \| Priced \| Unpriced \|/)
   assert.match(markdown, /\| Thread \| Source \| Surface \/ billing \| Workspace \| Sub-agents \| Provider \/ model \/ effort \| Attributed at \| Input \| Cached \| Output \| Tokens \| Selected cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Harness reported \| Method \|/)
   assert.match(markdown, /\| Cost \/ thread \| \$[\d,]+\./)
   assert.match(markdown, /\| Total \| \$[\d,]+\.\d+ \| [\d,]+ \| [\d,]+ \| \$[\d,]+\.\d+ \| [\d,]+ \| \$[\d,]+\.\d+ \| [\d,]+ \| \$[\d,]+\.\d+ \| 8 \|/)
@@ -238,7 +239,7 @@ try {
   assert.doesNotMatch(html, /<details\b[^>]*\bopen\b[^>]*>/)
   assert.match(html, /<table>/)
   assert.match(html, /codex-session\/[^/]+\/sessions\/recent\.jsonl/)
-  const orderedHtmlSections = ["Past 24 hours", "Past 7 days", "Past 30 days", "Past 60 days", "Past 90 days", "Today", "Month to date", "Quarter to date", "Year to date", "Monthly reports", "Quarterly reports", "Yearly reports", "All time", "Scan coverage", "Pricing coverage", "Anomalies and limitations", "Methodology"]
+  const orderedHtmlSections = ["Past 24 hours", "Past 7 days", "Past 30 days", "Past 60 days", "Past 90 days", "Today", "Month to date", "Quarter to date", "Year to date", "Monthly reports", "Quarterly reports", "Yearly reports", "All time", "Harness surface coverage", "Cowork coverage", "Scan coverage", "Pricing coverage", "Anomalies and limitations", "Methodology"]
   for (let index = 1; index < orderedHtmlSections.length; index += 1) {
     assert.ok(html.indexOf(`class="section-title">${orderedHtmlSections[index - 1]}</span>`) < html.indexOf(`class="section-title">${orderedHtmlSections[index]}</span>`))
   }
@@ -391,6 +392,7 @@ try {
   writeJsonl(join(coworkSessionDir, "audit.jsonl"), [coworkRecord(5, "2026-01-01T10:00:00.000Z"), coworkRecord(255, "2026-01-01T10:01:00.000Z")])
   writeJsonl(join(coworkSessionDir, ".claude", "projects", "fixture", "subagents", "agent.jsonl"), [coworkRecord(255, "2026-01-01T10:01:00.000Z")])
   writeJsonl(join(coworkSessionDir, ".claude", "projects", "fixture", "subagents", "agent-two.jsonl"), [{ timestamp: "2026-01-01T10:02:00.000Z", sessionId: "cowork-1", message: { id: "cowork-message-2", model: "claude-sonnet-4-6", usage: { input_tokens: 3, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 10 } } }])
+  writeFileSync(join(dirname(coworkSessionDir), "remote-session-spaces.json"), JSON.stringify({ entries: [{ sessionId: "remote-cowork-1", folders: [join(fixtureRoot, "cowork-workspace")] }] }))
   const emptyOpenCodeDb = join(fixtureRoot, "empty-opencode.db")
   const emptyDatabase = new DatabaseSync(emptyOpenCodeDb)
   emptyDatabase.exec("CREATE TABLE session (id TEXT, directory TEXT, cost REAL, tokens_input INTEGER, tokens_output INTEGER, tokens_reasoning INTEGER, tokens_cache_read INTEGER, tokens_cache_write INTEGER, model TEXT, time_created INTEGER, time_updated INTEGER)")
@@ -401,6 +403,11 @@ try {
     "--opencode-db", emptyOpenCodeDb, "--output", join(fixtureRoot, "cowork-report"),
   ])
   assert.equal(coworkSummary.coworkSessions, 1)
+  assert.equal(coworkSummary.coworkLocalSessionsMeasured, 1)
+  assert.equal(coworkSummary.coworkRemoteSessionsDetected, 1)
+  assert.equal(coworkSummary.coworkRemoteSessionsMeasured, 0)
+  assert.equal(coworkSummary.coworkRemoteSessionsUnavailable, 1)
+  assert.equal(coworkSummary.coworkRemoteIndexFiles, 1)
   assert.equal(coworkSummary.coworkTranscriptFiles, 3)
   assert.equal(coworkSummary.coworkSubagentRuns, 2)
   assert.equal(coworkSummary.threads, 1)
@@ -410,8 +417,13 @@ try {
   assert.match(coworkMarkdown, /\| cowork \|/)
   assert.match(coworkMarkdown, /Cowork fixture title/)
   assert.match(coworkMarkdown, /claude-cowork \/ subscription-or-api-equivalent/)
-  assert.match(coworkMarkdown, /\| Cowork sessions \| 1 \|/)
-  assert.match(coworkMarkdown, /\| Cowork sub-agent runs \| 2 \|/)
+  assert.match(coworkMarkdown, /\| Measured Cowork sessions \| 1 \|/)
+  assert.match(coworkMarkdown, /\| Measured Cowork sub-agent runs \| 2 \|/)
+  assert.match(coworkMarkdown, /\| Local measured \| 1 \| Included in measured totals \|/)
+  assert.match(coworkMarkdown, /\| Remote detected \| 1 \|/)
+  assert.match(coworkMarkdown, /\| Remote measured \| 0 \|/)
+  assert.match(coworkMarkdown, /\| Remote detected, usage unavailable \| 1 \| Excluded from measured totals; never treated as zero usage \|/)
+  assert.match(coworkMarkdown, /Cowork coverage warning:.*All token and cost totals in this report remain measured totals and exclude that unavailable usage\./)
 
   const declaredExports = join(fixtureRoot, "declared-exports")
   const declaredUsage = (id, workspace) => ({ id, provider: "openai", model: "gpt-5.6-sol", ...workspace, usage: { input_tokens: 10, output_tokens: 1, total_tokens: 11 } })
