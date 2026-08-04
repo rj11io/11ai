@@ -1,6 +1,6 @@
 ---
 name: 11ai-llm-cost-single-thread
-description: "Inspect one project-attributed Codex, Claude Code, Gemini CLI, Cline, Roo Code, OpenCode, or exported usage thread plus recursively spawned Codex sub-agent threads; normalize token counters, calculate attributable USD cost, measure wall time and estimated active time, and write matching timestamped Markdown and HTML reports under the current thread folder's 11ai-llm-cost-single-thread-reports directory. Use for the cost, tokens, effort level, wall time, or active time of the current Codex thread tree or one explicitly identified root thread."
+description: "Inspect one project-attributed Codex, Claude Code, Claude Cowork, Gemini CLI, Cline, Roo Code, OpenCode, or exported usage thread plus recursively spawned Codex sub-agent threads; classify its surface and billing mode, normalize token counters, calculate attributable USD cost, measure wall and estimated active time, and write matching timestamped reports. Use for the cost, tokens, effort, timing, provenance, or harness coverage of one exact thread tree."
 ---
 
 # 11ai LLM Cost Single Thread
@@ -30,7 +30,7 @@ Create this structure by default, where `{datetime}` is the UTC ISO timestamp wi
     └── 11ai-llm-cost-single-thread-{datetime}.html
 ```
 
-Accept `--output`, `--codex-home`, `--claude-home`, `--gemini-home`, `--cline-tasks`, `--roo-tasks`, `--opencode-db`, and `--project-only`. Reject a missing selector, an unmatched selector, or a selector that directly spans multiple logical root threads instead of emitting a zero-cost report. After exact root selection, recursively include Codex sessions explicitly marked as sub-agents whose `parent_thread_id` points to the selected root or an included descendant. Do not infer relationships from shared folders, timestamps, or fork metadata alone. Retain explicitly linked sub-agent sessions with unavailable usage and display their token and cost fields as `n/a`.
+Accept `--output`, `--codex-home`, `--claude-home`, `--cowork-home`, `--gemini-home`, `--cline-tasks`, `--roo-tasks`, `--opencode-db`, and `--project-only`. Reject a missing selector, an unmatched selector, or a selector that directly spans multiple logical root threads instead of emitting a zero-cost report. After exact root selection, recursively include Codex sessions explicitly marked as sub-agents whose `parent_thread_id` points to the selected root or an included descendant. Do not infer relationships from shared folders, timestamps, or fork metadata alone. Retain explicitly linked sub-agent sessions with unavailable usage and display their token and cost fields as `n/a`.
 
 Read [the bundled harness reference](references/harnesses.md) when native discovery, token semantics, or override paths need explanation. Use only the [bundled pricing catalog](references/pricing.json).
 
@@ -52,7 +52,7 @@ Before selecting and aggregating Claude usage, deduplicate records across every 
 
 ## Report requirements
 
-Place `Totals` immediately after `Cost by root and child folder`, and place `Scan coverage` immediately before `Pricing coverage`, in both report formats.
+Place `Totals` immediately after `Cost by root and child folder`, place `Harness surface coverage` immediately before `Scan coverage`, and keep `Scan coverage` immediately before `Pricing coverage`, in both report formats.
 
 Format every USD value with a dollar sign, comma thousands separators, and exactly four decimal places, such as `$1,234.5678`.
 
@@ -84,7 +84,7 @@ Before reporting completion:
 - confirm the HTML main title includes the smaller inline linked text `powered by 11ai-llm-cost-single-thread` and that its link safely opens in a new tab;
 - confirm both formats contain root/sub-agent counts and relationship detail, the standardized token breakdown and cost-adjacent metric order, aggregate cost per thread, plus `Cost by model by effort` as a level-two sibling immediately after `Cost by model`, totals, pricing coverage, limitations, and the exact linked signature;
 - confirm `Totals` is a level-two sibling immediately after `Cost by root and child folder`;
-- confirm `Scan coverage` is a level-two sibling immediately before `Pricing coverage`;
+- confirm `Harness surface coverage` appears immediately before `Scan coverage`, and `Scan coverage` remains immediately before `Pricing coverage`;
 - confirm every Cost by table contains total, input, output, per-1M-token, and per-thread costs in the required order, with a grand-total row;
 - confirm every HTML level-two and level-three section is collapsed by default;
 - confirm the HTML is fluid and compact without an outer card, and the generation message follows all disclosures immediately before the signature in both formats;

@@ -1,6 +1,6 @@
 {
   "name": "11ai-llm-costs",
-  "version": "1.30.0",
+  "version": "1.31.0",
   "description": "Single-thread, project-scoped, and machine-wide LLM cost reports with provider-verified pricing maintenance.",
   "author": {
     "name": "rj11io"
@@ -12,6 +12,7 @@
     "token-usage",
     "codex",
     "claude-code",
+    "claude-cowork",
     "gemini-cli",
     "cline",
     "roo-code",
@@ -24,7 +25,7 @@
   "interface": {
     "displayName": "11ai LLM Costs",
     "shortDescription": "Single-thread, project, and global LLM reports.",
-    "longDescription": "Analyze local Codex, Claude Code, Gemini CLI, Cline, Roo Code, OpenCode, and exported usage. Generate single-thread, project-scoped, or machine-wide reports with detailed cost aggregates, wall time, estimated active time, pricing coverage, and thread detail; refresh all bundled pricing catalogs from official provider sources.",
+    "longDescription": "Analyze local Codex, Claude Code, Claude Cowork, Gemini CLI, Cline, Roo Code, OpenCode, and exported usage. Generate single-thread, project-scoped, or machine-wide reports with harness-surface and billing classification, detailed cost aggregates, timing, pricing coverage, and thread detail; refresh all bundled pricing catalogs from official provider sources.",
     "developerName": "rj11io",
     "category": "Developer Tools",
     "capabilities": [

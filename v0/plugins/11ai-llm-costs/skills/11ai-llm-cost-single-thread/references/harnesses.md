@@ -23,6 +23,12 @@ The analyzer reads these stores without modifying them. Layouts are implementati
 - Deduplication: compare assistant message IDs across every in-scope project and native file because streaming snapshots, parent sessions, and subagent transcripts can repeat the same response. Prefer `message.id`, fall back to the top-level record ID, group each ID by stable model and input/cache billing fields, and retain the highest `output_tokens` snapshot per group. Preserve suppressed copies as selector aliases. If one ID has conflicting non-output billing fields, retain one winner per variant and report the conflict. Leave records without a usable ID unchanged. Claude Code's internal transcript line schema is not a documented stable API, so ignore unknown record types and keep parsing tolerant.
 - Sources: official Claude Code [hook transcript fields](https://code.claude.com/docs/en/hooks), [status-line usage and cost fields](https://code.claude.com/docs/en/statusline), [session resume CLI](https://docs.anthropic.com/en/docs/claude-code/cli-usage), [effort semantics and supported models](https://platform.claude.com/docs/en/build-with-claude/effort), and [prompt-caching accounting](https://platform.claude.com/docs/en/build-with-claude/prompt-caching).
 
+## Claude Cowork
+
+- Conventional roots: macOS `~/Library/Application Support/Claude/local-agent-mode-sessions`, Linux `~/.config/Claude/local-agent-mode-sessions`, and Windows `%APPDATA%/Claude/local-agent-mode-sessions`; use `--cowork-home` for another location.
+- Read `audit.jsonl` and nested sub-agent JSONL. Match any selected folder under the requested root, attribute one folder directly, and keep multiple folders as an unsplit multi-project session.
+- Deduplicate Cowork and Claude Code responses together by message ID and billing fingerprint, retaining the highest-output streaming snapshot.
+
 ## Gemini CLI
 
 - Default data root: `~/.gemini`; with `GEMINI_CLI_HOME`, the root is `$GEMINI_CLI_HOME/.gemini`.
@@ -48,9 +54,15 @@ The analyzer reads these stores without modifying them. Layouts are implementati
 ## OpenCode
 
 - Current database: `opencode*.db` under the XDG data directory's `opencode/` folder (normally `~/.local/share/opencode/`); a macOS Application Support fallback is also checked.
-- The `session` ledger supplies directory, timestamps, cost, model/provider JSON, and disjoint input, output, reasoning, cache-read, and cache-write counters.
+- Current databases store authoritative assistant cost/tokens/model/provider in `message.data`; legacy databases keep the same counters in `session` columns. Sum assistant messages only and do not also count overlapping `part` step-finish rows.
 - Databases are opened read-only. Native database support requires a Node.js runtime providing `node:sqlite`; exported JSON can still be inspected as generic usage.
 - Sources: [CLI export/stats commands](https://opencode.ai/docs/cli/), the official [database location code](https://github.com/anomalyco/opencode/blob/dev/packages/core/src/database/database.ts), and [session ledger schema](https://github.com/anomalyco/opencode/blob/dev/packages/core/src/session/sql.ts).
+
+## Surface and billing semantics
+
+- Preserve Codex `originator`/source so Codex CLI, Desktop, exec, ChatGPT Work, and T3 Code remain distinguishable while sharing one runtime ledger.
+- Treat T3 Code and Zed external agents as wrappers around their underlying runtime and count that runtime once.
+- Keep credit-, quota-, API/export-, and detected-only surfaces explicit in coverage; never convert their product counters into API-token costs without a documented conversion.
 
 ## Provider pricing
 

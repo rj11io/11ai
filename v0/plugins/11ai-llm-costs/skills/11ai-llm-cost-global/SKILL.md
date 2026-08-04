@@ -1,6 +1,6 @@
 ---
 name: 11ai-llm-cost-global
-description: "Inspect all readable Codex, Claude Code, Gemini CLI, Cline, Roo Code, and OpenCode usage stores across the machine; normalize token counters, calculate attributable USD costs, measure wall and estimated active time, and write Markdown and standalone HTML reports under the Desktop's 11ai-llm-cost-global-reports folder with rolling, calendar-to-date, monthly, quarterly, yearly, and all-time sections. Use for global LLM spend, token usage, model and effort cost, AI timing, or cross-project analysis."
+description: "Inspect all readable Codex, Claude Code, Claude Cowork, Gemini CLI, Cline, Roo Code, and OpenCode usage stores across the machine; classify harness surfaces and billing modes, normalize token counters, calculate attributable USD costs, measure wall and estimated active time, and write Markdown and standalone HTML reports. Use for global LLM spend, token usage, model and effort cost, AI timing, harness coverage, or cross-project analysis."
 ---
 
 # 11ai LLM Cost Global
@@ -29,6 +29,7 @@ Generate both reports from the same analysis so their facts, tables, ordering, l
 - `--output <folder>` or `--output-dir <folder>` only when the user explicitly requests a different reports directory;
 - `--codex-home <dir>` or `CODEX_HOME` to replace automatic Codex home discovery;
 - `--claude-home <dir>` or `CLAUDE_CONFIG_DIR` to replace automatic Claude Code home discovery;
+- `--cowork-home <dir>` to replace automatic Claude Cowork desktop-session discovery;
 - `--gemini-home <dir>` or `GEMINI_CLI_HOME` to replace Gemini CLI discovery (`--gemini-home` points directly to `.gemini`);
 - `--cline-tasks <dir>` and `--roo-tasks <dir>` to replace their automatic task-root discovery;
 - repeatable `--opencode-db <file>` arguments to replace automatic OpenCode database discovery;
@@ -65,10 +66,11 @@ Render these top-level report sections in this order:
 11. `Quarterly reports`
 12. `Yearly reports`
 13. `All time`
-14. `Scan coverage`
-15. `Pricing coverage`
-16. `Anomalies and limitations`
-17. `Methodology`
+14. `Harness surface coverage`
+15. `Scan coverage`
+16. `Pricing coverage`
+17. `Anomalies and limitations`
+18. `Methodology`
 
 Attribute a whole thread to its finish timestamp, falling back to its start timestamp. Include undated threads only in `All time` and flag them as limitations. Use the machine's local calendar boundaries for `Today`, month/quarter/year-to-date, and monthly/quarterly/yearly reports. Treat `Past 24 hours` and `Past 7/30/60/90 days` as rolling 24/168/720/1,440/2,160-hour windows ending at report generation time. Under each calendar archive, include one level-three subsection for every month, quarter, or year with dated activity, newest first, and render that period's totals and full breakdown as level-four subsections.
 
@@ -78,10 +80,11 @@ The bundled parser handles:
 
 - Codex session JSONL: final cumulative `token_count` usage and the latest model/effort context;
 - Claude session JSONL: assistant usage, cache creation/read buckets, global cross-file message deduplication, and per-model/per-effort grouping;
+- Claude Cowork audit and sub-agent JSONL: the same usage schema and global deduplication, with session title and selected-folder attribution from adjacent desktop metadata;
 - Claude effort: recorded request/configuration fields when present, with `ultracode` normalized to `xhigh`. Native transcript omissions remain `n/a`; never rewrite missing historical effort as the current setting or a model default;
 - Gemini CLI chat JSONL: per-response input, output, cached, thought, tool, and total counters;
 - Cline and Roo Code task `ui_messages.json`: API request, deleted-request, and subagent usage counters plus harness-reported cost;
-- OpenCode SQLite session ledgers: model/provider, workspace, cost, uncached input, output, reasoning, cache-read, and cache-write counters;
+- OpenCode SQLite ledgers: current assistant `message.data` usage and legacy session-column schemas, without also counting overlapping `part` rows;
 - OpenAI-style response usage: input/prompt, cached-input, output/completion, total, and reasoning counters;
 - Anthropic-style usage objects and generic `usage`, `token_usage`, or `tokenUsage` records;
 - harness-reported `cost`, `cost_usd`, or `total_cost_usd` when token pricing is unavailable.
@@ -138,7 +141,7 @@ Before reporting completion:
 - confirm the timestamped package contains same-named `.md` and `.html` reports;
 - confirm the Markdown report places the linked `powered by 11ai-llm-cost-global` attribution immediately below its H1;
 - confirm the HTML main title includes the smaller inline linked text `powered by 11ai-llm-cost-global` and that its link safely opens in a new tab;
-- confirm both reports use this exact top-level order: `Past 24 hours`, `Past 7 days`, `Past 30 days`, `Past 60 days`, `Past 90 days`, `Today`, `Month to date`, `Quarter to date`, `Year to date`, `Monthly reports`, `Quarterly reports`, `Yearly reports`, `All time`, `Scan coverage`, `Pricing coverage`, `Anomalies and limitations`, `Methodology`;
+- confirm both reports use this exact top-level order: `Past 24 hours`, `Past 7 days`, `Past 30 days`, `Past 60 days`, `Past 90 days`, `Today`, `Month to date`, `Quarter to date`, `Year to date`, `Monthly reports`, `Quarterly reports`, `Yearly reports`, `All time`, `Harness surface coverage`, `Scan coverage`, `Pricing coverage`, `Anomalies and limitations`, `Methodology`;
 - confirm monthly, quarterly, and yearly reports contain one newest-first level-three subsection for every corresponding calendar period with dated activity and that every archive period contains the same full breakdown at level four;
 - confirm every period in both formats displays the standardized token breakdown and cost-adjacent metric order, aggregate cost per thread, totals, and provider/model/model-by-effort/harness/workspace aggregates with grand-total rows;
 - confirm every fixed period contains `Cost by model by effort` as a level-three sibling immediately after `Cost by model`, and every calendar archive report contains the equivalent level-four sibling pair;

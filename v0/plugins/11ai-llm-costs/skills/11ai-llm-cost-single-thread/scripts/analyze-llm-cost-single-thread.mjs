@@ -5,6 +5,7 @@ import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readSync, rea
 import { homedir } from "node:os"
 import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path"
 import { fileURLToPath } from "node:url"
+import { HARNESS_SURFACE_COVERAGE, classifyThread, readOpenCodeUsageRows } from "./harness-support.mjs"
 
 const argv = process.argv.slice(2)
 const option = (name) => {
@@ -12,7 +13,7 @@ const option = (name) => {
   return index >= 0 ? argv[index + 1] : null
 }
 
-const VALUE_OPTIONS = new Set(["--output", "--codex-home", "--claude-home", "--gemini-home", "--cline-tasks", "--roo-tasks", "--opencode-db", "--thread"])
+const VALUE_OPTIONS = new Set(["--output", "--codex-home", "--claude-home", "--cowork-home", "--gemini-home", "--cline-tasks", "--roo-tasks", "--opencode-db", "--thread"])
 const FLAG_OPTIONS = new Set(["--project-only", "--help"])
 let positional = null
 for (let index = 0; index < argv.length; index += 1) {
@@ -29,7 +30,7 @@ for (let index = 0; index < argv.length; index += 1) {
 }
 
 if (argv.includes("--help")) {
-  console.log("usage: node analyze-llm-cost-single-thread.mjs [root-folder] [--thread id-or-source] [--output report.md] [--codex-home dir] [--claude-home dir] [--gemini-home dir] [--cline-tasks dir] [--roo-tasks dir] [--opencode-db file] [--project-only]")
+  console.log("usage: node analyze-llm-cost-single-thread.mjs [root-folder] [--thread id-or-source] [--output report.md] [--codex-home dir] [--claude-home dir] [--cowork-home dir] [--gemini-home dir] [--cline-tasks dir] [--roo-tasks dir] [--opencode-db file] [--project-only]")
   console.log("defaults: --thread uses CODEX_THREAD_ID when available")
   process.exit(0)
 }
@@ -74,7 +75,7 @@ const JSON_EXTENSIONS = new Set([".json", ".jsonl", ".ndjson"])
 const SESSION_EXTENSIONS = new Set([".json", ".jsonl", ".ndjson"])
 const ACTIVE_GAP_MS = 5 * 60 * 1000
 const externalSessions = new Map()
-const discovery = { nativeFilesConsidered: 0, nativeSessionsMatched: 0, codexSessions: 0, claudeSessions: 0, geminiSessions: 0, clineSessions: 0, rooSessions: 0, opencodeSessions: 0, limitations: [] }
+const discovery = { nativeFilesConsidered: 0, nativeSessionsMatched: 0, codexSessions: 0, claudeSessions: 0, coworkSessions: 0, geminiSessions: 0, clineSessions: 0, rooSessions: 0, opencodeSessions: 0, limitations: [] }
 const finite = (value) => typeof value === "number" && Number.isFinite(value)
 const number = (value) => {
   if (finite(value)) return value
@@ -111,6 +112,7 @@ function sourceLabel(file) {
 
 function folderLabel(file) {
   const external = externalSessions.get(resolve(file))
+  if (external?.workspaceLabel) return external.workspaceLabel
   if (external?.cwd) {
     const rel = relative(root, external.cwd).replaceAll("\\", "/")
     return !rel || rel === "." ? "." : rel.split("/")[0]
@@ -199,6 +201,21 @@ function geminiSessionMetadata(file) {
   return null
 }
 
+function coworkSessionMetadata(file) {
+  let sessionDir = dirname(file)
+  for (let depth = 0; depth < 10; depth += 1) {
+    if (basename(sessionDir).startsWith("local_")) break
+    const parent = dirname(sessionDir)
+    if (parent === sessionDir) return null
+    sessionDir = parent
+  }
+  if (!basename(sessionDir).startsWith("local_")) return null
+  let metadata = {}
+  try { metadata = JSON.parse(readFileSync(`${sessionDir}.json`, "utf8")) } catch { /* audit records remain usable without metadata */ }
+  const directories = Array.isArray(metadata.userSelectedFolders) ? metadata.userSelectedFolders.filter((value) => typeof value === "string").map((value) => resolve(value)) : []
+  return { id: firstValue(metadata.sessionId, basename(sessionDir)), title: typeof metadata.title === "string" ? metadata.title : null, cwd: directories.length === 1 ? directories[0] : null, directories, workspaceLabel: directories.length > 1 ? `multi-project session (${directories.length} folders)` : directories.length === 0 ? "session with no selected folder" : null }
+}
+
 function taskWorkspace(file) {
   for (const name of ["task_metadata.json", "history_item.json"]) {
     const metadataFile = join(dirname(file), name)
@@ -224,6 +241,11 @@ function discoverNativeSessions() {
   if (argv.includes("--project-only")) return []
   const codexHome = resolve(option("--codex-home") ?? process.env.CODEX_HOME ?? join(homedir(), ".codex"))
   const claudeHome = resolve(option("--claude-home") ?? process.env.CLAUDE_CONFIG_DIR ?? join(homedir(), ".claude"))
+  const coworkRoots = option("--cowork-home") ? [resolve(option("--cowork-home"))] : [
+    join(homedir(), "Library", "Application Support", "Claude", "local-agent-mode-sessions"),
+    join(homedir(), ".config", "Claude", "local-agent-mode-sessions"),
+    join(homedir(), "AppData", "Roaming", "Claude", "local-agent-mode-sessions"),
+  ]
   const geminiHome = resolve(option("--gemini-home") ?? (process.env.GEMINI_CLI_HOME ? join(process.env.GEMINI_CLI_HOME, ".gemini") : join(homedir(), ".gemini")))
   const clineRoots = option("--cline-tasks")
     ? [resolve(option("--cline-tasks"))]
@@ -234,6 +256,7 @@ function discoverNativeSessions() {
   const sources = [
     { harness: "codex", home: codexHome, roots: [join(codexHome, "sessions"), join(codexHome, "archived_sessions")] },
     { harness: "claude", home: claudeHome, roots: [join(claudeHome, "projects")] },
+    { harness: "cowork", home: homedir(), roots: coworkRoots },
     { harness: "gemini", home: geminiHome, roots: [join(geminiHome, "tmp")] },
     { harness: "cline", home: dirname(clineRoots[0]), roots: clineRoots },
     { harness: "roo", home: dirname(rooRoots[0]), roots: rooRoots },
@@ -242,13 +265,17 @@ function discoverNativeSessions() {
   for (const source of sources) {
     for (const sessionRoot of source.roots) {
       for (const file of walkSessionFiles(sessionRoot)) {
+        if (source.harness === "cowork" && extname(file).toLowerCase() !== ".jsonl") continue
         if ((source.harness === "cline" || source.harness === "roo") && basename(file) !== "ui_messages.json") continue
         if (source.harness === "gemini" && !file.replaceAll("\\", "/").includes("/chats/")) continue
         discovery.nativeFilesConsidered += 1
         let metadata
         let matches = false
         try {
-          if (source.harness === "gemini") {
+          if (source.harness === "cowork") {
+            metadata = coworkSessionMetadata(file)
+            matches = Boolean(metadata && metadata.directories.some((directory) => isWithin(root, directory)))
+          } else if (source.harness === "gemini") {
             metadata = geminiSessionMetadata(file)
             matches = Boolean(metadata && (metadata.projectHash === sha(root) || metadata.directories.some((directory) => isWithin(root, directory))))
             if (metadata && !metadata.cwd) metadata.cwd = root
@@ -271,6 +298,7 @@ function discoverNativeSessions() {
         discovery.nativeSessionsMatched += 1
         if (source.harness === "codex") discovery.codexSessions += 1
         if (source.harness === "claude") discovery.claudeSessions += 1
+        if (source.harness === "cowork") discovery.coworkSessions += 1
         if (source.harness === "gemini") discovery.geminiSessions += 1
         if (source.harness === "cline") discovery.clineSessions += 1
         if (source.harness === "roo") discovery.rooSessions += 1
@@ -521,13 +549,23 @@ function tokenIssues(tokens, reportedCostUsd) {
 
 function baseThread(file, index, provider, harness, model, tokens, records, usageList, reportedCostUsd = null, logicalId = null) {
   const timing = timingFrom(records)
-  const threadKey = `${sourceLabel(file)}|${provider}|${harness}|${model}|${index}`
-  const logicalThreadKey = `${harness}:${sourceLabel(file)}:${logicalId ? String(logicalId) : "n/a"}`
+  const external = externalSessions.get(resolve(file))
+  const effectiveHarness = external?.harness ?? harness
+  const meta = records.find((record) => record?.type === "session_meta")?.payload ?? {}
+  const threadKey = `${sourceLabel(file)}|${provider}|${effectiveHarness}|${model}|${index}`
+  const logicalThreadKey = `${effectiveHarness}:${sourceLabel(file)}:${logicalId ? String(logicalId) : "n/a"}`
   const recordedEffort = records.map(effortFrom).filter(Boolean).at(-1) ?? null
   return {
     threadId: `${provider}:${sha(threadKey).slice(0, 20)}`,
     provider,
-    harness,
+    harness: effectiveHarness,
+    originator: firstValue(meta.originator, meta.client, meta.app),
+    source: typeof meta.source === "string" ? meta.source : firstValue(meta.thread_source, meta.source?.type),
+    title: external?.title ?? null,
+    declaredSurface: records.map((record) => firstValue(record?.surface, record?.harness_surface, record?.harnessSurface)).find(Boolean) ?? null,
+    declaredBillingMode: records.map((record) => firstValue(record?.billing_mode, record?.billingMode)).find(Boolean) ?? null,
+    declaredUsageSource: records.map((record) => firstValue(record?.usage_source, record?.usageSource)).find(Boolean) ?? null,
+    declaredConfidence: records.map((record) => record?.confidence).find(Boolean) ?? null,
     model,
     effort: recordedEffort,
     effortSource: recordedEffort ? "recorded" : null,
@@ -795,20 +833,18 @@ async function parseOpenCodeDatabase(file) {
   let database
   try {
     database = new DatabaseSync(file, { readOnly: true })
-    const rows = database.prepare("SELECT id, directory, cost, tokens_input, tokens_output, tokens_reasoning, tokens_cache_read, tokens_cache_write, model, time_created, time_updated FROM session").all()
+    const rows = readOpenCodeUsageRows(database)
     const result = []
     for (const row of rows) {
       if (typeof row.directory !== "string" || !isWithin(root, row.directory)) continue
-      let modelInfo = {}
-      try { modelInfo = typeof row.model === "string" ? JSON.parse(row.model) : (row.model ?? {}) } catch { modelInfo = {} }
-      const model = firstValue(modelInfo.id, modelInfo.modelID, modelInfo.modelId) ?? "unknown"
-      const provider = String(firstValue(modelInfo.providerID, modelInfo.providerId, modelInfo.provider, providerFrom({ model }, {}, model))).toLowerCase()
-      const input = firstFinite(row.tokens_input, 0)
-      const output = firstFinite(row.tokens_output, 0)
-      const reasoning = firstFinite(row.tokens_reasoning, 0)
-      const cacheRead = firstFinite(row.tokens_cache_read, 0)
-      const cacheWrite = firstFinite(row.tokens_cache_write, 0)
-      const record = { timestamp: row.time_created, created_at: row.time_created }
+      const model = row.model ?? "unknown"
+      const provider = String(firstValue(row.provider, providerFrom({ model }, {}, model))).toLowerCase()
+      const input = firstFinite(row.input, 0)
+      const output = firstFinite(row.output, 0)
+      const reasoning = firstFinite(row.reasoning, 0)
+      const cacheRead = firstFinite(row.cacheRead, 0)
+      const cacheWrite = firstFinite(row.cacheWrite, 0)
+      const record = { timestamp: row.timeCreated, created_at: row.timeCreated }
       const thread = baseThread(file, result.length, provider, "opencode", model, {
         inputTotal: input + cacheRead + cacheWrite,
         inputUncached: input,
@@ -819,14 +855,15 @@ async function parseOpenCodeDatabase(file) {
         reasoningOutput: reasoning,
         nonReasoningOutput: output,
         providerTotal: input + cacheRead + cacheWrite + output + reasoning,
-      }, [record, { timestamp: row.time_updated }], [{ input, output, reasoning, cacheRead, cacheWrite }], firstFinite(row.cost), row.id)
+      }, [record, { timestamp: row.timeUpdated }], [{ input, output, reasoning, cacheRead, cacheWrite, schema: row.schema }], firstFinite(row.cost), row.id)
       thread.sourceFile = `opencode-session/${basename(file)}/${row.id}`
       const rel = relative(root, resolve(row.directory)).replaceAll("\\", "/")
       thread.folder = !rel || rel === "." ? "." : rel.split("/")[0]
       result.push(thread)
     }
-    discovery.opencodeSessions += result.length
-    discovery.nativeSessionsMatched += result.length
+    const sessionCount = new Set(result.map((thread) => thread.logicalId)).size
+    discovery.opencodeSessions += sessionCount
+    discovery.nativeSessionsMatched += sessionCount
     return result
   } catch (error) {
     discovery.limitations.push(`OpenCode database ${basename(file)} could not be read: ${error.message}`)
@@ -1195,11 +1232,12 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "",
     "## Thread detail",
     "",
-    table(["Thread", "Relationship", "Parent thread", "Source", "Provider / model / effort", "Input", "Cached", "Output", "Tokens", "Selected cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Harness reported", "Method"], sortedThreads.map((thread) => [
+    table(["Thread", "Relationship", "Parent thread", "Source", "Surface / billing", "Provider / model / effort", "Input", "Cached", "Output", "Tokens", "Selected cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Harness reported", "Method"], sortedThreads.map((thread) => [
       thread.threadId,
       thread.selectionDepth === 0 ? "Selected task" : `Sub-agent (depth ${thread.selectionDepth})`,
       thread.selectionDepth === 0 ? "n/a" : thread.parentThreadId ?? "n/a",
-      thread.sourceFile,
+      thread.title ? `${thread.title} (${thread.sourceFile})` : thread.sourceFile,
+      `${thread.surface} / ${thread.billingMode}`,
       thread.modelLabel,
       fmtInt(thread.tokens.inputTotal),
       fmtInt(thread.tokens.cachedInputRead),
@@ -1214,6 +1252,16 @@ function report({ threads, stats, malformed, duplicateIds }) {
       thread.costMethod === "derived" ? `derived${thread.pricingStatus === "matched-stale" ? " (stale rate)" : ""}` : thread.costMethod,
     ])),
     "",
+    "## Harness surface coverage",
+    "",
+    "Native and inherited surfaces contribute token records. Credit, quota, detected-only, and export-only surfaces remain explicit so missing data is not mistaken for zero usage.",
+    "",
+    table(["Surface", "Coverage", "Handling"], HARNESS_SURFACE_COVERAGE),
+    "",
+    "### Observed surface classification",
+    "",
+    table(["Surface", "Runtime", "Billing mode", "Usage source", "Confidence", "Threads"], [...groupBy(threads, (thread) => `${thread.surface}\u0000${thread.runtime}\u0000${thread.billingMode}\u0000${thread.usageSource}\u0000${thread.confidence}`).entries()].map(([key, items]) => [...key.split("\u0000"), fmtInt(logicalThreadRows(items).length)])),
+    "",
     "## Scan coverage",
     "",
     table(["Coverage", "Value"], [
@@ -1224,6 +1272,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
       ["Project-associated native sessions", fmtInt(stats.nativeSessionsMatched)],
       ["Codex sessions", fmtInt(stats.codexSessions)],
       ["Claude sessions", fmtInt(stats.claudeSessions)],
+      ["Claude Cowork transcript files", fmtInt(stats.coworkSessions)],
       ["Gemini CLI sessions", fmtInt(stats.geminiSessions)],
       ["Cline tasks", fmtInt(stats.clineSessions)],
       ["Roo Code tasks", fmtInt(stats.rooSessions)],
@@ -1557,6 +1606,7 @@ const stats = {
   nativeSessionsMatched: discovery.nativeSessionsMatched,
   codexSessions: discovery.codexSessions,
   claudeSessions: discovery.claudeSessions,
+  coworkSessions: discovery.coworkSessions,
   geminiSessions: discovery.geminiSessions,
   clineSessions: discovery.clineSessions,
   rooSessions: discovery.rooSessions,
@@ -1576,6 +1626,7 @@ for (const database of opencodeDatabaseCandidates()) {
   const databaseThreads = await parseOpenCodeDatabase(database)
   if (databaseThreads.length) stats.recognizedFiles += 1
   for (const thread of databaseThreads) {
+    Object.assign(thread, classifyThread(thread))
     const priced = priceThread(thread)
     Object.assign(thread, priced)
     threads.push(thread)
@@ -1618,6 +1669,7 @@ for (const [file, parsed] of parsedFiles) {
   if (!parsedThreads.length) continue
   stats.recognizedFiles += 1
   for (const thread of parsedThreads) {
+    Object.assign(thread, classifyThread(thread))
     const priced = priceThread(thread)
     Object.assign(thread, priced)
     threads.push(thread)
@@ -1680,6 +1732,7 @@ console.log(JSON.stringify({
   nativeSessionsMatched: stats.nativeSessionsMatched,
   codexSessions: stats.codexSessions,
   claudeSessions: stats.claudeSessions,
+  coworkSessions: stats.coworkSessions,
   geminiSessions: stats.geminiSessions,
   clineSessions: stats.clineSessions,
   rooSessions: stats.rooSessions,

@@ -27,6 +27,7 @@ try {
   const threadRoot = join(fixtureRoot, "thread-root")
   const codexHome = join(fixtureRoot, "codex")
   const claudeHome = join(fixtureRoot, "claude")
+  const coworkHome = join(fixtureRoot, "cowork-empty")
   const geminiHome = join(fixtureRoot, "gemini")
   const clineTasks = join(fixtureRoot, "cline-tasks")
   const rooTasks = join(fixtureRoot, "roo-tasks")
@@ -53,7 +54,7 @@ try {
   }))
 
   writeJsonl(join(codexHome, "sessions", "2026", "07", "18", "matching.jsonl"), [
-    { timestamp: "2026-07-18T09:00:00.000Z", type: "session_meta", payload: { id: "codex-matching", cwd: project } },
+    { timestamp: "2026-07-18T09:00:00.000Z", type: "session_meta", payload: { id: "codex-matching", cwd: project, originator: "t3code_desktop", source: "vscode" } },
     { timestamp: "2026-07-18T09:10:00.000Z", type: "turn_context", payload: { model: "gpt-5.6-sol", effort: "light" } },
     { timestamp: "2026-07-18T09:20:00.000Z", type: "event_msg", payload: { type: "token_count", info: { total_token_usage: { input_tokens: 1000, cached_input_tokens: 600, output_tokens: 100, reasoning_output_tokens: 40, total_tokens: 1100 } } } },
   ])
@@ -81,11 +82,14 @@ try {
     { ts: 1752829260000, type: "say", say: "api_req_started", text: JSON.stringify({ modelId: "gpt-5.6-sol", provider: "openai", tokensIn: 30, tokensOut: 6, cacheWrites: 0, cacheReads: 4, cost: 0.02 }) },
   ]))
   const database = new DatabaseSync(opencodeDb)
-  database.exec("CREATE TABLE session (id TEXT, directory TEXT, cost REAL, tokens_input INTEGER, tokens_output INTEGER, tokens_reasoning INTEGER, tokens_cache_read INTEGER, tokens_cache_write INTEGER, model TEXT, time_created INTEGER, time_updated INTEGER)")
-  database.prepare("INSERT INTO session VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)").run("opencode-1", project, 0.03, 40, 8, 2, 5, 1, JSON.stringify({ id: "gpt-5.6-sol", providerID: "openai" }), 1752829300000, 1752829360000)
+  database.exec("CREATE TABLE session (id TEXT PRIMARY KEY, directory TEXT, time_created INTEGER, time_updated INTEGER)")
+  database.exec("CREATE TABLE message (id TEXT PRIMARY KEY, session_id TEXT, time_created INTEGER, time_updated INTEGER, data TEXT)")
+  database.prepare("INSERT INTO session VALUES (?, ?, ?, ?)").run("opencode-1", project, 1752829300000, 1752829360000)
+  database.prepare("INSERT INTO message VALUES (?, ?, ?, ?, ?)").run("message-1", "opencode-1", 1752829300000, 1752829360000, JSON.stringify({ role: "assistant", modelID: "gpt-5.6-sol", providerID: "openai", cost: 0.03, tokens: { input: 40, output: 8, reasoning: 2, cache: { read: 5, write: 1 } } }))
+  database.prepare("INSERT INTO message VALUES (?, ?, ?, ?, ?)").run("message-user", "opencode-1", 1752829290000, 1752829290000, JSON.stringify({ role: "user", tokens: { input: 999, output: 999 } }))
   database.close()
 
-  const harnessArgs = ["--codex-home", codexHome, "--claude-home", claudeHome, "--gemini-home", geminiHome, "--cline-tasks", clineTasks, "--roo-tasks", rooTasks, "--opencode-db", opencodeDb]
+  const harnessArgs = ["--codex-home", codexHome, "--claude-home", claudeHome, "--cowork-home", coworkHome, "--gemini-home", geminiHome, "--cline-tasks", clineTasks, "--roo-tasks", rooTasks, "--opencode-db", opencodeDb]
   const summary = run([project, ...harnessArgs, "--output", report])
   assert.equal(summary.output, report)
   assert.equal(summary.markdownReport, report)
@@ -116,7 +120,8 @@ try {
   const levelTwoHeadings = markdown.match(/^## .+$/gm) ?? []
   assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Cost by model") + 1], "## Cost by model by effort")
   assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Cost by root and child folder") + 1], "## Totals")
-  assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Thread detail") + 1], "## Scan coverage")
+  assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Thread detail") + 1], "## Harness surface coverage")
+  assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Harness surface coverage") + 1], "## Scan coverage")
   assert.equal(levelTwoHeadings[levelTwoHeadings.indexOf("## Scan coverage") + 1], "## Pricing coverage")
   assert.match(markdown, /\| openai \/ gpt-5\.6-sol \| low \| \$\d+\.\d+ \| 1,000 \| 600 \| \$\d+\.\d+ \| 100 \| \$\d+\.\d+ \| 1,100 \| \$\d+\.\d+ \| 1 \| \$\d+\.\d+ \|/)
   assert.doesNotMatch(markdown, /\| openai \/ gpt-5\.6-sol \| light \|/)
@@ -128,7 +133,7 @@ try {
   assert.match(markdown, /\| Provider \/ model \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \|/)
   assert.match(markdown, /\| Provider \/ model \| Effort \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \|/)
   assert.match(markdown, /\| Folder \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Priced \| Unpriced \|/)
-  assert.match(markdown, /\| Thread \| Source \| Provider \/ model \/ effort \| Input \| Cached \| Output \| Tokens \| Selected cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Harness reported \| Method \|/)
+  assert.match(markdown, /\| Thread \| Source \| Surface \/ billing \| Provider \/ model \/ effort \| Input \| Cached \| Output \| Tokens \| Selected cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Harness reported \| Method \|/)
   assert.match(markdown, /\| Total \| \$[\d,]+\.\d+ \| 1,805 \| 792 \| \$[\d,]+\.\d+ \| 241 \| \$[\d,]+\.\d+ \| 2,046 \| \$[\d,]+\.\d+ \| 7 \|/)
   assert.match(markdown, /\$1,234\.\d{4}/)
   assert.match(markdown, /\| Cost \/ thread \| \$[\d,]+\./)
@@ -139,6 +144,7 @@ try {
   assert.match(markdown, /cline-session\/cline-tasks\/task-1\/ui_messages\.json/)
   assert.match(markdown, /roo-session\/roo-tasks\/task-2\/ui_messages\.json/)
   assert.match(markdown, /opencode-session\/opencode\.db\/opencode-1/)
+  assert.match(markdown, /t3-code \/ underlying-runtime/)
   assert.ok(markdown.endsWith("_LLM token cost analysis by [11ai-llm-cost-project](https://ai.rj11.io/skills/11ai-llm-cost-project)._\n"))
   assert.ok(markdown.lastIndexOf("> Generated ") > markdown.indexOf("## Methodology"))
   assert.ok(markdown.lastIndexOf("> Generated ") < markdown.lastIndexOf("_LLM token cost analysis"))
@@ -314,6 +320,29 @@ try {
   assert.equal(dirname(defaultSummary.htmlReport), defaultReportDir)
   assert.match(basename(defaultSummary.markdownReport), /^11ai-llm-cost-project-\d{4}-\d{2}-\d{2}T.*\.md$/)
   assert.equal(basename(defaultSummary.htmlReport), `${basename(defaultSummary.markdownReport, ".md")}.html`)
+
+  const coworkNativeHome = join(fixtureRoot, "cowork-native")
+  const coworkProject = join(fixtureRoot, "cowork-project")
+  const coworkSessionDir = join(coworkNativeHome, "account", "workspace", "local_project-cowork")
+  mkdirSync(coworkProject, { recursive: true })
+  mkdirSync(dirname(coworkSessionDir), { recursive: true })
+  writeFileSync(`${coworkSessionDir}.json`, JSON.stringify({ sessionId: "project-cowork", title: "Project Cowork fixture", userSelectedFolders: [coworkProject] }))
+  const coworkRecord = (output, timestamp) => ({ timestamp, sessionId: "project-cowork", message: { id: "project-cowork-message", model: "claude-sonnet-4-6", usage: { input_tokens: 2, cache_creation_input_tokens: 10, cache_read_input_tokens: 20, output_tokens: output } } })
+  writeJsonl(join(coworkSessionDir, "audit.jsonl"), [coworkRecord(5, "2026-01-01T10:00:00.000Z"), coworkRecord(255, "2026-01-01T10:01:00.000Z")])
+  writeJsonl(join(coworkSessionDir, ".claude", "projects", "fixture", "subagents", "agent.jsonl"), [coworkRecord(255, "2026-01-01T10:01:00.000Z")])
+  const emptyOpenCodeDb = join(fixtureRoot, "empty-opencode.db")
+  const emptyDatabase = new DatabaseSync(emptyOpenCodeDb)
+  emptyDatabase.exec("CREATE TABLE session (id TEXT, directory TEXT, cost REAL, tokens_input INTEGER, tokens_output INTEGER, tokens_reasoning INTEGER, tokens_cache_read INTEGER, tokens_cache_write INTEGER, model TEXT, time_created INTEGER, time_updated INTEGER)")
+  emptyDatabase.close()
+  const coworkReport = join(fixtureRoot, "cowork-project-report.md")
+  const coworkSummary = run([coworkProject, "--codex-home", join(fixtureRoot, "cowork-empty-codex"), "--claude-home", join(fixtureRoot, "cowork-empty-claude"), "--cowork-home", coworkNativeHome, "--gemini-home", join(fixtureRoot, "cowork-empty-gemini"), "--cline-tasks", join(fixtureRoot, "cowork-empty-cline"), "--roo-tasks", join(fixtureRoot, "cowork-empty-roo"), "--opencode-db", emptyOpenCodeDb, "--output", coworkReport], threadRoot)
+  assert.equal(coworkSummary.coworkSessions, 2)
+  assert.equal(coworkSummary.threads, 1)
+  assert.equal(coworkSummary.claudeDuplicatesRemoved, 2)
+  const coworkMarkdown = readFileSync(coworkReport, "utf8")
+  assert.match(coworkMarkdown, /\| Measured\/provider tokens \| 287 \|/)
+  assert.match(coworkMarkdown, /Project Cowork fixture/)
+  assert.match(coworkMarkdown, /claude-cowork \/ subscription-or-api-equivalent/)
 } finally {
   rmSync(fixtureRoot, { recursive: true, force: true })
 }

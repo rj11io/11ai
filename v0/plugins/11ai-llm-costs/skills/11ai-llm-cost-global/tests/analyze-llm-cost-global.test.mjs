@@ -24,6 +24,7 @@ function run(args, env = {}, cwd = undefined) {
 try {
   const codexHome = join(fixtureRoot, "codex")
   const claudeHome = join(fixtureRoot, "claude")
+  const coworkHome = join(fixtureRoot, "cowork")
   const geminiHome = join(fixtureRoot, "gemini")
   const clineTasks = join(fixtureRoot, "cline-tasks")
   const rooTasks = join(fixtureRoot, "roo-tasks")
@@ -35,7 +36,7 @@ try {
   const older = "2020-01-15T12:00:00.000Z"
 
   writeJsonl(join(codexHome, "sessions", "recent.jsonl"), [
-    { timestamp: recent, type: "session_meta", payload: { id: "codex-recent", cwd: join(fixtureRoot, "workspace-a") } },
+    { timestamp: recent, type: "session_meta", payload: { id: "codex-recent", cwd: join(fixtureRoot, "workspace-a"), originator: "codex_work_desktop", source: "vscode" } },
     { timestamp: recent, type: "turn_context", payload: { model: "gpt-5.6-sol", effort: "high" } },
     { timestamp: recent, type: "event_msg", payload: { type: "token_count", info: { total_token_usage: { input_tokens: 1000, cached_input_tokens: 600, output_tokens: 100, reasoning_output_tokens: 40, total_tokens: 1100 } } } },
   ])
@@ -69,19 +70,23 @@ try {
   mkdirSync(supplemental, { recursive: true })
   writeFileSync(join(supplemental, "undated.json"), JSON.stringify({
     id: "generic-undated",
+    surface: "cursor",
+    billing_mode: "official-api",
+    usage_source: "official-api",
+    confidence: "reported",
     provider: "other",
     model: "custom-model",
     cost_usd: 1234.5,
     usage: { input_tokens: 100, output_tokens: 20, total_tokens: 120 },
   }))
 
-  const harnessArgs = ["--codex-home", codexHome, "--claude-home", claudeHome, "--gemini-home", geminiHome, "--cline-tasks", clineTasks, "--roo-tasks", rooTasks, "--opencode-db", opencodeDb]
+  const harnessArgs = ["--codex-home", codexHome, "--claude-home", claudeHome, "--cowork-home", coworkHome, "--gemini-home", geminiHome, "--cline-tasks", clineTasks, "--roo-tasks", rooTasks, "--opencode-db", opencodeDb]
   const summary = run([...harnessArgs, "--include", supplemental, "--output", reportDir])
   assert.equal(summary.outputDirectory, reportDir)
   assert.equal(dirname(summary.markdownReport), reportDir)
   assert.equal(dirname(summary.htmlReport), reportDir)
   assert.equal(summary.nativeFilesMetadataChecked, 7)
-  assert.equal(summary.scope, "Codex: explicit override; Claude: explicit override; Gemini: explicit override; Cline: explicit override; Roo: explicit override; OpenCode: explicit override")
+  assert.equal(summary.scope, "Codex: explicit override; Claude: explicit override; Cowork: explicit override; Gemini: explicit override; Cline: explicit override; Roo: explicit override; OpenCode: explicit override")
   assert.equal(summary.codexSessions, 2)
   assert.equal(summary.claudeSessions, 1)
   assert.equal(summary.geminiSessions, 1)
@@ -127,6 +132,7 @@ try {
     "## Quarterly reports",
     "## Yearly reports",
     "## All time",
+    "## Harness surface coverage",
     "## Scan coverage",
     "## Pricing coverage",
     "## Anomalies and limitations",
@@ -166,11 +172,15 @@ try {
   assert.match(markdown, /\| Provider \/ model \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \|/)
   assert.match(markdown, /\| Provider \/ model \| Effort \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \|/)
   assert.match(markdown, /\| Workspace \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Priced \| Unpriced \|/)
-  assert.match(markdown, /\| Thread \| Source \| Workspace \| Provider \/ model \/ effort \| Attributed at \| Input \| Cached \| Output \| Tokens \| Selected cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Harness reported \| Method \|/)
+  assert.match(markdown, /\| Thread \| Source \| Surface \/ billing \| Workspace \| Provider \/ model \/ effort \| Attributed at \| Input \| Cached \| Output \| Tokens \| Selected cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Harness reported \| Method \|/)
   assert.match(markdown, /\| Cost \/ thread \| \$[\d,]+\./)
   assert.match(markdown, /\| Total \| \$[\d,]+\.\d+ \| [\d,]+ \| [\d,]+ \| \$[\d,]+\.\d+ \| [\d,]+ \| \$[\d,]+\.\d+ \| [\d,]+ \| \$[\d,]+\.\d+ \| 8 \|/)
   assert.match(markdown, /\$1,234\.\d{4}/)
-  assert.match(markdown, /Scope: Codex: explicit override; Claude: explicit override; Gemini: explicit override/)
+  assert.match(markdown, /Scope: Codex: explicit override; Claude: explicit override; Cowork: explicit override; Gemini: explicit override/)
+  assert.match(markdown, /^## Harness surface coverage$/m)
+  assert.match(markdown, /\| OpenCode \| Native \| Current message-data and legacy session-ledger schemas \|/)
+  assert.match(markdown, /chatgpt-work \/ credits-or-subscription/)
+  assert.match(markdown, /cursor \/ official-api/)
   assert.match(markdown, /^## Year to date$/m)
   assert.match(markdown, /^## Quarter to date$/m)
   assert.match(markdown, /^## Month to date$/m)
@@ -347,6 +357,49 @@ try {
   assert.equal(dirname(defaultSummary.htmlReport), defaultSummary.outputDirectory)
   assert.match(basename(defaultSummary.markdownReport), /^11ai-llm-cost-global-\d{4}-\d{2}-\d{2}T.*\.md$/)
   assert.equal(basename(defaultSummary.htmlReport), `${basename(defaultSummary.markdownReport, ".md")}.html`)
+
+  const currentOpenCodeDb = join(fixtureRoot, "current-opencode.db")
+  const currentDatabase = new DatabaseSync(currentOpenCodeDb)
+  currentDatabase.exec("CREATE TABLE session (id TEXT PRIMARY KEY, directory TEXT, time_created INTEGER, time_updated INTEGER)")
+  currentDatabase.exec("CREATE TABLE message (id TEXT PRIMARY KEY, session_id TEXT, time_created INTEGER, time_updated INTEGER, data TEXT)")
+  currentDatabase.prepare("INSERT INTO session VALUES (?, ?, ?, ?)").run("current-session", join(fixtureRoot, "opencode-workspace"), 1752829300000, 1752829360000)
+  currentDatabase.prepare("INSERT INTO message VALUES (?, ?, ?, ?, ?)").run("assistant-1", "current-session", 1752829300000, 1752829360000, JSON.stringify({ role: "assistant", providerID: "openai", modelID: "gpt-5.6-sol", cost: 0.04, tokens: { input: 10, output: 3, reasoning: 1, cache: { read: 2, write: 0 } } }))
+  currentDatabase.prepare("INSERT INTO message VALUES (?, ?, ?, ?, ?)").run("user-1", "current-session", 1752829290000, 1752829290000, JSON.stringify({ role: "user", tokens: { input: 999, output: 999 } }))
+  currentDatabase.close()
+  const currentOpenCodeSummary = run([
+    "--codex-home", join(fixtureRoot, "current-empty-codex"), "--claude-home", join(fixtureRoot, "current-empty-claude"), "--cowork-home", join(fixtureRoot, "current-empty-cowork"),
+    "--gemini-home", join(fixtureRoot, "current-empty-gemini"), "--cline-tasks", join(fixtureRoot, "current-empty-cline"), "--roo-tasks", join(fixtureRoot, "current-empty-roo"),
+    "--opencode-db", currentOpenCodeDb, "--output", join(fixtureRoot, "current-opencode-report"),
+  ])
+  assert.equal(currentOpenCodeSummary.opencodeSessions, 1)
+  assert.equal(currentOpenCodeSummary.threads, 1)
+  assert.equal(currentOpenCodeSummary.periods["All time"].knownTokens, 16)
+  assert.doesNotMatch(readFileSync(currentOpenCodeSummary.markdownReport, "utf8"), /no such column/)
+
+  const coworkNativeHome = join(fixtureRoot, "cowork-native")
+  const coworkSessionDir = join(coworkNativeHome, "account", "workspace", "local_cowork-1")
+  mkdirSync(dirname(coworkSessionDir), { recursive: true })
+  writeFileSync(`${coworkSessionDir}.json`, JSON.stringify({ sessionId: "cowork-1", title: "Cowork fixture title", userSelectedFolders: [join(fixtureRoot, "cowork-workspace")] }))
+  const coworkRecord = (output, timestamp) => ({ timestamp, sessionId: "cowork-1", message: { id: "cowork-message-1", model: "claude-sonnet-4-6", usage: { input_tokens: 2, cache_creation_input_tokens: 10, cache_read_input_tokens: 20, output_tokens: output } } })
+  writeJsonl(join(coworkSessionDir, "audit.jsonl"), [coworkRecord(5, "2026-01-01T10:00:00.000Z"), coworkRecord(255, "2026-01-01T10:01:00.000Z")])
+  writeJsonl(join(coworkSessionDir, ".claude", "projects", "fixture", "subagents", "agent.jsonl"), [coworkRecord(255, "2026-01-01T10:01:00.000Z")])
+  const emptyOpenCodeDb = join(fixtureRoot, "empty-opencode.db")
+  const emptyDatabase = new DatabaseSync(emptyOpenCodeDb)
+  emptyDatabase.exec("CREATE TABLE session (id TEXT, directory TEXT, cost REAL, tokens_input INTEGER, tokens_output INTEGER, tokens_reasoning INTEGER, tokens_cache_read INTEGER, tokens_cache_write INTEGER, model TEXT, time_created INTEGER, time_updated INTEGER)")
+  emptyDatabase.close()
+  const coworkSummary = run([
+    "--codex-home", join(fixtureRoot, "cowork-empty-codex"), "--claude-home", join(fixtureRoot, "cowork-empty-claude"), "--cowork-home", coworkNativeHome,
+    "--gemini-home", join(fixtureRoot, "cowork-empty-gemini"), "--cline-tasks", join(fixtureRoot, "cowork-empty-cline"), "--roo-tasks", join(fixtureRoot, "cowork-empty-roo"),
+    "--opencode-db", emptyOpenCodeDb, "--output", join(fixtureRoot, "cowork-report"),
+  ])
+  assert.equal(coworkSummary.coworkSessions, 2)
+  assert.equal(coworkSummary.threads, 1)
+  assert.equal(coworkSummary.claudeDuplicatesRemoved, 2)
+  const coworkMarkdown = readFileSync(coworkSummary.markdownReport, "utf8")
+  assert.match(coworkMarkdown, /\| Measured\/provider tokens \| 287 \|/)
+  assert.match(coworkMarkdown, /\| cowork \|/)
+  assert.match(coworkMarkdown, /Cowork fixture title/)
+  assert.match(coworkMarkdown, /claude-cowork \/ subscription-or-api-equivalent/)
 
   const legacyHome = join(fixtureRoot, "legacy-home")
   const legacyCwd = join(fixtureRoot, "legacy-cwd")

@@ -2,6 +2,8 @@
 
 Four skills for single-thread, project-scoped, and machine-wide LLM usage reporting plus provider-verified pricing maintenance across local coding harnesses.
 
+The reporting skills distinguish user-facing surface, underlying runtime, billing mode, usage source, and confidence. They count authoritative local token ledgers once, preserve wrapper provenance, and never convert product credits, quotas, or context snapshots into invented API-token costs.
+
 ## Choose a skill
 
 | Skill | Use it for |
