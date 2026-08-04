@@ -17,7 +17,7 @@ Claude reporting groups local Cowork root and sub-agent transcripts into logical
 
 All standalone HTML reports use native disclosure controls. Every report section is collapsed by default, while the report title and linked skill signature remain visible.
 
-The three reporting skills always use their synchronized bundled pricing catalog. They do not accept or discover local pricing overrides. When measured usage has no bundled model match, reports leave that cost unavailable and link to `11ai-llm-cost-pricing-update` for a provider-verified catalog refresh.
+The three reporting skills always use their synchronized bundled pricing catalog. They do not accept or discover local pricing overrides. Catalog version 3 preserves model price histories and applies the rate effective at each thread's attribution time. Boundary-spanning aggregates use their finish-time main price; usage older than known history uses the earliest available rate while the pricing-update workflow searches official historical sources. Reports expose every temporal fallback. When measured usage has no bundled model match, reports leave that cost unavailable and link to `11ai-llm-cost-pricing-update` for a provider-verified catalog refresh.
 
 ## Cross-skill maintenance
 
@@ -29,3 +29,5 @@ Treat report comparison as a required regression gate for every skill-behavior c
 2. If an affected scope has no older report, generate and preserve a baseline with the unmodified skill before making the change.
 3. After editing, generate the same reports and compare them with their baselines. Verify that existing sections, tables, thread rows, totals, pricing states, warnings, and HTML interactions were not lost or broken; explain any intentional difference.
 4. Do not consider the behavior change complete until both the automated tests and the report regression comparison pass.
+5. In the final handoff, tell the user exactly where to inspect the new behavior. Link the newly generated reports and name the relevant sections, tables, rows, or visible states.
+6. End the handoff with a conventional commit-style summary of the latest changes.
