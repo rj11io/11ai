@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-vercel-sandbox-v2",
-  "version": "1.31.0",
+  "version": "1.32.0",
   "description": "Modular, safety-first skills for Vercel Sandbox SDK 2 operations.",
   "author": {
     "name": "rj11io"

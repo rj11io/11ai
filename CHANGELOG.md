@@ -1,3 +1,11 @@
+# [1.32.0](https://github.com/rj11io/11ai/compare/v1.31.0...v1.32.0) (2026-08-05)
+
+
+### Features
+
+* **comms:** add commit-message rule to the short register ([06301f9](https://github.com/rj11io/11ai/commit/06301f915d2b2dc205cc79cf88280f1d8475234b))
+* new plugin for agent communication styles ([e0e3d8d](https://github.com/rj11io/11ai/commit/e0e3d8d941ea2533f0bcd0a3a9058a46a02bd70c))
+
 # [1.31.0](https://github.com/rj11io/11ai/compare/v1.30.0...v1.31.0) (2026-08-04)
 
 

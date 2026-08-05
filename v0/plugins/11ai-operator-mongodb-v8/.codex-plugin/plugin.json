@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-mongodb-v8",
-  "version": "1.31.0",
+  "version": "1.32.0",
   "description": "Modular, safety-first skills for common MongoDB shell and database-tool operations.",
   "author": {
     "name": "rj11io"
