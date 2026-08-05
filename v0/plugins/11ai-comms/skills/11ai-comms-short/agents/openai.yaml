@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Comms Short"
+  short_description: "Answer short, in lists, with examples"
+  default_prompt: "Use $11ai-comms-short to answer in the short register: tight lines, lists, no em dashes, an example for every claim, and a fix beside every problem."

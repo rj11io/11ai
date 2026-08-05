@@ -1,6 +1,6 @@
 # 11ai
 
-Reusable AI-agent skills for building chat products, editorial blogs, and repo-driven project sites; automating agent work; benchmarking coding models; reverse engineering and maintaining codebases; integrating application services; running repository tasks through disciplined Git workflows; cleaning up local development environments; and running deep iterative project audits.
+Reusable AI-agent skills for building chat products, editorial blogs, and repo-driven project sites; automating agent work; benchmarking coding models; reverse engineering and maintaining codebases; integrating application services; running repository tasks through disciplined Git workflows; cleaning up local development environments; setting how an agent speaks; and running deep iterative project audits.
 
 Project site: https://ai.rj11.io/
 
@@ -14,7 +14,7 @@ Install the collection from GitHub with the [skills CLI](https://skills.sh/docs/
 npx skills add rj11io/11ai --full-depth
 ```
 
-The CLI runs through `npx`, discovers the repository's skills, and configures the skills you select for your agent. `--full-depth` is required because this collection organizes skills into forty-six workflow plugins instead of one top-level `skills/` directory.
+The CLI runs through `npx`, discovers the repository's skills, and configures the skills you select for your agent. `--full-depth` is required because this collection organizes skills into forty-seven workflow plugins instead of one top-level `skills/` directory.
 
 The repository follows the open Agent Skills format. Every skill also includes Codex UI metadata in `agents/openai.yaml`, and every plugin is packaged for Claude Code. To add the Claude marketplace, run:
 
@@ -42,7 +42,7 @@ The files are installed at `node_modules/@rj11io/11ai/v0/plugins/`. You can also
 
 ## Skill catalog
 
-The repository currently contains 475 skills in 46 plugins.
+The repository currently contains 476 skills in 47 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
@@ -57,6 +57,7 @@ The repository currently contains 475 skills in 46 plugins.
 | [Cleanup](./v0/plugins/11ai-cleanup/README.md) | 5 | Safely finding and removing abandoned local resources |
 | [Clerk Core 3 operator](./v0/plugins/11ai-operator-clerk-core-3/README.md) | 11 | Clerk Core 3 setup, authentication, sessions, users, organizations, webhooks, native skills, and troubleshooting |
 | [Codebase](./v0/plugins/11ai-codebase/README.md) | 3 | Playwright setup, npm publishing, and automated releases |
+| [Comms](./v0/plugins/11ai-comms/README.md) | 1 | Communication registers that set the length, density, and shape of an agent's replies |
 | [Convex operator](./v0/plugins/11ai-operator-convex/README.md) | 12 | Current Convex setup, schema, functions, auth, storage, deployments, first-party native skills, and troubleshooting |
 | [CSS3 operator](./v0/plugins/11ai-operator-css-3/README.md) | 10 | Current CSS3-family cascade, selectors, layout, responsive design, theming, motion, integrations, reference, and troubleshooting |
 | [Docker operator](./v0/plugins/11ai-operator-docker/README.md) | 12 | Common Docker CLI and Compose operations, setup, integrations, safe cleanup, and troubleshooting |
@@ -109,6 +110,7 @@ v0/
     11ai-blog-builder/         8 editorial blog skills under skills/
     11ai-cleanup/              5 cleanup skills under skills/
     11ai-codebase/             3 codebase skills under skills/
+    11ai-comms/                1 communication register skill under skills/
     11ai-llm-costs/            4 LLM cost, effort, and timing skills under skills/
     11ai-operator-antdesign-v6/  12 Ant Design v6 operation skills under skills/
     11ai-operator-aws-cli-v2/    22 AWS CLI v2 operation skills under skills/

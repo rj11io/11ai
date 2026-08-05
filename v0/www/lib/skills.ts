@@ -91,6 +91,13 @@ const PLUGIN_CONFIG = [
       "Playwright setup, npm publishing, and fully automated releases for your repositories.",
   },
   {
+    slug: "comms",
+    dir: "11ai-comms",
+    title: "Comms",
+    tagline:
+      "Communication registers that set how an agent speaks: the length, density, and shape of its replies.",
+  },
+  {
     slug: "operator-convex",
     dir: "11ai-operator-convex",
     title: "Convex operator",

@@ -39,6 +39,10 @@
       "source": "./v0/plugins/11ai-codebase"
     },
     {
+      "name": "11ai-comms",
+      "source": "./v0/plugins/11ai-comms"
+    },
+    {
       "name": "11ai-operator-docker",
       "source": "./v0/plugins/11ai-operator-docker"
     },
