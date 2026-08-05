@@ -7,7 +7,7 @@ a session can pick a voice and hold it.
 
 | Skill | Use it for |
 | --- | --- |
-| [`11ai-comms-short`](./skills/11ai-comms-short/SKILL.md) | Terse, list-first replies with an example per claim and a fix beside every problem |
+| [`11ai-comms-short`](./skills/11ai-comms-short/SKILL.md) | Terse, list-first replies with an example per claim, a fix beside every problem, and a copyable conventional commit message after code changes |
 
 Pick one direction per session. Two registers at once cancel each other out.
 

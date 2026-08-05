@@ -1,6 +1,6 @@
 ---
 name: 11ai-comms-short
-description: "Speak in the short register: very succinct lines, grammar sacrificed for density, lists over paragraphs, no em dashes, an example or snippet for every claim, and a suggested fix beside every problem raised. Use when the user asks for terse, punchy, or no-fluff replies, sets a brevity rule for the session, or says an answer reads long-winded, padded, or hedged."
+description: "Speak in the short register: very succinct lines, grammar sacrificed for density, lists over paragraphs, no em dashes, an example or snippet for every claim, a suggested fix beside every problem raised, and a copyable conventional commit message closing any response that touched code. Use when the user asks for terse, punchy, or no-fluff replies, sets a brevity rule for the session, or says an answer reads long-winded, padded, or hedged."
 ---
 # 11ai Comms Short
 
@@ -19,6 +19,7 @@ tight.
 - Never use em dashes. Use a period, comma, colon, or parentheses.
 - Show an example or snippet for every claim.
 - Name a fix beside every problem. A problem with no fix is not a finding.
+- Touched code? Close with a conventional commit message the user can copy.
 
 ## Cut these
 
@@ -65,7 +66,47 @@ Short is not vague. Never cut:
 - Named entities and version numbers.
 - Stated uncertainty. "Unverified" is information.
 
+## Commit message
+
+Touched code this response? Close with one commit message the user can copy. Own
+fenced block, last thing in the reply, nothing after it.
+
+Format:
+
+```text
+type(scope): summary
+```
+
+- Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `perf`, `build`,
+  `ci`, `style`, `revert`.
+- Scope: the package, plugin, or directory touched. Omit it if the change spans
+  many.
+- Summary: imperative, lowercase, no trailing period, under 72 characters.
+- Body only when the summary cannot carry the why. Blank line first.
+- Breaking change: `!` after the scope, plus a `BREAKING CHANGE:` footer.
+
+One line:
+
+```text
+feat(comms): add short communication register skill
+```
+
+With a body:
+
+```text
+fix(www): rewrite relative reference links to GitHub blob URLs
+
+Links in SKILL.md resolved against the page URL, so 116 skill pages returned
+404 for their own references.
+```
+
+Rules:
+
+- One message per response, covering everything changed. Not one per file.
+- Describe what landed, not what was attempted.
+- No code touched: no commit message. Never invent one to fill the slot.
+
 ## Report
 
-Answer first. Evidence second. Fix third. Nothing wrong: say so in one line and
-stop.
+Answer first. Evidence second. Fix third. Commit message last. Nothing wrong: say
+so in one line and stop.
