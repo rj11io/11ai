@@ -42,7 +42,7 @@ The files are installed at `node_modules/@rj11io/11ai/v0/plugins/`. You can also
 
 ## Skill catalog
 
-The repository currently contains 458 skills in 47 plugins.
+The repository currently contains 459 skills in 47 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
@@ -62,7 +62,7 @@ The repository currently contains 458 skills in 47 plugins.
 | [CSS3 operator](./v0/plugins/11ai-operator-css-3/README.md) | 10 | Current CSS3-family cascade, selectors, layout, responsive design, theming, motion, integrations, reference, and troubleshooting |
 | [Directors](./v0/plugins/11ai-directors/README.md) | 2 | Wrapping a repository task in a disciplined Git workflow, on main or through a reviewed pull request |
 | [Docker operator](./v0/plugins/11ai-operator-docker/README.md) | 12 | Common Docker CLI and Compose operations, setup, integrations, safe cleanup, and troubleshooting |
-| [Git operator](./v0/plugins/11ai-operator-git/README.md) | 18 | Focused, safety-first Git operations: setup, state, staging, commits, sync, branches, worktrees, tags, submodules, hooks, pull requests, bisect, stashes, recovery, integrations, and troubleshooting |
+| [Git operator](./v0/plugins/11ai-operator-git/README.md) | 19 | Focused, safety-first Git operations: setup, state, staging, commits, sync, branches, worktrees, tags, submodules, hooks, pull requests, bisect, stashes, recovery, integrations, troubleshooting, and a FAQ |
 | [HTML5 operator](./v0/plugins/11ai-operator-html-5/README.md) | 10 | Current HTML5 documents, semantics, accessibility, forms, media, metadata, integrations, reference, and troubleshooting |
 | [JavaScript ES2026 operator](./v0/plugins/11ai-operator-javascript-es2026/README.md) | 10 | ECMAScript 2026 modules, async control flow, DOM events, data modeling, standard-library additions, performance, security, integrations, reference, and troubleshooting |
 | [Jest v30 operator](./v0/plugins/11ai-operator-jest-v30/README.md) | 17 | Setting up, inspecting, running, authoring, integrating, configuring, de-flaking, speeding up, and troubleshooting Jest 30 suites |
@@ -120,7 +120,7 @@ v0/
     11ai-operator-convex/     12 Convex backend operation skills under skills/
     11ai-operator-css-3/     10 CSS3 operation skills under skills/
     11ai-operator-docker/     12 Docker CLI operation skills under skills/
-    11ai-operator-git/        18 focused Git operation skills under skills/
+    11ai-operator-git/        19 focused Git operation skills under skills/
     11ai-operator-html-5/    10 HTML5 operation skills under skills/
     11ai-operator-javascript-es2026/ 10 JavaScript ES2026 operation skills under skills/
     11ai-operator-jest-v30/       17 Jest operation skills under skills/

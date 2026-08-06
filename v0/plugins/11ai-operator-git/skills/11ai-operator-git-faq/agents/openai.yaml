@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Git Operator FAQ"
+  short_description: "Answer questions about the Git operator skills"
+  default_prompt: "Use $11ai-operator-git-faq to answer my question about the Git operator skills: route it to the owning contract or reference, read that source, and answer with a citation."

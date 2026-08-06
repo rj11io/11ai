@@ -79,6 +79,7 @@ tier on the ground-truth ladder.
 | How are Cowork root and sub-agent transcripts grouped into sessions? | `../11ai-benchmarks-machine/references/harnesses.md` | "## Claude Cowork" | reference |
 | What happens to detected remote Cowork sessions without readable usage? | `../11ai-benchmarks-machine/scripts/analyze-llm-cost-global.mjs` | "remote Cowork" | behavior |
 | Where do measured Cowork sessions and sub-agent runs show up in a report? | `../11ai-benchmarks-machine/scripts/analyze-llm-cost-global.mjs` | "Cowork coverage" | behavior |
+| Is Claude usage ever counted twice across Desktop, Cowork, and CLI surfaces? | `../11ai-benchmarks-machine/references/harnesses.md` | "Claude Desktop metadata" | reference |
 
 ### Pricing and cost states
 
@@ -91,6 +92,7 @@ tier on the ground-truth ladder.
 | Why is a model listed as requiring a pricing update, and what does that exclude? | `../11ai-benchmarks-machine/scripts/analyze-llm-cost-global.mjs` | "Models requiring a pricing update" | behavior |
 | Which official sources may feed the catalog, and how are they reviewed? | `../11ai-benchmarks-pricing-update/references/provider-sources.md` | "# Official provider pricing sources" | reference |
 | What schema and rate periods does the pricing catalog use? | `../11ai-benchmarks-pricing-update/references/provider-sources.md` | "## Catalog schema" | reference |
+| Is a specific model priced in the bundled catalog right now? | `../11ai-benchmarks-pricing-update/references/pricing.json` | - | reference |
 | How are the three bundled catalog copies kept identical? | `../11ai-benchmarks-pricing-update/scripts/sync-pricing-catalog.mjs` | - | behavior |
 | Who is allowed to change the bundled catalogs? | `../11ai-benchmarks-pricing-update/SKILL.md` | "## Catalog ownership" | contract |
 
@@ -107,6 +109,8 @@ tier on the ground-truth ladder.
 | --- | --- | --- | --- |
 | Where are report packages written by default? | `../11ai-benchmarks-machine/SKILL.md` | "11ai-benchmarks-machine-reports" | contract |
 | Where does the project report land, and how is its folder named? | `../11ai-benchmarks-project/SKILL.md` | "11ai-benchmarks-project-reports" | contract |
+| Where does the single-thread report land, and how is its folder named? | `../11ai-benchmarks-single-thread/SKILL.md` | "11ai-benchmarks-single-thread-reports" | contract |
+| Are unreadable or malformed records silently dropped from the totals? | `../11ai-benchmarks-machine/scripts/analyze-llm-cost-global.mjs` | "malformed" | behavior |
 | What must every report contain, and how does the HTML behave? | `../11ai-benchmarks-machine/SKILL.md` | "## Report requirements" | contract |
 | How is usage attributed to monthly, quarterly, and yearly periods? | `../11ai-benchmarks-machine/SKILL.md` | "## Period attribution" | contract |
 | What does the Pricing coverage section of a report tell me? | `../11ai-benchmarks-machine/scripts/analyze-llm-cost-global.mjs` | "## Pricing coverage" | behavior |

@@ -57,6 +57,10 @@ Three tiers, from promise to proof:
 For edge-case questions prefer tests over scripts: a test asserts the behavior and cannot
 drift from it.
 
+When the plugin ships no scripts or tests, the behavior tier has no sources: say so under
+the ladder ("this plugin ships no scripts or tests, so no routing row carries the behavior
+tier") and route everything to contracts and references. Do not invent behavior rows.
+
 ### 3. Covered skills
 
 A `## Covered skills` section listing every sibling skill name in backticks, one bullet
@@ -82,9 +86,21 @@ Rows in this exact grammar (the validator parses it):
 ### 5. Synthesis content (the FAQ's own material)
 
 - **Comparison table**: one row per sibling — scope, input, how to run it, where output
-  lands. This answers "which skill do I want?" before anything is installed.
+  lands. This answers "which skill do I want?" before anything is installed. When the
+  plugin has many skills and its README already carries a full per-skill table, do not
+  restate it: group the skills by job family instead and route the per-skill detail to
+  the plugin README. Restating the README violates the router principle.
 - **Glossary**: the plugin's invented terms, defined in plain words. Definitions only —
   no numbers, paths, or defaults, which belong in routed sources where anchors watch them.
+
+## Sibling skills that also answer questions
+
+Some plugins already contain a question-answering skill about the plugin's subject — a
+cheatsheet, a reference, a troubleshooter. The FAQ does not replace it and must not
+compete with it: the sibling answers questions about the technology; the FAQ answers
+questions about the skills themselves (what they promise, guard, refuse, or report).
+State this boundary in the FAQ's intro and description, and route
+technology questions to that sibling in the routing table.
 
 ## Deriving the questions
 

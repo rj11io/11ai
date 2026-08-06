@@ -1,6 +1,6 @@
 # 11ai Git operator
 
-Eighteen standalone Git skills for inspecting, staging, committing, synchronizing, branching, tagging, shelving, recovering, learning, and troubleshooting repository state. Each one does a single Git operation and reports what it observed.
+Nineteen standalone Git skills for inspecting, staging, committing, synchronizing, branching, tagging, shelving, recovering, learning, and troubleshooting repository state, plus a FAQ that answers questions about how the skills themselves behave. Each one does a single Git operation and reports what it observed.
 
 ## Choose a skill
 
@@ -24,6 +24,7 @@ Eighteen standalone Git skills for inspecting, staging, committing, synchronizin
 | [`11ai-operator-git-recovery`](./skills/11ai-operator-git-recovery/SKILL.md) | Undoing local changes, reverting commits, and recovering reachable history with an explicit risk boundary |
 | [`11ai-operator-git-cheatsheet`](./skills/11ai-operator-git-cheatsheet/SKILL.md) | Answering quick Git command, flag, and “what should I use?” questions with a compact safety-aware reference |
 | [`11ai-operator-git-troubleshooting`](./skills/11ai-operator-git-troubleshooting/SKILL.md) | Diagnosing Git failures from read-only evidence before proposing the smallest justified repair |
+| [`11ai-operator-git-faq`](./skills/11ai-operator-git-faq/SKILL.md) | Answering questions about how these skills behave, which one to run, and what always needs approval |
 
 Every skill here stands alone and can be used for a single Git operation, for example: "Use 11ai-operator-git-status to tell me what is ahead of origin/main." Combine them when a task crosses boundaries, such as staging deliberately and then composing a conventional commit message, or bisecting to a commit and then reverting it.
 
