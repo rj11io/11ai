@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/operator-docker",
   "license": "Apache-2.0",
   "keywords": [
     "docker",
@@ -21,6 +22,7 @@
     "developerName": "rj11io",
     "category": "Developer Tools",
     "capabilities": [],
+    "websiteURL": "https://ai.rj11.io/plugins/operator-docker",
     "defaultPrompt": "Help me use the 11ai-operator-docker skills for this Docker task."
   }
 }

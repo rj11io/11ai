@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/operator-antdesign-v6",
   "license": "Apache-2.0",
   "keywords": [
     "ant-design",
@@ -26,6 +27,7 @@
       "Review",
       "Troubleshoot"
     ],
+    "websiteURL": "https://ai.rj11.io/plugins/operator-antdesign-v6",
     "defaultPrompt": "Help me use the 11ai-operator-antdesign-v6 skills for this Ant Design task."
   }
 }

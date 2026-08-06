@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/operator-css-3",
   "license": "Apache-2.0",
   "keywords": [
     "css3",
@@ -22,6 +23,7 @@
     "developerName": "rj11io",
     "category": "Developer Tools",
     "capabilities": [],
+    "websiteURL": "https://ai.rj11.io/plugins/operator-css-3",
     "defaultPrompt": "Help me use the 11ai-operator-css-3 skills for this CSS3 task."
   }
 }

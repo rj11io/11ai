@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/ai-chat",
   "license": "Apache-2.0",
   "keywords": [
     "ai-chat",
@@ -28,6 +29,7 @@
       "Write",
       "Developer Tools"
     ],
+    "websiteURL": "https://ai.rj11.io/plugins/ai-chat",
     "defaultPrompt": "Help me build an AI chat product with the 11ai-ai-chat skills."
   }
 }

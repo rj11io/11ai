@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/operator-vercel-core",
   "license": "Apache-2.0",
   "keywords": [
     "vercel",
@@ -22,6 +23,7 @@
     "developerName": "rj11io",
     "category": "Developer Tools",
     "capabilities": [],
+    "websiteURL": "https://ai.rj11.io/plugins/operator-vercel-core",
     "defaultPrompt": "Help me use the 11ai-operator-vercel-core skills for this Vercel Core Platform task."
   }
 }

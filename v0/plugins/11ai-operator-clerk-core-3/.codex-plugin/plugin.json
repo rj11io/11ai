@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/operator-clerk-core-3",
   "license": "Apache-2.0",
   "keywords": [
     "clerk",
@@ -22,6 +23,7 @@
     "developerName": "rj11io",
     "category": "Developer Tools",
     "capabilities": [],
+    "websiteURL": "https://ai.rj11.io/plugins/operator-clerk-core-3",
     "defaultPrompt": "Help me use the 11ai-operator-clerk-core-3 skills for this Clerk task."
   }
 }

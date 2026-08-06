@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/operator-tailwind-v4",
   "license": "Apache-2.0",
   "keywords": [
     "tailwindcss",
@@ -20,6 +21,7 @@
     "developerName": "rj11io",
     "category": "Developer Tools",
     "capabilities": [],
+    "websiteURL": "https://ai.rj11.io/plugins/operator-tailwind-v4",
     "defaultPrompt": "Help me use the 11ai-operator-tailwind-v4 skills for this Tailwind CSS v4 task."
   }
 }

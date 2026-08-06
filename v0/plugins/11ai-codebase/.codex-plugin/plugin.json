@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/codebase",
   "license": "Apache-2.0",
   "keywords": [
     "playwright",
@@ -26,6 +27,7 @@
       "Write",
       "Developer Tools"
     ],
+    "websiteURL": "https://ai.rj11.io/plugins/codebase",
     "defaultPrompt": "Help me set up releases, publishing, testing, or analytics with the 11ai-codebase skills."
   }
 }

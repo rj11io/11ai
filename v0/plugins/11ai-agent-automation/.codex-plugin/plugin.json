@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/agent-automation",
   "license": "Apache-2.0",
   "keywords": [
     "agent",
@@ -33,6 +34,7 @@
       "Write",
       "Developer Tools"
     ],
+    "websiteURL": "https://ai.rj11.io/plugins/agent-automation",
     "defaultPrompt": "Help me build a scheduled autonomous automation with the 11ai-agent-automation skills."
   }
 }

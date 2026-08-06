@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/benchmarks",
   "license": "Apache-2.0",
   "keywords": [
     "llm-cost",
@@ -33,6 +34,7 @@
       "Read",
       "Write"
     ],
+    "websiteURL": "https://ai.rj11.io/plugins/benchmarks",
     "defaultPrompt": [
       "Analyze LLM costs for this project.",
       "Analyze the cost and timing of this LLM thread.",

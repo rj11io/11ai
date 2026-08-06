@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/operator-git",
   "license": "Apache-2.0",
   "keywords": [
     "git",
@@ -26,6 +27,7 @@
       "Write",
       "Developer Tools"
     ],
+    "websiteURL": "https://ai.rj11.io/plugins/operator-git",
     "defaultPrompt": "Help me use the 11ai-operator-git skills for this Git task."
   }
 }

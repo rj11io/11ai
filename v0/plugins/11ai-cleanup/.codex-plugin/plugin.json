@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/cleanup",
   "license": "Apache-2.0",
   "keywords": [
     "cleanup",
@@ -27,6 +28,7 @@
       "Write",
       "Developer Tools"
     ],
+    "websiteURL": "https://ai.rj11.io/plugins/cleanup",
     "defaultPrompt": "Use the 11ai-cleanup skills to find and safely remove abandoned local resources."
   }
 }

@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/blog-builder",
   "license": "Apache-2.0",
   "keywords": [
     "blog",
@@ -28,6 +29,7 @@
       "Write",
       "Developer Tools"
     ],
+    "websiteURL": "https://ai.rj11.io/plugins/blog-builder",
     "defaultPrompt": "Help me build an editorial blog with the 11ai-blog-builder skills."
   }
 }

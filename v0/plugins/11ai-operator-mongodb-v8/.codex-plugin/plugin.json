@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/operator-mongodb-v8",
   "license": "Apache-2.0",
   "keywords": [
     "mongodb",
@@ -27,6 +28,7 @@
       "Write",
       "Developer Tools"
     ],
+    "websiteURL": "https://ai.rj11.io/plugins/operator-mongodb-v8",
     "defaultPrompt": "Help me use the 11ai MongoDB operations skills for this database task."
   }
 }

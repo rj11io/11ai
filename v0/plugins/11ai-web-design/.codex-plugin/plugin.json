@@ -7,8 +7,8 @@
     "email": "ricardojorgexyz@gmail.com",
     "url": "https://github.com/rj11io"
   },
-  "homepage": "https://ai.rj11.io",
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/web-design",
   "license": "Apache-2.0",
   "keywords": [
     "web-design",
@@ -29,7 +29,7 @@
       "Design",
       "Write"
     ],
-    "websiteURL": "https://ai.rj11.io",
+    "websiteURL": "https://ai.rj11.io/plugins/web-design",
     "defaultPrompt": [
       "Apply the 11ai style to this interface.",
       "Make this dashboard compact and data-rich.",

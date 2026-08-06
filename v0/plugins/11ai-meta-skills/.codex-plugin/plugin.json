@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/meta-skills",
   "license": "Apache-2.0",
   "skills": "./skills/",
   "keywords": [
@@ -26,6 +27,7 @@
       "Write",
       "Developer Tools"
     ],
+    "websiteURL": "https://ai.rj11.io/plugins/meta-skills",
     "defaultPrompt": "Help me use the 11ai-meta-skills skills to author or audit a skill in this collection."
   }
 }

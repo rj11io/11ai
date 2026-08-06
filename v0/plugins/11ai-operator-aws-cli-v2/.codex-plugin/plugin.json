@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/operator-aws-cli-v2",
   "license": "Apache-2.0",
   "keywords": [
     "aws",
@@ -30,6 +31,7 @@
       "Write",
       "Troubleshoot"
     ],
+    "websiteURL": "https://ai.rj11.io/plugins/operator-aws-cli-v2",
     "defaultPrompt": "Help me use the 11ai-operator-aws-cli-v2 skills for this AWS task."
   }
 }

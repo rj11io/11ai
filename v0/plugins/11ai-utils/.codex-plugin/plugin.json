@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/utils",
   "license": "Apache-2.0",
   "keywords": [
     "utilities",
@@ -26,6 +27,7 @@
       "Write",
       "Developer Tools"
     ],
+    "websiteURL": "https://ai.rj11.io/plugins/utils",
     "defaultPrompt": "Help me with this task using the matching 11ai-utils skill."
   }
 }

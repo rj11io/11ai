@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/operator-html-5",
   "license": "Apache-2.0",
   "keywords": [
     "html5",
@@ -22,6 +23,7 @@
     "developerName": "rj11io",
     "category": "Developer Tools",
     "capabilities": [],
+    "websiteURL": "https://ai.rj11.io/plugins/operator-html-5",
     "defaultPrompt": "Help me use the 11ai-operator-html-5 skills for this HTML5 task."
   }
 }

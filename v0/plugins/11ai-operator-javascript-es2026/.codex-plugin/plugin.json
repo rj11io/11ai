@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/operator-javascript-es2026",
   "license": "Apache-2.0",
   "keywords": [
     "javascript",
@@ -22,6 +23,7 @@
     "developerName": "rj11io",
     "category": "Developer Tools",
     "capabilities": [],
+    "websiteURL": "https://ai.rj11.io/plugins/operator-javascript-es2026",
     "defaultPrompt": "Help me use the 11ai-operator-javascript-es2026 skills for this JavaScript ES2026 task."
   }
 }

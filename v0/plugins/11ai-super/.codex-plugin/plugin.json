@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/super",
   "license": "Apache-2.0",
   "keywords": [
     "routines",
@@ -26,6 +27,7 @@
       "Write",
       "Developer Tools"
     ],
+    "websiteURL": "https://ai.rj11.io/plugins/super",
     "defaultPrompt": "Run my task with the 11ai-super skills and hold it to their evidence-based quality bar."
   }
 }

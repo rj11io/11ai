@@ -297,6 +297,9 @@ function validateCodexPlugins(plugins, pluginSkills) {
     if (claudeManifest && manifest.description !== claudeManifest.description) {
       fail(manifestFile, "description must match the Claude plugin manifest")
     }
+    if (typeof manifest.homepage !== "string" || !manifest.homepage.startsWith("https://")) {
+      fail(manifestFile, "missing https homepage")
+    }
     const ui = manifest.interface
     if (!ui || typeof ui !== "object") {
       fail(manifestFile, "missing interface block")
@@ -305,6 +308,9 @@ function validateCodexPlugins(plugins, pluginSkills) {
         if (typeof ui[key] !== "string" || !ui[key].trim()) {
           fail(manifestFile, `missing non-empty interface.${key}`)
         }
+      }
+      if (typeof ui.websiteURL !== "string" || !ui.websiteURL.startsWith("https://")) {
+        fail(manifestFile, "missing https interface.websiteURL")
       }
       const prompt = ui.defaultPrompt
       const promptOk =

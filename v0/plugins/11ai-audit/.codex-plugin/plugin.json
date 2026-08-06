@@ -6,6 +6,7 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/audit",
   "license": "Apache-2.0",
   "skills": "./skills/",
   "interface": {
@@ -19,6 +20,7 @@
       "Read",
       "Security"
     ],
+    "websiteURL": "https://ai.rj11.io/plugins/audit",
     "defaultPrompt": "Audit this project's dependencies for vulnerabilities, malware, and critical host-computer risks."
   },
   "keywords": [
