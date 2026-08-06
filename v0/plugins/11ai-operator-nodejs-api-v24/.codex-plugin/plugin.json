@@ -1,7 +1,7 @@
 {
   "name": "11ai-operator-nodejs-api-v24",
   "version": "1.32.0",
-  "description": "Modular, evidence-first skills for common Node.js API development and operations.",
+  "description": "Modular, evidence-first skills for Node.js 24 LTS API development and operations.",
   "author": {
     "name": "rj11io"
   },

@@ -8,5 +8,14 @@
   },
   "repository": "https://github.com/rj11io/11ai",
   "license": "Apache-2.0",
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "keywords": [
+    "blog",
+    "cms",
+    "markdown",
+    "editorial",
+    "content",
+    "navigation",
+    "ui"
+  ]
 }

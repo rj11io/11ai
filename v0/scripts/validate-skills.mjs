@@ -216,6 +216,9 @@ function validateClaude(plugins, pluginSkills) {
     if (manifest.skills !== "./skills/") {
       fail(manifestFile, "skills must point to the canonical './skills/' directory")
     }
+    if (!Array.isArray(manifest.keywords) || manifest.keywords.length === 0) {
+      fail(manifestFile, "missing non-empty keywords")
+    }
     const paths = Array.isArray(manifest.skills) ? manifest.skills : [manifest.skills]
     if (paths.some((value) => typeof value !== "string" || !value.startsWith("./"))) {
       fail(manifestFile, "skills must be a './'-relative string or array")
@@ -246,7 +249,10 @@ function validateCodexPlugins(plugins, pluginSkills) {
   const packageVersion = readJson(path.join(root, "package.json"))?.version
   for (const plugin of plugins) {
     const manifestFile = path.join(pluginsRoot, plugin, ".codex-plugin", "plugin.json")
-    if (!fs.existsSync(manifestFile)) continue
+    if (!fs.existsSync(manifestFile)) {
+      fail(manifestFile, "missing Codex plugin manifest")
+      continue
+    }
 
     const manifest = readJson(manifestFile)
     if (!manifest) continue
@@ -258,6 +264,28 @@ function validateCodexPlugins(plugins, pluginSkills) {
     }
     if (manifest.skills !== "./skills/") {
       fail(manifestFile, "skills must point to the canonical './skills/' directory")
+    }
+    if (!Array.isArray(manifest.keywords) || manifest.keywords.length === 0) {
+      fail(manifestFile, "missing non-empty keywords")
+    }
+    const claudeManifest = readJson(path.join(pluginsRoot, plugin, ".claude-plugin", "plugin.json"))
+    if (claudeManifest && manifest.description !== claudeManifest.description) {
+      fail(manifestFile, "description must match the Claude plugin manifest")
+    }
+    const ui = manifest.interface
+    if (!ui || typeof ui !== "object") {
+      fail(manifestFile, "missing interface block")
+    } else {
+      for (const key of ["displayName", "shortDescription", "longDescription", "category"]) {
+        if (typeof ui[key] !== "string" || !ui[key].trim()) {
+          fail(manifestFile, `missing non-empty interface.${key}`)
+        }
+      }
+      const prompt = ui.defaultPrompt
+      const promptOk =
+        (typeof prompt === "string" && prompt.trim()) ||
+        (Array.isArray(prompt) && prompt.length > 0 && prompt.every((p) => typeof p === "string" && p.trim()))
+      if (!promptOk) fail(manifestFile, "missing non-empty interface.defaultPrompt")
     }
 
     const paths = Array.isArray(manifest.skills) ? manifest.skills : [manifest.skills]
@@ -304,6 +332,46 @@ function validateCatalog(plugins, pluginSkills, skills) {
     const rootLayoutEntry = new RegExp(`^\\s+${plugin}\\/\\s+${count} `, "m")
     if (!rootLayoutEntry.test(rootReadme)) {
       fail(path.join(root, "README.md"), `layout entry for '${plugin}' must state ${count} skills`)
+    }
+  }
+}
+
+function validatePluginStructure() {
+  const entries = fs.readdirSync(pluginsRoot, { withFileTypes: true })
+  const ignoreCheck = spawnSync(
+    "git",
+    ["check-ignore", "-z", "--", ...entries.map((entry) => path.join("v0", "plugins", entry.name))],
+    { encoding: "utf8", cwd: root },
+  )
+  const ignored = new Set(
+    (ignoreCheck.stdout || "").split("\0").filter(Boolean).map((file) => path.basename(file)),
+  )
+
+  for (const entry of entries) {
+    if (ignored.has(entry.name)) continue
+    const entryPath = path.join(pluginsRoot, entry.name)
+    if (!entry.isDirectory()) {
+      fail(entryPath, "unexpected file in the plugins root")
+      continue
+    }
+    const skillsDir = path.join(entryPath, "skills")
+    if (!fs.existsSync(skillsDir)) {
+      fail(entryPath, "plugin has no skills directory")
+      continue
+    }
+    const skillEntries = fs.readdirSync(skillsDir, { withFileTypes: true })
+    if (!skillEntries.some((skillEntry) => skillEntry.isDirectory())) {
+      fail(skillsDir, "plugin has no skill directories")
+    }
+    for (const skillEntry of skillEntries) {
+      const skillPath = path.join(skillsDir, skillEntry.name)
+      if (!skillEntry.isDirectory()) {
+        fail(skillPath, "unexpected file in the skills directory")
+        continue
+      }
+      if (!fs.existsSync(path.join(skillPath, "SKILL.md"))) {
+        fail(skillPath, "skill directory has no SKILL.md")
+      }
     }
   }
 }
@@ -473,6 +541,7 @@ const pluginSkills = new Map(
   ]),
 )
 
+validatePluginStructure()
 validateScripts()
 validateClaude(plugins, pluginSkills)
 validateCodexPlugins(plugins, pluginSkills)
@@ -492,5 +561,5 @@ if (errors.length > 0) {
 }
 
 console.log(
-  `Validated ${inventorySkills.length} skills across ${plugins.length} plugins: canonical frontmatter, Codex metadata, Claude packaging, links, scripts, catalogs, and FAQ coverage.`,
+  `Validated ${inventorySkills.length} skills across ${plugins.length} plugins: structure, canonical frontmatter, Codex metadata, Claude packaging, links, scripts, catalogs, and FAQ coverage.`,
 )

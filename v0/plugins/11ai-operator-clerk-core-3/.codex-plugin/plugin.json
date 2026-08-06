@@ -1,7 +1,7 @@
 {
   "name": "11ai-operator-clerk-core-3",
   "version": "1.32.0",
-  "description": "Modular, safety-first skills for common Clerk authentication and user operations.",
+  "description": "Modular, safety-first Clerk Core 3 skills for authentication, users, and native-skill compatibility.",
   "author": {
     "name": "rj11io"
   },

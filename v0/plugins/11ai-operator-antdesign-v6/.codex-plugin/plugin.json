@@ -1,7 +1,7 @@
 {
   "name": "11ai-operator-antdesign-v6",
   "version": "1.32.0",
-  "description": "Modular, version-aware skills for common Ant Design React operations.",
+  "description": "Modular Ant Design 6 skills for React operations and native-skill compatibility.",
   "author": {
     "name": "rj11io"
   },

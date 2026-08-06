@@ -1,0 +1,31 @@
+{
+  "name": "11ai-codebase",
+  "version": "1.32.0",
+  "description": "Set up Playwright, npm publishing, and automated releases for repositories.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "playwright",
+    "npm-publishing",
+    "semantic-release",
+    "ci",
+    "web-analytics"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Codebase",
+    "shortDescription": "Playwright, npm publishing, releases, analytics.",
+    "longDescription": "Set up Playwright end-to-end testing, npm package publishing, fully automated semantic releases, and web analytics for repositories.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Developer Tools"
+    ],
+    "defaultPrompt": "Help me set up releases, publishing, testing, or analytics with the 11ai-codebase skills."
+  }
+}

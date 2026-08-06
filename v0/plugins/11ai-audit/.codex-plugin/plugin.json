@@ -20,5 +20,12 @@
       "Security"
     ],
     "defaultPrompt": "Audit this project's dependencies for vulnerabilities, malware, and critical host-computer risks."
-  }
+  },
+  "keywords": [
+    "audit",
+    "security",
+    "dependencies",
+    "vulnerabilities",
+    "supply-chain"
+  ]
 }

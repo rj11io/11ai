@@ -8,5 +8,12 @@
   },
   "repository": "https://github.com/rj11io/11ai",
   "license": "Apache-2.0",
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "keywords": [
+    "routines",
+    "quality",
+    "evidence",
+    "specialist",
+    "general-tasks"
+  ]
 }
