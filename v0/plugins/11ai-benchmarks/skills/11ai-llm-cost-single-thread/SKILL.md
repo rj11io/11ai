@@ -1,0 +1,97 @@
+---
+name: 11ai-llm-cost-single-thread
+description: "Inspect one project-attributed Codex, Claude Code, Claude Cowork, Gemini CLI, Cline, Roo Code, OpenCode, or exported usage thread plus recursively spawned Codex sub-agent threads; detect unavailable remote Cowork sessions; classify its surface and billing mode; normalize token counters; calculate attributable USD cost; measure wall and estimated active time; and write matching timestamped reports. Use for the cost, tokens, effort, timing, provenance, or harness coverage of one exact thread tree."
+---
+
+# 11ai LLM Cost Single Thread
+
+Analyze one exactly selected logical LLM root thread plus every recursively linked Codex sub-agent descendant using the bundled analyzer, pricing catalog, and harness reference. Keep source transcripts and input files read-only.
+
+## Contract
+
+Run the bundled analyzer from the current thread's folder root. The optional positional folder is the project to scan and does not change the default report destination:
+
+```bash
+node <skill>/scripts/analyze-llm-cost-single-thread.mjs <root-folder>
+```
+
+Use `CODEX_THREAD_ID` automatically when the active harness exposes it. For another thread or harness, pass an exact logical thread ID, report thread ID, source label, source filename, or transcript path:
+
+```bash
+node <skill>/scripts/analyze-llm-cost-single-thread.mjs <root-folder> --thread <id-or-source>
+```
+
+Create this structure by default, where `{datetime}` is the UTC ISO timestamp with colons and the decimal point replaced by hyphens:
+
+```text
+<thread-folder>/11ai-llm-cost-single-thread-reports/
+└── 11ai-llm-cost-single-thread-reports-{datetime}/
+    ├── 11ai-llm-cost-single-thread-{datetime}.md
+    └── 11ai-llm-cost-single-thread-{datetime}.html
+```
+
+Accept `--output`, `--codex-home`, `--claude-home`, `--claude-desktop-home`, `--cowork-home`, `--gemini-home`, `--cline-tasks`, `--roo-tasks`, `--opencode-db`, and `--project-only`. Reject a missing selector, an unmatched selector, or a selector that directly spans multiple logical root threads instead of emitting a zero-cost report. After exact root selection, recursively include Codex sessions explicitly marked as sub-agents whose `parent_thread_id` points to the selected root or an included descendant. Do not infer relationships from shared folders, timestamps, or fork metadata alone. Retain explicitly linked sub-agent sessions with unavailable usage and display their token and cost fields as `n/a`.
+
+Read [the bundled harness reference](references/harnesses.md) when native discovery, token semantics, or override paths need explanation. Use only the [bundled pricing catalog](references/pricing.json).
+
+## Workflow
+
+1. Establish the current thread folder and scan root. Prefer the active `CODEX_THREAD_ID`; otherwise obtain an exact selector from the native transcript filename, logical thread ID, or a prior report's `Thread detail` table.
+2. Run the analyzer and confirm the returned `threadSelector` matches the intended logical root, `rootThreads` identifies the selected root records, and `subagentThreads` reflects all recursively linked Codex descendants.
+3. Review both reports for explicit root/sub-agent counts, token and cost totals, provider/model/harness/folder aggregates, `Cost by model by effort`, wall time, estimated active time, pricing coverage, anomalies, and methodology.
+4. Leave unmatched models unpriced and make the report direct the user to [`11ai-llm-cost-pricing-update`](https://ai.rj11.io/skills/11ai-llm-cost-pricing-update). Do not research, inject, or persist rates from this reporting skill.
+5. Report the exact output paths and any timing, model, or pricing gaps.
+
+## Timing semantics
+
+Measure wall time independently for the selected root and every included sub-agent from each task's first to last distinct timestamp, then sum known task durations in aggregates. Estimate each task's active time by summing consecutive timestamp gaps while capping every gap at five minutes, then sum known estimates. This suppresses long idle periods without pretending to observe foreground activity. Report both metrics as `n/a` for a task when fewer than two distinct timestamps exist.
+
+Capture Claude effort only from recorded request/configuration fields when present, normalize Claude Code `ultracode` to `xhigh`, and group native usage by both model and recorded effort. Native transcript omissions remain unavailable; never substitute the current setting or a model default for missing history.
+
+Before selecting and aggregating Claude usage, deduplicate records across every in-scope project and native file. Prefer `message.id`, fall back to a top-level record ID, group each ID by stable non-output billing fields, and retain the record with the highest output-token count in each group. Preserve suppressed copies as selector aliases so exact logical IDs and transcript paths continue to resolve. If one message ID has conflicting model or input/cache billing fields, retain one highest-output record per conflicting variant and surface the conflict in scan coverage and limitations. Leave records without a usable message ID unchanged. Join Claude Desktop metadata to an existing Claude transcript by `cliSessionId` without adding usage. Group Cowork root and nested sub-agent transcripts as one logical session, retain the session title/workspace, and report the number of distinct Cowork sub-agent runs. Detect project-associated remote Cowork indexes and distinguish local measured, remote measured, and remote detected-but-unavailable sessions; preserve numeric measured totals and warn that unavailable remote usage is excluded.
+
+## Report requirements
+
+Place `Totals` immediately after `Cost by root and child folder`, then keep `Harness surface coverage`, `Cowork coverage`, `Scan coverage`, and `Pricing coverage` in that order in both report formats.
+
+Format every USD value with a dollar sign, comma thousands separators, and exactly four decimal places, such as `$1,234.5678`.
+
+For Cost by tables, the following specific layout supersedes any general metric-order guidance below: put total `Cost` immediately after the provider/model/effort/folder identity columns, then use `Input`, `Cached`, `Input cost`, `Output`, `Output cost`, total `Tokens`, `Cost / 1M tokens`, `Threads`, `Cost / thread`, active time, cost per active hour, wall time, and cost per wall hour. Input cost includes uncached input, cache reads, and supported cache-write classes. Cost per 1M tokens divides known total cost by total measured/provider tokens and multiplies the result by one million; cost per thread divides known cost by all recognized threads, so either may be understated when coverage is incomplete.
+
+Generate Markdown and self-contained HTML from the same analysis. Display the selected root identity, root and included sub-agent counts, relationship depth and parent identity for every task, token classes, measured/provider tokens, known cost, cost coverage, effort, wall time, estimated active time, cost per wall hour, and cost per active hour when calculable. Make `Cost by model by effort` a level-two sibling immediately after the level-two `Cost by model` section. In every thread-derived table, expand tokens into `Input`, `Cached`, `Output`, and total `Tokens` columns. Immediately after cost, order metrics as active time, cost per active hour, wall time, cost per wall hour, then cost per thread where rows aggregate multiple threads. Cost per thread divides known cost by all recognized threads and may be understated when coverage is incomplete; omit it from thread detail because it duplicates selected cost. Do not add hourly metrics to scan, token-composition, or pricing tables because their rows are not disjoint thread groups. Include `Total` rows in every aggregate table. Immediately below the Markdown H1, place `_powered by [11ai-llm-cost-single-thread](https://ai.rj11.io/skills/11ai-llm-cost-single-thread)._`. In HTML, append a smaller inline span to the main title with the exact text `powered by 11ai-llm-cost-single-thread`; link that text to the same skill URL with `target="_blank"` and `rel="noopener noreferrer"`. Make every table column sortable while preserving generated row order on initial load. A newly selected column must sort descending first and then toggle direction; keep unavailable values and `Total` rows at the bottom. Keep every HTML level-two and level-three section in a native `<details>` disclosure without an `open` attribute. Use a fluid full-width compact layout with minimal padding and no outer report card. Put the generation message after all sections and immediately before the signature in both formats.
+
+Place `Cowork coverage` immediately after `Harness surface coverage` and immediately before `Scan coverage`. Show local measured, remote detected, remote measured, and remote detected-but-unavailable states separately. When remote usage is unavailable, preserve all numeric measured totals and add a prominent warning that those totals exclude the unavailable sessions.
+
+When one or more unmatched real models have positive measured/provider tokens, add `Models requiring a pricing update` inside `Pricing coverage`. Aggregate those models by provider and model with thread, input, cached-input, output, and total-token counts. State that known-cost totals exclude them and link `11ai-llm-cost-pricing-update` to `https://ai.rj11.io/skills/11ai-llm-cost-pricing-update`, instructing the user to run it and regenerate the report. Omit synthetic, unknown, and zero-token placeholders from this callout. In HTML, open the link in a new tab with `rel="noopener noreferrer"`. Omit the entire callout when no actionable unmatched model exists.
+
+Use only this skill's bundled `references/pricing.json`. Do not accept a pricing override or read, create, update, or recommend `llm-pricing.json`, `.llm-cost/pricing.json`, or `~/.llm-cost/pricing.json`; legacy files at those paths have no effect. Select the rate effective at the thread finish timestamp, falling back to its start. If aggregated usage crosses a price boundary, use the main finish-time price for the whole thread. If usage predates known history, use the earliest available rate while directing historical research to the pricing-update skill; if usage is undated, use the latest rate active at report generation. Display each applied period, official-or-detected date basis, and temporal fallback. Only `11ai-llm-cost-pricing-update` may research official pricing and update the bundled catalogs.
+
+Do not copy prompts, message content, secrets, or full transcripts. Do not modify transcripts, code, ledgers, pricing inputs, or other source files.
+
+End the Markdown report with this exact signature:
+
+```markdown
+_LLM token cost analysis by [11ai-llm-cost-single-thread](https://ai.rj11.io/skills/11ai-llm-cost-single-thread)._
+```
+
+End the HTML report with the same visible linked signature. Set `target="_blank"` and `rel="noopener noreferrer"` on its link.
+
+## Completion checks
+
+Before reporting completion:
+
+- confirm the analyzer exits successfully, selects only the intended logical root, recursively includes its explicitly linked Codex sub-agents, and excludes unrelated siblings;
+- confirm the default timestamped package contains matching `.md` and `.html` files;
+- confirm the Markdown report places the linked `powered by 11ai-llm-cost-single-thread` attribution immediately below its H1;
+- confirm the HTML main title includes the smaller inline linked text `powered by 11ai-llm-cost-single-thread` and that its link safely opens in a new tab;
+- confirm both formats contain root/sub-agent counts and relationship detail, the standardized token breakdown and cost-adjacent metric order, aggregate cost per thread, plus `Cost by model by effort` as a level-two sibling immediately after `Cost by model`, totals, pricing coverage, historical pricing selection, applied rate periods, temporal fallbacks, limitations, and the exact linked signature;
+- confirm `Totals` is a level-two sibling immediately after `Cost by root and child folder`;
+- confirm `Harness surface coverage`, `Cowork coverage`, `Scan coverage`, and `Pricing coverage` appear in that order, with `Cowork coverage` immediately before `Scan coverage` and `Scan coverage` immediately before `Pricing coverage`;
+- confirm every Cost by table contains total, input, output, per-1M-token, and per-thread costs in the required order, with a grand-total row;
+- confirm every HTML level-two and level-three section is collapsed by default;
+- confirm the HTML is fluid and compact without an outer card, and the generation message follows all disclosures immediately before the signature in both formats;
+- confirm every HTML table header is sortable, initial row order is unchanged, a newly selected column starts descending, and `Total` rows remain pinned last;
+- confirm no prompt or transcript content appears in either report;
+- confirm both identify the bundled catalog version and update date, disclose earliest-available, latest-available, and main-price boundary fallbacks, and conditionally show actionable unmatched models, excluded token totals, and the exact pricing-update link without listing synthetic or zero-token placeholders;
+- confirm both distinguish every Cowork coverage state and preserve measured totals while warning about excluded unavailable remote usage;
+- report the selector, root and sub-agent counts, exact paths, and unavailable timing, usage, or pricing fields.

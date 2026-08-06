@@ -1,104 +1,33 @@
 # 11ai-benchmarks
 
-Nineteen skills for lifecycle orchestration, creating, operating, judging,
-accounting, reviewing, reporting, analyzing, synchronizing, and publishing
-reproducible AI-coding benchmarks.
+Four skills for single-thread, project-scoped, and machine-wide LLM usage reporting plus provider-verified pricing maintenance across local coding harnesses.
 
-The system freezes inputs, records exact run provenance, gates rule compliance,
-supports independent sequential AI and human judges, accounts for every thread
-found, and publishes immutable reviewed cycles. Re-running or returning the next
-day resumes by stable ID and source digest instead of duplicating work.
+The reporting skills distinguish user-facing surface, underlying runtime, billing mode, usage source, and confidence. They count authoritative local token ledgers once, preserve wrapper provenance, and never convert product credits, quotas, or context snapshots into invented API-token costs.
 
-A benchmark campaign can stay open for weeks while models are time-gated. A
-soft lifecycle publishes fully reviewed interim cumulative cycles; a hard
-lifecycle publishes a final cycle only after explicit closure. Older cycles
-never change.
+Claude reporting groups local Cowork root and sub-agent transcripts into logical sessions, reports distinct sub-agent runs, detects remote Cowork session indexes, honors declared workspace metadata in supplemental records, and joins Claude Desktop Code metadata to existing transcripts without counting usage twice. Reports keep measured totals numeric while warning that detected remote sessions without readable usage are excluded rather than treated as zero.
 
-## Lifecycle
+## Choose a skill
 
-```text
-initialize → run/audit available targets → freeze cumulative cycle
-           → AI/human judges (aggregate after each) → publish cycle
-         → account → review → analyze → report → sync websites
-         → interim-published-open ↺ new time-gated targets
-         → final cycle → hard-closed
-```
+| Skill | Use it for |
+| --- | --- |
+| [`11ai-llm-cost-global`](./skills/11ai-llm-cost-global/SKILL.md) | Reporting machine-wide LLM usage under `~/Desktop/11ai-llm-cost-global-reports/11ai-llm-cost-global-reports-{datetime}` |
+| [`11ai-llm-cost-project`](./skills/11ai-llm-cost-project/SKILL.md) | Analyzing project-attributed LLM usage and writing matching reports under `<current-thread-folder>/11ai-llm-cost-project-reports/11ai-llm-cost-project-reports-{datetime}` |
+| [`11ai-llm-cost-single-thread`](./skills/11ai-llm-cost-single-thread/SKILL.md) | Analyzing the active Codex thread or one exact thread selector under `<current-thread-folder>/11ai-llm-cost-single-thread-reports/11ai-llm-cost-single-thread-reports-{datetime}` |
+| [`11ai-llm-cost-pricing-update`](./skills/11ai-llm-cost-pricing-update/SKILL.md) | Verifying official provider prices, updating the canonical catalog, and synchronizing all three reporting skills |
 
-Static content-pack conversion is optional and runs only when explicitly
-requested. The suite deliberately does not prescribe a sequential-run commit or
-worktree policy.
+All standalone HTML reports use native disclosure controls. Every report section is collapsed by default, while the report title and linked skill signature remain visible.
 
-## Shared contracts
+The three reporting skills always use their synchronized bundled pricing catalog. They do not accept or discover local pricing overrides. Catalog version 3 preserves model price histories and applies the rate effective at each thread's attribution time. Boundary-spanning aggregates use their finish-time main price; usage older than known history uses the earliest available rate while the pricing-update workflow searches official historical sources. Reports expose every temporal fallback. When measured usage has no bundled model match, reports leave that cost unavailable and link to `11ai-llm-cost-pricing-update` for a provider-verified catalog refresh.
 
-The version-2 contracts live in `references/artifact-contracts.md` with JSON
-schemas under `schemas/` and deterministic helpers under `scripts/`.
+## Cross-skill maintenance
 
-- `benchmark/benchmark.json` — mode, policies, content/evidence configuration.
-- `benchmark/run-plan.json` — optional desired/available/time-gated targets and
-  manual or target-set closure policy.
-- `benchmark/lifecycle-state.json` — deterministic derived stage and blockers.
-- `benchmark/runs.json` — exact run ledger with template and instance hashes.
-- `benchmark/prompts/` — exact prompt instance per run.
-- root `JUDGE.md` plus cycle `judging/prompts/` — frozen operator template and
-  exact AI/human judge instances with template/instance hashes.
-- `benchmark/rubric.md` + `rubric.json` — human and machine-readable criteria.
-- `benchmark/audits/` — mechanical compliance and runtime evidence.
-- `benchmark/costs/` — every discovered thread, normalized tokens/costs/scopes.
-- `benchmark/cycles/<id>/` — immutable cohort, evidence, judges, aggregate,
-  review, and report.
-- `benchmark/current.json` — latest reviewed-cycle pointer, release type,
-  publication sequence, and review digest.
+When fixing or extending one skill, evaluate whether the behavior applies to every sibling skill in this plugin. Apply the equivalent change wherever it is applicable, document intentional exceptions, run the affected skill tests plus the complete plugin test set, and compare newly generated reports with prior reports to confirm existing features and output contracts remain intact.
 
-Accounting exposes benchmark scope, judge scope, every identified-other scope,
-unidentified scope, benchmark+judge scope, and a reconciled total across all
-threads found.
+Treat report comparison as a required regression gate for every skill-behavior change:
 
-## Skills
-
-### Orchestrate the lifecycle
-
-- `11ai-benchmark-run-lifecycle` — soft, hard, resume, from, and through modes
-  across the entire campaign.
-- `11ai-benchmark-initialize` — initialize through ready-for-runs without
-  running a model.
-- `11ai-benchmark-freeze-cycle` — freeze, audit, and evidence a cumulative
-  cohort through ready-for-judging without running a judge.
-- `11ai-benchmark-publish-cycle` — turn judging into accounting, review,
-  reports, sync, and an interim-open or final hard-close state.
-- `11ai-benchmark-sync` — refresh every stale derived domain without running a
-  benchmark or judge.
-
-### Create and configure
-
-- `11ai-benchmark-creator-singleapp` — shared Next.js app, one run folder each.
-- `11ai-benchmark-creator-multirepo` — isolated branch/worktree/repository runs.
-- `11ai-benchmark-rubric-creator` — frozen weighted criteria and rubric JSON.
-- `11ai-benchmark-content-pack-creator` — explicitly requested static content
-  conversion only.
-
-### Operate and evaluate
-
-- `11ai-benchmark-runner` — mode-aware run registration, hashes, launch/resume.
-- `11ai-benchmark-compliance-auditor` — configured hard-rule and runtime audit.
-- `11ai-benchmark-judge` — sequential blind AI judges and aggregate rebuilds.
-- `11ai-benchmark-human-judge` — guided blind human scoring using the same
-  criteria/evidence/artifact schema.
-- `11ai-benchmark-token-accountant` — exhaustive granular transcript, token,
-  metadata, price, scope, efficiency, and cost-quality accounting.
-- `11ai-benchmark-troubleshooter` — evidence-first diagnosis and repair of
-  transcript, accounting, lifecycle, review, report, index, and non-run UI
-  regressions without modifying benchmark run artifacts.
-
-### Review, report, and publish
-
-- `11ai-benchmark-reviewer` — cycle gate, consolidation, freshness, propagation.
-- `11ai-benchmark-reporter` — metadata-rich HTML/Markdown report and visuals.
-- `11ai-benchmark-www` — benchmark-specific recursive root/parent/benchmark/
-  cycle/run websites, compact non-root pages, catalog controls, and shadcn data
-  visualizations. It is separate from any general project-site workflow.
-
-### Across benchmarks
-
-- `11ai-benchmark-analyzer` — coverage-aware normalized leaderboard, pairwise,
-  cost-quality, compliance, judging, token, lifecycle, metadata, and trend
-  analysis.
+1. Before editing, identify older Markdown and HTML reports for every affected reporting scope. Global report baselines are stored under `~/Desktop/11ai-llm-cost-global-reports/`.
+2. If an affected scope has no older report, generate and preserve a baseline with the unmodified skill before making the change.
+3. After editing, generate the same reports and compare them with their baselines. Verify that existing sections, tables, thread rows, totals, pricing states, warnings, and HTML interactions were not lost or broken; explain any intentional difference.
+4. Do not consider the behavior change complete until both the automated tests and the report regression comparison pass.
+5. In the final handoff, tell the user exactly where to inspect the new behavior. Link the newly generated reports and name the relevant sections, tables, rows, or visible states.
+6. End the handoff with a conventional commit-style summary of the latest changes.

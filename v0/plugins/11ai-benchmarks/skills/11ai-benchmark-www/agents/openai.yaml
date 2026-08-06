@@ -1,4 +1,0 @@
-interface:
-  display_name: "Benchmark Website"
-  short_description: "Build data-rich benchmark result websites"
-  default_prompt: "Use $11ai-benchmark-www to build or upgrade this benchmark website hierarchy."

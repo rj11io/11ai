@@ -1,4 +1,0 @@
-interface:
-  display_name: "Benchmark Reporter"
-  short_description: "Render shareable benchmark reports"
-  default_prompt: "Use $11ai-benchmark-reporter to apply the Benchmark Reporter workflow to this task."
