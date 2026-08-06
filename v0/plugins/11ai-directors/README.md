@@ -3,13 +3,16 @@
 Director skills. A director does not do the task, it wraps one: preconditions,
 handoff, quality gate, report, abort.
 
-**Status: scaffold.** The plugin holds a placeholder only. No working skill yet.
-
 ## Choose a skill
 
 | Skill | Use it for |
 | --- | --- |
-| [`11ai-directors-placeholder`](./skills/11ai-directors-placeholder/SKILL.md) | Nothing yet. Reserves the plugin and carries the director contract for the first real skill |
+| [`11ai-director-git-main`](./skills/11ai-director-git-main/SKILL.md) | Running a complete repository task directly on main: sync a clean tree, do the task, quality-check, and report, committing or pushing only when explicitly asked |
+| [`11ai-director-git-branch`](./skills/11ai-director-git-branch/SKILL.md) | Landing a complete repository task through a branch and pull request: branch from a clean tree, do the task, open a detailed PR, address review comments, merging or closing only when explicitly asked |
+
+The directors wrap a task in a Git transaction; they do not define the task. Name
+the work (or the task skill) in the same request, and the director handles
+synchronization, cleanliness, rollback, and reporting around it.
 
 ## Director contract
 
@@ -23,9 +26,3 @@ Every skill here states these five beats in its own vocabulary:
 
 Pair a director with any skill that does the work itself. The director supplies
 the discipline, not the task.
-
-## Related
-
-`11ai-utils` already holds two working directors, `11ai-director-git-branch` and
-`11ai-director-git-main`. Read them before writing a new one. Moving them here is
-a separate decision, not part of this scaffold.

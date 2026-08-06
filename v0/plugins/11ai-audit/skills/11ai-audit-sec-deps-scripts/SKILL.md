@@ -1,9 +1,9 @@
 ---
-name: 11ai-security-dep-scan
+name: 11ai-audit-sec-deps-scripts
 description: "Fail-closed, read-only dependency security auditing across manifests, lockfiles, installed trees, registry version candidates, advisory databases, and live web sources. Enumerate every dependency and every version the configured resolver could install, then check each exact candidate for critical vulnerabilities, malware, compromised releases, install-time execution, and other host-computer risks. Use before installing or updating packages, when scanning a repository or proposed package/version, when comparing declared/locked/installed versions, or when producing an evidence-backed dependency security report."
 ---
 
-# 11ai Security Dependency Scan
+# 11ai Audit Security Dependency Scan
 
 ## Overview
 
@@ -244,11 +244,11 @@ Always write the final report as UTF-8 Markdown in the root folder of the
 project scan boundary established in step 1. Use this filename:
 
 ```text
-11ai-security-dep-scan-report-YYYYMMDDTHHMMSSZ.md
+11ai-audit-sec-deps-scripts-report-YYYYMMDDTHHMMSSZ.md
 ```
 
 Generate the datetime in UTC at write time; for example,
-`11ai-security-dep-scan-report-20260718T143052Z.md`. Resolve the project root
+`11ai-audit-sec-deps-scripts-report-20260718T143052Z.md`. Resolve the project root
 explicitly instead of assuming the current working directory or the skill
 directory is the root. Never overwrite an existing report. If a same-second
 name collision occurs, obtain a fresh timestamp or append `-2`, `-3`, and so on
@@ -281,7 +281,7 @@ Lead with the answer and include:
 End every Markdown report with this exact linked signature:
 
 ```markdown
-_Security scan by [11ai-security-dep-scan](https://ai.rj11.io/skills/11ai-security-dep-scan)._
+_Security scan by [11ai-audit-sec-deps-scripts](https://ai.rj11.io/skills/11ai-audit-sec-deps-scripts)._
 ```
 
 If another skill later extends the same report, preserve this attribution and

@@ -3,13 +3,11 @@
 Skills whose subject is skills: authoring, auditing, packaging, and retiring them
 without leaving dangling references.
 
-**Status: scaffold.** The plugin holds a placeholder only. No working skill yet.
-
 ## Choose a skill
 
 | Skill | Use it for |
 | --- | --- |
-| [`11ai-meta-skills-placeholder`](./skills/11ai-meta-skills-placeholder/SKILL.md) | Nothing yet. Reserves the plugin and records the packaging rules the first real skill has to enforce |
+| [`11ai-meta-operator-plugin-creator`](./skills/11ai-meta-operator-plugin-creator/SKILL.md) | Scaffolding a new `11ai-operator-TOOL` plugin that matches the house pattern and passes validation |
 
 ## Scope
 
@@ -29,7 +27,6 @@ does not. Read it first. Do not restate its rules from memory.
 
 ## Related
 
-Two working skills elsewhere already fall in this scope:
-`11ai-operator-plugin-creator` in `11ai-utils`, and `11ai-super-skill-qa` in
-`11ai-super`. Read both before writing a new one. Moving them here is a separate
-decision, not part of this scaffold.
+`11ai-super-skill-qa` in `11ai-super` also falls in this scope: it audits and
+repairs skill packaging across harnesses. Read it before writing a new meta
+skill here.

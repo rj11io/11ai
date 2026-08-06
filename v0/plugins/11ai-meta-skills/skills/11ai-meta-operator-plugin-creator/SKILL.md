@@ -1,8 +1,8 @@
 ---
-name: 11ai-operator-plugin-creator
+name: 11ai-meta-operator-plugin-creator
 description: "Scaffold a version-focused 11ai operator plugin for a tool, CLI, service, or SDK so it matches the existing operator plugins exactly, covering version selection, identity naming, first-party native-skill discovery and compatibility, skill archetypes, safety, manifests, and catalog wiring. Use when asked to create or extend an operator plugin, add skills for a technology, or check that an operator plugin follows the house pattern and targets the requested or latest stable version."
 ---
-# 11ai operator plugin creator
+# 11ai meta operator plugin creator
 
 Build a plugin named `11ai-operator-TOOL-ID` that a reader cannot tell apart from the ones already in this repository. `TOOL-ID` includes the technology's version identifier when applicable. The shape is fixed: `v0/scripts/validate-skills.mjs` rejects off-pattern frontmatter, missing Codex metadata, broken links, and catalog counts that do not add up. Read [references/plugin-blueprint.md](references/plugin-blueprint.md) before writing any file.
 

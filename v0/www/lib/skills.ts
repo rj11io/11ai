@@ -210,13 +210,6 @@ const PLUGIN_CONFIG = [
       "React 19.2 components, state, effects, Actions, Activity, forms, performance, testing, integrations, reference, and troubleshooting.",
   },
   {
-    slug: "security",
-    dir: "11ai-security",
-    title: "Security",
-    tagline:
-      "Read-only dependency security audits with critical vulnerability, supply-chain, and host-harm triage.",
-  },
-  {
     slug: "operator-shadcn-v4",
     dir: "11ai-operator-shadcn-v4",
     title: "shadcn v4 operator",
@@ -340,7 +333,7 @@ const PLUGIN_CONFIG = [
     dir: "11ai-utils",
     title: "Utilities",
     tagline:
-      "Git task directors, Markdown compression, reverse engineering, reviews, analytics, publication CMS, calls to action, project sites, and operator-plugin scaffolding.",
+      "Markdown compression, reverse engineering, reviews, analytics, publication CMS, calls to action, and project sites.",
   },
   {
     slug: "xharness",

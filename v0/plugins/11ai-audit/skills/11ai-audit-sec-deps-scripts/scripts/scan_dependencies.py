@@ -531,7 +531,7 @@ def markdown_report(report: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
-            "_Security scan by [11ai-security-dep-scan](https://ai.rj11.io/skills/11ai-security-dep-scan)._",
+            "_Security scan by [11ai-audit-sec-deps-scripts](https://ai.rj11.io/skills/11ai-audit-sec-deps-scripts)._",
         ]
     )
     return "\n".join(lines) + "\n"
