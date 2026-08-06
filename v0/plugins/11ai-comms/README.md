@@ -1,15 +1,18 @@
 # 11ai Comms
 
-Registers that set how an agent speaks. One skill per communication direction, so
-a session can pick a voice and hold it.
+How an agent speaks. Registers that set the shape of every reply, plus one-off
+communication deliverables like a blunt critique.
 
 ## Choose a skill
 
 | Skill | Use it for |
 | --- | --- |
 | [`11ai-comms-short`](./skills/11ai-comms-short/SKILL.md) | Terse, list-first replies with an example per claim, a fix beside every problem, and a copyable conventional commit message after code changes |
+| [`11ai-roast`](./skills/11ai-roast/SKILL.md) | Giving a blunt, prioritized, read-only critique of code or another work product |
 
-Pick one direction per session. Two registers at once cancel each other out.
+Pick one register per session. Two registers at once cancel each other out. The
+roast is not a register: it is a one-off critique, and it composes with whatever
+register is active.
 
 ## Register contract
 

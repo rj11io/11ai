@@ -88,14 +88,14 @@ const PLUGIN_CONFIG = [
     dir: "11ai-codebase",
     title: "Codebase",
     tagline:
-      "Playwright setup, npm publishing, and fully automated releases for your repositories.",
+      "Playwright setup, npm publishing, fully automated releases, and web analytics for your repositories.",
   },
   {
     slug: "comms",
     dir: "11ai-comms",
     title: "Comms",
     tagline:
-      "Communication registers that set how an agent speaks: the length, density, and shape of its replies.",
+      "Communication registers that set how an agent speaks, plus a blunt read-only critique deliverable.",
   },
   {
     slug: "directors",
@@ -333,7 +333,7 @@ const PLUGIN_CONFIG = [
     dir: "11ai-utils",
     title: "Utilities",
     tagline:
-      "Markdown compression, reverse engineering, reviews, analytics, publication CMS, calls to action, and project sites.",
+      "Markdown compression, reverse engineering, publication CMS, calls to action, and project sites.",
   },
   {
     slug: "xharness",
@@ -367,7 +367,7 @@ export type Skill = {
   description: string
   pluginSlug: string
   pluginTitle: string
-  /** Path from the repo root, e.g. "v0/plugins/11ai-utils/skills/11ai-roast". */
+  /** Path from the repo root, e.g. "v0/plugins/11ai-comms/skills/11ai-roast". */
   repoPath: string
   githubUrl: string
 }

@@ -56,8 +56,8 @@ The repository currently contains 475 skills in 48 plugins.
 | [Blog builder](./v0/plugins/11ai-blog-builder/README.md) | 8 | Building file-backed editorial blogs with composable CMS, author, Markdown, content, navigation, and UI skills |
 | [Cleanup](./v0/plugins/11ai-cleanup/README.md) | 5 | Safely finding and removing abandoned local resources |
 | [Clerk Core 3 operator](./v0/plugins/11ai-operator-clerk-core-3/README.md) | 11 | Clerk Core 3 setup, authentication, sessions, users, organizations, webhooks, native skills, and troubleshooting |
-| [Codebase](./v0/plugins/11ai-codebase/README.md) | 3 | Playwright setup, npm publishing, and automated releases |
-| [Comms](./v0/plugins/11ai-comms/README.md) | 1 | Communication registers that set the length, density, and shape of an agent's replies |
+| [Codebase](./v0/plugins/11ai-codebase/README.md) | 4 | Playwright setup, npm publishing, automated releases, and web analytics |
+| [Comms](./v0/plugins/11ai-comms/README.md) | 2 | Communication registers that set the shape of an agent's replies, plus a blunt read-only critique |
 | [Convex operator](./v0/plugins/11ai-operator-convex/README.md) | 12 | Current Convex setup, schema, functions, auth, storage, deployments, first-party native skills, and troubleshooting |
 | [CSS3 operator](./v0/plugins/11ai-operator-css-3/README.md) | 10 | Current CSS3-family cascade, selectors, layout, responsive design, theming, motion, integrations, reference, and troubleshooting |
 | [Directors](./v0/plugins/11ai-directors/README.md) | 2 | Wrapping a repository task in a disciplined Git workflow, on main or through a reviewed pull request |
@@ -82,7 +82,7 @@ The repository currently contains 475 skills in 48 plugins.
 | [Tailwind CSS v3 operator](./v0/plugins/11ai-operator-tailwind-v3/README.md) | 10 | Tailwind CSS 3.4 content scanning, builds, JavaScript configuration, themes, utilities, variants, plugins, integrations, reference, and troubleshooting |
 | [Tailwind CSS v4 operator](./v0/plugins/11ai-operator-tailwind-v4/README.md) | 10 | Tailwind CSS 4.3 sources, build adapters, CSS-first themes, utilities, variants, compatibility, migration, integrations, reference, and troubleshooting |
 | [TypeScript v7 operator](./v0/plugins/11ai-operator-typescript-v7/README.md) | 10 | TypeScript 7 native compiler configuration, type modeling, narrowing, generics, modules, packages, migrations, declarations, integrations, reference, and troubleshooting |
-| [Utilities](./v0/plugins/11ai-utils/README.md) | 7 | Markdown compression, reverse engineering, critique, analytics, publication CMS, calls to action, and project sites |
+| [Utilities](./v0/plugins/11ai-utils/README.md) | 5 | Markdown compression, reverse engineering, publication CMS, calls to action, and project sites |
 | [Vercel AI Gateway operator](./v0/plugins/11ai-operator-vercel-ai-gateway/README.md) | 10 | Models, routing, fallbacks, authentication, BYOK, budgets, usage, observability, security, integrations, reference, and troubleshooting |
 | [Vercel AI SDK v7 operator](./v0/plugins/11ai-operator-vercel-ai-sdk-v7/README.md) | 10 | AI SDK 7 multimodal generation, streaming UI, structured output, tools, durable agents, providers, telemetry, integrations, reference, and troubleshooting |
 | [Vercel Chat SDK v4 operator](./v0/plugins/11ai-operator-vercel-chat-sdk-v4/README.md) | 10 | Chat SDK 4 adapters, handlers, messages, UI, AI tools, state, concurrency, webhooks, deployment, integrations, reference, and troubleshooting |
@@ -110,8 +110,8 @@ v0/
     11ai-benchmarks/          19 benchmark skills under skills/
     11ai-blog-builder/         8 editorial blog skills under skills/
     11ai-cleanup/              5 cleanup skills under skills/
-    11ai-codebase/             3 codebase skills under skills/
-    11ai-comms/                1 communication register skill under skills/
+    11ai-codebase/             4 codebase skills under skills/
+    11ai-comms/                2 communication skills under skills/
     11ai-directors/            2 Git task-director skills under skills/
     11ai-llm-costs/            4 LLM cost, effort, and timing skills under skills/
     11ai-meta-skills/          1 skill-authoring and packaging skill under skills/
@@ -149,7 +149,7 @@ v0/
     11ai-operator-vercel-workflows-v4/ 10 Vercel Workflows v4 operation skills under skills/
     11ai-operator-workos/     11 WorkOS authentication operation skills under skills/
     11ai-super/                9 iterative task and improvement skills under skills/
-    11ai-utils/                7 utility skills under skills/
+    11ai-utils/                5 utility skills under skills/
     11ai-web-design/           3 web design skills under skills/
     11ai-xharness/             2 cross-harness skills under skills/
   scripts/                    Package validation, release, and publishing helpers
