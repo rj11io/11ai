@@ -10,14 +10,14 @@ Claude reporting groups local Cowork root and sub-agent transcripts into logical
 
 | Skill | Use it for |
 | --- | --- |
-| [`11ai-llm-cost-global`](./skills/11ai-llm-cost-global/SKILL.md) | Reporting machine-wide LLM usage under `~/Desktop/11ai-llm-cost-global-reports/11ai-llm-cost-global-reports-{datetime}` |
-| [`11ai-llm-cost-project`](./skills/11ai-llm-cost-project/SKILL.md) | Analyzing project-attributed LLM usage and writing matching reports under `<current-thread-folder>/11ai-llm-cost-project-reports/11ai-llm-cost-project-reports-{datetime}` |
-| [`11ai-llm-cost-single-thread`](./skills/11ai-llm-cost-single-thread/SKILL.md) | Analyzing the active Codex thread or one exact thread selector under `<current-thread-folder>/11ai-llm-cost-single-thread-reports/11ai-llm-cost-single-thread-reports-{datetime}` |
-| [`11ai-llm-cost-pricing-update`](./skills/11ai-llm-cost-pricing-update/SKILL.md) | Verifying official provider prices, updating the canonical catalog, and synchronizing all three reporting skills |
+| [`11ai-benchmarks-machine`](./skills/11ai-benchmarks-machine/SKILL.md) | Reporting machine-wide LLM usage under `~/Desktop/11ai-benchmarks-machine-reports/11ai-benchmarks-machine-reports-{datetime}` |
+| [`11ai-benchmarks-project`](./skills/11ai-benchmarks-project/SKILL.md) | Analyzing project-attributed LLM usage and writing matching reports under `<current-thread-folder>/11ai-benchmarks-project-reports/11ai-benchmarks-project-reports-{datetime}` |
+| [`11ai-benchmarks-single-thread`](./skills/11ai-benchmarks-single-thread/SKILL.md) | Analyzing the active Codex thread or one exact thread selector under `<current-thread-folder>/11ai-benchmarks-single-thread-reports/11ai-benchmarks-single-thread-reports-{datetime}` |
+| [`11ai-benchmarks-pricing-update`](./skills/11ai-benchmarks-pricing-update/SKILL.md) | Verifying official provider prices, updating the canonical catalog, and synchronizing all three reporting skills |
 
 All standalone HTML reports use native disclosure controls. Every report section is collapsed by default, while the report title and linked skill signature remain visible.
 
-The three reporting skills always use their synchronized bundled pricing catalog. They do not accept or discover local pricing overrides. Catalog version 3 preserves model price histories and applies the rate effective at each thread's attribution time. Boundary-spanning aggregates use their finish-time main price; usage older than known history uses the earliest available rate while the pricing-update workflow searches official historical sources. Reports expose every temporal fallback. When measured usage has no bundled model match, reports leave that cost unavailable and link to `11ai-llm-cost-pricing-update` for a provider-verified catalog refresh.
+The three reporting skills always use their synchronized bundled pricing catalog. They do not accept or discover local pricing overrides. Catalog version 3 preserves model price histories and applies the rate effective at each thread's attribution time. Boundary-spanning aggregates use their finish-time main price; usage older than known history uses the earliest available rate while the pricing-update workflow searches official historical sources. Reports expose every temporal fallback. When measured usage has no bundled model match, reports leave that cost unavailable and link to `11ai-benchmarks-pricing-update` for a provider-verified catalog refresh.
 
 ## Cross-skill maintenance
 
@@ -25,7 +25,7 @@ When fixing or extending one skill, evaluate whether the behavior applies to eve
 
 Treat report comparison as a required regression gate for every skill-behavior change:
 
-1. Before editing, identify older Markdown and HTML reports for every affected reporting scope. Global report baselines are stored under `~/Desktop/11ai-llm-cost-global-reports/`.
+1. Before editing, identify older Markdown and HTML reports for every affected reporting scope. Global report baselines are stored under `~/Desktop/11ai-benchmarks-machine-reports/`.
 2. If an affected scope has no older report, generate and preserve a baseline with the unmodified skill before making the change.
 3. After editing, generate the same reports and compare them with their baselines. Verify that existing sections, tables, thread rows, totals, pricing states, warnings, and HTML interactions were not lost or broken; explain any intentional difference.
 4. Do not consider the behavior change complete until both the automated tests and the report regression comparison pass.

@@ -60,7 +60,7 @@ const PLUGIN_CONFIG = [
     dir: "11ai-benchmarks",
     title: "Benchmarks",
     tagline:
-      "Run resumable soft or final benchmark lifecycles across time-gated models, judging, accounting, reports, and websites.",
+      "Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports across local coding harnesses.",
   },
   {
     slug: "blog-builder",
@@ -159,13 +159,6 @@ const PLUGIN_CONFIG = [
     title: "Jest v30 operator",
     tagline:
       "Setting up, inspecting, running, authoring, de-flaking, speeding up, integrating, and troubleshooting Jest 30 suites.",
-  },
-  {
-    slug: "llm-costs",
-    dir: "11ai-llm-costs",
-    title: "LLM costs",
-    tagline:
-      "Project-scoped and machine-wide LLM usage and cost reporting across local coding harnesses.",
   },
   {
     slug: "operator-mui-v9",

@@ -11,9 +11,9 @@ const skillRoot = dirname(testDir)
 const skillsRoot = dirname(skillRoot)
 const canonicalPath = resolve(skillRoot, "references/pricing.json")
 const targetPaths = [
-  resolve(skillsRoot, "11ai-llm-cost-project/references/pricing.json"),
-  resolve(skillsRoot, "11ai-llm-cost-global/references/pricing.json"),
-  resolve(skillsRoot, "11ai-llm-cost-single-thread/references/pricing.json"),
+  resolve(skillsRoot, "11ai-benchmarks-project/references/pricing.json"),
+  resolve(skillsRoot, "11ai-benchmarks-machine/references/pricing.json"),
+  resolve(skillsRoot, "11ai-benchmarks-single-thread/references/pricing.json"),
 ]
 
 function catalog(path) {

@@ -1,6 +1,6 @@
 # 11ai
 
-Reusable AI-agent skills for building chat products, editorial blogs, and repo-driven project sites; automating agent work; benchmarking coding models; reverse engineering and maintaining codebases; integrating application services; running repository tasks through disciplined Git workflows; cleaning up local development environments; setting how an agent speaks; and running deep iterative project audits.
+Reusable AI-agent skills for building chat products, editorial blogs, and repo-driven project sites; automating agent work; reporting LLM usage, cost, and timing; reverse engineering and maintaining codebases; integrating application services; running repository tasks through disciplined Git workflows; cleaning up local development environments; setting how an agent speaks; and running deep iterative project audits.
 
 Project site: https://ai.rj11.io/
 
@@ -42,7 +42,7 @@ The files are installed at `node_modules/@rj11io/11ai/v0/plugins/`. You can also
 
 ## Skill catalog
 
-The repository currently contains 475 skills in 48 plugins.
+The repository currently contains 456 skills in 47 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
@@ -52,7 +52,7 @@ The repository currently contains 475 skills in 48 plugins.
 | [Ant Design v6 operator](./v0/plugins/11ai-operator-antdesign-v6/README.md) | 12 | Ant Design 6 React setup, components, theming, integrations, first-party native skills, reference, and troubleshooting |
 | [AWS CLI v2 operator](./v0/plugins/11ai-operator-aws-cli-v2/README.md) | 22 | AWS CLI v2 operations for common services, deployments, first-party Agent Toolkit skills, integrations, and troubleshooting |
 | [Bash operator](./v0/plugins/11ai-operator-bash/README.md) | 10 | Shell inspection, strict-mode scripting, text processing, files, processes, linting, and troubleshooting |
-| [Benchmarks](./v0/plugins/11ai-benchmarks/README.md) | 19 | Running resumable soft/final lifecycles; creating, auditing, AI/human judging, accounting, reviewing, synchronizing, and publishing benchmarks |
+| [Benchmarks](./v0/plugins/11ai-benchmarks/README.md) | 4 | Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports |
 | [Blog builder](./v0/plugins/11ai-blog-builder/README.md) | 8 | Building file-backed editorial blogs with composable CMS, author, Markdown, content, navigation, and UI skills |
 | [Cleanup](./v0/plugins/11ai-cleanup/README.md) | 5 | Safely finding and removing abandoned local resources |
 | [Clerk Core 3 operator](./v0/plugins/11ai-operator-clerk-core-3/README.md) | 11 | Clerk Core 3 setup, authentication, sessions, users, organizations, webhooks, native skills, and troubleshooting |
@@ -66,7 +66,6 @@ The repository currently contains 475 skills in 48 plugins.
 | [HTML5 operator](./v0/plugins/11ai-operator-html-5/README.md) | 10 | Current HTML5 documents, semantics, accessibility, forms, media, metadata, integrations, reference, and troubleshooting |
 | [JavaScript ES2026 operator](./v0/plugins/11ai-operator-javascript-es2026/README.md) | 10 | ECMAScript 2026 modules, async control flow, DOM events, data modeling, standard-library additions, performance, security, integrations, reference, and troubleshooting |
 | [Jest v30 operator](./v0/plugins/11ai-operator-jest-v30/README.md) | 17 | Setting up, inspecting, running, authoring, integrating, configuring, de-flaking, speeding up, and troubleshooting Jest 30 suites |
-| [LLM costs](./v0/plugins/11ai-llm-costs/README.md) | 4 | Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports |
 | [Material UI v9 operator](./v0/plugins/11ai-operator-mui-v9/README.md) | 13 | Material UI 9.2 setup, components, forms, navigation, theming, styling, migration, first-party Agent Skills, integrations, reference, and troubleshooting |
 | [Meta skills](./v0/plugins/11ai-meta-skills/README.md) | 1 | Building, auditing, and maintaining other skills and the plugins that package them |
 | [MongoDB v8 operator](./v0/plugins/11ai-operator-mongodb-v8/README.md) | 17 | MongoDB 8 Shell and Database Tools work with transactions, profiling, roles, Atlas, backups, integrations, and safety checks |
@@ -107,13 +106,12 @@ v0/
     11ai-agent-automation/     8 automation skills under skills/
     11ai-ai-chat/              9 AI chat skills under skills/
     11ai-audit/                1 evidence-backed dependency audit skill under skills/
-    11ai-benchmarks/          19 benchmark skills under skills/
+    11ai-benchmarks/           4 LLM cost, effort, and timing skills under skills/
     11ai-blog-builder/         8 editorial blog skills under skills/
     11ai-cleanup/              5 cleanup skills under skills/
     11ai-codebase/             4 codebase skills under skills/
     11ai-comms/                2 communication skills under skills/
     11ai-directors/            2 Git task-director skills under skills/
-    11ai-llm-costs/            4 LLM cost, effort, and timing skills under skills/
     11ai-meta-skills/          1 skill-authoring and packaging skill under skills/
     11ai-operator-antdesign-v6/  12 Ant Design v6 operation skills under skills/
     11ai-operator-aws-cli-v2/    22 AWS CLI v2 operation skills under skills/

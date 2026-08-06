@@ -87,10 +87,6 @@
       "source": "./v0/plugins/11ai-operator-jest-v30"
     },
     {
-      "name": "11ai-llm-costs",
-      "source": "./v0/plugins/11ai-llm-costs"
-    },
-    {
       "name": "11ai-operator-mongodb-v8",
       "source": "./v0/plugins/11ai-operator-mongodb-v8"
     },

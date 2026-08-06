@@ -8,7 +8,7 @@ import { DatabaseSync } from "node:sqlite"
 
 const skillRoot = fileURLToPath(new URL("..", import.meta.url))
 const analyzer = join(skillRoot, "scripts", "analyze-llm-cost-global.mjs")
-const fixtureRoot = mkdtempSync(join(tmpdir(), "11ai-llm-cost-global-"))
+const fixtureRoot = mkdtempSync(join(tmpdir(), "11ai-benchmarks-machine-"))
 
 function writeJsonl(file, records) {
   mkdirSync(dirname(file), { recursive: true })
@@ -112,7 +112,7 @@ try {
 
   const markdown = readFileSync(summary.markdownReport, "utf8")
   const html = readFileSync(summary.htmlReport, "utf8")
-  assert.match(markdown, /^# Global LLM Cost Report\n\n_powered by \[11ai-llm-cost-global\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-global\)\._\n\n/)
+  assert.match(markdown, /^# Global LLM Cost Report\n\n_powered by \[11ai-benchmarks-machine\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-machine\)\._\n\n/)
   assert.match(markdown, /Desktop Claude fixture/)
   assert.match(markdown, /claude-desktop-code \/ subscription-or-api-equivalent/)
   const recentMonth = new Date(recent).toLocaleString("en-US", { month: "long", year: "numeric" })
@@ -215,15 +215,15 @@ try {
   assert.match(markdown, /cline-session\/[^/]+\/cline-tasks\/task-1\/ui_messages\.json/)
   assert.match(markdown, /roo-session\/[^/]+\/roo-tasks\/task-2\/ui_messages\.json/)
   assert.match(markdown, /opencode-session\/[^/]+\/opencode\.db\/opencode-1/)
-  assert.ok(markdown.endsWith("_LLM token cost analysis by [11ai-llm-cost-global](https://ai.rj11.io/skills/11ai-llm-cost-global)._\n"))
+  assert.ok(markdown.endsWith("_LLM token cost analysis by [11ai-benchmarks-machine](https://ai.rj11.io/skills/11ai-benchmarks-machine)._\n"))
   assert.ok(markdown.lastIndexOf("> Generated ") > markdown.indexOf("## Methodology"))
   assert.ok(markdown.lastIndexOf("> Generated ") < markdown.lastIndexOf("_LLM token cost analysis"))
   assert.doesNotMatch(markdown, new RegExp(fixtureRoot.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")))
   const htmlSections = html.match(/<details class="report-section level-[234]">/g) ?? []
   assert.equal(htmlSections.length, (markdown.match(/^#{2,4} /gm) ?? []).length)
   assert.equal((html.match(/<\/details>/g) ?? []).length, htmlSections.length)
-  assert.match(html, /<h1>Global LLM Cost Report <span class="powered-by"><a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-global" target="_blank" rel="noopener noreferrer">powered by 11ai-llm-cost-global<\/a><\/span><\/h1>/)
-  assert.equal((html.match(/powered by 11ai-llm-cost-global/g) ?? []).length, 1)
+  assert.match(html, /<h1>Global LLM Cost Report <span class="powered-by"><a href="https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-machine" target="_blank" rel="noopener noreferrer">powered by 11ai-benchmarks-machine<\/a><\/span><\/h1>/)
+  assert.equal((html.match(/powered by 11ai-benchmarks-machine/g) ?? []).length, 1)
   assert.match(html, /<summary><span class="section-title">All time<\/span><\/summary>/)
   assert.equal((html.match(/<summary><span class="section-title">Totals<\/span><\/summary>/g) ?? []).length, 16)
   assert.equal((html.match(/<summary><span class="section-title">Cost by harness<\/span><\/summary>/g) ?? []).length, 16)
@@ -247,7 +247,7 @@ try {
   for (let index = 1; index < orderedHtmlSections.length; index += 1) {
     assert.ok(html.indexOf(`class="section-title">${orderedHtmlSections[index - 1]}</span>`) < html.indexOf(`class="section-title">${orderedHtmlSections[index]}</span>`))
   }
-  assert.match(html, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-global" target="_blank" rel="noopener noreferrer">11ai-llm-cost-global<\/a>/)
+  assert.match(html, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-machine" target="_blank" rel="noopener noreferrer">11ai-benchmarks-machine<\/a>/)
   assert.match(html, /<p class="signature"><em>LLM token cost analysis by /)
   assert.equal((html.match(/<th\b/g) ?? []).length, (html.match(/class="sort-button"/g) ?? []).length)
   assert.ok((html.match(/<th scope="col" aria-sort="none">/g) ?? []).length > 0)
@@ -362,12 +362,12 @@ try {
   const fakeDesktop = join(fakeHome, "Desktop")
   mkdirSync(fakeDesktop, { recursive: true })
   const defaultSummary = run(harnessArgs, { HOME: fakeHome })
-  const reportsRoot = join(fakeDesktop, "11ai-llm-cost-global-reports")
+  const reportsRoot = join(fakeDesktop, "11ai-benchmarks-machine-reports")
   assert.equal(dirname(defaultSummary.outputDirectory), reportsRoot)
-  assert.match(basename(defaultSummary.outputDirectory), /^11ai-llm-cost-global-reports-\d{4}-\d{2}-\d{2}T/)
+  assert.match(basename(defaultSummary.outputDirectory), /^11ai-benchmarks-machine-reports-\d{4}-\d{2}-\d{2}T/)
   assert.equal(dirname(defaultSummary.markdownReport), defaultSummary.outputDirectory)
   assert.equal(dirname(defaultSummary.htmlReport), defaultSummary.outputDirectory)
-  assert.match(basename(defaultSummary.markdownReport), /^11ai-llm-cost-global-\d{4}-\d{2}-\d{2}T.*\.md$/)
+  assert.match(basename(defaultSummary.markdownReport), /^11ai-benchmarks-machine-\d{4}-\d{2}-\d{2}T.*\.md$/)
   assert.equal(basename(defaultSummary.htmlReport), `${basename(defaultSummary.markdownReport, ".md")}.html`)
 
   const currentOpenCodeDb = join(fixtureRoot, "current-opencode.db")
@@ -480,8 +480,8 @@ try {
   assert.match(legacyMarkdown, /\| Pricing catalog \| bundled default \(version 3, updated 2026-08-04\) \|/)
   assert.match(legacyMarkdown, /^### Models requiring a pricing update$/m)
   assert.match(legacyMarkdown, /\| anthropic \/ claude-unpriced-9 \| 1 \| 150 \| 50 \| 10 \| 160 \|/)
-  assert.match(legacyMarkdown, /Known-cost totals exclude the models above\. Run \[11ai-llm-cost-pricing-update\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-pricing-update\)/)
-  assert.match(legacyHtml, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-llm-cost-pricing-update" target="_blank" rel="noopener noreferrer">11ai-llm-cost-pricing-update<\/a>/)
+  assert.match(legacyMarkdown, /Known-cost totals exclude the models above\. Run \[11ai-benchmarks-pricing-update\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-pricing-update\)/)
+  assert.match(legacyHtml, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-pricing-update" target="_blank" rel="noopener noreferrer">11ai-benchmarks-pricing-update<\/a>/)
   const removedPricingOption = spawnSync(process.execPath, [analyzer, "--pricing", join(legacyCwd, "llm-pricing.json")], { encoding: "utf8", cwd: legacyCwd, env: { ...process.env, HOME: legacyHome } })
   assert.notEqual(removedPricingOption.status, 0)
   assert.match(removedPricingOption.stderr, /unknown argument: --pricing/)

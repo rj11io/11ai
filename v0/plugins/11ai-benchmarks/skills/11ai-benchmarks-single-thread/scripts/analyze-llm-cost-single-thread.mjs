@@ -42,13 +42,13 @@ const threadSelector = option("--thread") ?? process.env.CODEX_THREAD_ID
 if (!threadSelector) throw new Error("no thread selector is available; pass --thread <thread-id-or-source> or run inside a Codex thread that exposes CODEX_THREAD_ID")
 const generatedAt = new Date().toISOString()
 const filenameTimestamp = generatedAt.replaceAll(":", "-").replaceAll(".", "-")
-const reportSkillName = "11ai-llm-cost-single-thread"
+const reportSkillName = "11ai-benchmarks-single-thread"
 const reportTitle = "Single-Thread LLM Cost Report"
 const reportName = `${reportSkillName}-${filenameTimestamp}`
 const reportsRootName = `${reportSkillName}-reports`
 const reportPackageName = `${reportsRootName}-${filenameTimestamp}`
 const reportSkillUrl = `https://ai.rj11.io/skills/${reportSkillName}`
-const pricingUpdateSkillUrl = "https://ai.rj11.io/skills/11ai-llm-cost-pricing-update"
+const pricingUpdateSkillUrl = "https://ai.rj11.io/skills/11ai-benchmarks-pricing-update"
 const reportPoweredBy = `_powered by [${reportSkillName}](${reportSkillUrl})._`
 const reportSignature = `_LLM token cost analysis by [${reportSkillName}](${reportSkillUrl})._`
 const explicitOutput = option("--output")
@@ -1470,7 +1470,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
       ["Latest available fallback", fmtInt(temporalCount("latest-available-fallback")), "Usage is undated; the latest rate active when the report was generated was applied"],
     ]),
     "",
-    ...(temporalCount("earliest-available-fallback") > 0 ? [`**Historical pricing backfill recommended:** ${fmtInt(temporalCount("earliest-available-fallback"))} thread(s) use the earliest available rate because their usage predates the known catalog history. Run [11ai-llm-cost-pricing-update](${pricingUpdateSkillUrl}) to search official historical sources; totals remain numeric using the documented fallback.`, ""] : []),
+    ...(temporalCount("earliest-available-fallback") > 0 ? [`**Historical pricing backfill recommended:** ${fmtInt(temporalCount("earliest-available-fallback"))} thread(s) use the earliest available rate because their usage predates the known catalog history. Run [11ai-benchmarks-pricing-update](${pricingUpdateSkillUrl}) to search official historical sources; totals remain numeric using the documented fallback.`, ""] : []),
     ...(actionableUnmatched.length ? [
       "### Models requiring a pricing update",
       "",
@@ -1483,7 +1483,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
         fmtInt(sumAvailable(items.map((item) => item.tokens.providerTotal))),
       ])),
       "",
-      `**Pricing update required:** Known-cost totals exclude the models above. Run [11ai-llm-cost-pricing-update](${pricingUpdateSkillUrl}) to verify official rates and update the bundled catalog, then regenerate this report.`,
+      `**Pricing update required:** Known-cost totals exclude the models above. Run [11ai-benchmarks-pricing-update](${pricingUpdateSkillUrl}) to verify official rates and update the bundled catalog, then regenerate this report.`,
       "",
     ] : []),
     "### Pricing catalog match detail",

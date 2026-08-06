@@ -73,4 +73,4 @@ The analyzer reads these stores without modifying them. Layouts are implementati
 
 ## Provider pricing
 
-Native counters do not guarantee an invoice-equivalent price. Harness-reported cost is retained, while locally derived cost uses this skill's bundled pricing catalog. Gemini CLI use may be free, subscription-backed, or API-billed, so unmatched Google models remain visibly unpriced until `11ai-llm-cost-pricing-update` adds a provider-verified rate; consult [Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing).
+Native counters do not guarantee an invoice-equivalent price. Harness-reported cost is retained, while locally derived cost uses this skill's bundled pricing catalog. Gemini CLI use may be free, subscription-backed, or API-billed, so unmatched Google models remain visibly unpriced until `11ai-benchmarks-pricing-update` adds a provider-verified rate; consult [Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing).

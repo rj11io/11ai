@@ -31,15 +31,15 @@ for (let index = 0; index < argv.length; index += 1) {
 const generatedAt = new Date().toISOString()
 const generatedTime = new Date(generatedAt)
 const filenameTimestamp = generatedAt.replaceAll(":", "-").replaceAll(".", "-")
-const reportSkillName = "11ai-llm-cost-global"
+const reportSkillName = "11ai-benchmarks-machine"
 const reportSkillUrl = `https://ai.rj11.io/skills/${reportSkillName}`
-const pricingUpdateSkillUrl = "https://ai.rj11.io/skills/11ai-llm-cost-pricing-update"
+const pricingUpdateSkillUrl = "https://ai.rj11.io/skills/11ai-benchmarks-pricing-update"
 const reportPoweredBy = `_powered by [${reportSkillName}](${reportSkillUrl})._`
 const reportName = `${reportSkillName}-${filenameTimestamp}`
-const reportPackageName = `11ai-llm-cost-global-reports-${filenameTimestamp}`
+const reportPackageName = `11ai-benchmarks-machine-reports-${filenameTimestamp}`
 const explicitOutputDir = option("--output-dir") ?? option("--output")
 if (option("--output-dir") && option("--output")) throw new Error("use either --output or --output-dir, not both")
-const outputDir = resolve(explicitOutputDir ?? join(homedir(), "Desktop", "11ai-llm-cost-global-reports", reportPackageName))
+const outputDir = resolve(explicitOutputDir ?? join(homedir(), "Desktop", "11ai-benchmarks-machine-reports", reportPackageName))
 const markdownOutput = join(outputDir, `${reportName}.md`)
 const htmlOutput = join(outputDir, `${reportName}.html`)
 
@@ -1653,7 +1653,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
       ["Latest available fallback", fmtInt(temporalCount("latest-available-fallback")), "Usage is undated; the latest rate active when the report was generated was applied"],
     ]),
     "",
-    ...(temporalCount("earliest-available-fallback") > 0 ? [`**Historical pricing backfill recommended:** ${fmtInt(temporalCount("earliest-available-fallback"))} thread(s) use the earliest available rate because their usage predates the known catalog history. Run [11ai-llm-cost-pricing-update](${pricingUpdateSkillUrl}) to search official historical sources; totals remain numeric using the documented fallback.`, ""] : []),
+    ...(temporalCount("earliest-available-fallback") > 0 ? [`**Historical pricing backfill recommended:** ${fmtInt(temporalCount("earliest-available-fallback"))} thread(s) use the earliest available rate because their usage predates the known catalog history. Run [11ai-benchmarks-pricing-update](${pricingUpdateSkillUrl}) to search official historical sources; totals remain numeric using the documented fallback.`, ""] : []),
     ...(actionableUnmatched.length ? [
       "### Models requiring a pricing update",
       "",
@@ -1666,7 +1666,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
         fmtInt(sumAvailable(items.map((item) => item.tokens.providerTotal))),
       ])),
       "",
-      `**Pricing update required:** Known-cost totals exclude the models above. Run [11ai-llm-cost-pricing-update](${pricingUpdateSkillUrl}) to verify official rates and update the bundled catalog, then regenerate this report.`,
+      `**Pricing update required:** Known-cost totals exclude the models above. Run [11ai-benchmarks-pricing-update](${pricingUpdateSkillUrl}) to verify official rates and update the bundled catalog, then regenerate this report.`,
       "",
     ] : []),
     "### Pricing catalog match detail",
@@ -1704,7 +1704,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "",
     `> Generated ${generatedAt} · Scope: ${stats.scopeDescription} · Prices are USD per 1M tokens unless noted`,
     "",
-    "_LLM token cost analysis by [11ai-llm-cost-global](https://ai.rj11.io/skills/11ai-llm-cost-global)._",
+    "_LLM token cost analysis by [11ai-benchmarks-machine](https://ai.rj11.io/skills/11ai-benchmarks-machine)._",
     "",
   ]
   return lines.join("\n")
@@ -1783,7 +1783,7 @@ function htmlReport(markdown) {
       index += 1
       continue
     }
-    const signature = line === "_LLM token cost analysis by [11ai-llm-cost-global](https://ai.rj11.io/skills/11ai-llm-cost-global)._"
+    const signature = line === "_LLM token cost analysis by [11ai-benchmarks-machine](https://ai.rj11.io/skills/11ai-benchmarks-machine)._"
     if (line === reportPoweredBy) {
       index += 1
       continue
@@ -1791,8 +1791,8 @@ function htmlReport(markdown) {
     if (signature) {
       closeAllSections()
       const signatureHtml = inlineHtml(line).replace(
-        '<a href="https://ai.rj11.io/skills/11ai-llm-cost-global">',
-        '<a href="https://ai.rj11.io/skills/11ai-llm-cost-global" target="_blank" rel="noopener noreferrer">',
+        '<a href="https://ai.rj11.io/skills/11ai-benchmarks-machine">',
+        '<a href="https://ai.rj11.io/skills/11ai-benchmarks-machine" target="_blank" rel="noopener noreferrer">',
       )
       body.push(`<p class="signature">${signatureHtml}</p>`)
       index += 1

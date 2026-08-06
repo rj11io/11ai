@@ -8,14 +8,14 @@ const skillsRoot = dirname(skillRoot)
 const canonicalPath = resolve(skillRoot, "references/pricing.json")
 const canonicalResolverPath = resolve(skillRoot, "scripts/pricing-history.mjs")
 const reportCatalogs = [
-  resolve(skillsRoot, "11ai-llm-cost-project/references/pricing.json"),
-  resolve(skillsRoot, "11ai-llm-cost-global/references/pricing.json"),
-  resolve(skillsRoot, "11ai-llm-cost-single-thread/references/pricing.json"),
+  resolve(skillsRoot, "11ai-benchmarks-project/references/pricing.json"),
+  resolve(skillsRoot, "11ai-benchmarks-machine/references/pricing.json"),
+  resolve(skillsRoot, "11ai-benchmarks-single-thread/references/pricing.json"),
 ]
 const reportResolvers = [
-  resolve(skillsRoot, "11ai-llm-cost-project/scripts/pricing-history.mjs"),
-  resolve(skillsRoot, "11ai-llm-cost-global/scripts/pricing-history.mjs"),
-  resolve(skillsRoot, "11ai-llm-cost-single-thread/scripts/pricing-history.mjs"),
+  resolve(skillsRoot, "11ai-benchmarks-project/scripts/pricing-history.mjs"),
+  resolve(skillsRoot, "11ai-benchmarks-machine/scripts/pricing-history.mjs"),
+  resolve(skillsRoot, "11ai-benchmarks-single-thread/scripts/pricing-history.mjs"),
 ]
 
 const args = process.argv.slice(2)

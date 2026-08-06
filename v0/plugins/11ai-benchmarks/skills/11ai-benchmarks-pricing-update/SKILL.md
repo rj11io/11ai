@@ -1,9 +1,9 @@
 ---
-name: 11ai-llm-cost-pricing-update
+name: 11ai-benchmarks-pricing-update
 description: "Refresh and preserve the time-versioned token-pricing history used by the 11ai LLM cost reports from official AI-lab sources, synchronize the project, global, and single-thread copies, and validate their schemas, rate periods, resolver, and equality. Use when model prices, discounts, effective dates, aliases, providers, or pricing caveats have changed, when historical-rate backfill is requested, or when adding pricing support for another AI lab."
 ---
 
-# 11ai LLM Cost Pricing Update
+# 11ai Benchmarks Pricing Update
 
 Maintain one provider-verified catalog and keep every 11ai cost-report skill on the same rates.
 
@@ -52,9 +52,9 @@ This is the only skill allowed to research official prices and modify the bundle
 
 The canonical catalog is [`references/pricing.json`](references/pricing.json). The synchronization script writes byte-equivalent copies to:
 
-- `../11ai-llm-cost-project/references/pricing.json`
-- `../11ai-llm-cost-global/references/pricing.json`
-- `../11ai-llm-cost-single-thread/references/pricing.json`
+- `../11ai-benchmarks-project/references/pricing.json`
+- `../11ai-benchmarks-machine/references/pricing.json`
+- `../11ai-benchmarks-single-thread/references/pricing.json`
 
 The same script also synchronizes the temporal pricing resolver used by the three analyzers. Treat catalog or resolver divergence as a validation failure.
 

@@ -1,11 +1,11 @@
 ---
-name: 11ai-llm-cost-project
+name: 11ai-benchmarks-project
 description: "Inspect a repository plus its project-attributed Codex, Claude Code, Claude Cowork, Gemini CLI, Cline, Roo Code, and OpenCode records; detect unavailable remote Cowork sessions; classify harness surfaces and billing modes; normalize provider token counters; calculate attributable USD costs; measure wall and estimated active time; and write matching timestamped Markdown and HTML reports. Use for project LLM spend, token usage, model and effort cost, thread timing, harness coverage, or recursive cost analysis."
 ---
 
-# 11ai LLM Cost Project
+# 11ai Benchmarks Project
 
-Analyze local LLM activity without depending on a benchmark repository, benchmark schema, or external service. Write every default report package beneath the persistent `11ai-llm-cost-project-reports` folder at the current thread's working-directory root; keep source transcripts and input files read-only.
+Analyze local LLM activity without depending on a benchmark repository, benchmark schema, or external service. Write every default report package beneath the persistent `11ai-benchmarks-project-reports` folder at the current thread's working-directory root; keep source transcripts and input files read-only.
 
 ## Contract
 
@@ -18,10 +18,10 @@ node <skill>/scripts/analyze-llm-cost-project.mjs <root-folder>
 The command treats `process.cwd()` as the current thread folder and creates this structure if needed. `{datetime}` is the UTC ISO timestamp for the run with colons and the decimal point replaced by hyphens:
 
 ```text
-<thread-folder>/11ai-llm-cost-project-reports/
-└── 11ai-llm-cost-project-reports-{datetime}/
-    ├── 11ai-llm-cost-project-{datetime}.md
-    └── 11ai-llm-cost-project-{datetime}.html
+<thread-folder>/11ai-benchmarks-project-reports/
+└── 11ai-benchmarks-project-reports-{datetime}/
+    ├── 11ai-benchmarks-project-{datetime}.md
+    └── 11ai-benchmarks-project-{datetime}.html
 ```
 
 Generate both files from the same analysis. The HTML must be self-contained with embedded styling and no network dependency. The timestamped default package uses exclusive file creation so it never overwrites existing reports. It accepts:
@@ -43,10 +43,10 @@ Read [references/harnesses.md](references/harnesses.md) when native discovery, v
 
 ## Workflow
 
-1. Establish both the current thread folder (`process.cwd()`) and the project root to analyze. Resolve native transcript homes from CLI options, harness environment variables, or the current user's home directory, and use `<thread-folder>/11ai-llm-cost-project-reports/11ai-llm-cost-project-reports-{datetime}` unless the user explicitly requested another output path.
+1. Establish both the current thread folder (`process.cwd()`) and the project root to analyze. Resolve native transcript homes from CLI options, harness environment variables, or the current user's home directory, and use `<thread-folder>/11ai-benchmarks-project-reports/11ai-benchmarks-project-reports-{datetime}` unless the user explicitly requested another output path.
 2. Run the analyzer. Preserve malformed, ambiguous, unpriced, and reported-only records in the report's coverage and limitations sections rather than silently dropping them.
 3. Review both generated files for explicit totals, provider/model/harness aggregates, root-versus-child-folder aggregates, `Cost by model by effort`, token-class detail, wall time, estimated active time, per-thread detail, pricing coverage, anomalies, and methodology. Confirm every HTML report section is a native collapsed disclosure control on first load.
-4. Leave unmatched models unpriced and make the report direct the user to [`11ai-llm-cost-pricing-update`](https://ai.rj11.io/skills/11ai-llm-cost-pricing-update). Do not research, inject, or persist rates from this reporting skill.
+4. Leave unmatched models unpriced and make the report direct the user to [`11ai-benchmarks-pricing-update`](https://ai.rj11.io/skills/11ai-benchmarks-pricing-update). Do not research, inject, or persist rates from this reporting skill.
 5. Rerun the analyzer after the bundled catalog is updated by the pricing-update skill or after input changes. It is idempotent and does not edit transcripts or pricing.
 
 ## Supported usage shapes
@@ -90,17 +90,17 @@ Both reports must display explicit grand totals for threads, token classes, meas
 
 Place `Cowork coverage` immediately after `Harness surface coverage` and immediately before `Scan coverage`. Show local measured, remote detected, remote measured, and remote detected-but-unavailable states separately. When remote usage is unavailable, preserve all numeric measured totals and add a prominent warning that those totals exclude the unavailable sessions.
 
-When one or more unmatched real models have positive measured/provider tokens, add `Models requiring a pricing update` inside `Pricing coverage`. Aggregate those models by provider and model with thread, input, cached-input, output, and total-token counts. State that known-cost totals exclude them and link `11ai-llm-cost-pricing-update` to `https://ai.rj11.io/skills/11ai-llm-cost-pricing-update`, instructing the user to run it and regenerate the report. Omit synthetic, unknown, and zero-token placeholders from this callout. In HTML, open the link in a new tab with `rel="noopener noreferrer"`. Omit the entire callout when no actionable unmatched model exists.
+When one or more unmatched real models have positive measured/provider tokens, add `Models requiring a pricing update` inside `Pricing coverage`. Aggregate those models by provider and model with thread, input, cached-input, output, and total-token counts. State that known-cost totals exclude them and link `11ai-benchmarks-pricing-update` to `https://ai.rj11.io/skills/11ai-benchmarks-pricing-update`, instructing the user to run it and regenerate the report. Omit synthetic, unknown, and zero-token placeholders from this callout. In HTML, open the link in a new tab with `rel="noopener noreferrer"`. Omit the entire callout when no actionable unmatched model exists.
 
-Immediately below the Markdown H1, place `_powered by [11ai-llm-cost-project](https://ai.rj11.io/skills/11ai-llm-cost-project)._`. In HTML, append a smaller inline span to the main title with the exact text `powered by 11ai-llm-cost-project`; link that text to the same skill URL with `target="_blank"` and `rel="noopener noreferrer"`. Render every level-two and level-three report section as a native `<details>` element with a `<summary>`, omit the `open` attribute so all sections are collapsed by default, and keep the report title, generation message, and signature outside those disclosures. Put the generation message after all report sections and immediately before the signature in both formats.
+Immediately below the Markdown H1, place `_powered by [11ai-benchmarks-project](https://ai.rj11.io/skills/11ai-benchmarks-project)._`. In HTML, append a smaller inline span to the main title with the exact text `powered by 11ai-benchmarks-project`; link that text to the same skill URL with `target="_blank"` and `rel="noopener noreferrer"`. Render every level-two and level-three report section as a native `<details>` element with a `<summary>`, omit the `open` attribute so all sections are collapsed by default, and keep the report title, generation message, and signature outside those disclosures. Put the generation message after all report sections and immediately before the signature in both formats.
 
 End every Markdown report with this exact linked signature:
 
 ```markdown
-_LLM token cost analysis by [11ai-llm-cost-project](https://ai.rj11.io/skills/11ai-llm-cost-project)._
+_LLM token cost analysis by [11ai-benchmarks-project](https://ai.rj11.io/skills/11ai-benchmarks-project)._
 ```
 
-End the HTML report with the same visible signature and a clickable link whose `href` is exactly `https://ai.rj11.io/skills/11ai-llm-cost-project`. Set `target="_blank"` and `rel="noopener noreferrer"` on that signature link so it opens safely in a new tab.
+End the HTML report with the same visible signature and a clickable link whose `href` is exactly `https://ai.rj11.io/skills/11ai-benchmarks-project`. Set `target="_blank"` and `rel="noopener noreferrer"` on that signature link so it opens safely in a new tab.
 
 If this skill extends an existing report, preserve its prior skill attribution
 and keep all skill signatures together at the end of the combined report.
@@ -109,16 +109,16 @@ Do not modify source transcripts, code, benchmark artifacts, ledgers, reviews, o
 
 ## Pricing
 
-Use only this skill's bundled `references/pricing.json`. Do not accept a pricing override or read, create, update, or recommend `llm-pricing.json`, `.llm-cost/pricing.json`, or `~/.llm-cost/pricing.json`; legacy files at those paths have no effect. Rates are USD per one million tokens. Select the rate effective at the thread finish timestamp, falling back to its start. If aggregated usage crosses a price boundary, use the main finish-time price for the whole thread. If usage predates known history, use the earliest available rate while directing historical research to the pricing-update skill; if usage is undated, use the latest rate active at report generation. Display each applied period, official-or-detected date basis, and temporal fallback. Keep unmatched or stale prices visible as limitations and never turn them into zero-cost rows. Only `11ai-llm-cost-pricing-update` may research official pricing and update the bundled catalogs.
+Use only this skill's bundled `references/pricing.json`. Do not accept a pricing override or read, create, update, or recommend `llm-pricing.json`, `.llm-cost/pricing.json`, or `~/.llm-cost/pricing.json`; legacy files at those paths have no effect. Rates are USD per one million tokens. Select the rate effective at the thread finish timestamp, falling back to its start. If aggregated usage crosses a price boundary, use the main finish-time price for the whole thread. If usage predates known history, use the earliest available rate while directing historical research to the pricing-update skill; if usage is undated, use the latest rate active at report generation. Display each applied period, official-or-detected date basis, and temporal fallback. Keep unmatched or stale prices visible as limitations and never turn them into zero-cost rows. Only `11ai-benchmarks-pricing-update` may research official pricing and update the bundled catalogs.
 
 ## Completion checks
 
 Before reporting completion:
 
 - confirm the analyzer exits successfully;
-- confirm `<thread-folder>/11ai-llm-cost-project-reports/11ai-llm-cost-project-reports-{datetime}` exists and contains matching `11ai-llm-cost-project-{datetime}.md` and `.html` files;
-- confirm the Markdown report places the linked `powered by 11ai-llm-cost-project` attribution immediately below its H1;
-- confirm the HTML main title includes the smaller inline linked text `powered by 11ai-llm-cost-project` and that its link safely opens in a new tab;
+- confirm `<thread-folder>/11ai-benchmarks-project-reports/11ai-benchmarks-project-reports-{datetime}` exists and contains matching `11ai-benchmarks-project-{datetime}.md` and `.html` files;
+- confirm the Markdown report places the linked `powered by 11ai-benchmarks-project` attribution immediately below its H1;
+- confirm the HTML main title includes the smaller inline linked text `powered by 11ai-benchmarks-project` and that its link safely opens in a new tab;
 - confirm both reports display the standardized token breakdown and cost-adjacent metric order, aggregate cost per thread, totals, provider/model/model-by-effort/harness/folder aggregates with grand-total rows, scanned files, recognized threads, known and unknown costs, pricing coverage, historical pricing selection, applied rate periods, temporal fallbacks, limitations, and the exact linked signature above;
 - confirm `Cost by model by effort` is a level-two sibling immediately after `Cost by model`;
 - confirm `Totals` is a level-two sibling immediately after `Cost by root and child folder`;
