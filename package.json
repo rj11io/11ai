@@ -8,6 +8,7 @@
     "v0/index.js",
     "v0/plugins",
     ".claude-plugin",
+    ".agents",
     "README.md",
     "LICENSE"
   ],

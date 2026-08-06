@@ -1,0 +1,525 @@
+{
+  "name": "11ai",
+  "interface": {
+    "displayName": "11ai"
+  },
+  "plugins": [
+    {
+      "name": "11ai-agent-automation",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-agent-automation"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-ai-chat",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-ai-chat"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-antdesign-v6",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-antdesign-v6"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-aws-cli-v2",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-aws-cli-v2"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-benchmarks",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-benchmarks"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-blog-builder",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-blog-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-cleanup",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-cleanup"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-codebase",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-codebase"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-comms",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-comms"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-directors",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-directors"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-meta-skills",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-meta-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-docker",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-docker"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-git",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-git"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-nodejs-api-v24",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-nodejs-api-v24"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-super",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-super"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-audit",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-audit"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-utils",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-utils"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-web-design",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-web-design"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-xharness",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-xharness"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-jest-v30",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-jest-v30"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-mongodb-v8",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-mongodb-v8"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-ssh",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-ssh"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-bash",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-bash"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-supabase",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-supabase"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-workos",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-workos"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-convex",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-convex"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-clerk-core-3",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-clerk-core-3"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-stripe",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-stripe"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-pokeapi-v2",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-pokeapi-v2"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-html-5",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-html-5"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-css-3",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-css-3"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-javascript-es2026",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-javascript-es2026"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-typescript-v7",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-typescript-v7"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-reactjs-v19",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-reactjs-v19"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-nextjs-v16",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-nextjs-v16"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-vercel-ai-sdk-v7",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-vercel-ai-sdk-v7"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-vercel-chat-sdk-v4",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-vercel-chat-sdk-v4"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-vercel-eve-v0",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-vercel-eve-v0"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-vercel-ai-gateway",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-vercel-ai-gateway"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-vercel-sandbox-v2",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-vercel-sandbox-v2"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-vercel-workflows-v4",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-vercel-workflows-v4"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-vercel-passport",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-vercel-passport"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-vercel-core",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-vercel-core"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-tailwind-v3",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-tailwind-v3"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-tailwind-v4",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-tailwind-v4"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-mui-v9",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-mui-v9"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "11ai-operator-shadcn-v4",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-operator-shadcn-v4"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    }
+  ]
+}

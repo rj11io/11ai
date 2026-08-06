@@ -247,6 +247,31 @@ function validateClaude(plugins, pluginSkills) {
 
 function validateCodexPlugins(plugins, pluginSkills) {
   const packageVersion = readJson(path.join(root, "package.json"))?.version
+
+  const codexMarketplaceFile = path.join(root, ".agents", "plugins", "marketplace.json")
+  const codexMarketplace = readJson(codexMarketplaceFile)
+  const codexEntries = new Map()
+  if (!codexMarketplace) {
+    fail(codexMarketplaceFile, "missing Codex marketplace file")
+  } else {
+    for (const entry of codexMarketplace.plugins || []) {
+      if (!entry || typeof entry.name !== "string") {
+        fail(codexMarketplaceFile, "every Codex marketplace plugin must have a name")
+        continue
+      }
+      if (codexEntries.has(entry.name)) fail(codexMarketplaceFile, `duplicate plugin '${entry.name}'`)
+      codexEntries.set(entry.name, entry)
+      if (!plugins.includes(entry.name)) fail(codexMarketplaceFile, `unknown plugin entry '${entry.name}'`)
+    }
+    for (const plugin of plugins) {
+      const entry = codexEntries.get(plugin)
+      const expectedPath = `./v0/plugins/${plugin}`
+      if (!entry) fail(codexMarketplaceFile, `missing Codex marketplace entry for '${plugin}'`)
+      else if (entry.source?.source !== "local" || entry.source?.path !== expectedPath) {
+        fail(codexMarketplaceFile, `'${plugin}' source must be local '${expectedPath}'`)
+      }
+    }
+  }
   for (const plugin of plugins) {
     const manifestFile = path.join(pluginsRoot, plugin, ".codex-plugin", "plugin.json")
     if (!fs.existsSync(manifestFile)) {
@@ -433,7 +458,7 @@ function validatePackageConfiguration() {
   const packageFile = path.join(root, "package.json")
   const packageJson = readJson(packageFile)
   if (!packageJson) return
-  for (const included of ["v0/plugins", ".claude-plugin"]) {
+  for (const included of ["v0/plugins", ".claude-plugin", ".agents"]) {
     if (!packageJson.files?.includes(included)) {
       fail(packageFile, `npm files must include '${included}'`)
     }
