@@ -42,7 +42,7 @@ The files are installed at `node_modules/@rj11io/11ai/v0/plugins/`. You can also
 
 ## Skill catalog
 
-The repository currently contains 456 skills in 47 plugins.
+The repository currently contains 458 skills in 47 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
@@ -52,7 +52,7 @@ The repository currently contains 456 skills in 47 plugins.
 | [Ant Design v6 operator](./v0/plugins/11ai-operator-antdesign-v6/README.md) | 12 | Ant Design 6 React setup, components, theming, integrations, first-party native skills, reference, and troubleshooting |
 | [AWS CLI v2 operator](./v0/plugins/11ai-operator-aws-cli-v2/README.md) | 22 | AWS CLI v2 operations for common services, deployments, first-party Agent Toolkit skills, integrations, and troubleshooting |
 | [Bash operator](./v0/plugins/11ai-operator-bash/README.md) | 10 | Shell inspection, strict-mode scripting, text processing, files, processes, linting, and troubleshooting |
-| [Benchmarks](./v0/plugins/11ai-benchmarks/README.md) | 4 | Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports |
+| [Benchmarks](./v0/plugins/11ai-benchmarks/README.md) | 5 | Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports, plus a FAQ over all of them |
 | [Blog builder](./v0/plugins/11ai-blog-builder/README.md) | 8 | Building file-backed editorial blogs with composable CMS, author, Markdown, content, navigation, and UI skills |
 | [Cleanup](./v0/plugins/11ai-cleanup/README.md) | 5 | Safely finding and removing abandoned local resources |
 | [Clerk Core 3 operator](./v0/plugins/11ai-operator-clerk-core-3/README.md) | 11 | Clerk Core 3 setup, authentication, sessions, users, organizations, webhooks, native skills, and troubleshooting |
@@ -67,7 +67,7 @@ The repository currently contains 456 skills in 47 plugins.
 | [JavaScript ES2026 operator](./v0/plugins/11ai-operator-javascript-es2026/README.md) | 10 | ECMAScript 2026 modules, async control flow, DOM events, data modeling, standard-library additions, performance, security, integrations, reference, and troubleshooting |
 | [Jest v30 operator](./v0/plugins/11ai-operator-jest-v30/README.md) | 17 | Setting up, inspecting, running, authoring, integrating, configuring, de-flaking, speeding up, and troubleshooting Jest 30 suites |
 | [Material UI v9 operator](./v0/plugins/11ai-operator-mui-v9/README.md) | 13 | Material UI 9.2 setup, components, forms, navigation, theming, styling, migration, first-party Agent Skills, integrations, reference, and troubleshooting |
-| [Meta skills](./v0/plugins/11ai-meta-skills/README.md) | 1 | Building, auditing, and maintaining other skills and the plugins that package them |
+| [Meta skills](./v0/plugins/11ai-meta-skills/README.md) | 2 | Building, auditing, and maintaining other skills and the plugins that package them |
 | [MongoDB v8 operator](./v0/plugins/11ai-operator-mongodb-v8/README.md) | 17 | MongoDB 8 Shell and Database Tools work with transactions, profiling, roles, Atlas, backups, integrations, and safety checks |
 | [Next.js v16 operator](./v0/plugins/11ai-operator-nextjs-v16/README.md) | 10 | Next.js 16 App Router, Server and Client Components, Cache Components, mutations, handlers, metadata, deployment, integrations, reference, and troubleshooting |
 | [Node.js API v24 operator](./v0/plugins/11ai-operator-nodejs-api-v24/README.md) | 20 | Scaffolding, routing, validation, auth, data, jobs, GraphQL, OpenAPI, testing, and troubleshooting Node.js 24 LTS APIs |
@@ -106,13 +106,13 @@ v0/
     11ai-agent-automation/     8 automation skills under skills/
     11ai-ai-chat/              9 AI chat skills under skills/
     11ai-audit/                1 evidence-backed dependency audit skill under skills/
-    11ai-benchmarks/           4 LLM cost, effort, and timing skills under skills/
+    11ai-benchmarks/           5 LLM cost, effort, timing, and FAQ skills under skills/
     11ai-blog-builder/         8 editorial blog skills under skills/
     11ai-cleanup/              5 cleanup skills under skills/
     11ai-codebase/             4 codebase skills under skills/
     11ai-comms/                2 communication skills under skills/
     11ai-directors/            2 Git task-director skills under skills/
-    11ai-meta-skills/          1 skill-authoring and packaging skill under skills/
+    11ai-meta-skills/          2 skill-authoring and packaging skills under skills/
     11ai-operator-antdesign-v6/  12 Ant Design v6 operation skills under skills/
     11ai-operator-aws-cli-v2/    22 AWS CLI v2 operation skills under skills/
     11ai-operator-bash/       10 Bash shell and scripting skills under skills/

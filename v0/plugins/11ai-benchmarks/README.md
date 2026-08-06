@@ -1,6 +1,6 @@
 # 11ai-benchmarks
 
-Four skills for single-thread, project-scoped, and machine-wide LLM usage reporting plus provider-verified pricing maintenance across local coding harnesses.
+Five skills: single-thread, project-scoped, and machine-wide LLM usage reporting, provider-verified pricing maintenance, and a FAQ that answers questions about all of them — across local coding harnesses.
 
 The reporting skills distinguish user-facing surface, underlying runtime, billing mode, usage source, and confidence. They count authoritative local token ledgers once, preserve wrapper provenance, and never convert product credits, quotas, or context snapshots into invented API-token costs.
 
@@ -14,6 +14,7 @@ Claude reporting groups local Cowork root and sub-agent transcripts into logical
 | [`11ai-benchmarks-project`](./skills/11ai-benchmarks-project/SKILL.md) | Analyzing project-attributed LLM usage and writing matching reports under `<current-thread-folder>/11ai-benchmarks-project-reports/11ai-benchmarks-project-reports-{datetime}` |
 | [`11ai-benchmarks-single-thread`](./skills/11ai-benchmarks-single-thread/SKILL.md) | Analyzing the active Codex thread or one exact thread selector under `<current-thread-folder>/11ai-benchmarks-single-thread-reports/11ai-benchmarks-single-thread-reports-{datetime}` |
 | [`11ai-benchmarks-pricing-update`](./skills/11ai-benchmarks-pricing-update/SKILL.md) | Verifying official provider prices, updating the canonical catalog, and synchronizing all three reporting skills |
+| [`11ai-benchmarks-faq`](./skills/11ai-benchmarks-faq/SKILL.md) | Answering questions about how these skills behave, what report sections mean, and which skill to run |
 
 All standalone HTML reports use native disclosure controls. Every report section is collapsed by default, while the report title and linked skill signature remain visible.
 
@@ -21,7 +22,7 @@ The three reporting skills always use their synchronized bundled pricing catalog
 
 ## Cross-skill maintenance
 
-When fixing or extending one skill, evaluate whether the behavior applies to every sibling skill in this plugin. Apply the equivalent change wherever it is applicable, document intentional exceptions, run the affected skill tests plus the complete plugin test set, and compare newly generated reports with prior reports to confirm existing features and output contracts remain intact.
+When fixing or extending one skill, evaluate whether the behavior applies to every sibling skill in this plugin. Apply the equivalent change wherever it is applicable, document intentional exceptions, run the affected skill tests plus the complete plugin test set, and compare newly generated reports with prior reports to confirm existing features and output contracts remain intact. Confirm the `11ai-benchmarks-faq` routing rows and comparison table still hold for every section you touched; the validator checks its sources and anchors, but only you can tell when an unchanged heading now describes changed behavior.
 
 Treat report comparison as a required regression gate for every skill-behavior change:
 

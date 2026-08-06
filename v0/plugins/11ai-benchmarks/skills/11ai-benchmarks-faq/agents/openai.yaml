@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Benchmarks FAQ"
+  short_description: "Answer questions about the benchmarks skills"
+  default_prompt: "Use $11ai-benchmarks-faq to answer my question about the benchmark skills: route it to the owning contract, reference, script, or test, read that source, and answer with a citation."

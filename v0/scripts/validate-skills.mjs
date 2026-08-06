@@ -308,6 +308,59 @@ function validateCatalog(plugins, pluginSkills, skills) {
   }
 }
 
+function validateFaqSkills(plugins, pluginSkills) {
+  for (const plugin of plugins) {
+    const skills = pluginSkills.get(plugin)
+    for (const faq of skills.filter((skill) => skill.name.endsWith("-faq"))) {
+      const raw = fs.readFileSync(faq.file, "utf8")
+      const siblings = skills.filter((skill) => skill.name !== faq.name).map((skill) => skill.name)
+
+      const coverage = raw.match(/^## Covered skills\n([\s\S]*?)(?=^## |$(?![\s\S]))/m)
+      if (!coverage) {
+        fail(faq.file, "FAQ must contain a '## Covered skills' section")
+        continue
+      }
+      const covered = [...coverage[1].matchAll(/`([a-z0-9-]+)`/g)].map((match) => match[1])
+      for (const name of siblings) {
+        if (!covered.includes(name)) fail(faq.file, `covered skills must list sibling '${name}'`)
+      }
+      for (const name of covered) {
+        if (!siblings.includes(name)) fail(faq.file, `covered skills lists unknown skill '${name}'`)
+      }
+
+      const rows = [
+        ...raw.matchAll(
+          /^\| [^|`]+ \| `([^`]+)` \| ("(?:\\.|[^"\\])*"|-) \| (contract|reference|behavior) \|$/gm,
+        ),
+      ]
+      if (rows.length === 0) {
+        fail(faq.file, 'FAQ must contain routing rows shaped | question | `source` | "anchor" | tier |')
+        continue
+      }
+      const sourcedSkills = new Set()
+      for (const [, source, anchor] of rows) {
+        const resolved = path.resolve(faq.dir, source)
+        if (!fs.existsSync(resolved)) {
+          fail(faq.file, `routing source '${source}' does not exist`)
+          continue
+        }
+        for (const name of siblings) {
+          if (source.includes(`/${name}/`)) sourcedSkills.add(name)
+        }
+        if (anchor !== "-") {
+          const text = JSON.parse(anchor)
+          if (!fs.readFileSync(resolved, "utf8").includes(text)) {
+            fail(faq.file, `routing anchor ${anchor} not found in '${source}'`)
+          }
+        }
+      }
+      for (const name of siblings) {
+        if (!sourcedSkills.has(name)) fail(faq.file, `no routing row reads from sibling '${name}'`)
+      }
+    }
+  }
+}
+
 function validatePackageConfiguration() {
   const packageFile = path.join(root, "package.json")
   const packageJson = readJson(packageFile)
@@ -424,6 +477,7 @@ validateScripts()
 validateClaude(plugins, pluginSkills)
 validateCodexPlugins(plugins, pluginSkills)
 validateCatalog(plugins, pluginSkills, inventorySkills)
+validateFaqSkills(plugins, pluginSkills)
 validatePackageConfiguration()
 
 const trackedArtifacts = spawnSync("git", ["ls-files", "-z"], { encoding: "utf8" })
@@ -438,5 +492,5 @@ if (errors.length > 0) {
 }
 
 console.log(
-  `Validated ${inventorySkills.length} skills across ${plugins.length} plugins: canonical frontmatter, Codex metadata, Claude packaging, links, scripts, and catalogs.`,
+  `Validated ${inventorySkills.length} skills across ${plugins.length} plugins: canonical frontmatter, Codex metadata, Claude packaging, links, scripts, catalogs, and FAQ coverage.`,
 )
