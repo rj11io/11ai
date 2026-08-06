@@ -14,7 +14,7 @@ Install the collection from GitHub with the [skills CLI](https://skills.sh/docs/
 npx skills add rj11io/11ai --full-depth
 ```
 
-The CLI runs through `npx`, discovers the repository's skills, and configures the skills you select for your agent. `--full-depth` is required because this collection organizes skills into forty-seven workflow plugins instead of one top-level `skills/` directory.
+The CLI runs through `npx`, discovers the repository's skills, and configures the skills you select for your agent. `--full-depth` is required because this collection organizes skills into forty-nine workflow plugins instead of one top-level `skills/` directory.
 
 The repository follows the open Agent Skills format. Every skill also includes Codex UI metadata in `agents/openai.yaml`, and every plugin is packaged for Claude Code. To add the Claude marketplace, run:
 
@@ -42,7 +42,7 @@ The files are installed at `node_modules/@rj11io/11ai/v0/plugins/`. You can also
 
 ## Skill catalog
 
-The repository currently contains 476 skills in 47 plugins.
+The repository currently contains 478 skills in 49 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
@@ -60,6 +60,7 @@ The repository currently contains 476 skills in 47 plugins.
 | [Comms](./v0/plugins/11ai-comms/README.md) | 1 | Communication registers that set the length, density, and shape of an agent's replies |
 | [Convex operator](./v0/plugins/11ai-operator-convex/README.md) | 12 | Current Convex setup, schema, functions, auth, storage, deployments, first-party native skills, and troubleshooting |
 | [CSS3 operator](./v0/plugins/11ai-operator-css-3/README.md) | 10 | Current CSS3-family cascade, selectors, layout, responsive design, theming, motion, integrations, reference, and troubleshooting |
+| [Directors](./v0/plugins/11ai-directors/README.md) | 1 | Wrapping a task in a workflow: preconditions, handoff, quality gate, report, and a clean abort (scaffold) |
 | [Docker operator](./v0/plugins/11ai-operator-docker/README.md) | 12 | Common Docker CLI and Compose operations, setup, integrations, safe cleanup, and troubleshooting |
 | [Git operator](./v0/plugins/11ai-operator-git/README.md) | 18 | Focused, safety-first Git operations: setup, state, staging, commits, sync, branches, worktrees, tags, submodules, hooks, pull requests, bisect, stashes, recovery, integrations, and troubleshooting |
 | [HTML5 operator](./v0/plugins/11ai-operator-html-5/README.md) | 10 | Current HTML5 documents, semantics, accessibility, forms, media, metadata, integrations, reference, and troubleshooting |
@@ -67,6 +68,7 @@ The repository currently contains 476 skills in 47 plugins.
 | [Jest v30 operator](./v0/plugins/11ai-operator-jest-v30/README.md) | 17 | Setting up, inspecting, running, authoring, integrating, configuring, de-flaking, speeding up, and troubleshooting Jest 30 suites |
 | [LLM costs](./v0/plugins/11ai-llm-costs/README.md) | 4 | Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports |
 | [Material UI v9 operator](./v0/plugins/11ai-operator-mui-v9/README.md) | 13 | Material UI 9.2 setup, components, forms, navigation, theming, styling, migration, first-party Agent Skills, integrations, reference, and troubleshooting |
+| [Meta skills](./v0/plugins/11ai-meta-skills/README.md) | 1 | Building, auditing, and maintaining other skills and the plugins that package them (scaffold) |
 | [MongoDB v8 operator](./v0/plugins/11ai-operator-mongodb-v8/README.md) | 17 | MongoDB 8 Shell and Database Tools work with transactions, profiling, roles, Atlas, backups, integrations, and safety checks |
 | [Next.js v16 operator](./v0/plugins/11ai-operator-nextjs-v16/README.md) | 10 | Next.js 16 App Router, Server and Client Components, Cache Components, mutations, handlers, metadata, deployment, integrations, reference, and troubleshooting |
 | [Node.js API v24 operator](./v0/plugins/11ai-operator-nodejs-api-v24/README.md) | 20 | Scaffolding, routing, validation, auth, data, jobs, GraphQL, OpenAPI, testing, and troubleshooting Node.js 24 LTS APIs |
@@ -111,7 +113,9 @@ v0/
     11ai-cleanup/              5 cleanup skills under skills/
     11ai-codebase/             3 codebase skills under skills/
     11ai-comms/                1 communication register skill under skills/
+    11ai-directors/            1 task-director skill under skills/
     11ai-llm-costs/            4 LLM cost, effort, and timing skills under skills/
+    11ai-meta-skills/          1 skill-authoring and packaging skill under skills/
     11ai-operator-antdesign-v6/  12 Ant Design v6 operation skills under skills/
     11ai-operator-aws-cli-v2/    22 AWS CLI v2 operation skills under skills/
     11ai-operator-bash/       10 Bash shell and scripting skills under skills/

@@ -43,6 +43,14 @@
       "source": "./v0/plugins/11ai-comms"
     },
     {
+      "name": "11ai-directors",
+      "source": "./v0/plugins/11ai-directors"
+    },
+    {
+      "name": "11ai-meta-skills",
+      "source": "./v0/plugins/11ai-meta-skills"
+    },
+    {
       "name": "11ai-operator-docker",
       "source": "./v0/plugins/11ai-operator-docker"
     },

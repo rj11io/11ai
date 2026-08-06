@@ -24,7 +24,9 @@ export async function generateMetadata({
   const plugin = getPlugin(slug)
   if (!plugin) return {}
   return {
-    title: `${plugin.title} skills`,
+    title: plugin.title.toLowerCase().endsWith("skills")
+      ? plugin.title
+      : `${plugin.title} skills`,
     description: plugin.tagline,
   }
 }

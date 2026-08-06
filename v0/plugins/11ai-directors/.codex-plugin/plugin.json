@@ -1,0 +1,31 @@
+{
+  "name": "11ai-directors",
+  "version": "1.32.0",
+  "description": "Director skills that wrap a task in a full workflow: setup, execution, quality checks, and reporting.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "skills": "./skills/",
+  "keywords": [
+    "director",
+    "workflow",
+    "orchestration",
+    "process",
+    "reporting"
+  ],
+  "interface": {
+    "displayName": "11ai Directors",
+    "shortDescription": "Wrap a task in a disciplined workflow.",
+    "longDescription": "A director does not do the task. It wraps one: it establishes preconditions, hands the work to a task skill, quality-checks the result, reports what happened, and stops cleanly when the work becomes unmanageable. Pair a director with any skill that does the work itself.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Developer Tools"
+    ],
+    "defaultPrompt": "Help me use the 11ai-directors skills to wrap this task in a disciplined workflow."
+  }
+}

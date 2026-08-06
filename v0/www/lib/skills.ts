@@ -98,6 +98,20 @@ const PLUGIN_CONFIG = [
       "Communication registers that set how an agent speaks: the length, density, and shape of its replies.",
   },
   {
+    slug: "directors",
+    dir: "11ai-directors",
+    title: "Directors",
+    tagline:
+      "Directors wrap a task in a workflow: preconditions, handoff, quality gate, report, and a clean abort.",
+  },
+  {
+    slug: "meta-skills",
+    dir: "11ai-meta-skills",
+    title: "Meta skills",
+    tagline:
+      "Skills for building, auditing, and maintaining other skills and the plugins that package them.",
+  },
+  {
     slug: "operator-convex",
     dir: "11ai-operator-convex",
     title: "Convex operator",

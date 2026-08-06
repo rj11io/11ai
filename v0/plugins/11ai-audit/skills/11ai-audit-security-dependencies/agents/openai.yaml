@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Audit Security Dependencies"
-  short_description: "Audit dependency vulnerabilities and malware"
-  default_prompt: "Use $11ai-audit-security-dependencies to audit every dependency version this project could install against current vulnerability, malware, registry, and web evidence."

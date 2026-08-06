@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "11ai-meta-skills",
+  "version": "1.32.0",
+  "description": "Skills for building, auditing, and maintaining other skills and the plugins that package them.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "skills": "./skills/",
+  "keywords": [
+    "meta",
+    "skill-authoring",
+    "packaging",
+    "validation",
+    "tooling"
+  ]
+}
