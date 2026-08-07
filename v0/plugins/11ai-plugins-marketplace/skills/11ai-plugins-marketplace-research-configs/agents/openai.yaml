@@ -1,4 +1,4 @@
 interface:
-  display_name: "11ai Meta Marketplace Configs Research"
+  display_name: "11ai Plugins Marketplace Research Configs"
   short_description: "Answer agent marketplace and plugin config questions"
   default_prompt: "Use $11ai-plugins-marketplace-research-configs to answer my question about marketplace, plugin, or skill configuration across Claude Code, Claude Cowork, OpenAI Codex, ChatGPT, or the Agent Skills standard: route it to the owning reference, read it, and answer with a citation and the research date."

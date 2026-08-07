@@ -3,7 +3,7 @@ name: 11ai-plugins-marketplace-audit-configs
 description: "Continuously audit a repository's AI-agent marketplace, plugin, and skill configuration surfaces against the published specifications for Claude Code, Claude Cowork, OpenAI Codex, ChatGPT, and the open Agent Skills standard until no confirmed critical or major finding remains. Read-only: discovers which config surfaces exist, checks every manifest field, enum value, path, limit, and cross-file consistency rule from bundled conformance references, records evidence-backed findings in a severity-ranked ledger, writes a timestamped Markdown report, and re-audits with fresh lenses after each pass. Use when asked to audit, verify, or continuously check marketplace.json, plugin.json, SKILL.md, or agents/openai.yaml conformance, or before publishing a skills repository to multiple agent ecosystems."
 ---
 
-# 11ai Audit Marketplace Configs
+# 11ai Plugins Marketplace Audit Configs
 
 ## Mission
 

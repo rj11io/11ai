@@ -1,4 +1,4 @@
 interface:
-  display_name: "11ai Audit Marketplace Configs"
+  display_name: "11ai Plugins Marketplace Audit Configs"
   short_description: "Audit marketplace, plugin, and skill config conformance"
   default_prompt: "Use $11ai-plugins-marketplace-audit-configs to continuously audit this repository's marketplace, plugin, and skill configuration files against the Claude Code, Claude Cowork, OpenAI Codex, and Agent Skills specifications, and report evidence-backed findings until no critical or major issue remains."

@@ -16,6 +16,17 @@ Optional:
 
 - `$11ai-blog-ui` — standalone add-on that applies the 11ai-style editorial visual system after the functional blog exists.
 
+## Also in this plugin
+
+Two more skills share this plugin's editorial and publishing theme, but they
+are not steps in the pipeline above — each builds its own thing, standalone:
+
+- `$11ai-platform-cta` — a marketing/services page for an author or agency
+  platform. Not a blog.
+- `$11ai-publications-cms` — a different, file-backed CMS for serial
+  publications with nested chapters. Use this instead of `11ai-blog-cms`
+  when the content is chapters in a publication, not blog posts.
+
 ## Scope
 
 The plugin is intended for React/Next.js-style blogs but keeps contracts white-label. It should preserve each target project's route prefix, framework version, style tokens, and existing conventions. Use `11ai-blog-ui` only when the user asks for the 11ai visual treatment or equivalent polish.

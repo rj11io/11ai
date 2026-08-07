@@ -1,7 +1,8 @@
 # 11ai Meta Skills
 
-Skills whose subject is skills: authoring, auditing, packaging, and retiring them
-without leaving dangling references.
+Skills for building, auditing, and packaging other skills and plugins, plus
+two general-purpose utilities that don't fit anywhere else yet: compressing
+guidance text and reverse engineering an existing repo.
 
 ## Choose a skill
 
@@ -9,7 +10,11 @@ without leaving dangling references.
 | --- | --- |
 | [`11ai-meta-operator-plugin-creator`](./skills/11ai-meta-operator-plugin-creator/SKILL.md) | Scaffolding a new `11ai-operator-TOOL` plugin that matches the house pattern and passes validation |
 | [`11ai-meta-plugin-faq-manager`](./skills/11ai-meta-plugin-faq-manager/SKILL.md) | Creating or updating a plugin's `11ai-*-faq` skill: a validated question router over the plugin's own contracts, references, scripts, and tests |
-| [`11ai-meta-marketplace-configs-research`](./skills/11ai-meta-marketplace-configs-research/SKILL.md) | Answering marketplace, plugin, and skill configuration questions across Claude Code, Claude Cowork, OpenAI Codex, ChatGPT, and the Agent Skills standard from dated, source-cited research references |
+| [`11ai-meta-compression`](./skills/11ai-meta-compression/SKILL.md) | Compressing a markdown guidance file (a SKILL.md, CLAUDE.md, prompt, or runbook) locally, without an external LLM call, while preserving headings, code, links, and paths |
+| [`11ai-meta-reverse-engineering`](./skills/11ai-meta-reverse-engineering/SKILL.md) | Reverse engineering a locally cloned repository into a sanitized markdown blueprint for rebuilding it with modern tools |
+
+Marketplace and plugin configuration research moved to the
+[`11ai-plugins-marketplace`](../11ai-plugins-marketplace/README.md) plugin.
 
 ## Scope
 

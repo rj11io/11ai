@@ -1,7 +1,7 @@
 {
   "name": "11ai-plugins-marketplace",
   "version": "1.33.1",
-  "description": "A reserved plugin for skills that manage how 11ai plugins are listed, versioned, and published across the Claude Code and Codex marketplaces. It currently has one placeholder skill; plugin creation and marketplace-config auditing already live in the 11ai-meta-skills plugin.",
+  "description": "Marketplace, plugin, and skill configuration auditing and research for the Claude Code, Claude Cowork, OpenAI Codex, ChatGPT, and Agent Skills ecosystems.",
   "author": {
     "name": "rj11io"
   },
@@ -11,22 +11,23 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "11ai Plugins Marketplace",
-    "shortDescription": "Reserved for future marketplace-publishing skills.",
-    "longDescription": "A reserved plugin for skills that manage how 11ai plugins are listed, versioned, and published across the Claude Code and Codex marketplaces, once real skills are built. Plugin creation and marketplace-config auditing already live in the 11ai-meta-skills plugin.",
+    "shortDescription": "Audit and research marketplace and plugin configs.",
+    "longDescription": "Audits a repository's marketplace.json, plugin.json, SKILL.md, and agents/openai.yaml files against the Claude Code, Claude Cowork, OpenAI Codex, ChatGPT, and Agent Skills specifications, and answers configuration questions from source-cited research references.",
     "developerName": "rj11io",
     "category": "Developer Tools",
     "capabilities": [
+      "Analyze",
       "Read",
       "Developer Tools"
     ],
     "websiteURL": "https://ai.rj11.io/plugins/plugins-marketplace",
-    "defaultPrompt": "Help me with this task using the matching 11ai-plugins-marketplace skill."
+    "defaultPrompt": "Audit or research this repository's marketplace and plugin configuration files using the 11ai-plugins-marketplace skills."
   },
   "keywords": [
     "marketplace",
-    "plugins",
-    "publishing",
-    "versioning",
-    "placeholder"
+    "plugin-config",
+    "audit",
+    "research",
+    "conformance"
   ]
 }

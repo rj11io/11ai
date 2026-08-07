@@ -1,22 +1,26 @@
 # 11ai Plugins Marketplace
 
-A reserved home for skills that manage how 11ai plugins are listed,
-versioned, and published across the Claude Code and Codex marketplaces.
+Audits and researches the marketplace, plugin, and skill configuration files
+that a Claude Code or Codex skills repository ships: `marketplace.json`,
+`plugin.json`, `SKILL.md`, and `agents/openai.yaml`.
 
 ## Skills
 
 | Skill | Use it for |
 | --- | --- |
-| [`11ai-plugins-marketplace-placeholder`](./skills/11ai-plugins-marketplace-placeholder/SKILL.md) | Explaining what this plugin will hold, and pointing you to the tools that already scaffold and validate plugins today |
+| [`11ai-plugins-marketplace-audit-configs`](./skills/11ai-plugins-marketplace-audit-configs/SKILL.md) | Continuously auditing marketplace, plugin, and skill configuration files against the Claude Code, Claude Cowork, OpenAI Codex, and Agent Skills specifications until no critical or major finding remains |
+| [`11ai-plugins-marketplace-research-configs`](./skills/11ai-plugins-marketplace-research-configs/SKILL.md) | Answering marketplace, plugin, and skill configuration questions across Claude Code, Claude Cowork, OpenAI Codex, ChatGPT, and the Agent Skills standard from dated, source-cited research references |
 
-## Status
+## How the two skills split the work
 
-This plugin has one skill, and it is a placeholder. It does not register,
-version, or publish anything yet. Two things already do related work:
+`11ai-plugins-marketplace-research-configs` answers "what does the spec allow"
+from bundled, source-cited reference files. `11ai-plugins-marketplace-audit-configs`
+answers "does this specific repository conform" by reading the actual files and
+writing a timestamped findings report. Start with research for an open-ended
+question; start with the audit when you already know which repository to check.
 
-- The [`11ai-meta-skills`](../11ai-meta-skills/README.md) plugin scaffolds a
-  brand-new plugin end to end, and audits marketplace configuration files.
-- [`v0/scripts/validate-skills.mjs`](../../scripts/validate-skills.mjs) is the
-  script that checks every packaging rule a plugin must follow.
+## Related
 
-A real skill in this plugin should build on those, not repeat them.
+[`11ai-meta-skills`](../11ai-meta-skills/README.md) scaffolds a brand-new
+plugin end to end. Read it before writing a new skill here, so plugin
+creation and plugin auditing don't drift apart.

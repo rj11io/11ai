@@ -2,7 +2,7 @@
 name: 11ai-plugins-marketplace-research-configs
 description: "Answer questions about marketplace, plugin, and skill configuration formats across Claude Code, Claude Cowork, claude.ai, the Claude API, OpenAI Codex, ChatGPT, the open Agent Skills standard, and the skills.sh CLI, from bundled research references verified against official docs, JSON schemas, and vendor source code on 2026-08-06. Covers file locations, every schema field and enum value, source variants, policy values, install flows, settings, caching, and how this repository's own config surfaces and validator map onto each ecosystem. Use when a user asks how any of these config files work, which fields or values are allowed, how the ecosystems differ, or where 11ai deviates from a spec."
 ---
-# 11ai meta marketplace configs research
+# 11ai Plugins Marketplace Research Configs
 
 Answer configuration questions from the bundled references, not from memory. Every
 reference was verified against a primary source (official docs pages, published JSON

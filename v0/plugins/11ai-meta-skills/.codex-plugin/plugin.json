@@ -1,7 +1,7 @@
 {
   "name": "11ai-meta-skills",
   "version": "1.33.1",
-  "description": "Skills for building, auditing, and maintaining other skills and the plugins that package them.",
+  "description": "Skills for building, auditing, and maintaining other skills and the plugins that package them, plus general-purpose guidance-compression and repository reverse-engineering utilities.",
   "author": {
     "name": "rj11io"
   },
@@ -14,12 +14,14 @@
     "skill-authoring",
     "packaging",
     "validation",
-    "tooling"
+    "tooling",
+    "compression",
+    "reverse-engineering"
   ],
   "interface": {
     "displayName": "11ai Meta Skills",
     "shortDescription": "Build, audit, and maintain other skills.",
-    "longDescription": "Skills whose subject is skills: authoring a new one, auditing frontmatter and packaging across harnesses, wiring a plugin into the marketplace and catalogs, and keeping counts, manifests, and cross-skill copies in sync as the collection grows.",
+    "longDescription": "Skills whose subject is skills: authoring a new one, auditing frontmatter and packaging across harnesses, wiring a plugin into the marketplace and catalogs, and keeping counts, manifests, and cross-skill copies in sync as the collection grows. Also includes two general-purpose utilities: compressing guidance text and reverse engineering an existing repository.",
     "developerName": "rj11io",
     "category": "Developer Tools",
     "capabilities": [

@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-audit",
   "version": "1.33.1",
-  "description": "Evidence-backed, read-only audits for codebases and their dependencies.",
+  "description": "Evidence-backed, read-only dependency audits for vulnerabilities, malware, and host-computer risks.",
   "author": {
     "name": "rj11io"
   },

@@ -181,17 +181,6 @@
       "category": "Security"
     },
     {
-      "name": "11ai-utils",
-      "source": {
-        "source": "local",
-        "path": "./v0/plugins/11ai-utils"
-      },
-      "policy": {
-        "installation": "AVAILABLE"
-      },
-      "category": "Developer Tools"
-    },
-    {
       "name": "11ai-web-design",
       "source": {
         "source": "local",

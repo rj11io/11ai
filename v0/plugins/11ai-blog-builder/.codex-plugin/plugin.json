@@ -15,7 +15,9 @@
     "editorial",
     "content",
     "navigation",
-    "ui"
+    "ui",
+    "marketing-page",
+    "publications"
   ],
   "skills": "./skills/",
   "interface": {

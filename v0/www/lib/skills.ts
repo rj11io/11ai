@@ -79,7 +79,7 @@ const PLUGIN_CONFIG = [
     dir: "11ai-blog-builder",
     title: "Blog builder",
     tagline:
-      "Build file-backed editorial blogs with composable CMS, author, Markdown, content, navigation, and UI skills.",
+      "Build file-backed editorial blogs with composable CMS, author, Markdown, content, navigation, and UI skills, plus a standalone platform-services page and a publications-and-chapters CMS.",
   },
   {
     slug: "cleanup",
@@ -121,7 +121,7 @@ const PLUGIN_CONFIG = [
     dir: "11ai-meta-skills",
     title: "Meta skills",
     tagline:
-      "Skills for building, auditing, and maintaining other skills and the plugins that package them.",
+      "Skills for building, auditing, and maintaining other skills and the plugins that package them, plus guidance-compression and repository reverse-engineering utilities.",
   },
   {
     slug: "operator-convex",
@@ -334,13 +334,6 @@ const PLUGIN_CONFIG = [
       "Current WorkOS setup, AuthKit, SSO, directory sync, organizations, webhooks, first-party native skills, and troubleshooting.",
   },
   {
-    slug: "utils",
-    dir: "11ai-utils",
-    title: "Utilities",
-    tagline:
-      "Markdown compression, reverse engineering, publication CMS, calls to action, and project sites.",
-  },
-  {
     slug: "xharness",
     dir: "11ai-xharness",
     title: "Cross-harness",
@@ -352,7 +345,7 @@ const PLUGIN_CONFIG = [
     dir: "11ai-web-design",
     title: "Web design",
     tagline:
-      "The 11ai visual language and deliberate content-led styling for accessible, compact, and data-rich interfaces.",
+      "The 11ai visual language, deliberate content-led styling, and repository-driven project sites for accessible, compact, and data-rich interfaces.",
   },
 ] as const
 

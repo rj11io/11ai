@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-plugins-marketplace",
   "version": "1.33.1",
-  "description": "A reserved plugin for skills that manage how 11ai plugins are listed, versioned, and published across the Claude Code and Codex marketplaces. It currently has one placeholder skill; plugin creation and marketplace-config auditing already live in the 11ai-meta-skills plugin.",
+  "description": "Marketplace, plugin, and skill configuration auditing and research for the Claude Code, Claude Cowork, OpenAI Codex, ChatGPT, and Agent Skills ecosystems.",
   "author": {
     "name": "rj11io"
   },
@@ -11,9 +11,9 @@
   "skills": "./skills/",
   "keywords": [
     "marketplace",
-    "plugins",
-    "publishing",
-    "versioning",
-    "placeholder"
+    "plugin-config",
+    "audit",
+    "research",
+    "conformance"
   ]
 }
