@@ -13,6 +13,8 @@ import { TerminalBlock } from "@/components/terminal-block"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import {
+  CLAUDE_MARKETPLACE_COMMAND,
+  CODEX_MARKETPLACE_COMMAND,
   GITHUB_REPO_URL,
   INSTALL_COMMAND,
   getPackageVersion,
@@ -169,6 +171,37 @@ export default function Page() {
               </div>
             </div>
           ) : null}
+        </div>
+      </section>
+
+      {/* ── Marketplaces ─────────────────────────────────────── */}
+      <section id="marketplaces" className="scroll-mt-20 border-t border-border/60 py-20">
+        <div className="mx-auto max-w-3xl space-y-6 text-center">
+          <p className="font-mono text-xs tracking-widest text-muted-foreground uppercase">
+            Marketplaces
+          </p>
+          <h2 className="text-3xl font-semibold tracking-tight">
+            Install as plugins in Claude Code or Codex
+          </h2>
+          <p className="leading-relaxed text-muted-foreground">
+            Add the 11ai marketplace once, then install any plugin from it by
+            name. Every plugin page shows its exact install command.
+          </p>
+          <div className="space-y-3 text-left">
+            <TerminalBlock title="claude code" command={CLAUDE_MARKETPLACE_COMMAND} />
+            <TerminalBlock title="codex" command={CODEX_MARKETPLACE_COMMAND} />
+          </div>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            Then install a plugin, for example{" "}
+            <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
+              claude plugin install 11ai-benchmarks@11ai
+            </code>{" "}
+            or{" "}
+            <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
+              codex plugin add 11ai-benchmarks@11ai
+            </code>
+            .
+          </p>
         </div>
       </section>
 

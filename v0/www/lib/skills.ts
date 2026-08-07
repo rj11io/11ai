@@ -6,6 +6,18 @@ import matter from "gray-matter"
 export const GITHUB_REPO_URL = "https://github.com/rj11io/11ai"
 export const NPM_URL = "https://www.npmjs.com/package/@rj11io/11ai"
 export const INSTALL_COMMAND = "npx skills add rj11io/11ai --full-depth"
+export const CLAUDE_MARKETPLACE_COMMAND = "claude plugin marketplace add rj11io/11ai"
+export const CODEX_MARKETPLACE_COMMAND = "codex plugin marketplace add rj11io/11ai"
+
+/** Per-plugin install command for Claude Code, once the marketplace is added. */
+export function claudeInstallCommand(pluginDir: string) {
+  return `claude plugin install ${pluginDir}@11ai`
+}
+
+/** Per-plugin install command for Codex, once the marketplace is added. */
+export function codexInstallCommand(pluginDir: string) {
+  return `codex plugin add ${pluginDir}@11ai`
+}
 
 /**
  * Curated per-plugin presentation data. Skills, counts, and descriptions all

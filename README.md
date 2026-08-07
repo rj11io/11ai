@@ -16,13 +16,33 @@ npx skills add rj11io/11ai --full-depth
 
 The CLI runs through `npx`, discovers the repository's skills, and configures the skills you select for your agent. `--full-depth` is required because this collection organizes skills into per-workflow plugins under `v0/plugins/` instead of one top-level `skills/` directory.
 
-The repository follows the open Agent Skills format. Every skill also includes Codex UI metadata in `agents/openai.yaml`, and every plugin is packaged for Claude Code. To add the Claude marketplace, run:
+The repository follows the open Agent Skills format. Every skill also includes Codex UI metadata in `agents/openai.yaml`, and every plugin is packaged for both Claude Code and Codex.
+
+### Claude Code marketplace
+
+Add the marketplace once, either inside a Claude Code session:
 
 ```text
 /plugin marketplace add rj11io/11ai
 ```
 
-Then install the plugin you need from the marketplace UI or with `/plugin install <plugin>@11ai`.
+or from your shell:
+
+```bash
+claude plugin marketplace add rj11io/11ai
+```
+
+Then install the plugin you need from the marketplace UI or with `/plugin install <plugin>@11ai`, for example `/plugin install 11ai-benchmarks@11ai`.
+
+### Codex marketplace
+
+Add the marketplace once:
+
+```bash
+codex plugin marketplace add rj11io/11ai
+```
+
+Then install the plugin you need with `codex plugin add <plugin>@11ai`, for example `codex plugin add 11ai-benchmarks@11ai`, or pick it from the plugins UI.
 
 After installation, ask your agent to use a skill by name. For example:
 

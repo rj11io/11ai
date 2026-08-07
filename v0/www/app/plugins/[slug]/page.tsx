@@ -8,7 +8,15 @@ import { SkillCard } from "@/components/skill-card"
 import { TerminalBlock } from "@/components/terminal-block"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
-import { getPlugin, getPlugins, getSkillsByPlugin } from "@/lib/skills"
+import {
+  CLAUDE_MARKETPLACE_COMMAND,
+  CODEX_MARKETPLACE_COMMAND,
+  claudeInstallCommand,
+  codexInstallCommand,
+  getPlugin,
+  getPlugins,
+  getSkillsByPlugin,
+} from "@/lib/skills"
 import { cn } from "@/lib/utils"
 
 export function generateStaticParams() {
@@ -74,10 +82,25 @@ export default async function PluginPage({
         </a>
       </div>
 
-      <TerminalBlock
-        command={`npx skills add rj11io/11ai ${skills.map((skill) => `--skill ${skill.name}`).join(" ")}`}
-        className="mb-12"
-      />
+      <div className="mb-12 space-y-3">
+        <TerminalBlock
+          title="any skills-format agent"
+          command={`npx skills add rj11io/11ai ${skills.map((skill) => `--skill ${skill.name}`).join(" ")}`}
+        />
+        <TerminalBlock title="claude code" command={claudeInstallCommand(plugin.dir)} />
+        <TerminalBlock title="codex" command={codexInstallCommand(plugin.dir)} />
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          First time? Add the marketplace once with{" "}
+          <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
+            {CLAUDE_MARKETPLACE_COMMAND}
+          </code>{" "}
+          or{" "}
+          <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
+            {CODEX_MARKETPLACE_COMMAND}
+          </code>
+          , then install any plugin from it.
+        </p>
+      </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {skills.map((skill) => (
