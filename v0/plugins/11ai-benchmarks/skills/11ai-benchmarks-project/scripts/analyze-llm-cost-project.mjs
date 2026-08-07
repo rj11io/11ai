@@ -63,6 +63,7 @@ import {
   parseClineFamily,
   parseGemini,
   claudeMessageLatencies,
+  codexTurnLatencies,
   latencyHistogram,
   parseGeneric,
   priceThread,
@@ -398,7 +399,7 @@ function parseCodex(file, records) {
   const context = records.filter((record) => record?.type === "turn_context" && record?.payload?.model).at(-1)?.payload ?? {}
   const provider = "openai"
   const model = context.model ?? "unknown"
-  return [baseThread(
+  const thread = baseThread(
     file,
     0,
     provider,
@@ -409,7 +410,9 @@ function parseCodex(file, records) {
     [usage],
     null,
     firstValue(meta?.payload?.id, meta?.payload?.session_id),
-  )]
+  )
+  thread.latency = latencyHistogram(codexTurnLatencies(tokenEvents), "turn-events")
+  return [thread]
 }
 
 function buildClaudeDedupState(parsedFiles) {
@@ -540,6 +543,9 @@ async function parseOpenCodeDatabase(file) {
         nonReasoningOutput: output,
         providerTotal: input + cacheRead + cacheWrite + output + reasoning,
       }, [record, { timestamp: row.timeUpdated }], [{ input, output, reasoning, cacheRead, cacheWrite, schema: row.schema }], firstFinite(row.cost), row.id)
+      const rowCreated = Date.parse(iso(row.timeCreated) ?? "")
+      const rowUpdated = Date.parse(iso(row.timeUpdated) ?? "")
+      thread.latency = latencyHistogram([Number.isFinite(rowCreated) && Number.isFinite(rowUpdated) ? rowUpdated - rowCreated : null], "row-durations")
       thread.sourceFile = `opencode-session/${basename(file)}/${row.id}`
       const rel = relative(root, resolve(row.directory)).replaceAll("\\", "/")
       thread.folder = !rel || rel === "." ? "." : rel.split("/")[0]

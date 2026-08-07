@@ -140,7 +140,7 @@ Definitions only; the numbers, paths, and defaults live in the routed sources ab
 | Billing mode | Whether usage was billed per token through an API key or covered by a subscription |
 | Output TPS | Blended output tokens per second: output tokens divided by estimated active seconds, over threads with measured timing; includes tool time and excludes time-to-first-token |
 | Active time / response | Blended turnaround: estimated active time divided by counted usage responses; a work-rate proxy, not provider latency |
-| Response latency | Per-response time from the last preceding input record to the response's final snapshot; includes network, queue, and decode, not time-to-first-token |
+| Response latency | Per-response duration measured by a per-harness method (record-timestamps, turn-events, request-events, or row-durations); includes network, queue, decode, and in-turn tool time, never time-to-first-token |
 | Thread | One conversation or session as the unit of attribution, cost, and timing |
 | Known cost | Cost computed from measured tokens matched to a bundled catalog rate |
 | Unpriced model | A measured model with no catalog match; its cost stays unavailable instead of zero |

@@ -468,7 +468,19 @@ export function parseClineFamily(file, records, harness) {
     // OpenAI-protocol tasks report cached tokens as a subset of prompt tokens;
     // Anthropic-protocol buckets are disjoint.
     const openaiCacheSemantics = String(usage.apiProtocol ?? "").toLowerCase() === "openai"
+    const startTs = Date.parse(iso(record.ts ?? record.timestamp) ?? "")
+    const nextTs = (() => {
+      const index = records.indexOf(record)
+      for (let cursor = index + 1; cursor < records.length; cursor += 1) {
+        const candidate = Date.parse(iso(records[cursor]?.ts ?? records[cursor]?.timestamp) ?? "")
+        if (Number.isFinite(candidate)) return candidate
+      }
+      return NaN
+    })()
+    const requestGapMs = Number.isFinite(startTs) && Number.isFinite(nextTs) && nextTs > startTs ? nextTs - startTs : null
+    const requestLatencyMs = record.say === "api_req_started" && requestGapMs !== null && requestGapMs <= ACTIVE_GAP_MS ? requestGapMs : null
     entries.push({
+      requestLatencyMs,
       record: { ...record, timestamp: record.ts ?? record.timestamp },
       usage,
       model,
@@ -514,7 +526,7 @@ export function parseClineFamily(file, records, harness) {
     group.map((entry) => entry.usage),
     sumReported(group.map((entry) => entry.cost)),
     externalSessions.get(resolve(file))?.id,
-  ), fullTiming))
+  ), fullTiming, { latency: latencyHistogram(group.map((entry) => entry.requestLatencyMs), "request-events") }))
 }
 
 export function parseGemini(file, records) {
@@ -954,7 +966,7 @@ export function loadDataset(file, expectedSkill) {
 
 export const LATENCY_BUCKET_EDGES_MS = [250, 500, 1000, 2000, 4000, 8000, 15000, 30000, 60000, 120000, 300000, 600000]
 
-export function latencyHistogram(samplesMs) {
+export function latencyHistogram(samplesMs, method = "record-timestamps") {
   const samples = samplesMs.filter((value) => finite(value) && value > 0)
   if (!samples.length) return null
   const buckets = new Array(LATENCY_BUCKET_EDGES_MS.length + 1).fill(0)
@@ -969,13 +981,14 @@ export function latencyHistogram(samplesMs) {
     minMs = Math.min(minMs, value)
     maxMs = Math.max(maxMs, value)
   }
-  return { method: "record-timestamps", count: samples.length, sumMs, minMs, maxMs, buckets }
+  return { method, count: samples.length, sumMs, minMs, maxMs, buckets }
 }
 
 export function mergeLatency(histograms) {
   const usable = histograms.filter((histogram) => histogram?.count)
   if (!usable.length) return null
-  const merged = { method: usable[0].method, count: 0, sumMs: 0, minMs: Infinity, maxMs: 0, buckets: new Array(LATENCY_BUCKET_EDGES_MS.length + 1).fill(0) }
+  const methods = [...new Set(usable.map((histogram) => histogram.method))]
+  const merged = { method: methods.length === 1 ? methods[0] : "mixed", count: 0, sumMs: 0, minMs: Infinity, maxMs: 0, buckets: new Array(LATENCY_BUCKET_EDGES_MS.length + 1).fill(0) }
   for (const histogram of usable) {
     merged.count += histogram.count
     merged.sumMs += histogram.sumMs
@@ -994,8 +1007,10 @@ export function latencyQuantileMs(histogram, q) {
     const bucketCount = histogram.buckets[index]
     if (!bucketCount) continue
     if (cumulative + bucketCount >= target) {
-      const lower = index === 0 ? Math.min(histogram.minMs, LATENCY_BUCKET_EDGES_MS[0]) : LATENCY_BUCKET_EDGES_MS[index - 1]
-      const upper = index < LATENCY_BUCKET_EDGES_MS.length ? Math.min(LATENCY_BUCKET_EDGES_MS[index], histogram.maxMs) : histogram.maxMs
+      // Clamp bucket bounds to the observed min/max so sparse histograms
+      // (for example a single sample) interpolate to real values.
+      const lower = Math.max(index === 0 ? 0 : LATENCY_BUCKET_EDGES_MS[index - 1], histogram.minMs)
+      const upper = Math.min(index < LATENCY_BUCKET_EDGES_MS.length ? LATENCY_BUCKET_EDGES_MS[index] : Infinity, histogram.maxMs)
       const fraction = Math.max(0, Math.min(1, (target - cumulative) / bucketCount))
       return lower + (Math.max(upper, lower) - lower) * fraction
     }
@@ -1028,12 +1043,25 @@ export function claudeMessageLatencies(records) {
   return latencies
 }
 
+export function codexTurnLatencies(tokenEvents) {
+  // Each token_count event marks the end of a model turn; consecutive event
+  // gaps approximate turn durations (model plus in-turn tool time). Gaps above
+  // the active-gap cap are idle time between turns, not turns, and are excluded.
+  const times = tokenEvents.map((record) => Date.parse(record?.timestamp ?? "")).filter(Number.isFinite)
+  const samples = []
+  for (let index = 1; index < times.length; index += 1) {
+    const delta = times[index] - times[index - 1]
+    if (delta > 0 && delta <= ACTIVE_GAP_MS) samples.push(delta)
+  }
+  return samples
+}
+
 export function responseLatencyLines(threads) {
   const fmtLatency = (ms) => (finite(ms) ? `${(ms / 1000).toFixed(1)}s` : "n/a")
   const lines = [
     "## Response latency",
     "",
-    "Latency runs from the last preceding input record (user message or tool result) to the final snapshot of each response (method: record-timestamps). It includes network, queue, and decode time, is not time-to-first-token, and is currently measured for Claude-family transcripts; responses from other harnesses count toward coverage denominators only.",
+    "Latency includes network, queue, decode, and in-turn tool time; it is never time-to-first-token. Methods by harness: Claude family measures each response from the last preceding input record to its final snapshot (record-timestamps); Codex measures gaps between consecutive cumulative token events (turn-events); Cline and Roo Code measure each API request to the next recorded event (request-events); OpenCode measures row creation to last update (row-durations). Gemini CLI records one timestamp per response and is excluded; unmeasured responses count toward coverage denominators only. Gap-based methods (turn-events, request-events) exclude gaps above the five-minute active-gap cap as idle time.",
     "",
   ]
   const covered = threads.filter((thread) => thread.latency?.count)
@@ -1042,12 +1070,13 @@ export function responseLatencyLines(threads) {
     return lines
   }
   const headers = ["Responses", "p50", "p90", "Mean", "Max", "Mean output tokens / response", "Coverage"]
+  const responseUnits = (thread) => Math.max(finite(thread.usageRecordCount) ? thread.usageRecordCount : 0, thread.latency?.count ?? 0)
   const rowFor = (items) => {
     const merged = mergeLatency(items.map((thread) => thread.latency))
     const measuredThreads = items.filter((thread) => thread.latency?.count)
     const outputs = sumKnown(measuredThreads.map((thread) => thread.tokens.outputTotal).filter(finite))
-    const responses = sumKnown(measuredThreads.map((thread) => thread.usageRecordCount).filter(finite))
-    const denominator = sumKnown(items.map((thread) => thread.usageRecordCount).filter(finite))
+    const responses = sumKnown(measuredThreads.map(responseUnits))
+    const denominator = sumKnown(items.map(responseUnits))
     return [
       fmtInt(merged.count),
       fmtLatency(latencyQuantileMs(merged, 0.5)),
@@ -1063,12 +1092,14 @@ export function responseLatencyLines(threads) {
       .filter(([, items]) => items.some((thread) => thread.latency?.count))
       .sort((a, b) => (mergeLatency(b[1].map((t) => t.latency))?.count ?? 0) - (mergeLatency(a[1].map((t) => t.latency))?.count ?? 0) || a[0].localeCompare(b[0]))
     if (!groups.length) return []
+    const withMethod = label === "harness"
+    const methodOf = (items) => mergeLatency(items.map((thread) => thread.latency))?.method ?? "n/a"
     return [
       `### Response latency by ${label}`,
       "",
-      table([label === "harness" ? "Harness" : "Provider / model / effort", ...headers], [
-        ...groups.map(([key, items]) => [key, ...rowFor(items)]),
-        ["Total", ...rowFor(threads)],
+      table([withMethod ? "Harness" : "Provider / model / effort", ...headers, ...(withMethod ? ["Method"] : [])], [
+        ...groups.map(([key, items]) => [key, ...rowFor(items), ...(withMethod ? [methodOf(items)] : [])]),
+        ["Total", ...rowFor(threads), ...(withMethod ? [methodOf(threads)] : [])],
       ]),
       "",
     ]

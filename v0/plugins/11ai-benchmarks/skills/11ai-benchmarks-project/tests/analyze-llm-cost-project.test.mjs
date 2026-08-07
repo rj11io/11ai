@@ -473,6 +473,23 @@ try {
   assert.equal(latencyThread.latency.method, "record-timestamps")
   // no-coverage scope still renders the section honestly
   assert.match(readFileSync(genericReport, "utf8"), /No responses carried measurable per-response timestamps in this scope\./)
+
+  // OpenCode row-durations: one 60s row-duration sample from time_created -> time_updated
+  const mainMarkdown = readFileSync(report, "utf8")
+  assert.match(mainMarkdown, /^### Response latency by harness$/m)
+  assert.match(mainMarkdown, /\| opencode \| 1 \| 60\.0s \| 60\.0s \| 60\.0s \| 60\.0s \| 10 \| 100\.0% \| row-durations \|$/m)
+
+  // Cline request-events: api_req_started followed 4s later by another record
+  const latencyClineTasks = join(fixtureRoot, "latency-cline-tasks")
+  mkdirSync(join(latencyClineTasks, "task-lat"), { recursive: true })
+  writeFileSync(join(latencyClineTasks, "task-lat", "task_metadata.json"), JSON.stringify({ cwdOnTaskInitialization: latencyProject }))
+  writeFileSync(join(latencyClineTasks, "task-lat", "ui_messages.json"), JSON.stringify([
+    { ts: 1752829200000, type: "say", say: "api_req_started", text: JSON.stringify({ modelId: "claude-sonnet-4-6", provider: "anthropic", tokensIn: 10, tokensOut: 4, cacheWrites: 0, cacheReads: 0, cost: 0.005 }) },
+    { ts: 1752829204000, type: "say", say: "text", text: "done" },
+  ]))
+  const latencyClineReport = join(fixtureRoot, "latency-cline-report.md")
+  run([latencyProject, "--codex-home", join(fixtureRoot, "no-codex"), "--claude-home", join(fixtureRoot, "no-claude"), "--claude-desktop-home", join(fixtureRoot, "no-desktop"), "--cowork-home", join(fixtureRoot, "no-cowork"), "--gemini-home", join(fixtureRoot, "no-gemini"), "--cline-tasks", latencyClineTasks, "--roo-tasks", join(fixtureRoot, "no-roo"), "--opencode-db", join(fixtureRoot, "no-opencode.db"), "--output", latencyClineReport])
+  assert.match(readFileSync(latencyClineReport, "utf8"), /\| cline \| 1 \| 4\.0s \| 4\.0s \| 4\.0s \| 4\.0s \| 4 \| 100\.0% \| request-events \|$/m)
 } finally {
   rmSync(fixtureRoot, { recursive: true, force: true })
 }
