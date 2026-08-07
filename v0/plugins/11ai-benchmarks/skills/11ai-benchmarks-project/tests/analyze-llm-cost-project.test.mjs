@@ -124,7 +124,7 @@ try {
   assert.match(markdown, /^## Totals$/m)
   assert.match(markdown, /^## Cost by harness$/m)
   assert.match(markdown, /^## Cost by model by effort$/m)
-  assert.match(markdown, /\| Pricing catalog \| bundled default \(version 3, updated 2026-08-04\) \|/)
+  assert.match(markdown, /\| Pricing catalog \| bundled default \(version 3, updated 2026-08-07\) \|/)
   assert.match(markdown, /^### Historical pricing selection$/m)
   assert.match(markdown, /\| Effective-period price \| \d+ \| Rate effective at the thread attribution timestamp \|/)
   assert.match(markdown, /\| Earliest available fallback \| \d+ \| Usage predates known history;/)
@@ -219,7 +219,7 @@ try {
   assert.equal(unmatchedSummary.knownCosts, 0)
   const unmatchedMarkdown = readFileSync(unmatchedReport, "utf8")
   const unmatchedHtml = readFileSync(unmatchedSummary.htmlReport, "utf8")
-  assert.match(unmatchedMarkdown, /\| Pricing catalog \| bundled default \(version 3, updated 2026-08-04\) \|/)
+  assert.match(unmatchedMarkdown, /\| Pricing catalog \| bundled default \(version 3, updated 2026-08-07\) \|/)
   assert.match(unmatchedMarkdown, /^### Models requiring a pricing update$/m)
   assert.match(unmatchedMarkdown, /\| anthropic \/ claude-unpriced-9 \| 1 \| 150 \| 50 \| 10 \| 160 \|/)
   const unmatchedCallout = unmatchedMarkdown.slice(unmatchedMarkdown.indexOf("### Models requiring a pricing update"), unmatchedMarkdown.indexOf("### Pricing catalog match detail"))
@@ -374,6 +374,69 @@ try {
   assert.match(coworkMarkdown, /\| Remote measured \| 0 \|/)
   assert.match(coworkMarkdown, /\| Remote detected, usage unavailable \| 1 \| Excluded from measured totals; never treated as zero usage \|/)
   assert.match(coworkMarkdown, /Cowork coverage warning:.*All token and cost totals in this report remain measured totals and exclude that unavailable usage\./)
+  const genericProject = join(fixtureRoot, "generic-provider-project")
+  mkdirSync(genericProject, { recursive: true })
+  writeFileSync(join(genericProject, "mistral-usage.json"), JSON.stringify({
+    id: "mistral-call-1",
+    provider: "mistral",
+    model: "mistral-large-2411",
+    usage: { input_tokens: 1000000, output_tokens: 100000 },
+  }))
+  const genericReport = join(fixtureRoot, "generic-provider-report.md")
+  const genericSummary = run([genericProject, "--project-only", "--output", genericReport])
+  assert.equal(genericSummary.threads, 1)
+  assert.equal(genericSummary.knownCosts, 1)
+  const genericMarkdown = readFileSync(genericReport, "utf8")
+  assert.match(genericMarkdown, /\| mistral \/ mistral-large-2411 \|[^\n]*\$0\.6500/)
+  assert.doesNotMatch(genericMarkdown, /pricing is incomplete/)
+
+  const reusedIdProject = join(fixtureRoot, "reused-id-project")
+  writeJsonl(join(reusedIdProject, "session-export.jsonl"), [
+    { id: "session-1", provider: "mistral", model: "mistral-large-2411", usage: { input_tokens: 100, output_tokens: 10 } },
+    { id: "session-1", provider: "mistral", model: "mistral-large-2411", usage: { input_tokens: 300, output_tokens: 30 } },
+    { id: "session-1", provider: "mistral", model: "mistral-large-2411", usage: { input_tokens: 120, output_tokens: 12 } },
+  ])
+  const reusedIdReport = join(fixtureRoot, "reused-id-report.md")
+  const reusedIdSummary = run([reusedIdProject, "--project-only", "--output", reusedIdReport])
+  // Line 2 supersedes line 1 (streaming snapshot growth); line 3 shares the id with
+  // unrelated counters and must stay a separate call: 300+120 input, 30+12 output.
+  assert.match(readFileSync(reusedIdReport, "utf8"), /\| Measured\/provider tokens \| 462 \|/)
+  assert.equal(reusedIdSummary.threads, 1)
+
+  const noIdProject = join(fixtureRoot, "no-id-project")
+  writeJsonl(join(noIdProject, "calls-export.jsonl"), [
+    { provider: "mistral", model: "mistral-large-2411", usage: { input_tokens: 55, output_tokens: 5 } },
+    { provider: "mistral", model: "mistral-large-2411", usage: { input_tokens: 55, output_tokens: 5 } },
+  ])
+  const noIdReport = join(fixtureRoot, "no-id-report.md")
+  run([noIdProject, "--project-only", "--output", noIdReport])
+  // Two identical no-id records are two distinct calls, never one.
+  assert.match(readFileSync(noIdReport, "utf8"), /\| Measured\/provider tokens \| 120 \|/)
+
+  const malformedProject = join(fixtureRoot, "malformed-project")
+  mkdirSync(malformedProject, { recursive: true })
+  writeFileSync(join(malformedProject, "usage.jsonl"), [
+    JSON.stringify({ id: "ok-1", provider: "mistral", model: "mistral-large-2411", usage: { input_tokens: 10, output_tokens: 1 } }),
+    "{ this line is not JSON",
+    "",
+  ].join("\n"))
+  const malformedReport = join(fixtureRoot, "malformed-report.md")
+  const malformedSummary = run([malformedProject, "--project-only", "--output", malformedReport])
+  assert.equal(malformedSummary.threads, 1)
+  assert.equal(malformedSummary.malformedRecords, 1)
+
+  const localDirProject = join(fixtureRoot, "local-dir-project")
+  writeJsonl(join(localDirProject, "local_data", "usage.jsonl"), [
+    { timestamp: "2026-07-18T10:00:00.000Z", sessionId: "plain-session", message: { id: "plain-1", model: "claude-sonnet-4-6", usage: { input_tokens: 100, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 10 } } },
+  ])
+  const localDirReport = join(fixtureRoot, "local-dir-report.md")
+  const localDirSummary = run([localDirProject, "--project-only", "--output", localDirReport])
+  // A project directory named local_* is not a Cowork session store.
+  assert.equal(localDirSummary.threads, 1)
+  assert.equal(localDirSummary.coworkSessions, 0)
+  const localDirMarkdown = readFileSync(localDirReport, "utf8")
+  assert.doesNotMatch(localDirMarkdown, /cowork-session\//)
+  assert.doesNotMatch(localDirMarkdown, /session with no selected folder/)
 } finally {
   rmSync(fixtureRoot, { recursive: true, force: true })
 }

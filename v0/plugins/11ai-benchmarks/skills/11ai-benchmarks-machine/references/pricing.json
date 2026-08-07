@@ -1,7 +1,7 @@
 {
   "version": 3,
-  "updatedAt": "2026-08-04",
-  "detectedAt": "2026-07-21T14:12:15Z",
+  "updatedAt": "2026-08-07",
+  "detectedAt": "2026-08-07T10:30:00Z",
   "comment": "Rates are standard, real-time USD prices per 1M text tokens. Cached input is a subset of input; Anthropic input, cache writes, and cache reads are disjoint. Long-context, batch, priority, regional, tool, request, storage, media, subscription, enterprise, and negotiated charges are excluded unless a note says otherwise.",
   "models": [
     {
@@ -19,7 +19,7 @@
       },
       "effectiveDate": "2026-06-24",
       "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "verifiedAt": "2026-07-21"
+      "verifiedAt": "2026-08-07"
     },
     {
       "match": [
@@ -36,7 +36,7 @@
       "effectiveDate": "2026-07-24",
       "detectedAt": "2026-07-26T12:33:31Z",
       "sourceUrl": "https://platform.claude.com/docs/en/release-notes/overview",
-      "verifiedAt": "2026-07-26",
+      "verifiedAt": "2026-08-07",
       "notes": "Standard Claude API rates. Fast mode, batch processing, and platform-specific pricing are excluded because current report inputs do not attribute those request classes."
     },
     {
@@ -56,7 +56,7 @@
       },
       "effectiveDate": "2026-06-24",
       "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "verifiedAt": "2026-07-21"
+      "verifiedAt": "2026-08-07"
     },
     {
       "match": [
@@ -74,7 +74,7 @@
           },
           "effectiveDate": "2026-06-30",
           "sourceUrl": "https://platform.claude.com/docs/en/release-notes/overview",
-          "verifiedAt": "2026-07-21",
+          "verifiedAt": "2026-08-07",
           "changeType": "temporary-discount",
           "notes": "Published introductory pricing through 2026-08-31."
         },
@@ -88,7 +88,7 @@
           },
           "effectiveDate": "2026-09-01",
           "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
-          "verifiedAt": "2026-07-21",
+          "verifiedAt": "2026-08-07",
           "changeType": "promotion-successor",
           "notes": "Published successor rates after the introductory pricing period."
         }
@@ -109,7 +109,7 @@
       },
       "effectiveDate": "2026-06-24",
       "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "verifiedAt": "2026-07-21"
+      "verifiedAt": "2026-08-07"
     },
     {
       "match": [
@@ -125,7 +125,7 @@
       },
       "effectiveDate": "2026-06-24",
       "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "verifiedAt": "2026-07-21"
+      "verifiedAt": "2026-08-07"
     },
     {
       "match": [
@@ -139,7 +139,7 @@
       },
       "effectiveDate": "2026-07-09",
       "sourceUrl": "https://developers.openai.com/api/docs/pricing",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Standard-context rates. Prompts over 272K input tokens use published long-context rates; cache-write charges are not represented by current harness token records."
     },
     {
@@ -147,30 +147,60 @@
         "gpt-5.6-terra*"
       ],
       "provider": "openai",
-      "per1M": {
-        "input": 2.5,
-        "cachedInput": 0.25,
-        "output": 15
-      },
-      "effectiveDate": "2026-07-09",
-      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
-      "verifiedAt": "2026-07-21",
-      "notes": "Standard-context rates. Prompts over 272K input tokens use published long-context rates; cache-write charges are not represented by current harness token records."
+      "rates": [
+        {
+          "per1M": {
+            "input": 2.5,
+            "cachedInput": 0.25,
+            "output": 15
+          },
+          "effectiveDate": "2026-07-09",
+          "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+          "verifiedAt": "2026-08-07"
+        },
+        {
+          "per1M": {
+            "input": 2,
+            "cachedInput": 0.2,
+            "output": 12
+          },
+          "detectedAt": "2026-08-07T10:30:00Z",
+          "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+          "verifiedAt": "2026-08-07",
+          "changeType": "permanent-change",
+          "notes": "Provider price cut observed after the previous verification; no official effective date published, attributed from detection time."
+        }
+      ]
     },
     {
       "match": [
         "gpt-5.6-luna*"
       ],
       "provider": "openai",
-      "per1M": {
-        "input": 1,
-        "cachedInput": 0.1,
-        "output": 6
-      },
-      "effectiveDate": "2026-07-09",
-      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
-      "verifiedAt": "2026-07-21",
-      "notes": "Standard-context rates. Prompts over 272K input tokens use published long-context rates; cache-write charges are not represented by current harness token records."
+      "rates": [
+        {
+          "per1M": {
+            "input": 1,
+            "cachedInput": 0.1,
+            "output": 6
+          },
+          "effectiveDate": "2026-07-09",
+          "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+          "verifiedAt": "2026-08-07"
+        },
+        {
+          "per1M": {
+            "input": 0.2,
+            "cachedInput": 0.02,
+            "output": 1.2
+          },
+          "detectedAt": "2026-08-07T10:30:00Z",
+          "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+          "verifiedAt": "2026-08-07",
+          "changeType": "permanent-change",
+          "notes": "Provider price cut observed after the previous verification; no official effective date published, attributed from detection time."
+        }
+      ]
     },
     {
       "match": [
@@ -184,7 +214,7 @@
       },
       "effectiveDate": "2026-04-24",
       "sourceUrl": "https://openai.com/index/introducing-gpt-5-5/",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Standard-context rates. Prompts over 272K input tokens use published long-context rates."
     },
     {
@@ -199,7 +229,7 @@
       },
       "effectiveDate": "2026-04-24",
       "sourceUrl": "https://openai.com/index/introducing-gpt-5-5/",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Standard-context rates. Prompts over 272K input tokens use published long-context rates."
     },
     {
@@ -214,7 +244,7 @@
       },
       "effectiveDate": "2026-03-17",
       "sourceUrl": "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/",
-      "verifiedAt": "2026-07-21"
+      "verifiedAt": "2026-08-07"
     },
     {
       "match": [
@@ -228,7 +258,22 @@
       },
       "effectiveDate": "2026-03-17",
       "sourceUrl": "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/",
-      "verifiedAt": "2026-07-21"
+      "verifiedAt": "2026-08-07"
+    },
+    {
+      "match": [
+        "gpt-5.4-pro*"
+      ],
+      "provider": "openai",
+      "per1M": {
+        "input": 30,
+        "cachedInput": null,
+        "output": 180
+      },
+      "effectiveDate": "2026-08-07",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-08-07",
+      "notes": "Pro tier publishes no cached-input rate. Listed before the gpt-5.4 wildcard so the sibling cannot swallow it."
     },
     {
       "match": [
@@ -242,8 +287,154 @@
       },
       "effectiveDate": "2026-03-05",
       "sourceUrl": "https://openai.com/index/introducing-gpt-5-4/",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Standard-context rates. Prompts over 272K input tokens use published long-context rates."
+    },
+    {
+      "match": [
+        "gpt-5.3-codex*"
+      ],
+      "provider": "openai",
+      "per1M": {
+        "input": 1.75,
+        "cachedInput": 0.175,
+        "output": 14
+      },
+      "effectiveDate": "2026-08-07",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-08-07"
+    },
+    {
+      "match": [
+        "gpt-5.2-pro*"
+      ],
+      "provider": "openai",
+      "per1M": {
+        "input": 21,
+        "cachedInput": null,
+        "output": 168
+      },
+      "effectiveDate": "2026-08-07",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-08-07",
+      "notes": "Pro tier publishes no cached-input rate."
+    },
+    {
+      "match": [
+        "gpt-5.2*"
+      ],
+      "provider": "openai",
+      "per1M": {
+        "input": 1.75,
+        "cachedInput": 0.175,
+        "output": 14
+      },
+      "effectiveDate": "2026-08-07",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-08-07"
+    },
+    {
+      "match": [
+        "gpt-5.1*"
+      ],
+      "provider": "openai",
+      "per1M": {
+        "input": 1.25,
+        "cachedInput": 0.125,
+        "output": 10
+      },
+      "effectiveDate": "2026-08-07",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-08-07"
+    },
+    {
+      "match": [
+        "gpt-5-pro*"
+      ],
+      "provider": "openai",
+      "per1M": {
+        "input": 15,
+        "cachedInput": null,
+        "output": 120
+      },
+      "effectiveDate": "2026-08-07",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-08-07",
+      "notes": "Pro tier publishes no cached-input rate."
+    },
+    {
+      "match": [
+        "gpt-5-mini*"
+      ],
+      "provider": "openai",
+      "per1M": {
+        "input": 0.25,
+        "cachedInput": 0.025,
+        "output": 2
+      },
+      "effectiveDate": "2026-08-07",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-08-07"
+    },
+    {
+      "match": [
+        "gpt-5-nano*"
+      ],
+      "provider": "openai",
+      "per1M": {
+        "input": 0.05,
+        "cachedInput": 0.005,
+        "output": 0.4
+      },
+      "effectiveDate": "2026-08-07",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-08-07"
+    },
+    {
+      "match": [
+        "gpt-5",
+        "gpt-5-20*"
+      ],
+      "provider": "openai",
+      "per1M": {
+        "input": 1.25,
+        "cachedInput": 0.125,
+        "output": 10
+      },
+      "effectiveDate": "2026-08-07",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "verifiedAt": "2026-08-07",
+      "notes": "Base gpt-5 and its dated snapshots only; deliberately not gpt-5* so future families cannot be swallowed by a wildcard."
+    },
+    {
+      "match": [
+        "gemini-3.5-flash-lite*"
+      ],
+      "provider": "google",
+      "per1M": {
+        "input": 0.3,
+        "cachedInput": 0.03,
+        "output": 2.5
+      },
+      "effectiveDate": "2026-08-07",
+      "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
+      "verifiedAt": "2026-08-07",
+      "notes": "Listed before the gemini-3.5-flash wildcard so the sibling cannot swallow it. Context-cache storage per hour excluded."
+    },
+    {
+      "match": [
+        "gemini-3.6-flash*"
+      ],
+      "provider": "google",
+      "per1M": {
+        "input": 1.5,
+        "cachedInput": 0.15,
+        "output": 7.5
+      },
+      "effectiveDate": "2026-08-07",
+      "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
+      "verifiedAt": "2026-08-07",
+      "notes": "Context-cache storage per hour excluded."
     },
     {
       "match": [
@@ -257,7 +448,7 @@
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Text/image/video input rate; audio input, cache storage, grounding, and tool charges are excluded."
     },
     {
@@ -272,7 +463,7 @@
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Text/image/video input rate; audio input, cache storage, grounding, and tool charges are excluded."
     },
     {
@@ -287,7 +478,7 @@
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Standard rate for prompts up to 200K tokens. Published long-context rates, audio input, cache storage, grounding, and tool charges are excluded."
     },
     {
@@ -302,7 +493,7 @@
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Text/image/video input rate; audio input, cache storage, grounding, and tool charges are excluded."
     },
     {
@@ -317,7 +508,7 @@
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Standard rate for prompts up to 200K tokens. Published long-context rates, audio input, cache storage, grounding, and tool charges are excluded."
     },
     {
@@ -332,7 +523,7 @@
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Text/image/video input rate; audio input, cache storage, grounding, and tool charges are excluded."
     },
     {
@@ -347,7 +538,7 @@
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Text/image/video input rate; audio input, cache storage, grounding, and tool charges are excluded."
     },
     {
@@ -362,7 +553,7 @@
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://docs.x.ai/developers/pricing",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Short-context rate. Requests exceeding 200K prompt tokens use the published long-context rates."
     },
     {
@@ -377,7 +568,7 @@
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://docs.x.ai/developers/pricing",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Short-context rate. Requests exceeding 200K prompt tokens use the published long-context rates."
     },
     {
@@ -394,7 +585,7 @@
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://docs.x.ai/developers/pricing",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Short-context rate. Requests exceeding 200K prompt tokens use the published long-context rates; batch discounts and tool charges are excluded."
     },
     {
@@ -409,7 +600,8 @@
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing",
-      "verifiedAt": "2026-07-21"
+      "verifiedAt": "2026-08-07",
+      "notes": "Provider has pre-announced a price increase on its pricing page; re-verify before relying on these rates."
     },
     {
       "match": [
@@ -423,7 +615,8 @@
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing",
-      "verifiedAt": "2026-07-21"
+      "verifiedAt": "2026-08-07",
+      "notes": "Provider has pre-announced a price increase on its pricing page; re-verify before relying on these rates."
     },
     {
       "match": [
@@ -432,12 +625,13 @@
       "provider": "mistral",
       "per1M": {
         "input": 0.5,
-        "cachedInput": null,
+        "cachedInput": 0.05,
         "output": 1.5
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://mistral.ai/pricing/api/",
-      "verifiedAt": "2026-07-21"
+      "verifiedAt": "2026-08-07",
+      "notes": "Cached input derived from the provider's published flat -90% cached-input discount; no per-model cached price is itemized."
     },
     {
       "match": [
@@ -446,12 +640,13 @@
       "provider": "mistral",
       "per1M": {
         "input": 0.15,
-        "cachedInput": null,
+        "cachedInput": 0.015,
         "output": 0.6
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://mistral.ai/pricing/api/",
-      "verifiedAt": "2026-07-21"
+      "verifiedAt": "2026-08-07",
+      "notes": "Cached input derived from the provider's published flat -90% cached-input discount; no per-model cached price is itemized."
     },
     {
       "match": [
@@ -460,12 +655,13 @@
       "provider": "mistral",
       "per1M": {
         "input": 0.4,
-        "cachedInput": null,
+        "cachedInput": 0.04,
         "output": 2
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://mistral.ai/pricing/api/",
-      "verifiedAt": "2026-07-21"
+      "verifiedAt": "2026-08-07",
+      "notes": "Cached input derived from the provider's published flat -90% cached-input discount; no per-model cached price is itemized."
     },
     {
       "match": [
@@ -474,12 +670,13 @@
       "provider": "mistral",
       "per1M": {
         "input": 0.1,
-        "cachedInput": null,
+        "cachedInput": 0.01,
         "output": 0.3
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://mistral.ai/pricing/api/",
-      "verifiedAt": "2026-07-21"
+      "verifiedAt": "2026-08-07",
+      "notes": "Cached input derived from the provider's published flat -90% cached-input discount; no per-model cached price is itemized."
     },
     {
       "match": [
@@ -488,12 +685,13 @@
       "provider": "mistral",
       "per1M": {
         "input": 0.3,
-        "cachedInput": null,
+        "cachedInput": 0.03,
         "output": 0.9
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://mistral.ai/pricing/api/",
-      "verifiedAt": "2026-07-21"
+      "verifiedAt": "2026-08-07",
+      "notes": "Cached input derived from the provider's published flat -90% cached-input discount; no per-model cached price is itemized."
     },
     {
       "match": [
@@ -507,7 +705,8 @@
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://docs.cohere.com/docs/command-a",
-      "verifiedAt": "2026-07-21"
+      "verifiedAt": "2026-07-21",
+      "notes": "Provider no longer publishes per-token list prices; cohere.com/pricing routes to enterprise quotes. Rates kept from the last public verification and cannot currently be re-verified from an official page."
     },
     {
       "match": [
@@ -521,7 +720,7 @@
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://docs.perplexity.ai/docs/getting-started/pricing",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Token rates only; request and search charges are excluded."
     },
     {
@@ -536,7 +735,7 @@
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://docs.perplexity.ai/docs/getting-started/pricing",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Token rates only; request and search charges are excluded."
     },
     {
@@ -551,7 +750,7 @@
       },
       "effectiveDate": "2026-07-21",
       "sourceUrl": "https://docs.perplexity.ai/docs/getting-started/pricing",
-      "verifiedAt": "2026-07-21",
+      "verifiedAt": "2026-08-07",
       "notes": "Token rates only; request and search charges are excluded."
     }
   ]

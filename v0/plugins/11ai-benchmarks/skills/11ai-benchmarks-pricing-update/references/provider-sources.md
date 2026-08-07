@@ -8,9 +8,9 @@ Use these primary pages as the starting point. Re-open them on every refresh bec
 | `openai` | <https://developers.openai.com/api/docs/pricing> | Use standard processing rates. Long-context, cache-write, batch, flex, and priority rates require separately attributable usage. |
 | `google` | <https://ai.google.dev/gemini-api/docs/pricing> | Prefer text/image/video input when one row separates audio. Note context tiers, cache storage, grounding, and tool charges. |
 | `xai` | <https://docs.x.ai/developers/pricing> | Use short-context text rates. Note the per-request long-context threshold, batch discounts, regional differences, and tool charges. |
-| `deepseek` | <https://api-docs.deepseek.com/quick_start/pricing> | Map cache-hit to `cachedInput` and cache-miss to `input`. |
-| `mistral` | <https://mistral.ai/pricing/api/> | Use serverless API text-token rates, not self-deployment or fine-tuning prices. |
-| `cohere` | <https://docs.cohere.com/docs/command-a> | Verify the exact dated model ID. Do not assign paid rates to free-preview or Model Vault-only variants without a published price. |
+| `deepseek` | <https://api-docs.deepseek.com/quick_start/pricing> | Map cache-hit to `cachedInput` and cache-miss to `input`. The provider has pre-announced a price increase; check for it on every refresh. |
+| `mistral` | <https://mistral.ai/pricing/api/> | Use serverless API text-token rates, not self-deployment or fine-tuning prices. Cached input is published as a flat -90% discount, not per-model prices. |
+| `cohere` | <https://cohere.com/pricing> | The provider no longer publishes per-token list prices; the pricing page routes to enterprise quotes. Keep the last publicly verified rates with a note, and do not invent a source. |
 | `perplexity` | <https://docs.perplexity.ai/docs/getting-started/pricing> | Token prices may be only one component; disclose request, search, and citation-related charges that the reports cannot derive. |
 
 ## Catalog schema

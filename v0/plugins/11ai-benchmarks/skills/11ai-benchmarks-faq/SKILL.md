@@ -59,8 +59,9 @@ tier on the ground-truth ladder.
 | What does the project skill promise end to end? | `../11ai-benchmarks-project/SKILL.md` | "## Contract" | contract |
 | What does the single-thread skill promise end to end? | `../11ai-benchmarks-single-thread/SKILL.md` | "## Contract" | contract |
 | What does the pricing-update skill actually do? | `../11ai-benchmarks-pricing-update/SKILL.md` | "## Workflow" | contract |
-| How do I run the machine-wide analyzer and which flags exist? | `../11ai-benchmarks-machine/SKILL.md` | "## Workflow" | contract |
+| How do I run the machine-wide analyzer and which flags exist? | `../11ai-benchmarks-machine/SKILL.md` | "## Contract" | contract |
 | How do I select one exact thread to analyze? | `../11ai-benchmarks-single-thread/SKILL.md` | "## Workflow" | contract |
+| How do I include exported usage from an unsupported harness? | `../11ai-benchmarks-machine/SKILL.md` | "--include" | contract |
 | What checks must pass before a run counts as complete? | `../11ai-benchmarks-machine/SKILL.md` | "## Completion checks" | contract |
 
 ### Harness coverage and classification
@@ -95,6 +96,7 @@ tier on the ground-truth ladder.
 | Is a specific model priced in the bundled catalog right now? | `../11ai-benchmarks-pricing-update/references/pricing.json` | - | reference |
 | How are the three bundled catalog copies kept identical? | `../11ai-benchmarks-pricing-update/scripts/sync-pricing-catalog.mjs` | - | behavior |
 | Who is allowed to change the bundled catalogs? | `../11ai-benchmarks-pricing-update/SKILL.md` | "## Catalog ownership" | contract |
+| Why does the report not match my invoice or subscription bill? | `../11ai-benchmarks-machine/SKILL.md` | "API-equivalent estimate" | contract |
 
 ### Timing
 

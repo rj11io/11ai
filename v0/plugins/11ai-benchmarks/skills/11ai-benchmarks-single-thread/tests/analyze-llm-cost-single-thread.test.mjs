@@ -91,7 +91,7 @@ try {
   assert.match(markdown, /^# Single-Thread LLM Cost Report\n\n_powered by \[11ai-benchmarks-single-thread\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-single-thread\)\._\n\n/)
   assert.match(markdown, /^# Single-Thread LLM Cost Report$/m)
   assert.match(markdown, /^## Cost by model by effort$/m)
-  assert.match(markdown, /\| Pricing catalog \| bundled default \(version 3, updated 2026-08-04\) \|/)
+  assert.match(markdown, /\| Pricing catalog \| bundled default \(version 3, updated 2026-08-07\) \|/)
   assert.match(markdown, /^### Historical pricing selection$/m)
   assert.match(markdown, /\| Effective-period price \| \d+ \| Rate effective at the thread attribution timestamp \|/)
   assert.match(markdown, /\| Earliest available fallback \| \d+ \| Usage predates known history;/)

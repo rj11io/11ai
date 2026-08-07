@@ -19,18 +19,20 @@ This is the only skill allowed to research official prices and modify the bundle
    - explicit official effective dates when the provider publishes them, otherwise the first UTC detection timestamp;
    - detection and verification timestamps or dates;
    - material exclusions or tier rules in `notes`.
-4. Update the canonical catalog with `apply_patch`. Preserve every prior price period. Convert a compact single-rate model to ordered `rates` when its first change is observed, append the new period, and never overwrite the former rate. Keep specific match patterns before broader wildcards because matching is first-match-wins.
+4. Edit the canonical catalog file directly. Preserve every prior price period. Convert a compact single-rate model to ordered `rates` when its first change is observed, append the new period, and never overwrite the former rate. Keep specific match patterns before broader wildcards because matching is first-match-wins.
 5. Synchronize the three bundled report catalogs:
 
    ```bash
-   node scripts/sync-pricing-catalog.mjs --write
+   node 11ai-benchmarks-pricing-update/scripts/sync-pricing-catalog.mjs --write
    ```
 
 6. Validate catalog structure and synchronization:
 
    ```bash
-   node scripts/sync-pricing-catalog.mjs
+   node 11ai-benchmarks-pricing-update/scripts/sync-pricing-catalog.mjs
    ```
+
+   Both commands resolve the catalogs from the script's own location, so any working directory works. `--write` mutates the sibling report skills' bundled copies: run it in the source repository, not inside an installed plugin cache.
 
 7. Run all three report-skill test suites and validate this skill and the enclosing plugin.
 8. Summarize providers and rates changed, limitations retained, validation performed, and links to the official pages consulted.

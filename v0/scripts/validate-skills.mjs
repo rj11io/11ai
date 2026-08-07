@@ -461,6 +461,16 @@ function validateFaqSkills(plugins, pluginSkills) {
   }
 }
 
+function validateBenchmarksDrift() {
+  const script = path.join(root, "v0", "scripts", "check-benchmarks-drift.mjs")
+  const result = spawnSync(process.execPath, [script], { cwd: root, encoding: "utf8" })
+  if (result.status !== 0) {
+    for (const line of (result.stderr || result.stdout).trim().split("\n").filter(Boolean)) {
+      fail(script, line)
+    }
+  }
+}
+
 function validatePackageConfiguration() {
   const packageFile = path.join(root, "package.json")
   const packageJson = readJson(packageFile)
@@ -580,6 +590,7 @@ validateCodexPlugins(plugins, pluginSkills)
 validateCatalog(plugins, pluginSkills, inventorySkills)
 validateFaqSkills(plugins, pluginSkills)
 validatePackageConfiguration()
+validateBenchmarksDrift()
 
 const trackedArtifacts = spawnSync("git", ["ls-files", "-z"], { encoding: "utf8" })
   .stdout.split("\0")

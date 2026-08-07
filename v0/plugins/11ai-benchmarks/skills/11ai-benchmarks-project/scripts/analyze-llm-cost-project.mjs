@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { createHash } from "node:crypto"
-import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readSync, readdirSync, statSync, writeFileSync } from "node:fs"
+import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readSync, readdirSync, realpathSync, statSync, writeFileSync } from "node:fs"
 import { homedir } from "node:os"
 import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path"
 import { fileURLToPath } from "node:url"
@@ -15,7 +15,7 @@ const option = (name) => {
 }
 
 const VALUE_OPTIONS = new Set(["--output", "--codex-home", "--claude-home", "--claude-desktop-home", "--cowork-home", "--gemini-home", "--cline-tasks", "--roo-tasks", "--opencode-db", "--thread"])
-const FLAG_OPTIONS = new Set(["--project-only", "--single-thread-report", "--help"])
+const FLAG_OPTIONS = new Set(["--project-only", "--help"])
 let positional = null
 for (let index = 0; index < argv.length; index += 1) {
   const arg = argv[index]
@@ -37,13 +37,13 @@ if (argv.includes("--help")) {
 
 const threadRoot = resolve(process.cwd())
 const root = resolve(positional ?? threadRoot)
+// Gemini hashes its realpath'd cwd; tolerate a root passed through a symlink.
+const realRoot = (() => { try { return realpathSync(root) } catch { return root } })()
 const threadSelector = option("--thread")
-const singleThreadReport = argv.includes("--single-thread-report")
-if (singleThreadReport && !threadSelector) throw new Error("single-thread reports require --thread <id-or-source>")
 const generatedAt = new Date().toISOString()
 const filenameTimestamp = generatedAt.replaceAll(":", "-").replaceAll(".", "-")
-const reportSkillName = singleThreadReport ? "11ai-benchmarks-single-thread" : "11ai-benchmarks-project"
-const reportTitle = singleThreadReport ? "Single-Thread LLM Cost Report" : "Project LLM Cost Report"
+const reportSkillName = "11ai-benchmarks-project"
+const reportTitle = "Project LLM Cost Report"
 const reportName = `${reportSkillName}-${filenameTimestamp}`
 const reportsRootName = `${reportSkillName}-reports`
 const reportPackageName = `${reportsRootName}-${filenameTimestamp}`
@@ -144,7 +144,7 @@ function folderLabel(file, records = []) {
 function walk(dir, files = []) {
   let entries
   try { entries = readdirSync(dir, { withFileTypes: true }) } catch (error) {
-    discovery.limitations.push(`Directory could not be scanned: ${dir} (${error.message})`)
+    if (existsSync(dir)) discovery.limitations.push(`Directory could not be scanned: ${dir} (${error.message})`)
     return files
   }
   for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
@@ -170,8 +170,9 @@ function walkSessionFiles(dir, files = []) {
   }
   for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
     const file = join(dir, entry.name)
-    if (entry.isDirectory()) walkSessionFiles(file, files)
-    else if (entry.isFile() && SESSION_EXTENSIONS.has(extname(entry.name).toLowerCase())) files.push(file)
+    if (entry.isDirectory()) {
+      if (!SKIP_DIRS.has(entry.name)) walkSessionFiles(file, files)
+    } else if (entry.isFile() && SESSION_EXTENSIONS.has(extname(entry.name).toLowerCase())) files.push(file)
   }
   return files
 }
@@ -201,6 +202,9 @@ function nativeSessionMetadata(file) {
       id: firstValue(record?.sessionId, record?.session_id, record?.payload?.id, record?.payload?.session_id),
     }
   }
+  try {
+    if (statSync(file).size > 256 * 1024) discovery.limitations.push(`Session metadata not found within the first 256 KB: ${file}`)
+  } catch { /* unreadable files are reported by the callers that read them */ }
   return null
 }
 
@@ -220,6 +224,16 @@ function geminiSessionMetadata(file) {
   return null
 }
 
+function coworkRootCandidates() {
+  const explicit = option("--cowork-home")
+  if (explicit) return [resolve(explicit)]
+  return [
+    join(homedir(), "Library", "Application Support", "Claude", "local-agent-mode-sessions"),
+    join(homedir(), ".config", "Claude", "local-agent-mode-sessions"),
+    join(homedir(), "AppData", "Roaming", "Claude", "local-agent-mode-sessions"),
+  ]
+}
+
 function coworkSessionMetadata(file) {
   let sessionDir = dirname(file)
   for (let depth = 0; depth < 10; depth += 1) {
@@ -235,11 +249,24 @@ function coworkSessionMetadata(file) {
   const sessionId = firstValue(metadata.sessionId, basename(sessionDir))
   const transcript = relative(sessionDir, file).replaceAll("\\", "/")
   const subagentMatch = transcript.match(/(?:^|\/)subagents\/([^/]+)\.jsonl$/i)
-  return { id: sessionId, coworkSessionId: String(sessionId), coworkTranscriptRole: transcript === "audit.jsonl" ? "root" : subagentMatch ? "sub-agent" : "auxiliary", coworkSubagentId: subagentMatch?.[1] ?? null, title: typeof metadata.title === "string" ? metadata.title : null, cwd: directories.length === 1 ? directories[0] : null, directories, workspaceLabel: directories.length > 1 ? `multi-project session (${directories.length} folders)` : directories.length === 0 ? "session with no selected folder" : null }
+  return {
+    id: sessionId,
+    coworkSessionId: String(sessionId),
+    coworkTranscriptRole: transcript === "audit.jsonl" ? "root" : subagentMatch ? "sub-agent" : "auxiliary",
+    coworkSubagentId: subagentMatch?.[1] ?? null,
+    title: typeof metadata.title === "string" ? metadata.title : null,
+    cwd: directories.length === 1 ? directories[0] : null,
+    directories,
+    workspaceLabel: directories.length > 1 ? `multi-project session (${directories.length} folders)` : directories.length === 0 ? "session with no selected folder" : null,
+  }
 }
 
 function claudeDesktopRoots(userHome) {
-  return [join(userHome, "Library", "Application Support", "Claude", "claude-code-sessions"), join(userHome, ".config", "Claude", "claude-code-sessions"), join(userHome, "AppData", "Roaming", "Claude", "claude-code-sessions")]
+  return [
+    join(userHome, "Library", "Application Support", "Claude", "claude-code-sessions"),
+    join(userHome, ".config", "Claude", "claude-code-sessions"),
+    join(userHome, "AppData", "Roaming", "Claude", "claude-code-sessions"),
+  ]
 }
 
 function indexClaudeDesktopSessions(explicitRoot = null) {
@@ -272,8 +299,10 @@ function indexRemoteCoworkSessions(file) {
 }
 
 function enrichCoworkFiles(files) {
+  const coworkRoots = coworkRootCandidates()
   for (const file of files) {
     if (extname(file).toLowerCase() !== ".jsonl") continue
+    if (!coworkRoots.some((dir) => isWithin(dir, file))) continue
     const existing = externalSessions.get(resolve(file))
     if (existing?.harness && existing.harness !== "cowork") continue
     const metadata = coworkSessionMetadata(file)
@@ -320,21 +349,21 @@ function vscodeTaskRoots(userHome, extensionId) {
     join(userHome, "Library", "Application Support", "Code", "User", "globalStorage", extensionId, "tasks"),
     join(userHome, ".config", "Code", "User", "globalStorage", extensionId, "tasks"),
     join(userHome, ".vscode-server", "data", "User", "globalStorage", extensionId, "tasks"),
+    join(userHome, "AppData", "Roaming", "Code", "User", "globalStorage", extensionId, "tasks"),
   ]
 }
 
 function discoverNativeSessions() {
   if (argv.includes("--project-only")) return []
-  const explicitClaude = option("--claude-home") ?? process.env.CLAUDE_CONFIG_DIR ?? null
+  const explicitClaudeFlag = option("--claude-home")
+  const explicitClaude = explicitClaudeFlag ?? process.env.CLAUDE_CONFIG_DIR ?? null
   const explicitClaudeDesktop = option("--claude-desktop-home") ?? null
-  if (explicitClaudeDesktop || !explicitClaude) indexClaudeDesktopSessions(explicitClaudeDesktop)
+  // Only the CLI flag opts out of the desktop metadata join; the CLAUDE_CONFIG_DIR
+  // env var is a supported home override and must not disable an unrelated source.
+  if (explicitClaudeDesktop || !explicitClaudeFlag) indexClaudeDesktopSessions(explicitClaudeDesktop)
   const codexHome = resolve(option("--codex-home") ?? process.env.CODEX_HOME ?? join(homedir(), ".codex"))
   const claudeHome = resolve(explicitClaude ?? join(homedir(), ".claude"))
-  const coworkRoots = option("--cowork-home") ? [resolve(option("--cowork-home"))] : [
-    join(homedir(), "Library", "Application Support", "Claude", "local-agent-mode-sessions"),
-    join(homedir(), ".config", "Claude", "local-agent-mode-sessions"),
-    join(homedir(), "AppData", "Roaming", "Claude", "local-agent-mode-sessions"),
-  ]
+  const coworkRoots = coworkRootCandidates()
   const geminiHome = resolve(option("--gemini-home") ?? (process.env.GEMINI_CLI_HOME ? join(process.env.GEMINI_CLI_HOME, ".gemini") : join(homedir(), ".gemini")))
   const clineRoots = option("--cline-tasks")
     ? [resolve(option("--cline-tasks"))]
@@ -374,7 +403,7 @@ function discoverNativeSessions() {
             matches = Boolean(metadata && metadata.directories.some((directory) => isWithin(root, directory)))
           } else if (source.harness === "gemini") {
             metadata = geminiSessionMetadata(file)
-            matches = Boolean(metadata && (metadata.projectHash === sha(root) || metadata.directories.some((directory) => isWithin(root, directory))))
+            matches = Boolean(metadata && (metadata.projectHash === sha(root) || metadata.projectHash === sha(realRoot) || metadata.directories.some((directory) => isWithin(root, directory))))
             if (metadata && !metadata.cwd) metadata.cwd = root
           } else if (source.harness === "cline" || source.harness === "roo") {
             const cwd = taskWorkspace(file)
@@ -601,28 +630,16 @@ function normalizeUsage(usage, provider) {
     }
   }
 
-  if (provider === "openai") {
-    const inputTotal = input
-    const cachedInputRead = cached ?? 0
-    return {
-      inputTotal,
-      inputUncached: finite(input) ? input - cachedInputRead : null,
-      cachedInputRead,
-      cacheWrite5m: 0,
-      cacheWrite1h: 0,
-      outputTotal,
-      reasoningOutput: reasoning,
-      nonReasoningOutput: separateReasoning ? output : finite(output) && finite(reasoning) ? output - reasoning : null,
-      providerTotal: firstFinite(total, finite(input) && finite(outputTotal) ? input + outputTotal : null),
-    }
-  }
-
+  // Non-Anthropic counters treat cached tokens as a subset of input, and cache-write
+  // classes only exist on Anthropic-style counters (routed to the branch above), so
+  // OpenAI and generic providers share subset semantics with zero cache writes.
+  const cachedInputRead = cached ?? 0
   return {
     inputTotal: input,
-    inputUncached: input,
-    cachedInputRead: cached,
-    cacheWrite5m: cacheWrite5m ?? cacheWriteCombined,
-    cacheWrite1h,
+    inputUncached: finite(input) ? input - cachedInputRead : null,
+    cachedInputRead,
+    cacheWrite5m: 0,
+    cacheWrite1h: 0,
     outputTotal,
     reasoningOutput: reasoning,
     nonReasoningOutput: separateReasoning ? output : finite(output) && finite(reasoning) ? output - reasoning : null,
@@ -637,12 +654,8 @@ function addTokens(items) {
 
 function tokenIssues(tokens, reportedCostUsd) {
   const issues = []
-  for (const [name, value] of Object.entries(tokens)) {
-    if (finite(value) && value < 0) issues.push(`${name} is negative (${value})`)
-  }
-  if (finite(tokens.reasoningOutput) && finite(tokens.outputTotal) && tokens.reasoningOutput > tokens.outputTotal) {
-    issues.push(`reasoning output (${tokens.reasoningOutput}) exceeds total output (${tokens.outputTotal})`)
-  }
+  for (const [name, value] of Object.entries(tokens)) if (finite(value) && value < 0) issues.push(`${name} is negative (${value})`)
+  if (finite(tokens.reasoningOutput) && finite(tokens.outputTotal) && tokens.reasoningOutput > tokens.outputTotal) issues.push(`reasoning output (${tokens.reasoningOutput}) exceeds total output (${tokens.outputTotal})`)
   if (finite(reportedCostUsd) && reportedCostUsd < 0) issues.push(`reported cost is negative (${reportedCostUsd})`)
   return issues
 }
@@ -878,13 +891,26 @@ function parseClineFamily(file, records, harness) {
     const tokensOut = firstFinite(usage.tokensOut, 0)
     const cacheWrites = firstFinite(usage.cacheWrites, 0)
     const cacheReads = firstFinite(usage.cacheReads, 0)
+    // OpenAI-protocol tasks report cached tokens as a subset of prompt tokens;
+    // Anthropic-protocol buckets are disjoint.
+    const openaiCacheSemantics = String(usage.apiProtocol ?? "").toLowerCase() === "openai"
     entries.push({
       record: { ...record, timestamp: record.ts ?? record.timestamp },
       usage,
       model,
       provider,
       cost: firstFinite(usage.cost),
-      tokens: {
+      tokens: openaiCacheSemantics ? {
+        inputTotal: tokensIn,
+        inputUncached: tokensIn - cacheReads,
+        cachedInputRead: cacheReads,
+        cacheWrite5m: cacheWrites,
+        cacheWrite1h: 0,
+        outputTotal: tokensOut,
+        reasoningOutput: null,
+        nonReasoningOutput: tokensOut,
+        providerTotal: tokensIn + cacheWrites + tokensOut,
+      } : {
         inputTotal: tokensIn + cacheWrites + cacheReads,
         inputUncached: tokensIn,
         cachedInputRead: cacheReads,
@@ -981,16 +1007,48 @@ function opencodeDatabaseCandidates() {
   return files
 }
 
+function usageNumbers(usage, prefix = "", out = {}) {
+  for (const [key, value] of Object.entries(usage ?? {})) {
+    if (typeof value === "number") out[prefix + key] = value
+    else if (value && typeof value === "object" && !Array.isArray(value)) usageNumbers(value, `${prefix}${key}.`, out)
+  }
+  return out
+}
+
+function usageSupersedes(next, previous) {
+  const before = usageNumbers(previous)
+  const after = usageNumbers(next)
+  for (const key of new Set([...Object.keys(before), ...Object.keys(after)])) {
+    if ((after[key] ?? 0) < (before[key] ?? 0)) return false
+  }
+  return true
+}
+
 function parseGeneric(file, records, claudeDedup) {
   const byKey = new Map()
-  for (const record of records) {
+  for (const [recordIndex, record] of records.entries()) {
     if (claudeDedup.candidates.has(record) && !claudeDedup.retained.has(record)) continue
     const usage = usageObject(record)
     if (!usage) continue
     const model = modelFrom(record, usage)
-    const key = firstValue(record?.id, record?.message?.id) ?? sha(JSON.stringify({ model, usage }))
     const provider = providerFrom(record, usage, model)
-    byKey.set(key, { record, usage, model, provider })
+    const id = firstValue(record?.id, record?.message?.id)
+    if (id === null || id === undefined) {
+      // Records without ids are distinct calls even when their counters are identical.
+      byKey.set(`${sha(JSON.stringify({ model, usage }))}\u0000${recordIndex}`, { record, usage, model, provider })
+      continue
+    }
+    const key = `${id}\u0000${model ?? ""}`
+    const existing = byKey.get(key)
+    if (!existing) {
+      byKey.set(key, { record, usage, model, provider })
+    } else if (usageSupersedes(usage, existing.usage)) {
+      // Same id with counters that grew (or repeated exactly): a streaming snapshot; keep the latest.
+      byKey.set(key, { record, usage, model, provider })
+    } else {
+      // Same id with counters that did not grow: an export that reuses a session-level id per call; keep both.
+      byKey.set(`${key}\u0000${recordIndex}`, { record, usage, model, provider })
+    }
   }
   const entries = [...byKey.values()]
   if (!entries.length) return []
@@ -1089,8 +1147,8 @@ function rollup(items) {
     return values.some(finite) ? sumKnown(values) : null
   })
   const outputCostValues = items.map((item) => item.cost.outputUsd)
-  const wallValues = logical.map((group) => group.map((item) => item.wallTimeMs).find(finite) ?? null)
-  const activeValues = logical.map((group) => group.map((item) => item.activeTimeMs).find(finite) ?? null)
+  const wallValues = logical.map((group) => groupTiming(group).wallTimeMs)
+  const activeValues = logical.map((group) => groupTiming(group).activeTimeMs)
   return {
     threadCount: logical.length,
     knownTokenThreads: logical.filter((group) => group.some((item) => finite(item.tokens.providerTotal))).length,
@@ -1214,12 +1272,31 @@ function coworkCoverageLines(stats) {
   ]
 }
 
+function groupTiming(group) {
+  // Slices of one transcript share its timing window and must count once; distinct
+  // transcripts in a logical session (Cowork root plus sub-agents) time independently,
+  // so the session wall time is the span and the active time is the per-file sum.
+  const starts = group.map((item) => Date.parse(item.startedAt ?? "")).filter(Number.isFinite)
+  const finishes = group.map((item) => Date.parse(item.finishedAt ?? "")).filter(Number.isFinite)
+  const perFile = [...groupBy(group, (item) => item.sourceFile).values()].map((items) => ({
+    wallTimeMs: items.map((item) => item.wallTimeMs).filter(finite).reduce((max, value) => Math.max(max, value), -Infinity),
+    activeTimeMs: items.map((item) => item.activeTimeMs).filter(finite).reduce((max, value) => Math.max(max, value), -Infinity),
+  }))
+  const walls = perFile.map((file) => file.wallTimeMs).filter(finite)
+  const actives = perFile.map((file) => file.activeTimeMs).filter(finite)
+  return {
+    startedAt: starts.length ? new Date(Math.min(...starts)).toISOString() : group[0].startedAt ?? null,
+    finishedAt: finishes.length ? new Date(Math.max(...finishes)).toISOString() : group[0].finishedAt ?? null,
+    wallTimeMs: starts.length && finishes.length ? Math.max(...finishes) - Math.min(...starts) : walls.length ? Math.max(...walls) : null,
+    activeTimeMs: actives.length ? actives.reduce((sum, value) => sum + value, 0) : null,
+  }
+}
+
 function logicalThreadRows(items) {
   return [...groupBy(items, (item) => item.logicalThreadKey ?? item.threadId).values()].map((group) => {
     const first = group[0]
     const methods = new Set(group.map((item) => item.costMethod))
     const statuses = new Set(group.map((item) => item.pricingStatus))
-    const models = [...new Set(group.map((item) => `${item.provider} / ${item.model} / ${item.effort ?? "n/a"}`))]
     const pricingStatus = statuses.has("invalid") ? "invalid"
       : statuses.has("partial") || (statuses.has("unmatched") && statuses.size > 1) ? "partial"
         : statuses.has("unmatched") ? "unmatched"
@@ -1227,8 +1304,9 @@ function logicalThreadRows(items) {
             : statuses.has("matched-stale") ? "matched-stale" : "matched"
     return {
       ...first,
+      ...groupTiming(group),
       threadId: first.logicalThreadId ?? first.threadId,
-      modelLabel: models.join("; "),
+      modelLabel: [...new Set(group.map((item) => `${item.provider} / ${item.model} / ${item.effort ?? "n/a"}`))].join("; "),
       tokens: addTokens(group.map((item) => item.tokens)),
       cost: { totalUsd: sumNullable(group.map((item) => item.cost.totalUsd)) },
       reportedCostUsd: sumReported(group.map((item) => item.reportedCostUsd)),
@@ -1245,15 +1323,15 @@ function report({ threads, stats, malformed, duplicateIds }) {
   const reported = logicalRows.filter((thread) => thread.costMethod === "reported")
   const unknown = logicalRows.filter((thread) => !finite(thread.cost.totalUsd))
   const providers = [...groupBy(threads, (thread) => thread.provider).entries()]
-    .sort((a, b) => rollup(b[1]).costUsd - rollup(a[1]).costUsd)
+    .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1) || a[0].localeCompare(b[0]))
   const harnesses = [...groupBy(threads, (thread) => thread.harness).entries()]
-    .sort((a, b) => rollup(b[1]).costUsd - rollup(a[1]).costUsd)
+    .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1) || a[0].localeCompare(b[0]))
   const models = [...groupBy(threads, (thread) => `${thread.provider} / ${thread.model}`).entries()]
-    .sort((a, b) => rollup(b[1]).costUsd - rollup(a[1]).costUsd)
+    .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1) || a[0].localeCompare(b[0]))
   const modelEfforts = [...groupBy(threads, (thread) => `${thread.provider} / ${thread.model}\u0000${thread.effort ?? "n/a"}`).entries()]
     .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1) || a[0].localeCompare(b[0]))
   const folders = [...groupBy(threads, (thread) => thread.folder).entries()]
-    .sort((a, b) => rollup(b[1]).costUsd - rollup(a[1]).costUsd)
+    .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1) || a[0].localeCompare(b[0]))
   const sortedThreads = logicalRows.sort((a, b) => (b.cost.totalUsd ?? -1) - (a.cost.totalUsd ?? -1) || (b.tokens.providerTotal ?? -1) - (a.tokens.providerTotal ?? -1) || a.sourceFile.localeCompare(b.sourceFile))
   const inputTotal = sumAvailable(threads.map((thread) => thread.tokens.inputTotal))
   const cachedInput = sumAvailable(threads.map((thread) => thread.tokens.cachedInputRead))
@@ -1301,8 +1379,8 @@ function report({ threads, stats, malformed, duplicateIds }) {
     table(["Harness", ...COST_BY_HEADERS, "Measured Cowork sessions", "Sub-agent runs", "Reported-cost sum", "Average tokens / thread", "Priced", "Unpriced"], [...harnesses.map(([key, items]) => {
       const r = rollup(items)
       const cowork = coworkRunStats(items)
-      return [key, ...costByValues(items), fmtInt(cowork.sessions), fmtInt(cowork.subagents), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount ? r.tokens / r.threadCount : null), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
-    }), ["Total", ...costByValues(threads), fmtInt(coworkRunStats(threads).sessions), fmtInt(coworkRunStats(threads).subagents), fmtUsd(sumReported(threads.map((item) => item.reportedCostUsd))), fmtInt(total.threadCount ? total.tokens / total.threadCount : null), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
+      return [key, ...costByValues(items), fmtInt(cowork.sessions), fmtInt(cowork.subagents), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount && r.tokens !== null ? r.tokens / r.threadCount : null), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
+    }), ["Total", ...costByValues(threads), fmtInt(coworkRunStats(threads).sessions), fmtInt(coworkRunStats(threads).subagents), fmtUsd(sumReported(threads.map((item) => item.reportedCostUsd))), fmtInt(total.threadCount && total.tokens !== null ? total.tokens / total.threadCount : null), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
     "## Cost by model",
     "",

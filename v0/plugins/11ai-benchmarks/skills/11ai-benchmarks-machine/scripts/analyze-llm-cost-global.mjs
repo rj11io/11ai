@@ -3,7 +3,7 @@
 import { createHash } from "node:crypto"
 import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readSync, readdirSync, statSync, writeFileSync } from "node:fs"
 import { homedir } from "node:os"
-import { basename, dirname, extname, join, relative, resolve } from "node:path"
+import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path"
 import { fileURLToPath } from "node:url"
 import { HARNESS_SURFACE_COVERAGE, classifyThread, readOpenCodeUsageRows } from "./harness-support.mjs"
 import { pricingAgeDays, resolveHistoricalPrice } from "./pricing-history.mjs"
@@ -66,6 +66,7 @@ const includedFiles = new Map()
 const claudeDesktopSessions = new Map()
 const matchedClaudeDesktopSessions = new Set()
 const remoteCoworkSessions = new Map()
+const REPORT_SIGNATURE = "_LLM token cost analysis by [11ai-benchmarks-machine](https://ai.rj11.io/skills/11ai-benchmarks-machine)._"
 const discovery = { accountsConsidered: 0, nativeFilesConsidered: 0, codexSessions: 0, claudeSessions: 0, coworkSessions: 0, coworkLocalSessionsMeasured: 0, coworkRemoteSessionsDetected: 0, coworkRemoteSessionsMeasured: 0, coworkRemoteSessionsUnavailable: 0, coworkRemoteIndexFiles: 0, coworkTranscriptFiles: 0, coworkSubagentRuns: 0, claudeDesktopMetadataFiles: 0, geminiSessions: 0, clineSessions: 0, rooSessions: 0, opencodeSessions: 0, unreadableFiles: 0, limitations: [], scopeDescription: "" }
 const finite = (value) => typeof value === "number" && Number.isFinite(value)
 const number = (value) => {
@@ -131,7 +132,10 @@ function workspaceLabel(cwd, userHome = null) {
 
 function walk(dir, files = []) {
   let entries
-  try { entries = readdirSync(dir, { withFileTypes: true }) } catch { return files }
+  try { entries = readdirSync(dir, { withFileTypes: true }) } catch (error) {
+    if (existsSync(dir)) discovery.limitations.push(`Directory could not be scanned: ${dir} (${error.message})`)
+    return files
+  }
   for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
     if (entry.isDirectory() && SKIP_DIRS.has(entry.name)) continue
     const file = join(dir, entry.name)
@@ -144,13 +148,20 @@ function walk(dir, files = []) {
 function walkSessionFiles(dir, files = []) {
   try {
     if (!existsSync(dir) || !statSync(dir).isDirectory()) return files
-  } catch { return files }
+  } catch (error) {
+    discovery.limitations.push(`Native session directory could not be inspected: ${dir} (${error.message})`)
+    return files
+  }
   let entries
-  try { entries = readdirSync(dir, { withFileTypes: true }) } catch { return files }
+  try { entries = readdirSync(dir, { withFileTypes: true }) } catch (error) {
+    discovery.limitations.push(`Native session directory could not be scanned: ${dir} (${error.message})`)
+    return files
+  }
   for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
     const file = join(dir, entry.name)
-    if (entry.isDirectory()) walkSessionFiles(file, files)
-    else if (entry.isFile() && SESSION_EXTENSIONS.has(extname(entry.name).toLowerCase())) files.push(file)
+    if (entry.isDirectory()) {
+      if (!SKIP_DIRS.has(entry.name)) walkSessionFiles(file, files)
+    } else if (entry.isFile() && SESSION_EXTENSIONS.has(extname(entry.name).toLowerCase())) files.push(file)
   }
   return files
 }
@@ -180,6 +191,9 @@ function nativeSessionMetadata(file) {
       id: firstValue(record?.sessionId, record?.session_id, record?.payload?.id, record?.payload?.session_id),
     }
   }
+  try {
+    if (statSync(file).size > 256 * 1024) discovery.limitations.push(`Session metadata not found within the first 256 KB: ${file}`)
+  } catch { /* unreadable files are reported by the callers that read them */ }
   return null
 }
 
@@ -196,6 +210,25 @@ function geminiSessionMetadata(file) {
     }
   }
   return null
+}
+
+function isWithin(parent, child) {
+  const rel = relative(resolve(parent), resolve(child))
+  return rel === "" || (rel !== ".." && !rel.startsWith(`..${sep}`) && !isAbsolute(rel))
+}
+
+function coworkRootCandidates() {
+  const explicit = option("--cowork-home")
+  if (explicit) return [resolve(explicit)]
+  const roots = []
+  for (const userHome of conventionalUserHomes()) {
+    roots.push(
+      join(userHome, "Library", "Application Support", "Claude", "local-agent-mode-sessions"),
+      join(userHome, ".config", "Claude", "local-agent-mode-sessions"),
+      join(userHome, "AppData", "Roaming", "Claude", "local-agent-mode-sessions"),
+    )
+  }
+  return roots
 }
 
 function coworkSessionMetadata(file) {
@@ -269,8 +302,10 @@ function indexRemoteCoworkSessions(file, account) {
 }
 
 function enrichCoworkFiles(files) {
+  const coworkRoots = coworkRootCandidates()
   for (const file of files) {
     if (extname(file).toLowerCase() !== ".jsonl") continue
+    if (!coworkRoots.some((dir) => isWithin(dir, file))) continue
     const existing = externalSessions.get(resolve(file))
     if (existing?.harness && existing.harness !== "cowork") continue
     const metadata = coworkSessionMetadata(file)
@@ -316,7 +351,7 @@ function taskWorkspace(file) {
       const metadata = JSON.parse(readFileSync(metadataFile, "utf8"))
       const cwd = firstValue(metadata?.cwdOnTaskInitialization, metadata?.cwd, metadata?.workspace, metadata?.workspacePath)
       if (typeof cwd === "string") return resolve(cwd)
-    } catch { /* no-op */ }
+    } catch { /* ignored and reported only if the usage file is selected */ }
   }
   return null
 }
@@ -326,6 +361,7 @@ function vscodeTaskRoots(userHome, extensionId) {
     join(userHome, "Library", "Application Support", "Code", "User", "globalStorage", extensionId, "tasks"),
     join(userHome, ".config", "Code", "User", "globalStorage", extensionId, "tasks"),
     join(userHome, ".vscode-server", "data", "User", "globalStorage", extensionId, "tasks"),
+    join(userHome, "AppData", "Roaming", "Code", "User", "globalStorage", extensionId, "tasks"),
   ]
 }
 
@@ -342,7 +378,8 @@ function conventionalUserHomes() {
 
 function discoverNativeSessions() {
   const explicitCodex = option("--codex-home") ?? process.env.CODEX_HOME ?? null
-  const explicitClaude = option("--claude-home") ?? process.env.CLAUDE_CONFIG_DIR ?? null
+  const explicitClaudeFlag = option("--claude-home")
+  const explicitClaude = explicitClaudeFlag ?? process.env.CLAUDE_CONFIG_DIR ?? null
   const explicitClaudeDesktop = option("--claude-desktop-home") ?? null
   const explicitCowork = option("--cowork-home") ?? null
   const explicitGemini = option("--gemini-home") ?? (process.env.GEMINI_CLI_HOME ? join(process.env.GEMINI_CLI_HOME, ".gemini") : null)
@@ -354,7 +391,9 @@ function discoverNativeSessions() {
     ["Cline", explicitCline], ["Roo", explicitRoo], ["OpenCode", explicitOpenCode],
   ].map(([name, explicit]) => `${name}: ${explicit ? "explicit override" : "all readable conventional homes"}`).join("; ")
   const userHomes = conventionalUserHomes()
-  if (explicitClaudeDesktop || !explicitClaude) indexClaudeDesktopSessions(userHomes, explicitClaudeDesktop)
+  // Only the CLI flag opts out of the desktop metadata join; the CLAUDE_CONFIG_DIR
+  // env var is a supported home override and must not disable an unrelated source.
+  if (explicitClaudeDesktop || !explicitClaudeFlag) indexClaudeDesktopSessions(userHomes, explicitClaudeDesktop)
   const sources = []
   if (explicitCodex) {
     const home = resolve(explicitCodex)
@@ -666,28 +705,16 @@ function normalizeUsage(usage, provider) {
     }
   }
 
-  if (provider === "openai") {
-    const inputTotal = input
-    const cachedInputRead = cached ?? 0
-    return {
-      inputTotal,
-      inputUncached: finite(input) ? input - cachedInputRead : null,
-      cachedInputRead,
-      cacheWrite5m: 0,
-      cacheWrite1h: 0,
-      outputTotal,
-      reasoningOutput: reasoning,
-      nonReasoningOutput: separateReasoning ? output : finite(output) && finite(reasoning) ? output - reasoning : null,
-      providerTotal: firstFinite(total, finite(input) && finite(outputTotal) ? input + outputTotal : null),
-    }
-  }
-
+  // Non-Anthropic counters treat cached tokens as a subset of input, and cache-write
+  // classes only exist on Anthropic-style counters (routed to the branch above), so
+  // OpenAI and generic providers share subset semantics with zero cache writes.
+  const cachedInputRead = cached ?? 0
   return {
     inputTotal: input,
-    inputUncached: input,
-    cachedInputRead: cached,
-    cacheWrite5m: cacheWrite5m ?? cacheWriteCombined,
-    cacheWrite1h,
+    inputUncached: finite(input) ? input - cachedInputRead : null,
+    cachedInputRead,
+    cacheWrite5m: 0,
+    cacheWrite1h: 0,
     outputTotal,
     reasoningOutput: reasoning,
     nonReasoningOutput: separateReasoning ? output : finite(output) && finite(reasoning) ? output - reasoning : null,
@@ -934,9 +961,26 @@ function parseClineFamily(file, records, harness) {
     const tokensOut = firstFinite(usage.tokensOut, 0)
     const cacheWrites = firstFinite(usage.cacheWrites, 0)
     const cacheReads = firstFinite(usage.cacheReads, 0)
+    // OpenAI-protocol tasks report cached tokens as a subset of prompt tokens;
+    // Anthropic-protocol buckets are disjoint.
+    const openaiCacheSemantics = String(usage.apiProtocol ?? "").toLowerCase() === "openai"
     entries.push({
-      record: { ...record, timestamp: record.ts ?? record.timestamp }, usage, model, provider, cost: firstFinite(usage.cost),
-      tokens: {
+      record: { ...record, timestamp: record.ts ?? record.timestamp },
+      usage,
+      model,
+      provider,
+      cost: firstFinite(usage.cost),
+      tokens: openaiCacheSemantics ? {
+        inputTotal: tokensIn,
+        inputUncached: tokensIn - cacheReads,
+        cachedInputRead: cacheReads,
+        cacheWrite5m: cacheWrites,
+        cacheWrite1h: 0,
+        outputTotal: tokensOut,
+        reasoningOutput: null,
+        nonReasoningOutput: tokensOut,
+        providerTotal: tokensIn + cacheWrites + tokensOut,
+      } : {
         inputTotal: tokensIn + cacheWrites + cacheReads,
         inputUncached: tokensIn,
         cachedInputRead: cacheReads,
@@ -956,9 +1000,16 @@ function parseClineFamily(file, records, harness) {
   }
   const fullTiming = timingFrom(entries.map((entry) => entry.record))
   return [...groups.values()].map((group, index) => Object.assign(baseThread(
-    file, index, group[0].provider, harness, group[0].model,
-    addTokens(group.map((entry) => entry.tokens)), group.map((entry) => entry.record), group.map((entry) => entry.usage),
-    sumReported(group.map((entry) => entry.cost)), externalSessions.get(resolve(file))?.id,
+    file,
+    index,
+    group[0].provider,
+    harness,
+    group[0].model,
+    addTokens(group.map((entry) => entry.tokens)),
+    group.map((entry) => entry.record),
+    group.map((entry) => entry.usage),
+    sumReported(group.map((entry) => entry.cost)),
+    externalSessions.get(resolve(file))?.id,
   ), fullTiming))
 }
 
@@ -1022,16 +1073,48 @@ function opencodeDatabaseCandidates() {
   return candidates
 }
 
+function usageNumbers(usage, prefix = "", out = {}) {
+  for (const [key, value] of Object.entries(usage ?? {})) {
+    if (typeof value === "number") out[prefix + key] = value
+    else if (value && typeof value === "object" && !Array.isArray(value)) usageNumbers(value, `${prefix}${key}.`, out)
+  }
+  return out
+}
+
+function usageSupersedes(next, previous) {
+  const before = usageNumbers(previous)
+  const after = usageNumbers(next)
+  for (const key of new Set([...Object.keys(before), ...Object.keys(after)])) {
+    if ((after[key] ?? 0) < (before[key] ?? 0)) return false
+  }
+  return true
+}
+
 function parseGeneric(file, records, claudeDedup) {
   const byKey = new Map()
-  for (const record of records) {
+  for (const [recordIndex, record] of records.entries()) {
     if (claudeDedup.candidates.has(record) && !claudeDedup.retained.has(record)) continue
     const usage = usageObject(record)
     if (!usage) continue
     const model = modelFrom(record, usage)
-    const key = firstValue(record?.id, record?.message?.id) ?? sha(JSON.stringify({ model, usage }))
     const provider = providerFrom(record, usage, model)
-    byKey.set(key, { record, usage, model, provider })
+    const id = firstValue(record?.id, record?.message?.id)
+    if (id === null || id === undefined) {
+      // Records without ids are distinct calls even when their counters are identical.
+      byKey.set(`${sha(JSON.stringify({ model, usage }))}\u0000${recordIndex}`, { record, usage, model, provider })
+      continue
+    }
+    const key = `${id}\u0000${model ?? ""}`
+    const existing = byKey.get(key)
+    if (!existing) {
+      byKey.set(key, { record, usage, model, provider })
+    } else if (usageSupersedes(usage, existing.usage)) {
+      // Same id with counters that grew (or repeated exactly): a streaming snapshot; keep the latest.
+      byKey.set(key, { record, usage, model, provider })
+    } else {
+      // Same id with counters that did not grow: an export that reuses a session-level id per call; keep both.
+      byKey.set(`${key}\u0000${recordIndex}`, { record, usage, model, provider })
+    }
   }
   const entries = [...byKey.values()]
   if (!entries.length) return []
@@ -1130,8 +1213,8 @@ function rollup(items) {
     return values.some(finite) ? sumKnown(values) : null
   })
   const outputCostValues = items.map((item) => item.cost.outputUsd)
-  const wallValues = logical.map((group) => group.map((item) => item.wallTimeMs).find(finite) ?? null)
-  const activeValues = logical.map((group) => group.map((item) => item.activeTimeMs).find(finite) ?? null)
+  const wallValues = logical.map((group) => groupTiming(group).wallTimeMs)
+  const activeValues = logical.map((group) => groupTiming(group).activeTimeMs)
   return {
     threadCount: logical.length,
     knownTokenThreads: logical.filter((group) => group.some((item) => finite(item.tokens.providerTotal))).length,
@@ -1255,6 +1338,26 @@ function coworkCoverageLines(stats) {
   ]
 }
 
+function groupTiming(group) {
+  // Slices of one transcript share its timing window and must count once; distinct
+  // transcripts in a logical session (Cowork root plus sub-agents) time independently,
+  // so the session wall time is the span and the active time is the per-file sum.
+  const starts = group.map((item) => Date.parse(item.startedAt ?? "")).filter(Number.isFinite)
+  const finishes = group.map((item) => Date.parse(item.finishedAt ?? "")).filter(Number.isFinite)
+  const perFile = [...groupBy(group, (item) => item.sourceFile).values()].map((items) => ({
+    wallTimeMs: items.map((item) => item.wallTimeMs).filter(finite).reduce((max, value) => Math.max(max, value), -Infinity),
+    activeTimeMs: items.map((item) => item.activeTimeMs).filter(finite).reduce((max, value) => Math.max(max, value), -Infinity),
+  }))
+  const walls = perFile.map((file) => file.wallTimeMs).filter(finite)
+  const actives = perFile.map((file) => file.activeTimeMs).filter(finite)
+  return {
+    startedAt: starts.length ? new Date(Math.min(...starts)).toISOString() : group[0].startedAt ?? null,
+    finishedAt: finishes.length ? new Date(Math.max(...finishes)).toISOString() : group[0].finishedAt ?? null,
+    wallTimeMs: starts.length && finishes.length ? Math.max(...finishes) - Math.min(...starts) : walls.length ? Math.max(...walls) : null,
+    activeTimeMs: actives.length ? actives.reduce((sum, value) => sum + value, 0) : null,
+  }
+}
+
 function logicalThreadRows(items) {
   return [...groupBy(items, (item) => item.logicalThreadKey ?? item.threadId).values()].map((group) => {
     const first = group[0]
@@ -1267,6 +1370,7 @@ function logicalThreadRows(items) {
             : statuses.has("matched-stale") ? "matched-stale" : "matched"
     return {
       ...first,
+      ...groupTiming(group),
       threadId: first.logicalThreadId ?? first.threadId,
       modelLabel: [...new Set(group.map((item) => `${item.provider} / ${item.model} / ${item.effort ?? "n/a"}`))].join("; "),
       tokens: addTokens(group.map((item) => item.tokens)),
@@ -1387,15 +1491,15 @@ function windowSection(definition, threads, headingLevel = 2) {
   const reported = logicalRows.filter((thread) => thread.costMethod === "reported")
   const unknown = logicalRows.filter((thread) => !finite(thread.cost.totalUsd))
   const providers = [...groupBy(threads, (thread) => thread.provider).entries()]
-    .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1))
+    .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1) || a[0].localeCompare(b[0]))
   const harnesses = [...groupBy(threads, (thread) => thread.harness).entries()]
-    .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1))
+    .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1) || a[0].localeCompare(b[0]))
   const models = [...groupBy(threads, (thread) => `${thread.provider} / ${thread.model}`).entries()]
-    .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1))
+    .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1) || a[0].localeCompare(b[0]))
   const modelEfforts = [...groupBy(threads, (thread) => `${thread.provider} / ${thread.model}\u0000${thread.effort ?? "n/a"}`).entries()]
     .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1) || a[0].localeCompare(b[0]))
   const workspaces = [...groupBy(threads, (thread) => thread.folder).entries()]
-    .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1))
+    .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1) || a[0].localeCompare(b[0]))
   const sortedThreads = logicalRows.sort((a, b) => (b.cost.totalUsd ?? -1) - (a.cost.totalUsd ?? -1) || (b.tokens.providerTotal ?? -1) - (a.tokens.providerTotal ?? -1) || a.sourceFile.localeCompare(b.sourceFile))
   const inputTotal = sumAvailable(threads.map((thread) => thread.tokens.inputTotal))
   const cachedInput = sumAvailable(threads.map((thread) => thread.tokens.cachedInputRead))
@@ -1420,8 +1524,8 @@ function windowSection(definition, threads, headingLevel = 2) {
     noRows("No threads fall in this period.") ?? table(["Harness", ...COST_BY_HEADERS, "Measured Cowork sessions", "Sub-agent runs", "Reported-cost sum", "Average tokens / thread", "Priced", "Unpriced"], [...harnesses.map(([key, items]) => {
       const r = rollup(items)
       const cowork = coworkRunStats(items)
-      return [key, ...costByValues(items), fmtInt(cowork.sessions), fmtInt(cowork.subagents), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount ? r.tokens / r.threadCount : null), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
-    }), ["Total", ...costByValues(threads), fmtInt(coworkRunStats(threads).sessions), fmtInt(coworkRunStats(threads).subagents), fmtUsd(sumReported(threads.map((item) => item.reportedCostUsd))), fmtInt(total.threadCount ? total.tokens / total.threadCount : null), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
+      return [key, ...costByValues(items), fmtInt(cowork.sessions), fmtInt(cowork.subagents), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount && r.tokens !== null ? r.tokens / r.threadCount : null), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
+    }), ["Total", ...costByValues(threads), fmtInt(coworkRunStats(threads).sessions), fmtInt(coworkRunStats(threads).subagents), fmtUsd(sumReported(threads.map((item) => item.reportedCostUsd))), fmtInt(total.threadCount && total.tokens !== null ? total.tokens / total.threadCount : null), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
     `${subheading} Cost by model`,
     "",
@@ -1704,7 +1808,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "",
     `> Generated ${generatedAt} · Scope: ${stats.scopeDescription} · Prices are USD per 1M tokens unless noted`,
     "",
-    "_LLM token cost analysis by [11ai-benchmarks-machine](https://ai.rj11.io/skills/11ai-benchmarks-machine)._",
+    REPORT_SIGNATURE,
     "",
   ]
   return lines.join("\n")
@@ -1783,7 +1887,7 @@ function htmlReport(markdown) {
       index += 1
       continue
     }
-    const signature = line === "_LLM token cost analysis by [11ai-benchmarks-machine](https://ai.rj11.io/skills/11ai-benchmarks-machine)._"
+    const signature = line === REPORT_SIGNATURE
     if (line === reportPoweredBy) {
       index += 1
       continue

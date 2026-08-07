@@ -1,6 +1,6 @@
 ---
 name: 11ai-benchmarks-machine
-description: "Inspect all readable Codex, Claude Code, Claude Cowork, Gemini CLI, Cline, Roo Code, and OpenCode usage stores across the machine; detect unavailable remote Cowork sessions; classify harness surfaces and billing modes; normalize token counters; calculate attributable USD costs; measure wall and estimated active time; and write Markdown and standalone HTML reports. Use for global LLM spend, token usage, model and effort cost, AI timing, harness coverage, or cross-project analysis."
+description: "Inspect all readable Codex, Claude Code, Claude Cowork, Gemini CLI, Cline, Roo Code, and OpenCode usage stores across the machine, plus exported usage files or folders from unsupported harnesses included on request; detect unavailable remote Cowork sessions; classify harness surfaces and billing modes; normalize token counters; calculate attributable USD costs; measure wall and estimated active time; and write Markdown and standalone HTML reports. Use for global LLM spend, token usage, model and effort cost, thread timing, harness coverage, cross-project analysis, or machine-wide reports over exported usage."
 ---
 
 # 11ai Benchmarks Machine
@@ -68,10 +68,11 @@ Render these top-level report sections in this order:
 12. `Yearly reports`
 13. `All time`
 14. `Harness surface coverage`
-15. `Scan coverage`
-16. `Pricing coverage`
-17. `Anomalies and limitations`
-18. `Methodology`
+15. `Cowork coverage`
+16. `Scan coverage`
+17. `Pricing coverage`
+18. `Anomalies and limitations`
+19. `Methodology`
 
 Attribute a whole thread to its finish timestamp, falling back to its start timestamp. Include undated threads only in `All time` and flag them as limitations. Use the machine's local calendar boundaries for `Today`, month/quarter/year-to-date, and monthly/quarterly/yearly reports. Treat `Past 24 hours` and `Past 7/30/60/90 days` as rolling 24/168/720/1,440/2,160-hour windows ending at report generation time. Under each calendar archive, include one level-three subsection for every month, quarter, or year with dated activity, newest first, and render that period's totals and full breakdown as level-four subsections.
 

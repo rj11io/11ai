@@ -27,7 +27,7 @@ function findRate(pricing, provider, model) {
   }))
 }
 
-function currentRate(entry, at = "2026-08-04T00:00:00Z") {
+function currentRate(entry, at = "2026-08-07T00:00:00Z") {
   if (!Array.isArray(entry.rates)) return entry
   return entry.rates.filter((rate) => new Date(rate.effectiveDate ?? rate.detectedAt).getTime() <= new Date(at).getTime()).at(-1) ?? entry.rates[0]
 }

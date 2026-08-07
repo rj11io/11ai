@@ -72,7 +72,7 @@ The repository currently contains 461 skills in 47 plugins.
 | [Ant Design v6 operator](./v0/plugins/11ai-operator-antdesign-v6/README.md) | 12 | Ant Design 6 React setup, components, theming, integrations, first-party native skills, reference, and troubleshooting |
 | [AWS CLI v2 operator](./v0/plugins/11ai-operator-aws-cli-v2/README.md) | 22 | AWS CLI v2 operations for common services, deployments, first-party Agent Toolkit skills, integrations, and troubleshooting |
 | [Bash operator](./v0/plugins/11ai-operator-bash/README.md) | 10 | Shell inspection, strict-mode scripting, text processing, files, processes, linting, and troubleshooting |
-| [Benchmarks](./v0/plugins/11ai-benchmarks/README.md) | 5 | Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports, plus a FAQ over all of them |
+| [Benchmarks](./v0/plugins/11ai-benchmarks/README.md) | 5 | Single-thread, project-scoped, and machine-wide LLM cost, effort, and timing reports, provider-verified pricing maintenance, and a FAQ over all of them |
 | [Blog builder](./v0/plugins/11ai-blog-builder/README.md) | 8 | Building file-backed editorial blogs with composable CMS, author, Markdown, content, navigation, and UI skills |
 | [Cleanup](./v0/plugins/11ai-cleanup/README.md) | 5 | Safely finding and removing abandoned local resources |
 | [Clerk Core 3 operator](./v0/plugins/11ai-operator-clerk-core-3/README.md) | 11 | Clerk Core 3 setup, authentication, sessions, users, organizations, webhooks, native skills, and troubleshooting |

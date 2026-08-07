@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-benchmarks",
   "version": "1.32.0",
-  "description": "Single-thread, project-scoped, and machine-wide LLM cost reports with provider-verified pricing maintenance.",
+  "description": "Single-thread, project-scoped, and machine-wide LLM cost reports with provider-verified pricing maintenance and a routed FAQ.",
   "author": {
     "name": "rj11io",
     "email": "ricardojorgexyz@gmail.com"

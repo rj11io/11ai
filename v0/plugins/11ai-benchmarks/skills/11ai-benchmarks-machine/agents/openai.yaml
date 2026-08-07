@@ -1,4 +1,4 @@
 interface:
-  display_name: "11ai LLM Cost Global"
+  display_name: "11ai Benchmarks Machine"
   short_description: "Analyze global LLM cost, effort, and time"
   default_prompt: "Use $11ai-benchmarks-machine to analyze machine-wide LLM usage, harness surfaces, billing modes, cost by model and effort, wall time, and estimated active time, then create matching Markdown and HTML reports."

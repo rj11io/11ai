@@ -50,7 +50,7 @@ for (const target of reportResolvers) {
 if (divergent.length) {
   console.error("Catalogs are not synchronized:")
   for (const target of divergent) console.error("- " + target)
-  console.error("Run: node scripts/sync-pricing-catalog.mjs --write")
+  console.error("Run: node 11ai-benchmarks-pricing-update/scripts/sync-pricing-catalog.mjs --write")
   process.exit(1)
 }
 
@@ -91,7 +91,7 @@ function validateCatalog(value) {
       failures.push(label + ".per1M must be an object")
     } else {
       for (const required of ["input", "output"]) {
-        if (!Number.isFinite(rate.per1M[required]) || rate.per1M[required] < 0) failures.push(label + ".per1M." + required + " must be a non-negative number")
+        if (!Number.isFinite(rate.per1M[required]) || rate.per1M[required] <= 0) failures.push(label + ".per1M." + required + " must be a positive number")
       }
       for (const [name, amount] of Object.entries(rate.per1M)) {
         if (!supportedRates.has(name)) failures.push(label + ".per1M contains unsupported rate " + name)
