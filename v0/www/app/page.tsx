@@ -28,7 +28,7 @@ export default function Page() {
   const plugins = getPlugins()
   const skillCount = getSkillCount()
   const version = getPackageVersion()
-  const exampleSkill = getSkill("11ai-roast")
+  const exampleSkill = getSkill("11ai-pragmatic")
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
@@ -158,9 +158,9 @@ export default function Page() {
                   </span>
                 </p>
                 <p className="text-muted-foreground">---</p>
-                <p className="pt-1 font-semibold"># 11ai Roast</p>
+                <p className="pt-1 font-semibold"># 11ai Pragmatic</p>
                 <p className="text-muted-foreground">
-                  Blunt, prioritized, read-only critique of any work product…
+                  The short register. Reading speed beats polish…
                 </p>
                 <Link
                   href={`/skills/${exampleSkill.slug}`}
