@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-vercel-ai-sdk-v7",
-  "version": "1.32.0",
+  "version": "1.33.0",
   "description": "Modular, safety-first skills for Vercel AI SDK 7 operations.",
   "author": {
     "name": "rj11io"

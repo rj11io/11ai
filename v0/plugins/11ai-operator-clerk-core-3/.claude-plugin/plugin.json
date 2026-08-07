@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-operator-clerk-core-3",
-  "version": "1.32.0",
+  "version": "1.33.0",
   "description": "Modular, safety-first Clerk Core 3 skills for authentication, users, and native-skill compatibility.",
   "author": {
     "name": "rj11io"

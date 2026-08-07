@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-operator-convex",
-  "version": "1.32.0",
+  "version": "1.33.0",
   "description": "Modular, safety-first skills for common Convex backend and deployment operations.",
   "author": {
     "name": "rj11io"

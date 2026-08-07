@@ -1,7 +1,7 @@
 {
   "name": "11ai-benchmarks",
-  "version": "1.32.0",
-  "description": "Single-thread, project-scoped, and machine-wide LLM cost reports with provider-verified pricing maintenance and a routed FAQ.",
+  "version": "1.33.0",
+  "description": "Single-thread, project-scoped, and machine-wide LLM cost reports with provider-verified pricing maintenance.",
   "author": {
     "name": "rj11io"
   },
