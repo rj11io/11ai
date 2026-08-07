@@ -22,7 +22,11 @@
     "longDescription": "A modular toolbox for inspecting the SSH client, managing keys and host configuration, opening sessions, forwarding ports, transferring files, wiring SSH into Git and pipelines, and diagnosing connection failures.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": [],
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
     "websiteURL": "https://ai.rj11.io/plugins/operator-ssh",
     "defaultPrompt": "Help me use the 11ai-operator-ssh skills for this SSH task."
   }

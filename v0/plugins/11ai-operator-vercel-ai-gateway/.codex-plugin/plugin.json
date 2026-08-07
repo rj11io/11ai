@@ -22,7 +22,11 @@
     "longDescription": "A standalone toolbox for unified model access, model discovery, provider routing, fallbacks, authentication, BYOK, budgets, usage, observability, and security policy, including setup, focused operations, integrations, and troubleshooting.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": [],
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
     "websiteURL": "https://ai.rj11.io/plugins/operator-vercel-ai-gateway",
     "defaultPrompt": "Help me use the 11ai-operator-vercel-ai-gateway skills for this Vercel AI Gateway task."
   }

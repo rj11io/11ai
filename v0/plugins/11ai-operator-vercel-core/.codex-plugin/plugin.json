@@ -22,7 +22,11 @@
     "longDescription": "A standalone toolbox for Vercel security, content delivery, Fluid Compute, observability, CI/CD, setup, integrations, and troubleshooting.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": [],
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
     "websiteURL": "https://ai.rj11.io/plugins/operator-vercel-core",
     "defaultPrompt": "Help me use the 11ai-operator-vercel-core skills for this Vercel Core Platform task."
   }

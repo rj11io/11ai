@@ -22,7 +22,11 @@
     "longDescription": "A standalone toolbox for Vercel Passport provider applications, project and team protection, visitor identity, sessions, audits, integrations, and troubleshooting.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": [],
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
     "websiteURL": "https://ai.rj11.io/plugins/operator-vercel-passport",
     "defaultPrompt": "Help me use the 11ai-operator-vercel-passport skills for this Vercel Passport task."
   }

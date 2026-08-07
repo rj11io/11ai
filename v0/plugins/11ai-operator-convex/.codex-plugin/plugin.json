@@ -22,7 +22,11 @@
     "longDescription": "A modular toolbox for setting up a Convex project, defining schemas and indexes, writing queries, mutations, and actions, wiring authentication and file storage, managing deployments, and diagnosing failures.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": [],
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
     "websiteURL": "https://ai.rj11.io/plugins/operator-convex",
     "defaultPrompt": "Help me use the 11ai-operator-convex skills for this Convex task."
   }

@@ -45,6 +45,13 @@ semantic-release.
 
 ## Issues found in the snapshot (none broke the repo's own validation)
 
+Update 2026-08-07: items 1 through 4 and 6 below were fixed, and the validator now
+also checks `interface.developerName`, non-empty `interface.capabilities`, and
+Codex marketplace category agreement with each manifest's `interface.category`. A
+`renames` map was added to the Claude marketplace for the two folded plugins. Items
+5, 7, and the remaining headroom in item 8 were left as-is on purpose. The list is
+kept for history; re-verify against the working tree before citing any item.
+
 1. **Codex schema violation:** 29 of 47 `.codex-plugin/plugin.json` files declared
    `capabilities: []`, but the official Codex manifest schema requires at least one
    item (minItems 1). The repo validator did not check that field.

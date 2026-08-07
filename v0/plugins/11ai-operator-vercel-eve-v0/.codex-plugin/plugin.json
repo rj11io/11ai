@@ -22,7 +22,11 @@
     "longDescription": "A standalone eve 0.27 preview toolbox for filesystem-first durable agents, tools, sessions, subagents, approvals, channels, schedules, evals, and observability.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": [],
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
     "websiteURL": "https://ai.rj11.io/plugins/operator-vercel-eve-v0",
     "defaultPrompt": "Help me use the 11ai-operator-vercel-eve-v0 skills for this Vercel eve 0.27 task."
   }

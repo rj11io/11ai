@@ -22,7 +22,11 @@
     "longDescription": "A standalone TypeScript 7 native-compiler toolbox for configuration, type modeling, narrowing, generics, modules, declarations, migrations, and compiler-API compatibility.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": [],
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
     "websiteURL": "https://ai.rj11.io/plugins/operator-typescript-v7",
     "defaultPrompt": "Help me use the 11ai-operator-typescript-v7 skills for this TypeScript 7 task."
   }

@@ -24,7 +24,11 @@
     "longDescription": "A modular toolbox for inspecting Node.js API projects, running local servers, changing routes, validating input, handling errors, securing endpoints, calling upstream APIs, testing behavior, and diagnosing failures.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": [],
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
     "websiteURL": "https://ai.rj11.io/plugins/operator-nodejs-api-v24",
     "defaultPrompt": "Help me use the 11ai-operator-nodejs-api-v24 skills for this Node.js API task."
   }

@@ -22,7 +22,11 @@
     "longDescription": "A standalone Sandbox SDK 2 toolbox for persistent isolated compute, commands, files, current runtimes, VCR images, multi-user isolation, networking, exposure, limits, and cleanup.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": [],
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
     "websiteURL": "https://ai.rj11.io/plugins/operator-vercel-sandbox-v2",
     "defaultPrompt": "Help me use the 11ai-operator-vercel-sandbox-v2 skills for this Vercel Sandbox SDK 2 task."
   }

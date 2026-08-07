@@ -14,7 +14,7 @@ Install the collection from GitHub with the [skills CLI](https://skills.sh/docs/
 npx skills add rj11io/11ai --full-depth
 ```
 
-The CLI runs through `npx`, discovers the repository's skills, and configures the skills you select for your agent. `--full-depth` is required because this collection organizes skills into forty-eight workflow plugins instead of one top-level `skills/` directory.
+The CLI runs through `npx`, discovers the repository's skills, and configures the skills you select for your agent. `--full-depth` is required because this collection organizes skills into per-workflow plugins under `v0/plugins/` instead of one top-level `skills/` directory.
 
 The repository follows the open Agent Skills format. Every skill also includes Codex UI metadata in `agents/openai.yaml`, and every plugin is packaged for Claude Code. To add the Claude marketplace, run:
 

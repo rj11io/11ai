@@ -22,7 +22,11 @@
     "longDescription": "A standalone Chat SDK 4 toolbox for platform adapters, event handlers, messages, cards, AI tools, Vercel Connect, state, concurrency, webhooks, streaming, and deployment.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": [],
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
     "websiteURL": "https://ai.rj11.io/plugins/operator-vercel-chat-sdk-v4",
     "defaultPrompt": "Help me use the 11ai-operator-vercel-chat-sdk-v4 skills for this Vercel Chat SDK 4 task."
   }

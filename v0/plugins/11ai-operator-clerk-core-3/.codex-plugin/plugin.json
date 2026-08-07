@@ -22,7 +22,11 @@
     "longDescription": "A modular toolbox for setting up Clerk, wiring sign-in and sign-up flows, protecting routes with sessions, managing users and organizations, verifying webhooks, and diagnosing authentication failures.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": [],
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
     "websiteURL": "https://ai.rj11.io/plugins/operator-clerk-core-3",
     "defaultPrompt": "Help me use the 11ai-operator-clerk-core-3 skills for this Clerk task."
   }

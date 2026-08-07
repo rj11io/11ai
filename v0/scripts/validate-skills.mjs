@@ -215,22 +215,17 @@ function validateClaude(plugins, pluginSkills) {
     }
     if (manifest.skills !== "./skills/") {
       fail(manifestFile, "skills must point to the canonical './skills/' directory")
+    } else {
+      const base = path.resolve(path.dirname(manifestFile), "..", manifest.skills)
+      for (const skill of pluginSkills.get(plugin)) {
+        const relative = path.relative(base, skill.dir)
+        if (relative.startsWith("..") || path.isAbsolute(relative)) {
+          fail(manifestFile, `skills paths do not cover '${skill.name}'`)
+        }
+      }
     }
     if (!Array.isArray(manifest.keywords) || manifest.keywords.length === 0) {
       fail(manifestFile, "missing non-empty keywords")
-    }
-    const paths = Array.isArray(manifest.skills) ? manifest.skills : [manifest.skills]
-    if (paths.some((value) => typeof value !== "string" || !value.startsWith("./"))) {
-      fail(manifestFile, "skills must be a './'-relative string or array")
-    } else {
-      for (const skill of pluginSkills.get(plugin)) {
-        const covered = paths.some((value) => {
-          const base = path.resolve(path.dirname(manifestFile), "..", value)
-          const relative = path.relative(base, skill.dir)
-          return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative))
-        })
-        if (!covered) fail(manifestFile, `skills paths do not cover '${skill.name}'`)
-      }
     }
 
     const entry = entries.get(plugin)
@@ -289,6 +284,14 @@ function validateCodexPlugins(plugins, pluginSkills) {
     }
     if (manifest.skills !== "./skills/") {
       fail(manifestFile, "skills must point to the canonical './skills/' directory")
+    } else {
+      const base = path.resolve(path.dirname(manifestFile), "..", manifest.skills)
+      for (const skill of pluginSkills.get(plugin) || []) {
+        const relative = path.relative(base, skill.dir)
+        if (relative.startsWith("..") || path.isAbsolute(relative)) {
+          fail(manifestFile, `skills paths do not cover '${skill.name}'`)
+        }
+      }
     }
     if (!Array.isArray(manifest.keywords) || manifest.keywords.length === 0) {
       fail(manifestFile, "missing non-empty keywords")
@@ -304,7 +307,7 @@ function validateCodexPlugins(plugins, pluginSkills) {
     if (!ui || typeof ui !== "object") {
       fail(manifestFile, "missing interface block")
     } else {
-      for (const key of ["displayName", "shortDescription", "longDescription", "category"]) {
+      for (const key of ["displayName", "shortDescription", "longDescription", "developerName", "category"]) {
         if (typeof ui[key] !== "string" || !ui[key].trim()) {
           fail(manifestFile, `missing non-empty interface.${key}`)
         }
@@ -312,25 +315,23 @@ function validateCodexPlugins(plugins, pluginSkills) {
       if (typeof ui.websiteURL !== "string" || !ui.websiteURL.startsWith("https://")) {
         fail(manifestFile, "missing https interface.websiteURL")
       }
+      // Codex's plugin manifest schema requires capabilities with at least one item.
+      if (
+        !Array.isArray(ui.capabilities) ||
+        ui.capabilities.length === 0 ||
+        ui.capabilities.some((c) => typeof c !== "string" || !c.trim())
+      ) {
+        fail(manifestFile, "interface.capabilities must be a non-empty array of non-empty strings")
+      }
       const prompt = ui.defaultPrompt
       const promptOk =
         (typeof prompt === "string" && prompt.trim()) ||
         (Array.isArray(prompt) && prompt.length > 0 && prompt.every((p) => typeof p === "string" && p.trim()))
       if (!promptOk) fail(manifestFile, "missing non-empty interface.defaultPrompt")
-    }
-
-    const paths = Array.isArray(manifest.skills) ? manifest.skills : [manifest.skills]
-    if (paths.some((value) => typeof value !== "string" || !value.startsWith("./"))) {
-      fail(manifestFile, "skills must be a './'-relative string or array")
-      continue
-    }
-    for (const skill of pluginSkills.get(plugin) || []) {
-      const covered = paths.some((value) => {
-        const base = path.resolve(path.dirname(manifestFile), "..", value)
-        const relative = path.relative(base, skill.dir)
-        return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative))
-      })
-      if (!covered) fail(manifestFile, `skills paths do not cover '${skill.name}'`)
+      const entry = codexEntries.get(plugin)
+      if (entry && typeof ui.category === "string" && entry.category !== ui.category) {
+        fail(codexMarketplaceFile, `'${plugin}' category must match the manifest's interface.category '${ui.category}'`)
+      }
     }
   }
 }

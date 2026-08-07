@@ -22,7 +22,11 @@
     "longDescription": "A modular toolbox for inspecting the shell, writing strict-mode scripts, processing text, handling files and processes, linting and testing scripts, wiring them into pipelines, and diagnosing failures.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": [],
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
     "websiteURL": "https://ai.rj11.io/plugins/operator-bash",
     "defaultPrompt": "Help me use the 11ai-operator-bash skills for this shell task."
   }

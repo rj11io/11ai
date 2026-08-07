@@ -20,7 +20,11 @@
     "longDescription": "A modular toolbox for shadcn CLI v4 setup, components, charts, forms, data, blocks, registries, presets, themes, updates, migrations, integrations, native Agent Skills, and troubleshooting.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": [],
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
     "websiteURL": "https://ai.rj11.io/plugins/operator-shadcn-v4",
     "defaultPrompt": "Help me use the 11ai-operator-shadcn-v4 skills for this shadcn v4 task."
   }

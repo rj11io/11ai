@@ -22,7 +22,11 @@
     "longDescription": "A standalone Workflow SDK 4 toolbox for durable definitions, event-sourced runs, steps, retries, waits, approvals, encrypted payloads, versioning, and observability.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": [],
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
     "websiteURL": "https://ai.rj11.io/plugins/operator-vercel-workflows-v4",
     "defaultPrompt": "Help me use the 11ai-operator-vercel-workflows-v4 skills for this Vercel Workflow SDK 4 task."
   }

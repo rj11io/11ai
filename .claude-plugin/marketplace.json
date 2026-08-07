@@ -194,5 +194,8 @@
       "name": "11ai-operator-shadcn-v4",
       "source": "./v0/plugins/11ai-operator-shadcn-v4"
     }
-  ]
+  ],
+  "renames": {
+    "11ai-llm-costs": "11ai-benchmarks"
+  }
 }

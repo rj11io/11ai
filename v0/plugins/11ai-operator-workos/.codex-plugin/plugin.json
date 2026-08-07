@@ -22,7 +22,11 @@
     "longDescription": "A modular toolbox for setting up a WorkOS environment, wiring AuthKit sessions, configuring enterprise single sign-on and directory sync, managing organizations, verifying webhooks, and diagnosing failures.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": [],
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
     "websiteURL": "https://ai.rj11.io/plugins/operator-workos",
     "defaultPrompt": "Help me use the 11ai-operator-workos skills for this WorkOS task."
   }

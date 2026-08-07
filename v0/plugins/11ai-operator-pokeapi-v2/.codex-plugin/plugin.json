@@ -22,7 +22,11 @@
     "longDescription": "A cache-first toolbox for PokéAPI v2 setup, request planning, Pokémon, moves, items, locations, encounters, evolution, game metadata, integrations, and troubleshooting under the service's fair-use policy.",
     "developerName": "rj11io",
     "category": "Developer Tools",
-    "capabilities": [],
+    "capabilities": [
+      "Read",
+      "Write",
+      "Troubleshoot"
+    ],
     "websiteURL": "https://ai.rj11.io/plugins/operator-pokeapi-v2",
     "defaultPrompt": "Help me use the 11ai-operator-pokeapi-v2 skills for this PokéAPI v2 task while honoring fair use and reusing cached responses."
   }
