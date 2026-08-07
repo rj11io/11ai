@@ -1214,7 +1214,7 @@ export function reportHtmlShell({ title, body }) {
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-sans); font-size: 14px; line-height: 1.45; }
     main { width: 100%; margin: 0; padding: 16px 20px 24px; background: transparent; }
-    h1 { margin: 0 0 .75rem; font-size: clamp(1.65rem, 3vw, 2.4rem); letter-spacing: -.035em; }
+    h1 { margin: 0 0 .75rem; font-size: clamp(1.45rem, 2.6vw, 2.05rem); letter-spacing: -.035em; }
     #theme-toggle { position: fixed; top: 12px; right: 16px; z-index: 10; padding: .3rem .7rem; border: 1px solid var(--border); background: var(--card); color: var(--foreground); font: inherit; font-size: .8rem; cursor: pointer; }
     #theme-toggle:hover, #theme-toggle:focus-visible { border-color: var(--primary); color: var(--primary); outline: none; }
     .powered-by { display: inline-block; margin-left: .35rem; font-size: .38em; font-weight: 500; letter-spacing: 0; white-space: nowrap; vertical-align: middle; }
