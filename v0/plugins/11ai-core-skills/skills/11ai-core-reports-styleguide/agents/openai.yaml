@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Core Reports Styleguide"
+  short_description: "Apply the house style to generated HTML reports"
+  default_prompt: "Use $11ai-core-reports-styleguide to style this generated report: apply the canonical tokens, embedded fonts, dark default with a light toggle, collapsed disclosures, and the table interaction contract, then run the verification checklist against the previous generation."

@@ -14,6 +14,7 @@ communicates, and critiquing any work product.
 | [`11ai-core-compression`](./skills/11ai-core-compression/SKILL.md) | Compressing a markdown guidance file (a SKILL.md, CLAUDE.md, prompt, or runbook) locally, without an external LLM call, while preserving headings, code, links, and paths |
 | [`11ai-core-reverse-engineering`](./skills/11ai-core-reverse-engineering/SKILL.md) | Reverse engineering a locally cloned repository into a sanitized markdown blueprint for rebuilding it with modern tools |
 | [`11ai-pragmatic`](./skills/11ai-pragmatic/SKILL.md) | Answering in a terse, evidence-preserving register: short lines, an example per claim, a fix beside every problem, and a copyable conventional commit message after repo work |
+| [`11ai-core-reports-styleguide`](./skills/11ai-core-reports-styleguide/SKILL.md) | Styling, restyling, or reviewing generated HTML reports: canonical tokens, embedded fonts, dark default, and the table interaction contract with its verification checklist |
 | [`11ai-roast`](./skills/11ai-roast/SKILL.md) | Giving a blunt, prioritized, read-only critique of code, documents, designs, or any other work product |
 
 Marketplace and plugin configuration research moved to the
