@@ -1173,6 +1173,13 @@ export function upgradeDatasetThreads(dataset) {
 }
 
 export function reportHtmlShell({ title, body }) {
+  const toggle = '<button type="button" id="theme-toggle" aria-pressed="true" aria-label="Toggle color theme" title="Toggle color theme">☀</button>'
+  const newline = body.indexOf("\n")
+  const first = newline === -1 ? body : body.slice(0, newline)
+  const rest = newline === -1 ? "" : body.slice(newline + 1)
+  const headed = first.startsWith("<h1")
+    ? `<div class="report-header">${first}${toggle}</div>\n${rest}`
+    : `<div class="report-header"><span></span>${toggle}</div>\n${body}`
   return String.raw`<!doctype html>
 <html lang="en" class="dark">
 <head>
@@ -1216,8 +1223,9 @@ export function reportHtmlShell({ title, body }) {
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-sans); font-size: 14px; line-height: 1.45; }
     main { width: 100%; margin: 0; padding: 16px 20px 24px; background: transparent; }
-    h1 { margin: 0 0 .75rem; font-size: clamp(1.45rem, 2.6vw, 2.05rem); letter-spacing: -.035em; }
-    #theme-toggle { position: fixed; top: 12px; right: 16px; z-index: 10; padding: .3rem .7rem; border: 1px solid var(--border); background: var(--card); color: var(--foreground); font: inherit; font-size: .8rem; cursor: pointer; }
+    h1 { margin: 0; font-size: clamp(1.3rem, 2.3vw, 1.8rem); letter-spacing: -.035em; }
+    .report-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin: 0 0 .75rem; }
+    #theme-toggle { flex: none; display: grid; place-items: center; width: 2.1rem; height: 2.1rem; padding: 0; border: 1px solid var(--border); background: var(--card); color: var(--foreground); font: inherit; font-size: 1rem; line-height: 1; cursor: pointer; }
     #theme-toggle:hover, #theme-toggle:focus-visible { border-color: var(--primary); color: var(--primary); outline: none; }
     .powered-by { display: inline-block; margin-left: .35rem; font-size: .38em; font-weight: 500; letter-spacing: 0; white-space: nowrap; vertical-align: middle; }
     .powered-by a { color: var(--muted-foreground); text-decoration: none; }
@@ -1257,9 +1265,8 @@ export function reportHtmlShell({ title, body }) {
   </style>
 </head>
 <body>
-<button type="button" id="theme-toggle" aria-pressed="true" title="Toggle color theme">dark</button>
 <main>
-${body}
+${headed}
 </main>
 <script>
   (() => {
@@ -1323,7 +1330,7 @@ ${body}
     if (toggle) {
       toggle.addEventListener("click", () => {
         const dark = document.documentElement.classList.toggle("dark")
-        toggle.textContent = dark ? "dark" : "light"
+        toggle.textContent = dark ? "☀" : "☾"
         toggle.setAttribute("aria-pressed", String(dark))
       })
     }

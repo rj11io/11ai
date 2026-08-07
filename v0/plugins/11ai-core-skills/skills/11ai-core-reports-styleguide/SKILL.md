@@ -32,15 +32,16 @@ Tokens and theme:
 - Use the tokens in tokens.css; never hardcode a color beside them.
 - Square corners everywhere. Straight lines and hairline `--border` rules; no
   `border-radius`, no shadows.
-- Dark by default: `class="dark"` on the root element, a fixed top-right
-  toggle switches modes, `color-scheme` declared per mode.
+- Dark by default: `class="dark"` on the root element, an icon toggle in a
+  flex header row opposite the title switches modes, `color-scheme` declared
+  per mode.
 
 Typography:
 
 - Inter for text, Geist Mono for code and identifiers, both embedded per
   fonts.css with full system stacks behind them for other platforms and
   glyph ranges.
-- Body 14px/1.45. Tables .82rem. Title `clamp(1.45rem, 2.6vw, 2.05rem)` with
+- Body 14px/1.45. Tables .82rem. Title `clamp(1.3rem, 2.3vw, 1.8rem)` with
   tight tracking. Headings weight 750, table headers 700.
 - `font-variant-numeric: tabular-nums` on every data cell so digits align.
 

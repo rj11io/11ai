@@ -46,8 +46,9 @@
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-sans); font-size: 14px; line-height: 1.45; }
 main { width: 100%; margin: 0; padding: 16px 20px 24px; background: transparent; }
-h1 { margin: 0 0 .75rem; font-size: clamp(1.45rem, 2.6vw, 2.05rem); letter-spacing: -.035em; }
-#theme-toggle { position: fixed; top: 12px; right: 16px; z-index: 10; padding: .3rem .7rem; border: 1px solid var(--border); background: var(--card); color: var(--foreground); font: inherit; font-size: .8rem; cursor: pointer; }
+h1 { margin: 0; font-size: clamp(1.3rem, 2.3vw, 1.8rem); letter-spacing: -.035em; }
+.report-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin: 0 0 .75rem; }
+#theme-toggle { flex: none; display: grid; place-items: center; width: 2.1rem; height: 2.1rem; padding: 0; border: 1px solid var(--border); background: var(--card); color: var(--foreground); font: inherit; font-size: 1rem; line-height: 1; cursor: pointer; }
 #theme-toggle:hover, #theme-toggle:focus-visible { border-color: var(--primary); color: var(--primary); outline: none; }
 .powered-by { display: inline-block; margin-left: .35rem; font-size: .38em; font-weight: 500; letter-spacing: 0; white-space: nowrap; vertical-align: middle; }
 .powered-by a { color: var(--muted-foreground); text-decoration: none; }
@@ -88,9 +89,8 @@ a { color: var(--primary); }
   </style>
 </head>
 <body>
-<button type="button" id="theme-toggle" aria-pressed="true" title="Toggle color theme">dark</button>
 <main>
-<h1>Report template <span class="powered-by"><a href="#" target="_blank" rel="noopener noreferrer">powered by skill-name</a></span></h1>
+<div class="report-header"><h1>Report template <span class="powered-by"><a href="#" target="_blank" rel="noopener noreferrer">powered by skill-name</a></span></h1><button type="button" id="theme-toggle" aria-pressed="true" aria-label="Toggle color theme" title="Toggle color theme">☀</button></div>
 <details class="report-section level-2"><summary><span class="section-title">Example table</span></summary><div class="section-body">
 <div class="table-wrap"><table><thead><tr>
 <th scope="col" aria-sort="none"><button type="button" class="sort-button">Name<span class="sort-indicator" aria-hidden="true"></span></button><span class="col-resize" aria-hidden="true"></span></th>
@@ -168,7 +168,7 @@ a { color: var(--primary); }
     if (toggle) {
       toggle.addEventListener("click", () => {
         const dark = document.documentElement.classList.toggle("dark")
-        toggle.textContent = dark ? "dark" : "light"
+        toggle.textContent = dark ? "☀" : "☾"
         toggle.setAttribute("aria-pressed", String(dark))
       })
     }
