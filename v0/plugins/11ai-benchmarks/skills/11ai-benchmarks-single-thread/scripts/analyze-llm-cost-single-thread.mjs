@@ -45,7 +45,7 @@ if (!threadSelector) throw new Error("no thread selector is available; pass --th
 const generatedAt = new Date().toISOString()
 const filenameTimestamp = generatedAt.replaceAll(":", "-").replaceAll(".", "-")
 const reportSkillName = "11ai-benchmarks-single-thread"
-const reportTitle = "Single-Thread LLM Cost Report"
+const reportTitle = "AI benchmarks and analysis: Single-Thread Report"
 const reportName = `${reportSkillName}-${filenameTimestamp}`
 const reportsRootName = `${reportSkillName}-reports`
 const reportPackageName = `${reportsRootName}-${filenameTimestamp}`

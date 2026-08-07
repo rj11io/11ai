@@ -1652,7 +1652,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
   const years = yearlyDefinitions(threads)
 
   const lines = [
-    "# Global LLM Cost Report",
+    "# AI benchmarks and analysis: Machine Report",
     "",
     reportPoweredBy,
     "",
@@ -1947,7 +1947,7 @@ function htmlReport(markdown) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Global LLM Cost Report</title>
+  <title>AI benchmarks and analysis: Machine Report</title>
   <style>
     :root { color-scheme: light dark; --bg: #f6f7fb; --card: #fff; --text: #172033; --muted: #5d6678; --line: #dce1ea; --accent: #3157d5; }
     @media (prefers-color-scheme: dark) { :root { --bg: #10131a; --card: #181d27; --text: #edf1f7; --muted: #aab3c3; --line: #303848; --accent: #8da8ff; } }

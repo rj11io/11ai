@@ -112,7 +112,7 @@ try {
 
   const markdown = readFileSync(summary.markdownReport, "utf8")
   const html = readFileSync(summary.htmlReport, "utf8")
-  assert.match(markdown, /^# Global LLM Cost Report\n\n_powered by \[11ai-benchmarks-machine\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-machine\)\._\n\n/)
+  assert.match(markdown, /^# AI benchmarks and analysis: Machine Report\n\n_powered by \[11ai-benchmarks-machine\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-machine\)\._\n\n/)
   assert.match(markdown, /Desktop Claude fixture/)
   assert.match(markdown, /claude-desktop-code \/ subscription-or-api-equivalent/)
   const recentMonth = new Date(recent).toLocaleString("en-US", { month: "long", year: "numeric" })
@@ -222,7 +222,7 @@ try {
   const htmlSections = html.match(/<details class="report-section level-[234]">/g) ?? []
   assert.equal(htmlSections.length, (markdown.match(/^#{2,4} /gm) ?? []).length)
   assert.equal((html.match(/<\/details>/g) ?? []).length, htmlSections.length)
-  assert.match(html, /<h1>Global LLM Cost Report <span class="powered-by"><a href="https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-machine" target="_blank" rel="noopener noreferrer">powered by 11ai-benchmarks-machine<\/a><\/span><\/h1>/)
+  assert.match(html, /<h1>AI benchmarks and analysis: Machine Report <span class="powered-by"><a href="https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-machine" target="_blank" rel="noopener noreferrer">powered by 11ai-benchmarks-machine<\/a><\/span><\/h1>/)
   assert.equal((html.match(/powered by 11ai-benchmarks-machine/g) ?? []).length, 1)
   assert.match(html, /<summary><span class="section-title">All time<\/span><\/summary>/)
   assert.equal((html.match(/<summary><span class="section-title">Totals<\/span><\/summary>/g) ?? []).length, 16)

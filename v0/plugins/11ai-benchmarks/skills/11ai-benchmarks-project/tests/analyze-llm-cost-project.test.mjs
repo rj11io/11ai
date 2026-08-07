@@ -116,11 +116,11 @@ try {
 
   const markdown = readFileSync(report, "utf8")
   const html = readFileSync(summary.htmlReport, "utf8")
-  assert.match(markdown, /^# Project LLM Cost Report\n\n_powered by \[11ai-benchmarks-project\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-project\)\._\n\n/)
+  assert.match(markdown, /^# AI benchmarks and analysis: Project Report\n\n_powered by \[11ai-benchmarks-project\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-project\)\._\n\n/)
   assert.match(markdown, /Project Desktop Claude/)
   assert.match(markdown, /claude-desktop-code \/ subscription-or-api-equivalent/)
   assert.match(markdown, /\| declared-child \|/)
-  assert.match(markdown, /^# Project LLM Cost Report$/m)
+  assert.match(markdown, /^# AI benchmarks and analysis: Project Report$/m)
   assert.match(markdown, /^## Totals$/m)
   assert.match(markdown, /^## Cost by harness$/m)
   assert.match(markdown, /^## Cost by model by effort$/m)
@@ -167,7 +167,7 @@ try {
   const htmlSections = html.match(/<details class="report-section level-[23]">/g) ?? []
   assert.equal(htmlSections.length, (markdown.match(/^#{2,3} /gm) ?? []).length)
   assert.equal((html.match(/<\/details>/g) ?? []).length, htmlSections.length)
-  assert.match(html, /<h1>Project LLM Cost Report <span class="powered-by"><a href="https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-project" target="_blank" rel="noopener noreferrer">powered by 11ai-benchmarks-project<\/a><\/span><\/h1>/)
+  assert.match(html, /<h1>AI benchmarks and analysis: Project Report <span class="powered-by"><a href="https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-project" target="_blank" rel="noopener noreferrer">powered by 11ai-benchmarks-project<\/a><\/span><\/h1>/)
   assert.equal((html.match(/powered by 11ai-benchmarks-project/g) ?? []).length, 1)
   assert.match(html, /<summary><span class="section-title">Totals<\/span><\/summary>/)
   assert.match(html, /<summary><span class="section-title">Pricing catalog match detail<\/span><\/summary>/)
