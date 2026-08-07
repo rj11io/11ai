@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Meta Plugin FAQ Manager"
-  short_description: "Create or update a plugin's question-router FAQ skill"
-  default_prompt: "Use $11ai-meta-plugin-faq-manager to analyze the target plugin and create or update its FAQ skill: derive user questions across choosing, running, interpreting, and troubleshooting, route each to the plugin's contracts, references, scripts, or tests, add the comparison table and glossary, and wire the catalogs."

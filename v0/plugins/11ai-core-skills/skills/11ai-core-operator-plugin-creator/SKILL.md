@@ -1,5 +1,5 @@
 ---
-name: 11ai-meta-operator-plugin-creator
+name: 11ai-core-operator-plugin-creator
 description: "Scaffold a version-focused 11ai operator plugin for a tool, CLI, service, or SDK so it matches the existing operator plugins exactly, covering version selection, identity naming, first-party native-skill discovery and compatibility, skill archetypes, safety, manifests, and catalog wiring. Use when asked to create or extend an operator plugin, add skills for a technology, or check that an operator plugin follows the house pattern and targets the requested or latest stable version."
 ---
 # 11ai meta operator plugin creator

@@ -1,5 +1,5 @@
 ---
-name: 11ai-meta-plugin-faq-manager
+name: 11ai-core-plugin-faq-manager
 description: "Analyze an existing 11ai plugin and create or update its FAQ skill: a question router that maps user questions about skill behavior, usage, outputs, and troubleshooting to the plugin's own contracts, references, scripts, and tests, plus a comparison table and glossary the siblings do not carry. Use when asked to add a FAQ skill to a plugin, refresh a plugin FAQ after skills changed, or check that a FAQ still covers its plugin."
 ---
 # 11ai meta plugin FAQ manager

@@ -1,5 +1,5 @@
 {
-  "name": "11ai-meta-skills",
+  "name": "11ai-core-skills",
   "version": "1.34.0",
   "description": "Skills for building, auditing, and maintaining other skills and the plugins that package them, plus general-purpose guidance-compression and repository reverse-engineering utilities.",
   "author": {
@@ -30,6 +30,6 @@
       "Developer Tools"
     ],
     "websiteURL": "https://ai.rj11.io/plugins/meta-skills",
-    "defaultPrompt": "Help me use the 11ai-meta-skills skills to author or audit a skill in this collection."
+    "defaultPrompt": "Help me use the 11ai-core-skills skills to author or audit a skill in this collection."
   }
 }

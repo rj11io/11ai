@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Meta Operator Plugin Creator"
-  short_description: "Scaffold a version-focused operator plugin"
-  default_prompt: "Use $11ai-meta-operator-plugin-creator to scaffold a standalone operator plugin for the requested or latest stable technology version, use the ecosystem's version form, check first-party native skills for baseline compatibility, and wire the plugin into every repository catalog."
