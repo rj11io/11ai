@@ -25,6 +25,8 @@
   --primary: oklch(0.74 0.15 163);
   --primary-foreground: oklch(0.262 0.051 172.552);
   --border: oklch(1 0 0 / 10%);
+  /* Stronger wash in dark mode: the 12% default is invisible on the dark card. */
+  --accent-surface: color-mix(in oklab, var(--primary) 28%, var(--background));
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-sans); font-size: 14px; line-height: 1.45; }
