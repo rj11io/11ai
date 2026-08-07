@@ -62,12 +62,15 @@ import {
   normalizeUsage,
   parseClineFamily,
   parseGemini,
+  claudeMessageLatencies,
+  latencyHistogram,
   parseGeneric,
   priceThread,
   providerFrom,
   readPrefix,
   readRecords,
   reportedCostFrom,
+  responseLatencyLines,
   rollup,
   table,
   threadActiveMsPerResponse,
@@ -567,9 +570,13 @@ function parseClaude(file, records, dedup) {
     groups.set(key, group)
   }
   const fullTiming = timingFrom(records)
+  const messageLatencies = claudeMessageLatencies(records)
   return [...groups.values()].map((group, index) => {
     const groupRecords = group.entries.map((entry) => entry.record)
-    return Object.assign(baseThread(file, index, "anthropic", "claude", group.entries[0].model || "unknown", addTokens(group.tokens), groupRecords, group.entries.map((entry) => entry.usage), sumReported(group.entries.map((entry) => reportedCostFrom(entry.record, entry.usage))), logicalIdFrom(group.entries[0].record)), fullTiming)
+    const thread = Object.assign(baseThread(file, index, "anthropic", "claude", group.entries[0].model || "unknown", addTokens(group.tokens), groupRecords, group.entries.map((entry) => entry.usage), sumReported(group.entries.map((entry) => reportedCostFrom(entry.record, entry.usage))), logicalIdFrom(group.entries[0].record)), fullTiming)
+    const messageIds = [...new Set(groupRecords.map((record) => claudeMessageId(record)).filter(Boolean))]
+    thread.latency = latencyHistogram(messageIds.map((id) => messageLatencies.get(id)))
+    return thread
   })
 }
 
@@ -942,6 +949,8 @@ function report({ threads, stats, malformed, duplicateIds }) {
       ? years.flatMap((definition) => windowSection(definition, threadsForDefinition(threads, definition), 3))
       : ["No dated threads are available for yearly reports.", ""]),
     ...sectionFor("All time"),
+    ...responseLatencyLines(threads),
+    "",
     "## Harness surface coverage",
     "",
     "Native and inherited surfaces contribute token records. Credit, quota, detected-only, and export-only surfaces remain explicit so missing data is not mistaken for zero usage.",

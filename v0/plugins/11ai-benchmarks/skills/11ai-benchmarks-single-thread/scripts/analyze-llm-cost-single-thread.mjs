@@ -62,12 +62,15 @@ import {
   normalizeUsage,
   parseClineFamily,
   parseGemini,
+  claudeMessageLatencies,
+  latencyHistogram,
   parseGeneric,
   priceThread,
   providerFrom,
   readPrefix,
   readRecords,
   reportedCostFrom,
+  responseLatencyLines,
   rollup,
   table,
   threadActiveMsPerResponse,
@@ -511,10 +514,13 @@ function parseClaude(file, records, dedup) {
     groups.set(key, group)
   }
   const fullTiming = timingFrom(records)
+  const messageLatencies = claudeMessageLatencies(records)
   return [...groups.values()].map((group, index) => {
     const groupRecords = group.entries.map((entry) => entry.record)
     const thread = Object.assign(baseThread(file, index, "anthropic", "claude", group.entries[0].model || "unknown", addTokens(group.tokens), groupRecords, group.entries.map((entry) => entry.usage), sumReported(group.entries.map((entry) => reportedCostFrom(entry.record, entry.usage))), logicalIdFrom(group.entries[0].record)), fullTiming)
     thread.selectorAliases = [...new Set(group.entries.flatMap((entry) => entry.selectorAliases))]
+    const messageIds = [...new Set(groupRecords.map((record) => claudeMessageId(record)).filter(Boolean))]
+    thread.latency = latencyHistogram(messageIds.map((id) => messageLatencies.get(id)))
     return thread
   })
 }
@@ -715,6 +721,8 @@ function report({ threads, stats, malformed, duplicateIds }) {
       ["Output", fmtInt(outputTotal), fmtPct(outputTotal, total.tokens), "Generated output, including reasoning where exposed"],
       ["Reasoning output", fmtInt(reasoningTotal), fmtPct(reasoningTotal, outputTotal), "Subset of output, never added twice"],
     ]),
+    "",
+    ...responseLatencyLines(threads),
     "",
     "## Thread detail",
     "",

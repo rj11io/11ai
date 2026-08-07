@@ -111,7 +111,7 @@ try {
   assert.ok(summary.periods["Past 30 days"].threads >= summary.periods["Past 7 days"].threads)
 
   const summaryDataset = JSON.parse(readFileSync(summary.dataReport, "utf8"))
-  assert.equal(summaryDataset.schemaVersion, 1)
+  assert.equal(summaryDataset.schemaVersion, 2)
   assert.equal(summaryDataset.generator.skill, "11ai-benchmarks-machine")
   assert.ok(summaryDataset.threads.length > 0)
   const markdown = readFileSync(summary.markdownReport, "utf8")
@@ -143,6 +143,7 @@ try {
     "## Quarterly reports",
     "## Yearly reports",
     "## All time",
+    "## Response latency",
     "## Harness surface coverage",
     "## Cowork coverage",
     "## Scan coverage",
@@ -247,7 +248,7 @@ try {
   assert.doesNotMatch(html, /<details\b[^>]*\bopen\b[^>]*>/)
   assert.match(html, /<table>/)
   assert.match(html, /codex-session\/[^/]+\/sessions\/recent\.jsonl/)
-  const orderedHtmlSections = ["Past 24 hours", "Past 7 days", "Past 30 days", "Past 60 days", "Past 90 days", "Today", "Month to date", "Quarter to date", "Year to date", "Monthly reports", "Quarterly reports", "Yearly reports", "All time", "Harness surface coverage", "Cowork coverage", "Scan coverage", "Pricing coverage", "Anomalies and limitations", "Methodology"]
+  const orderedHtmlSections = ["Past 24 hours", "Past 7 days", "Past 30 days", "Past 60 days", "Past 90 days", "Today", "Month to date", "Quarter to date", "Year to date", "Monthly reports", "Quarterly reports", "Yearly reports", "All time", "Response latency", "Harness surface coverage", "Cowork coverage", "Scan coverage", "Pricing coverage", "Anomalies and limitations", "Methodology"]
   for (let index = 1; index < orderedHtmlSections.length; index += 1) {
     assert.ok(html.indexOf(`class="section-title">${orderedHtmlSections[index - 1]}</span>`) < html.indexOf(`class="section-title">${orderedHtmlSections[index]}</span>`))
   }

@@ -390,7 +390,7 @@ try {
   assert.match(genericMarkdown, /\| mistral \/ mistral-large-2411 \|[^\n]*\$0\.6500/)
   assert.doesNotMatch(genericMarkdown, /pricing is incomplete/)
   const genericDataset = JSON.parse(readFileSync(genericSummary.dataReport, "utf8"))
-  assert.equal(genericDataset.schemaVersion, 1)
+  assert.equal(genericDataset.schemaVersion, 2)
   assert.equal(genericDataset.generator.skill, "11ai-benchmarks-project")
   assert.equal(genericDataset.threads.length, 1)
   assert.equal(genericDataset.pricingCatalog.version, 3)
@@ -448,6 +448,31 @@ try {
   const localDirMarkdown = readFileSync(localDirReport, "utf8")
   assert.doesNotMatch(localDirMarkdown, /cowork-session\//)
   assert.doesNotMatch(localDirMarkdown, /session with no selected folder/)
+  const latencyProject = join(fixtureRoot, "latency-project")
+  writeJsonl(join(latencyProject, "session.jsonl"), [
+    { timestamp: "2026-07-18T10:00:00.000Z", sessionId: "latency-session", type: "user", message: { role: "user" } },
+    { timestamp: "2026-07-18T10:00:05.000Z", sessionId: "latency-session", message: { id: "latency-1", model: "claude-sonnet-5", usage: { input_tokens: 100, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 50 } } },
+    { timestamp: "2026-07-18T10:00:08.000Z", sessionId: "latency-session", message: { id: "latency-1", model: "claude-sonnet-5", usage: { input_tokens: 100, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 120 } } },
+    { timestamp: "2026-07-18T10:00:20.000Z", sessionId: "latency-session", type: "user", message: { role: "user" } },
+    { timestamp: "2026-07-18T10:00:22.000Z", sessionId: "latency-session", message: { id: "latency-2", model: "claude-sonnet-5", usage: { input_tokens: 150, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 30 } } },
+  ])
+  const latencyReport = join(fixtureRoot, "latency-report.md")
+  const latencySummary = run([latencyProject, "--project-only", "--output", latencyReport])
+  assert.equal(latencySummary.threads, 1)
+  const latencyMarkdown = readFileSync(latencyReport, "utf8")
+  assert.match(latencyMarkdown, /^## Response latency$/m)
+  assert.match(latencyMarkdown, /^### Response latency by model$/m)
+  // Message 1: 10:00:00 -> 10:00:08 = 8s; message 2: 10:00:20 -> 10:00:22 = 2s.
+  assert.match(latencyMarkdown, /\| anthropic \/ claude-sonnet-5 \/ n\/a \| 2 \| [0-9.]+s \| [0-9.]+s \| 5\.0s \| 8\.0s \|/)
+  assert.match(latencyMarkdown, /\| anthropic \/ claude-sonnet-5 \/ n\/a \|[^\n]*\| 100\.0% \|$/m)
+  const latencyDataset = JSON.parse(readFileSync(latencySummary.dataReport, "utf8"))
+  const latencyThread = latencyDataset.threads.find((thread) => thread.latency)
+  assert.ok(latencyThread)
+  assert.equal(latencyThread.latency.count, 2)
+  assert.equal(latencyThread.latency.sumMs, 10000)
+  assert.equal(latencyThread.latency.method, "record-timestamps")
+  // no-coverage scope still renders the section honestly
+  assert.match(readFileSync(genericReport, "utf8"), /No responses carried measurable per-response timestamps in this scope\./)
 } finally {
   rmSync(fixtureRoot, { recursive: true, force: true })
 }

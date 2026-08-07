@@ -97,6 +97,7 @@ tier on the ground-truth ladder.
 | How are the three bundled catalog copies kept identical? | `../11ai-benchmarks-pricing-update/scripts/sync-pricing-catalog.mjs` | - | behavior |
 | Who is allowed to change the bundled catalogs? | `../11ai-benchmarks-pricing-update/SKILL.md` | "## Catalog ownership" | contract |
 | Why does the report not match my invoice or subscription bill? | `../11ai-benchmarks-machine/SKILL.md` | "API-equivalent estimate" | contract |
+| How is response latency measured and which harnesses does it cover? | `../11ai-benchmarks-machine/SKILL.md` | "Response latency" | contract |
 
 ### Timing
 
@@ -139,6 +140,7 @@ Definitions only; the numbers, paths, and defaults live in the routed sources ab
 | Billing mode | Whether usage was billed per token through an API key or covered by a subscription |
 | Output TPS | Blended output tokens per second: output tokens divided by estimated active seconds, over threads with measured timing; includes tool time and excludes time-to-first-token |
 | Active time / response | Blended turnaround: estimated active time divided by counted usage responses; a work-rate proxy, not provider latency |
+| Response latency | Per-response time from the last preceding input record to the response's final snapshot; includes network, queue, and decode, not time-to-first-token |
 | Thread | One conversation or session as the unit of attribution, cost, and timing |
 | Known cost | Cost computed from measured tokens matched to a bundled catalog rate |
 | Unpriced model | A measured model with no catalog match; its cost stays unavailable instead of zero |

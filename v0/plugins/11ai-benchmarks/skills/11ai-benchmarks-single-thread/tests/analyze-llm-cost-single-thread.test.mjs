@@ -87,7 +87,7 @@ try {
   assert.match(basename(summary.markdownReport), /^11ai-benchmarks-single-thread-\d{4}-\d{2}-\d{2}T.*\.md$/)
 
   const summaryDataset = JSON.parse(readFileSync(summary.dataReport, "utf8"))
-  assert.equal(summaryDataset.schemaVersion, 1)
+  assert.equal(summaryDataset.schemaVersion, 2)
   assert.equal(summaryDataset.generator.skill, "11ai-benchmarks-single-thread")
   assert.equal(String(summaryDataset.scope.thread), "selected-thread")
   const markdown = readFileSync(summary.markdownReport, "utf8")
