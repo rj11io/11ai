@@ -73,6 +73,7 @@ import {
   providerFrom,
   readPrefix,
   readRecords,
+  reportHtmlShell,
   reportedCostFrom,
   responseLatencyLines,
   rollup,
@@ -1091,6 +1092,7 @@ function htmlReport(markdown) {
   const lines = markdown.split(/\r?\n/)
   const body = []
   const sectionLevels = []
+  let tableIndex = 0
   const closeSection = () => {
     body.push("</div></details>")
     sectionLevels.pop()
@@ -1155,10 +1157,11 @@ function htmlReport(markdown) {
         rows.push(markdownCells(lines[index]))
         index += 1
       }
+      tableIndex += 1
       body.push("<div class=\"table-wrap\"><table><thead><tr>")
-      body.push(headers.map((cell) => `<th scope="col" aria-sort="none"><button type="button" class="sort-button">${inlineHtml(cell)}<span class="sort-indicator" aria-hidden="true"></span></button></th>`).join(""))
+      body.push(headers.map((cell) => `<th scope="col" aria-sort="none"><button type="button" class="sort-button">${inlineHtml(cell)}<span class="sort-indicator" aria-hidden="true"></span></button><span class="col-resize" aria-hidden="true"></span></th>`).join(""))
       body.push("</tr></thead><tbody>")
-      for (const row of rows) body.push(`<tr>${row.map((cell) => `<td>${inlineHtml(cell)}</td>`).join("")}</tr>`)
+      rows.forEach((row, rowIndex) => body.push(`<tr data-row-id="t${tableIndex}-r${rowIndex}">${row.map((cell) => `<td>${inlineHtml(cell)}</td>`).join("")}</tr>`))
       body.push("</tbody></table></div>")
       continue
     }
@@ -1176,121 +1179,7 @@ function htmlReport(markdown) {
   }
   closeAllSections()
 
-  return String.raw`<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI benchmarks and analysis: Machine Report</title>
-  <style>
-    :root { color-scheme: light dark; --bg: #f6f7fb; --card: #fff; --text: #172033; --muted: #5d6678; --line: #dce1ea; --accent: #3157d5; }
-    @media (prefers-color-scheme: dark) { :root { --bg: #10131a; --card: #181d27; --text: #edf1f7; --muted: #aab3c3; --line: #303848; --accent: #8da8ff; } }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    main { width: 100%; margin: 0; padding: 16px 20px 24px; background: transparent; }
-    h1 { margin: 0 0 .75rem; font-size: clamp(1.65rem, 3vw, 2.4rem); letter-spacing: -.035em; }
-    .powered-by { display: inline-block; margin-left: .35rem; font-size: .38em; font-weight: 500; letter-spacing: 0; white-space: nowrap; vertical-align: middle; }
-    .powered-by a { color: var(--muted); text-decoration: none; }
-    .powered-by a:hover, .powered-by a:focus-visible { color: var(--accent); text-decoration: underline; }
-    .report-section { margin: .55rem 0; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: color-mix(in srgb, var(--card) 96%, var(--accent)); }
-    .report-section.level-2 { margin-top: .8rem; }
-    .report-section.level-3 { margin: .45rem 0; }
-    .report-section.level-4 { margin: .35rem 0; }
-    summary { display: flex; align-items: center; gap: .5rem; padding: .62rem .78rem; cursor: pointer; color: var(--text); font-weight: 750; list-style: none; user-select: none; }
-    summary::-webkit-details-marker { display: none; }
-    summary::before { content: "▸"; flex: 0 0 auto; color: var(--accent); transition: transform .15s ease; }
-    details[open] > summary::before { transform: rotate(90deg); }
-    .level-2 > summary { font-size: 1.12rem; }
-    .level-3 > summary { font-size: .98rem; }
-    .level-4 > summary { font-size: .9rem; }
-    .section-body { padding: 0 .78rem .72rem; border-top: 1px solid var(--line); }
-    p, li { margin: .45rem 0; color: var(--muted); }
-    blockquote { margin: .75rem 0; padding: .65rem .8rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); color: var(--muted); }
-    .table-wrap { margin: .55rem 0 .9rem; overflow-x: auto; border: 1px solid var(--line); border-radius: 7px; }
-    table { width: 100%; border-collapse: collapse; font-size: .82rem; }
-    th, td { text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); white-space: nowrap; }
-    td { padding: .42rem .52rem; }
-    th { padding: 0; background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--text); }
-    .sort-button { display: flex; width: 100%; align-items: center; gap: .3rem; padding: .42rem .52rem; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 700; text-align: left; white-space: nowrap; cursor: pointer; }
-    .sort-button:hover, .sort-button:focus-visible { background: color-mix(in srgb, var(--accent) 14%, transparent); outline: none; }
-    .sort-indicator { min-width: .8em; color: var(--accent); }
-    th[aria-sort="descending"] .sort-indicator::after { content: "▼"; }
-    th[aria-sort="ascending"] .sort-indicator::after { content: "▲"; }
-    tr:last-child td { border-bottom: 0; }
-    code { padding: .1rem .3rem; border-radius: 4px; background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--text); }
-    a { color: var(--accent); }
-    .generation-message { margin-top: 1rem; }
-    .signature { margin-top: .75rem; padding-top: .75rem; border-top: 1px solid var(--line); }
-    @media (max-width: 700px) { main { padding: 10px; } }
-  </style>
-</head>
-<body>
-<main>
-${body.join("\n")}
-</main>
-<script>
-  (() => {
-    const sortValue = (cell) => {
-      const text = (cell?.textContent ?? "").trim()
-      const lower = text.toLowerCase()
-      if (!text || lower === "n/a" || lower === "none" || lower === "unknown") return { kind: 2, value: null }
-      if (/^\d{4}-\d{2}-\d{2}T/.test(text)) {
-        const timestamp = Date.parse(text)
-        if (Number.isFinite(timestamp)) return { kind: 0, value: timestamp }
-      }
-      let durationSeconds = 0
-      let durationParts = 0
-      const durationRemainder = lower.replace(/(\d+(?:\.\d+)?)\s*([hms])/g, (_match, amount, unit) => {
-        durationSeconds += Number(amount) * ({ h: 3600, m: 60, s: 1 })[unit]
-        durationParts += 1
-        return ""
-      }).trim()
-      if (durationParts && !durationRemainder) return { kind: 0, value: durationSeconds }
-      const normalized = text.replaceAll(",", "").replace(/^\$/, "").replace(/%$/, "").trim()
-      if (/^-?\d+(?:\.\d+)?$/.test(normalized)) return { kind: 0, value: Number(normalized) }
-      const ratio = /^(-?\d+(?:\.\d+)?)\s*\//.exec(normalized)
-      if (ratio) return { kind: 0, value: Number(ratio[1]) }
-      return { kind: 1, value: lower }
-    }
-    const compareValues = (left, right, direction) => {
-      if (left.kind === 2 && right.kind === 2) return 0
-      if (left.kind === 2) return 1
-      if (right.kind === 2) return -1
-      const comparison = left.kind === 0 && right.kind === 0
-        ? left.value - right.value
-        : String(left.value).localeCompare(String(right.value), undefined, { numeric: true, sensitivity: "base" })
-      return direction === "descending" ? -comparison : comparison
-    }
-    document.querySelectorAll("table").forEach((table) => {
-      const headers = [...table.querySelectorAll("thead th")]
-      const body = table.tBodies[0]
-      if (!body) return
-      ;[...body.rows].forEach((row, index) => { row.dataset.originalIndex = String(index) })
-      headers.forEach((header, column) => {
-        const button = header.querySelector(".sort-button")
-        if (!button) return
-        button.title = "Sort descending"
-        button.addEventListener("click", () => {
-          const direction = header.getAttribute("aria-sort") === "descending" ? "ascending" : "descending"
-          headers.forEach((item) => item.setAttribute("aria-sort", "none"))
-          header.setAttribute("aria-sort", direction)
-          headers.forEach((item) => {
-            const itemButton = item.querySelector(".sort-button")
-            if (itemButton) itemButton.title = item === header && direction === "descending" ? "Sort ascending" : "Sort descending"
-          })
-          const rows = [...body.rows]
-          const totals = rows.filter((row) => (row.cells[0]?.textContent ?? "").trim().toLowerCase() === "total")
-          const sortable = rows.filter((row) => !totals.includes(row))
-          sortable.sort((left, right) => compareValues(sortValue(left.cells[column]), sortValue(right.cells[column]), direction) || Number(left.dataset.originalIndex) - Number(right.dataset.originalIndex))
-          body.replaceChildren(...sortable, ...totals)
-        })
-      })
-    })
-  })()
-</script>
-</body>
-</html>
-`
+  return reportHtmlShell({ title: reportTitle, body: body.join("\n") })
 }
 
 const fromData = option("--from-data")

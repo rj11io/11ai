@@ -110,6 +110,10 @@ try {
   assert.equal(summary.periods.Today.threads, 5)
   assert.ok(summary.periods["Past 30 days"].threads >= summary.periods["Past 7 days"].threads)
 
+  const summaryHtml = readFileSync(summary.htmlReport, "utf8")
+  assert.match(summaryHtml, /<html lang="en" class="dark">/)
+  assert.match(summaryHtml, /id="theme-toggle"/)
+  assert.match(summaryHtml, /class="col-resize"/)
   const summaryDataset = JSON.parse(readFileSync(summary.dataReport, "utf8"))
   assert.equal(summaryDataset.schemaVersion, 3)
   assert.equal(summaryDataset.generator.skill, "11ai-benchmarks-machine")

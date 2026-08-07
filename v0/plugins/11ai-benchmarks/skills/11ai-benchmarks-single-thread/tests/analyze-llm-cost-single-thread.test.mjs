@@ -86,6 +86,10 @@ try {
   assert.match(basename(summary.outputDirectory), /^11ai-benchmarks-single-thread-reports-\d{4}-\d{2}-\d{2}T/)
   assert.match(basename(summary.markdownReport), /^11ai-benchmarks-single-thread-\d{4}-\d{2}-\d{2}T.*\.md$/)
 
+  const summaryHtml = readFileSync(summary.htmlReport, "utf8")
+  assert.match(summaryHtml, /<html lang="en" class="dark">/)
+  assert.match(summaryHtml, /id="theme-toggle"/)
+  assert.match(summaryHtml, /class="col-resize"/)
   const summaryDataset = JSON.parse(readFileSync(summary.dataReport, "utf8"))
   assert.equal(summaryDataset.schemaVersion, 3)
   assert.equal(summaryDataset.generator.skill, "11ai-benchmarks-single-thread")

@@ -6,6 +6,7 @@ import { createHash } from "node:crypto"
 import { closeSync, existsSync, openSync, readFileSync, readSync, readdirSync, statSync } from "node:fs"
 import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path"
 import { classifyThread } from "./harness-support.mjs"
+import { GEIST_MONO_UNICODE_RANGE, GEIST_MONO_WOFF2_BASE64, INTER_UNICODE_RANGE, INTER_WOFF2_BASE64 } from "./report-fonts.mjs"
 import { pricingAgeDays, resolveHistoricalPrice } from "./pricing-history.mjs"
 
 export const SKIP_DIRS = new Set([
@@ -1169,4 +1170,210 @@ export function upgradeDatasetThreads(dataset) {
     thread.harness = classifyThread(thread)
   }
   return dataset
+}
+
+export function reportHtmlShell({ title, body }) {
+  return String.raw`<!doctype html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${title}</title>
+  <style>
+    /* Fonts: the exact latin slices the 11blog site self-hosts (Inter, Geist Mono;
+       SIL OFL 1.1, https://openfontlicense.org), embedded so the report stays
+       self-contained. The stacks behind them cover other scripts and platforms. */
+    @font-face { font-family: "Inter"; font-style: normal; font-weight: 100 900; font-display: swap; src: url(data:font/woff2;base64,${INTER_WOFF2_BASE64}) format("woff2"); unicode-range: ${INTER_UNICODE_RANGE}; }
+    @font-face { font-family: "Geist Mono"; font-style: normal; font-weight: 100 900; font-display: swap; src: url(data:font/woff2;base64,${GEIST_MONO_WOFF2_BASE64}) format("woff2"); unicode-range: ${GEIST_MONO_UNICODE_RANGE}; }
+    /* Design tokens mirrored from 11blog v0/www/app/globals.css. Square corners by design. */
+    :root {
+      color-scheme: light;
+      --background: oklch(1 0 0);
+      --foreground: oklch(0.145 0 0);
+      --card: oklch(1 0 0);
+      --muted: oklch(0.97 0 0);
+      --muted-foreground: oklch(0.556 0 0);
+      --primary: oklch(0.508 0.118 165.612);
+      --primary-foreground: oklch(0.979 0.021 166.113);
+      --border: oklch(0.922 0 0);
+      --accent-surface: color-mix(in oklab, var(--primary) 12%, var(--background));
+      --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .dark {
+      color-scheme: dark;
+      --background: oklch(0.145 0 0);
+      --foreground: oklch(0.985 0 0);
+      --card: oklch(0.205 0 0);
+      --muted: oklch(0.269 0 0);
+      --muted-foreground: oklch(0.708 0 0);
+      --primary: oklch(0.74 0.15 163);
+      --primary-foreground: oklch(0.262 0.051 172.552);
+      --border: oklch(1 0 0 / 10%);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-sans); font-size: 14px; line-height: 1.45; }
+    main { width: 100%; margin: 0; padding: 16px 20px 24px; background: transparent; }
+    h1 { margin: 0 0 .75rem; font-size: clamp(1.65rem, 3vw, 2.4rem); letter-spacing: -.035em; }
+    #theme-toggle { position: fixed; top: 12px; right: 16px; z-index: 10; padding: .3rem .7rem; border: 1px solid var(--border); background: var(--card); color: var(--foreground); font: inherit; font-size: .8rem; cursor: pointer; }
+    #theme-toggle:hover, #theme-toggle:focus-visible { border-color: var(--primary); color: var(--primary); outline: none; }
+    .powered-by { display: inline-block; margin-left: .35rem; font-size: .38em; font-weight: 500; letter-spacing: 0; white-space: nowrap; vertical-align: middle; }
+    .powered-by a { color: var(--muted-foreground); text-decoration: none; }
+    .powered-by a:hover, .powered-by a:focus-visible { color: var(--primary); text-decoration: underline; }
+    .report-section { margin: .55rem 0; overflow: hidden; border: 1px solid var(--border); background: var(--card); }
+    .report-section.level-2 { margin-top: .8rem; }
+    .report-section.level-3 { margin: .45rem 0; }
+    summary { display: flex; align-items: center; gap: .5rem; padding: .62rem .78rem; cursor: pointer; color: var(--foreground); font-weight: 750; list-style: none; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▸"; flex: 0 0 auto; color: var(--primary); transition: transform .15s ease; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    .level-2 > summary { font-size: 1.12rem; }
+    .level-3 > summary { font-size: .98rem; }
+    .section-body { padding: 0 .78rem .72rem; border-top: 1px solid var(--border); }
+    p, li { margin: .45rem 0; color: var(--muted-foreground); }
+    blockquote { margin: .75rem 0; padding: .65rem .8rem; border-left: 3px solid var(--primary); background: color-mix(in oklab, var(--primary) 7%, transparent); color: var(--muted-foreground); }
+    .table-wrap { margin: .55rem 0 .9rem; overflow-x: auto; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    th, td { text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    td { padding: .42rem .52rem; font-variant-numeric: tabular-nums; }
+    th { position: relative; padding: 0; background: var(--muted); color: var(--foreground); }
+    .sort-button { display: flex; width: 100%; align-items: center; gap: .3rem; padding: .42rem .52rem; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 700; text-align: left; white-space: nowrap; cursor: pointer; }
+    .sort-button:hover, .sort-button:focus-visible { background: color-mix(in oklab, var(--primary) 14%, transparent); outline: none; }
+    .sort-indicator { min-width: .8em; color: var(--primary); }
+    th[aria-sort="descending"] .sort-indicator::after { content: "▼"; }
+    th[aria-sort="ascending"] .sort-indicator::after { content: "▲"; }
+    .col-resize { position: absolute; top: 0; right: 0; width: 6px; height: 100%; cursor: col-resize; user-select: none; touch-action: none; }
+    .col-resize:hover { background: color-mix(in oklab, var(--primary) 35%, transparent); }
+    table.fixed-cols th, table.fixed-cols td { overflow: hidden; text-overflow: ellipsis; }
+    tbody tr.highlighted td { background: var(--accent-surface); }
+    tr:last-child td { border-bottom: 0; }
+    code { padding: .1rem .3rem; background: var(--muted); color: var(--foreground); font-family: var(--font-mono); font-size: .92em; }
+    a { color: var(--primary); }
+    .generation-message { margin-top: 1rem; }
+    .signature { margin-top: .75rem; padding-top: .75rem; border-top: 1px solid var(--border); }
+    @media (max-width: 700px) { main { padding: 10px; } }
+  </style>
+</head>
+<body>
+<button type="button" id="theme-toggle" aria-pressed="true" title="Toggle color theme">dark</button>
+<main>
+${body}
+</main>
+<script>
+  (() => {
+    const sortValue = (cell) => {
+      const text = (cell?.textContent ?? "").trim()
+      const lower = text.toLowerCase()
+      if (!text || lower === "n/a" || lower === "none" || lower === "unknown") return { kind: 2, value: null }
+      if (/^\d{4}-\d{2}-\d{2}T/.test(text)) {
+        const timestamp = Date.parse(text)
+        if (Number.isFinite(timestamp)) return { kind: 0, value: timestamp }
+      }
+      let durationSeconds = 0
+      let durationParts = 0
+      const durationRemainder = lower.replace(/(\d+(?:\.\d+)?)\s*([hms])/g, (_match, amount, unit) => {
+        durationSeconds += Number(amount) * ({ h: 3600, m: 60, s: 1 })[unit]
+        durationParts += 1
+        return ""
+      }).trim()
+      if (durationParts && !durationRemainder) return { kind: 0, value: durationSeconds }
+      const normalized = text.replaceAll(",", "").replace(/^\$/, "").replace(/%$/, "").trim()
+      if (/^-?\d+(?:\.\d+)?$/.test(normalized)) return { kind: 0, value: Number(normalized) }
+      const ratio = /^(-?\d+(?:\.\d+)?)\s*\//.exec(normalized)
+      if (ratio) return { kind: 0, value: Number(ratio[1]) }
+      return { kind: 1, value: lower }
+    }
+    const compareValues = (left, right, direction) => {
+      if (left.kind === 2 && right.kind === 2) return 0
+      if (left.kind === 2) return 1
+      if (right.kind === 2) return -1
+      const comparison = left.kind === 0 && right.kind === 0
+        ? left.value - right.value
+        : String(left.value).localeCompare(String(right.value), undefined, { numeric: true, sensitivity: "base" })
+      return direction === "descending" ? -comparison : comparison
+    }
+    document.querySelectorAll("table").forEach((table) => {
+      const headers = [...table.querySelectorAll("thead th")]
+      const body = table.tBodies[0]
+      if (!body) return
+      ;[...body.rows].forEach((row, index) => { row.dataset.originalIndex = String(index) })
+      headers.forEach((header, column) => {
+        const button = header.querySelector(".sort-button")
+        if (!button) return
+        button.title = "Sort descending"
+        button.addEventListener("click", () => {
+          const direction = header.getAttribute("aria-sort") === "descending" ? "ascending" : "descending"
+          headers.forEach((item) => item.setAttribute("aria-sort", "none"))
+          header.setAttribute("aria-sort", direction)
+          headers.forEach((item) => {
+            const itemButton = item.querySelector(".sort-button")
+            if (itemButton) itemButton.title = item === header && direction === "descending" ? "Sort ascending" : "Sort descending"
+          })
+          const rows = [...body.rows]
+          const totals = rows.filter((row) => (row.cells[0]?.textContent ?? "").trim().toLowerCase() === "total")
+          const sortable = rows.filter((row) => !totals.includes(row))
+          sortable.sort((left, right) => compareValues(sortValue(left.cells[column]), sortValue(right.cells[column]), direction) || Number(left.dataset.originalIndex) - Number(right.dataset.originalIndex))
+          body.replaceChildren(...sortable, ...totals)
+        })
+      })
+    })
+    const toggle = document.getElementById("theme-toggle")
+    if (toggle) {
+      toggle.addEventListener("click", () => {
+        const dark = document.documentElement.classList.toggle("dark")
+        toggle.textContent = dark ? "dark" : "light"
+        toggle.setAttribute("aria-pressed", String(dark))
+      })
+    }
+    document.addEventListener("click", (event) => {
+      if (event.target.closest("a, button, .col-resize, thead")) return
+      const row = event.target.closest("tbody tr")
+      if (!row || !row.dataset.rowId) return
+      const selection = window.getSelection()
+      if (selection && !selection.isCollapsed) return
+      row.classList.toggle("highlighted")
+    })
+    document.addEventListener("pointerdown", (event) => {
+      const handle = event.target.closest(".col-resize")
+      if (!handle) return
+      const th = handle.parentElement
+      const table = th.closest("table")
+      const headerCells = [...table.tHead.rows[0].cells]
+      if (!table.dataset.fixedLayout) {
+        const widths = headerCells.map((cell) => cell.getBoundingClientRect().width)
+        const colgroup = document.createElement("colgroup")
+        for (const width of widths) {
+          const col = document.createElement("col")
+          col.style.width = width + "px"
+          colgroup.append(col)
+        }
+        table.insertBefore(colgroup, table.firstChild)
+        table.style.tableLayout = "fixed"
+        table.style.width = widths.reduce((sum, width) => sum + width, 0) + "px"
+        table.classList.add("fixed-cols")
+        table.dataset.fixedLayout = "true"
+      }
+      const column = headerCells.indexOf(th)
+      const col = table.querySelector("colgroup").children[column]
+      const startX = event.clientX
+      const startWidth = parseFloat(col.style.width)
+      const startTableWidth = parseFloat(table.style.width)
+      const move = (moveEvent) => {
+        const width = Math.max(0, startWidth + (moveEvent.clientX - startX))
+        col.style.width = width + "px"
+        table.style.width = (startTableWidth - startWidth + width) + "px"
+      }
+      const stop = () => {
+        document.removeEventListener("pointermove", move)
+        document.removeEventListener("pointerup", stop)
+      }
+      document.addEventListener("pointermove", move)
+      document.addEventListener("pointerup", stop)
+      event.preventDefault()
+    })
+  })()
+</script>
+</body>
+</html>
+`
 }

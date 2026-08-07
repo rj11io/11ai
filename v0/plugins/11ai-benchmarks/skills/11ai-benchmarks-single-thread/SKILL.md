@@ -21,7 +21,7 @@ Use `CODEX_THREAD_ID` automatically when the active harness exposes it. For anot
 node <skill>/scripts/analyze-llm-cost-single-thread.mjs <root-folder> --thread <id-or-source>
 ```
 
-Create this structure by default, where `{datetime}` is the UTC ISO timestamp with colons and the decimal point replaced by hyphens. The `.json` file is the machine-readable dataset (`schemaVersion` 1) the two reports are rendered from; it carries the generator identity, scope, scan coverage, pricing-catalog identity, and every selected thread's token classes, costs, pricing state, and timing, and never contains prompts, message content, or transcripts:
+Create this structure by default, where `{datetime}` is the UTC ISO timestamp with colons and the decimal point replaced by hyphens. The `.json` file is the machine-readable dataset (`schemaVersion` 3) the two reports are rendered from; it carries the generator identity, scope, scan coverage, pricing-catalog identity, and every selected thread's token classes, costs, pricing state, and timing, and never contains prompts, message content, or transcripts:
 
 ```text
 <thread-folder>/11ai-benchmarks-single-thread-reports/
