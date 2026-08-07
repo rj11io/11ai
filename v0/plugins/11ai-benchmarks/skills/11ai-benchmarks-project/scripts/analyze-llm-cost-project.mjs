@@ -23,6 +23,9 @@ import {
   sumKnown,
   sumNullable,
   sumReported,
+  HARNESS_HINT,
+  HARNESS_TUPLE_HEADERS,
+  STORE_NAMES,
   buildDataset,
   datasetReportInputs,
   initCore,
@@ -73,6 +76,8 @@ import {
   reportedCostFrom,
   responseLatencyLines,
   rollup,
+  harnessTupleKey,
+  subagentRunsCell,
   table,
   threadActiveMsPerResponse,
   threadOutputTps,
@@ -351,13 +356,14 @@ function baseThread(file, index, provider, harness, model, tokens, records, usag
   const desktopMetadata = effectiveHarness === "claude" && logicalId ? claudeDesktopSessions.get(String(logicalId)) : null
   if (desktopMetadata && logicalId) matchedClaudeDesktopSessions.add(String(logicalId))
   const meta = records.find((record) => record?.type === "session_meta")?.payload ?? {}
-  const threadKey = `${sourceLabel(file)}|${provider}|${effectiveHarness}|${model}|${index}`
-  const logicalThreadKey = effectiveHarness === "cowork" && external?.coworkSessionId ? `cowork:${external.coworkSessionId}` : `${effectiveHarness}:${sourceLabel(file)}:${logicalId ? String(logicalId) : "n/a"}`
+  const store = STORE_NAMES[effectiveHarness] ?? effectiveHarness
+  const threadKey = `${sourceLabel(file)}|${provider}|${store}|${model}|${index}`
+  const logicalThreadKey = effectiveHarness === "cowork" && external?.coworkSessionId ? `${store}:${external.coworkSessionId}` : `${store}:${sourceLabel(file)}:${logicalId ? String(logicalId) : "n/a"}`
   const recordedEffort = records.map(effortFrom).filter(Boolean).at(-1) ?? (desktopMetadata?.effort ? effortFrom({ effort: desktopMetadata.effort }) : null)
   return {
     threadId: `${provider}:${sha(threadKey).slice(0, 20)}`,
     provider,
-    harness: effectiveHarness,
+    store,
     originator: firstValue(meta.originator, meta.client, meta.app),
     source: typeof meta.source === "string" ? meta.source : firstValue(meta.thread_source, meta.source?.type),
     title: external?.title ?? desktopMetadata?.title ?? null,
@@ -588,7 +594,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
   const unknown = logicalRows.filter((thread) => !finite(thread.cost.totalUsd))
   const providers = [...groupBy(threads, (thread) => thread.provider).entries()]
     .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1) || a[0].localeCompare(b[0]))
-  const harnesses = [...groupBy(threads, (thread) => thread.harness).entries()]
+  const harnesses = [...groupBy(threads, harnessTupleKey).entries()]
     .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1) || a[0].localeCompare(b[0]))
   const models = [...groupBy(threads, (thread) => `${thread.provider} / ${thread.model}`).entries()]
     .sort((a, b) => (rollup(b[1]).costUsd ?? -1) - (rollup(a[1]).costUsd ?? -1) || a[0].localeCompare(b[0]))
@@ -640,11 +646,12 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "",
     "## Cost by harness",
     "",
-    table(["Harness", ...COST_BY_HEADERS, "Measured Cowork sessions", "Sub-agent runs", "Reported-cost sum", "Average tokens / thread", "Priced", "Unpriced"], [...harnesses.map(([key, items]) => {
+    HARNESS_HINT,
+    "",
+    table([...HARNESS_TUPLE_HEADERS, ...COST_BY_HEADERS, "Sub-agent runs", "Reported-cost sum", "Average tokens / thread", "Priced", "Unpriced"], [...harnesses.map(([key, items]) => {
       const r = rollup(items)
-      const cowork = coworkRunStats(items)
-      return [key, ...costByValues(items), fmtInt(cowork.sessions), fmtInt(cowork.subagents), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount && r.tokens !== null ? r.tokens / r.threadCount : null), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
-    }), ["Total", ...costByValues(threads), fmtInt(coworkRunStats(threads).sessions), fmtInt(coworkRunStats(threads).subagents), fmtUsd(sumReported(threads.map((item) => item.reportedCostUsd))), fmtInt(total.threadCount && total.tokens !== null ? total.tokens / total.threadCount : null), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
+      return [...key.split(" | "), ...costByValues(items), subagentRunsCell(items), fmtUsd(sumReported(items.map((item) => item.reportedCostUsd))), fmtInt(r.threadCount && r.tokens !== null ? r.tokens / r.threadCount : null), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
+    }), ["Total", "", "", "", "", "", ...costByValues(threads), subagentRunsCell(threads), fmtUsd(sumReported(threads.map((item) => item.reportedCostUsd))), fmtInt(total.threadCount && total.tokens !== null ? total.tokens / total.threadCount : null), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
     "## Cost by model",
     "",
@@ -661,11 +668,10 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "",
     "The folder is the direct child of the scanned root; files directly in the root are grouped as `.`.",
     "",
-    table(["Folder", ...COST_BY_HEADERS, "Measured Cowork sessions", "Sub-agent runs", "Priced", "Unpriced"], [...folders.map(([key, items]) => {
+    table(["Folder", ...COST_BY_HEADERS, "Sub-agent runs", "Priced", "Unpriced"], [...folders.map(([key, items]) => {
       const r = rollup(items)
-      const cowork = coworkRunStats(items)
-      return [key, ...costByValues(items), fmtInt(cowork.sessions), fmtInt(cowork.subagents), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
-    }), ["Total", ...costByValues(threads), fmtInt(coworkRunStats(threads).sessions), fmtInt(coworkRunStats(threads).subagents), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
+      return [key, ...costByValues(items), subagentRunsCell(items), fmtInt(r.knownCostThreads), fmtInt(r.threadCount - r.knownCostThreads)]
+    }), ["Total", ...costByValues(threads), subagentRunsCell(threads), fmtInt(total.knownCostThreads), fmtInt(total.threadCount - total.knownCostThreads)]]),
     "",
     "## Totals",
     "",
@@ -714,7 +720,7 @@ function report({ threads, stats, malformed, duplicateIds }) {
     table(["Thread", "Source", "Surface / billing", "Sub-agents", "Provider / model / effort", "Input", "Cached", "Output", "Tokens", "Selected cost", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Output TPS", "Active time / response", "Harness reported", "Method"], sortedThreads.map((thread) => [
       thread.threadId,
       thread.title ? `${thread.title} (${thread.sourceFile})` : thread.sourceFile,
-      `${thread.surface} / ${thread.billingMode}`,
+      `${thread.harness.surface} / ${thread.harness.billingMode}`,
       fmtInt(thread.coworkSubagentRuns ?? 0),
       thread.modelLabel,
       fmtInt(thread.tokens.inputTotal),
@@ -737,10 +743,6 @@ function report({ threads, stats, malformed, duplicateIds }) {
     "Native and inherited surfaces contribute token records. Credit, quota, detected-only, and export-only surfaces remain explicit so missing data is not mistaken for zero usage.",
     "",
     table(["Surface", "Coverage", "Handling"], HARNESS_SURFACE_COVERAGE),
-    "",
-    "### Observed surface classification",
-    "",
-    table(["Surface", "Runtime", "Billing mode", "Usage source", "Confidence", "Threads"], [...groupBy(threads, (thread) => `${thread.surface}\u0000${thread.runtime}\u0000${thread.billingMode}\u0000${thread.usageSource}\u0000${thread.confidence}`).entries()].map(([key, items]) => [...key.split("\u0000"), fmtInt(logicalThreadRows(items).length)])),
     "",
     ...coworkCoverageLines(stats),
     "## Scan coverage",
@@ -1117,7 +1119,7 @@ for (const database of opencodeDatabaseCandidates()) {
   const databaseThreads = await parseOpenCodeDatabase(database)
   if (databaseThreads.length) stats.recognizedFiles += 1
   for (const thread of databaseThreads) {
-    Object.assign(thread, classifyThread(thread))
+    thread.harness = classifyThread(thread)
     const priced = priceThread(thread)
     Object.assign(thread, priced)
     threads.push(thread)
@@ -1160,7 +1162,7 @@ for (const [file, parsed] of parsedFiles) {
   if (!parsedThreads.length) continue
   stats.recognizedFiles += 1
   for (const thread of parsedThreads) {
-    Object.assign(thread, classifyThread(thread))
+    thread.harness = classifyThread(thread)
     const priced = priceThread(thread)
     Object.assign(thread, priced)
     threads.push(thread)

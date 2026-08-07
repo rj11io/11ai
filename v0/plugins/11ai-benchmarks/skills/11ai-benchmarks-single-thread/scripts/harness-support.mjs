@@ -83,13 +83,14 @@ export function readOpenCodeUsageRows(database) {
 export function classifyThread(thread) {
   const originator = String(thread.originator ?? "").toLowerCase()
   const source = String(thread.source ?? "").toLowerCase()
-  let surface = thread.harness
-  let runtime = thread.harness
+  const store = thread.store
+  let surface = store
+  let runtime = store
   let billingMode = thread.reportedCostUsd !== null ? "harness-reported" : "api-equivalent"
-  let usageSource = thread.harness === "opencode" ? "local-db" : "native-transcript"
+  let usageSource = store === "opencode-db" ? "local-db" : "native-transcript"
   let confidence = "reported-tokens"
 
-  if (thread.harness === "codex") {
+  if (store === "codex-rollouts") {
     runtime = "codex"
     if (originator.includes("codex_work") || originator.includes("chatgpt work")) {
       surface = "chatgpt-work"
@@ -102,22 +103,28 @@ export function classifyThread(thread) {
     else if (source === "exec" || originator.includes("exec")) surface = "codex-exec"
     else if (source === "subagent") surface = "codex-subagent"
     else surface = "codex"
-  } else if (thread.harness === "cowork") {
+  } else if (store === "cowork-sessions") {
     surface = "claude-cowork"
     runtime = "claude"
     billingMode = "subscription-or-api-equivalent"
-  } else if (thread.harness === "claude") {
+  } else if (store === "claude-projects") {
     surface = thread.desktopClaudeSession ? "claude-desktop-code" : "claude-code"
     runtime = "claude"
     billingMode = "subscription-or-api-equivalent"
-  } else if (thread.harness === "gemini") {
+  } else if (store === "gemini-chats") {
     surface = "gemini-cli"
     runtime = "gemini"
     billingMode = "api-subscription-or-free"
-  } else if (thread.harness === "cline") surface = "cline"
-  else if (thread.harness === "roo") surface = "roo-code"
-  else if (thread.harness === "opencode") surface = "opencode"
-  else if (thread.harness === "generic") {
+  } else if (store === "cline-tasks") {
+    surface = "cline"
+    runtime = "cline"
+  } else if (store === "roo-tasks") {
+    surface = "roo-code"
+    runtime = "roo"
+  } else if (store === "opencode-db") {
+    surface = "opencode"
+    runtime = "opencode"
+  } else if (store === "export-files") {
     surface = "imported-export"
     runtime = "generic"
     usageSource = "export"
@@ -127,7 +134,7 @@ export function classifyThread(thread) {
   if (thread.declaredBillingMode) billingMode = String(thread.declaredBillingMode)
   if (thread.declaredUsageSource) usageSource = String(thread.declaredUsageSource)
   if (thread.declaredConfidence) confidence = String(thread.declaredConfidence)
-  return { surface, runtime, billingMode, usageSource, confidence }
+  return { surface, runtime, store, billingMode, usageSource, confidence }
 }
 
 export const HARNESS_SURFACE_COVERAGE = [

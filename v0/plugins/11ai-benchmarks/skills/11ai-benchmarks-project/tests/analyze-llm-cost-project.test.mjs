@@ -142,11 +142,11 @@ try {
   assert.match(markdown, /\| anthropic \/ claude-sonnet-4-6 \| medium \|/)
   assert.match(markdown, /\| Sum of thread wall time \| 22m \|/)
   assert.match(markdown, /\| Estimated active time \| 12m \|/)
-  assert.match(markdown, /\| Harness \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Output TPS \| Active time \/ response \| Measured Cowork sessions \| Sub-agent runs \| Reported-cost sum \| Average tokens \/ thread \| Priced \| Unpriced \|/)
+  assert.match(markdown, /\| Surface \| Runtime \| Store \| Billing mode \| Usage source \| Confidence \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Output TPS \| Active time \/ response \| Sub-agent runs \| Reported-cost sum \| Average tokens \/ thread \| Priced \| Unpriced \|/)
   assert.match(markdown, /\| Provider \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Output TPS \| Active time \/ response \| Priced \| Unpriced \|/)
   assert.match(markdown, /\| Provider \/ model \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Output TPS \| Active time \/ response \|/)
   assert.match(markdown, /\| Provider \/ model \| Effort \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \|/)
-  assert.match(markdown, /\| Folder \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Output TPS \| Active time \/ response \| Measured Cowork sessions \| Sub-agent runs \| Priced \| Unpriced \|/)
+  assert.match(markdown, /\| Folder \| Cost \| Input \| Cached \| Input cost \| Output \| Output cost \| Tokens \| Cost \/ 1M tokens \| Threads \| Cost \/ thread \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Output TPS \| Active time \/ response \| Sub-agent runs \| Priced \| Unpriced \|/)
   assert.match(markdown, /\| Thread \| Source \| Surface \/ billing \| Sub-agents \| Provider \/ model \/ effort \| Input \| Cached \| Output \| Tokens \| Selected cost \| Active time \| Cost \/ active hour \| Wall time \| Cost \/ wall hour \| Output TPS \| Active time \/ response \| Harness reported \| Method \|/)
   assert.match(markdown, /\| Total \| \$[\d,]+\.\d+ \| 1,805 \| 792 \| \$[\d,]+\.\d+ \| 241 \| \$[\d,]+\.\d+ \| 2,046 \| \$[\d,]+\.\d+ \| 7 \|/)
   assert.match(markdown, /\$1,234\.\d{4}/)
@@ -390,10 +390,12 @@ try {
   assert.match(genericMarkdown, /\| mistral \/ mistral-large-2411 \|[^\n]*\$0\.6500/)
   assert.doesNotMatch(genericMarkdown, /pricing is incomplete/)
   const genericDataset = JSON.parse(readFileSync(genericSummary.dataReport, "utf8"))
-  assert.equal(genericDataset.schemaVersion, 2)
+  assert.equal(genericDataset.schemaVersion, 3)
   assert.equal(genericDataset.generator.skill, "11ai-benchmarks-project")
   assert.equal(genericDataset.threads.length, 1)
   assert.equal(genericDataset.pricingCatalog.version, 3)
+  assert.equal(genericDataset.threads[0].store, "export-files")
+  assert.deepEqual(genericDataset.threads[0].harness, { surface: "imported-export", runtime: "generic", store: "export-files", billingMode: "api-equivalent", usageSource: "export", confidence: "schema-derived" })
   assert.ok(Array.isArray(genericDataset.scan.limitations))
   const rerenderReport = join(fixtureRoot, "generic-provider-rerender.md")
   const rerenderSummary = run(["--from-data", genericSummary.dataReport, "--output", rerenderReport])
@@ -477,7 +479,7 @@ try {
   // OpenCode row-durations: one 60s row-duration sample from time_created -> time_updated
   const mainMarkdown = readFileSync(report, "utf8")
   assert.match(mainMarkdown, /^### Response latency by harness$/m)
-  assert.match(mainMarkdown, /\| opencode \| 1 \| 60\.0s \| 60\.0s \| 60\.0s \| 60\.0s \| 10 \| 100\.0% \| row-durations \|$/m)
+  assert.match(mainMarkdown, /\| opencode \| opencode \| opencode-db \| harness-reported \| local-db \| reported-tokens \| 1 \| 60\.0s \| 60\.0s \| 60\.0s \| 60\.0s \| 10 \| 100\.0% \| row-durations \|$/m)
 
   // Cline request-events: api_req_started followed 4s later by another record
   const latencyClineTasks = join(fixtureRoot, "latency-cline-tasks")
@@ -489,7 +491,39 @@ try {
   ]))
   const latencyClineReport = join(fixtureRoot, "latency-cline-report.md")
   run([latencyProject, "--codex-home", join(fixtureRoot, "no-codex"), "--claude-home", join(fixtureRoot, "no-claude"), "--claude-desktop-home", join(fixtureRoot, "no-desktop"), "--cowork-home", join(fixtureRoot, "no-cowork"), "--gemini-home", join(fixtureRoot, "no-gemini"), "--cline-tasks", latencyClineTasks, "--roo-tasks", join(fixtureRoot, "no-roo"), "--opencode-db", join(fixtureRoot, "no-opencode.db"), "--output", latencyClineReport])
-  assert.match(readFileSync(latencyClineReport, "utf8"), /\| cline \| 1 \| 4\.0s \| 4\.0s \| 4\.0s \| 4\.0s \| 4 \| 100\.0% \| request-events \|$/m)
+  assert.match(readFileSync(latencyClineReport, "utf8"), /\| cline \| cline \| cline-tasks \| harness-reported \| native-transcript \| reported-tokens \| 1 \| 4\.0s \| 4\.0s \| 4\.0s \| 4\.0s \| 4 \| 100\.0% \| request-events \|$/m)
+  // v2 dataset upgrade: string harness rehydrates into the tuple on load
+  const v2Dataset = JSON.parse(readFileSync(genericSummary.dataReport, "utf8"))
+  v2Dataset.schemaVersion = 2
+  for (const thread of v2Dataset.threads) {
+    thread.harness = "generic"
+    delete thread.store
+  }
+  const v2Path = join(fixtureRoot, "v2-dataset.json")
+  writeFileSync(v2Path, JSON.stringify(v2Dataset))
+  const upgradeReport = join(fixtureRoot, "v2-upgrade-report.md")
+  const upgradeSummary = run(["--from-data", v2Path, "--output", upgradeReport])
+  assert.equal(upgradeSummary.threads, 1)
+  assert.match(readFileSync(upgradeReport, "utf8"), /\| imported-export \| generic \| export-files \| api-equivalent \| export \| schema-derived \|/)
+
+  // claude sub-agent transcripts are counted per tuple row
+  const subagentProject = join(fixtureRoot, "subagent-project")
+  writeJsonl(join(subagentProject, "main.jsonl"), [
+    { timestamp: "2026-07-18T11:00:00.000Z", sessionId: "sa-main", type: "user", message: { role: "user" } },
+    { timestamp: "2026-07-18T11:00:05.000Z", sessionId: "sa-main", message: { id: "sa-1", model: "claude-sonnet-5", usage: { input_tokens: 100, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 10 } } },
+  ])
+  writeJsonl(join(subagentProject, "subagents", "agent-1.jsonl"), [
+    { timestamp: "2026-07-18T11:00:10.000Z", sessionId: "sa-child", type: "user", message: { role: "user" } },
+    { timestamp: "2026-07-18T11:00:15.000Z", sessionId: "sa-child", message: { id: "sa-2", model: "claude-sonnet-5", usage: { input_tokens: 50, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 5 } } },
+  ])
+  const subagentReport = join(fixtureRoot, "subagent-report.md")
+  const subagentSummary = run([subagentProject, "--project-only", "--output", subagentReport])
+  assert.equal(subagentSummary.threads, 2)
+  const subagentMarkdown = readFileSync(subagentReport, "utf8")
+  assert.match(subagentMarkdown, /\| claude-code \| claude \| claude-projects \| subscription-or-api-equivalent \| native-transcript \| reported-tokens \|(?:[^|\n]*\|){16} 1 \|/)
+
+  // stores without a sub-agent concept show n/a, never 0
+  assert.match(readFileSync(latencyClineReport, "utf8"), /\| cline \| cline \| cline-tasks \| harness-reported \| native-transcript \| reported-tokens \|(?:[^|\n]*\|){16} n\/a \|/)
 } finally {
   rmSync(fixtureRoot, { recursive: true, force: true })
 }

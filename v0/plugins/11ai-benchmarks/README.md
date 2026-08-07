@@ -20,6 +20,10 @@ All standalone HTML reports use native disclosure controls. Every report section
 
 The three reporting skills always use their synchronized bundled pricing catalog. They do not accept or discover local pricing overrides. Catalog version 3 preserves model price histories and applies the rate effective at each thread's attribution time. Boundary-spanning aggregates use their finish-time main price; usage older than known history uses the earliest available rate while the pricing-update workflow searches official historical sources. Reports expose every temporal fallback. When measured usage has no bundled model match, reports leave that cost unavailable and link to `11ai-benchmarks-pricing-update` for a provider-verified catalog refresh.
 
+## Reporting principles
+
+Show as many datapoints as possible. Table width is never a reason to drop a column: when a metric is available per row, it belongs in the table, and unavailable values render as `n/a` rather than being omitted. A harness is the combination of surface, runtime, store, and billing mode, and the by-harness tables break those out as separate columns together with usage source and confidence.
+
 ## Cross-skill maintenance
 
 The three reporting skills share one analyzer core: each carries a byte-identical copy of `scripts/benchmarks-core.mjs` and `scripts/harness-support.mjs`, with only scope-specific code living in the per-skill analyzer scripts. Edit shared behavior in the `11ai-benchmarks-project` copy first, then run `node v0/scripts/check-benchmarks-drift.mjs --write` from the repository root to copy the shared files to the siblings; the same script without `--write` (also run by `validate-skills`) fails on any divergence, including divergence between same-named analyzer functions that are not allowlisted as intentionally scope-specific.

@@ -120,7 +120,7 @@ tier on the ground-truth ladder.
 | What does the Anomalies and limitations section flag? | `../11ai-benchmarks-machine/scripts/analyze-llm-cost-global.mjs` | "## Anomalies and limitations" | behavior |
 | What does the Historical pricing selection detail show? | `../11ai-benchmarks-machine/scripts/analyze-llm-cost-global.mjs` | "Historical pricing selection" | behavior |
 | How is cost broken down by model and reasoning effort? | `../11ai-benchmarks-machine/scripts/analyze-llm-cost-global.mjs` | "Cost by model by effort" | behavior |
-| How does a report classify each observed surface? | `../11ai-benchmarks-machine/scripts/analyze-llm-cost-global.mjs` | "Observed surface classification" | behavior |
+| How does a report classify each observed harness? | `../11ai-benchmarks-machine/scripts/harness-support.mjs` | "classifyThread" | behavior |
 
 ### Maintenance and regression
 
@@ -135,8 +135,12 @@ Definitions only; the numbers, paths, and defaults live in the routed sources ab
 
 | Term | Meaning |
 | --- | --- |
-| Harness | A local coding agent whose usage stores the analyzers read, such as Codex or Claude Code |
-| Harness surface | The user-facing product a thread ran in, as opposed to the runtime underneath it |
+| Harness | The combination of surface, runtime, store, and billing mode that identifies how a thread ran and was recorded |
+| Surface | The user-facing product a thread ran in, such as claude-code, claude-desktop-code, codex-cli, or chatgpt-work |
+| Runtime | The underlying engine that executed the thread and wrote its usage ledger, such as claude or codex |
+| Store | The usage store the numbers were read from, such as claude-projects, codex-rollouts, or opencode-db |
+| Usage source | The kind of evidence behind the numbers: a native transcript, a local database, or an imported export |
+| Confidence | How trustworthy the counters are: harness-reported tokens versus values derived from a record's shape |
 | Billing mode | Whether usage was billed per token through an API key or covered by a subscription |
 | Output TPS | Blended output tokens per second: output tokens divided by estimated active seconds, over threads with measured timing; includes tool time and excludes time-to-first-token |
 | Active time / response | Blended turnaround: estimated active time divided by counted usage responses; a work-rate proxy, not provider latency |
