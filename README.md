@@ -62,7 +62,7 @@ The files are installed at `node_modules/@rj11io/11ai/v0/plugins/`. You can also
 
 ## Skill catalog
 
-The repository currently contains 463 skills in 47 plugins.
+The repository currently contains 464 skills in 47 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
@@ -86,7 +86,7 @@ The repository currently contains 463 skills in 47 plugins.
 | [JavaScript ES2026 operator](./v0/plugins/11ai-operator-javascript-es2026/README.md) | 10 | ECMAScript 2026 modules, async control flow, DOM events, data modeling, standard-library additions, performance, security, integrations, reference, and troubleshooting |
 | [Jest v30 operator](./v0/plugins/11ai-operator-jest-v30/README.md) | 17 | Setting up, inspecting, running, authoring, integrating, configuring, de-flaking, speeding up, and troubleshooting Jest 30 suites |
 | [Material UI v9 operator](./v0/plugins/11ai-operator-mui-v9/README.md) | 13 | Material UI 9.2 setup, components, forms, navigation, theming, styling, migration, first-party Agent Skills, integrations, reference, and troubleshooting |
-| [Core skills](./v0/plugins/11ai-core-skills/README.md) | 7 | Building, auditing, and maintaining other skills and the plugins that package them, plus markdown compression, repository reverse engineering, a report styleguide, a pragmatic communication register, and a blunt read-only critique |
+| [Core skills](./v0/plugins/11ai-core-skills/README.md) | 8 | Building, auditing, and maintaining other skills and the plugins that package them, plus markdown compression, repository reverse engineering, report and web styleguides, a pragmatic communication register, and a blunt read-only critique |
 | [MongoDB v8 operator](./v0/plugins/11ai-operator-mongodb-v8/README.md) | 17 | MongoDB 8 Shell and Database Tools work with transactions, profiling, roles, Atlas, backups, integrations, and safety checks |
 | [Next.js v16 operator](./v0/plugins/11ai-operator-nextjs-v16/README.md) | 10 | Next.js 16 App Router, Server and Client Components, Cache Components, mutations, handlers, metadata, deployment, integrations, reference, and troubleshooting |
 | [Node.js API v24 operator](./v0/plugins/11ai-operator-nodejs-api-v24/README.md) | 20 | Scaffolding, routing, validation, auth, data, jobs, GraphQL, OpenAPI, testing, and troubleshooting Node.js 24 LTS APIs |
@@ -131,7 +131,7 @@ v0/
     11ai-cleanup/              5 cleanup skills under skills/
     11ai-codebase/             4 codebase skills under skills/
     11ai-directors/            2 Git task-director skills under skills/
-    11ai-core-skills/          7 skill-authoring, packaging, compression, reverse-engineering, report-styleguide, and communication-register skills under skills/
+    11ai-core-skills/          8 skill-authoring, packaging, compression, reverse-engineering, styleguide, and communication-register skills under skills/
     11ai-operator-antdesign-v6/  12 Ant Design v6 operation skills under skills/
     11ai-operator-aws-cli-v2/    22 AWS CLI v2 operation skills under skills/
     11ai-operator-bash/       10 Bash shell and scripting skills under skills/

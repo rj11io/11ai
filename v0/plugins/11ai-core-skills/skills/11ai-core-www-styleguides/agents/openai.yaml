@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Core WWW Styleguides"
+  short_description: "Theme a Next.js shadcn app from any token subset"
+  default_prompt: "Use $11ai-core-www-styleguides to style this Next.js application: keep the tokens and fonts I specify, generate balanced equivalents for everything missing including the opposite color mode, fall back to the bundled defaults where nothing is given, and report the contrast gates with the delivery."
