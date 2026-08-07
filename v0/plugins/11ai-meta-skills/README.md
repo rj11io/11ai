@@ -9,6 +9,7 @@ without leaving dangling references.
 | --- | --- |
 | [`11ai-meta-operator-plugin-creator`](./skills/11ai-meta-operator-plugin-creator/SKILL.md) | Scaffolding a new `11ai-operator-TOOL` plugin that matches the house pattern and passes validation |
 | [`11ai-meta-plugin-faq-manager`](./skills/11ai-meta-plugin-faq-manager/SKILL.md) | Creating or updating a plugin's `11ai-*-faq` skill: a validated question router over the plugin's own contracts, references, scripts, and tests |
+| [`11ai-meta-marketplace-configs-research`](./skills/11ai-meta-marketplace-configs-research/SKILL.md) | Answering marketplace, plugin, and skill configuration questions across Claude Code, Claude Cowork, OpenAI Codex, ChatGPT, and the Agent Skills standard from dated, source-cited research references |
 
 ## Scope
 
