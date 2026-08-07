@@ -7,7 +7,7 @@ communication deliverables like a blunt critique.
 
 | Skill | Use it for |
 | --- | --- |
-| [`11ai-comms-short`](./skills/11ai-comms-short/SKILL.md) | Terse, list-first replies with an example per claim, a fix beside every problem, and a copyable conventional commit message after code changes |
+| [`11ai-pragmatic`](./skills/11ai-pragmatic/SKILL.md) | Pragmatic, objective, extremely concise replies: lists, an example and source per claim, a fix beside every problem, no file changes while planning, verify pointers after changes, and a copyable scoped conventional commit message after repo work |
 | [`11ai-roast`](./skills/11ai-roast/SKILL.md) | Giving a blunt, prioritized, read-only critique of code or another work product |
 
 Pick one register per session. Two registers at once cancel each other out. The

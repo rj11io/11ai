@@ -1,4 +1,4 @@
 interface:
-  display_name: "11ai Comms Short"
-  short_description: "Answer short, in lists, with examples"
-  default_prompt: "Use $11ai-comms-short to answer pragmatic, objective, and short: extremely concise lines, lists, no em dashes, an example and a source for every claim, a fix for every problem found, no file changes while planning until the plan is approved, a pointer to where changes landed, and a copyable conventional commit message with scope after repo work."
+  display_name: "11ai Pragmatic"
+  short_description: "Pragmatic, objective, short answers"
+  default_prompt: "Use $11ai-pragmatic to answer pragmatic, objective, and short: extremely concise lines, lists, no em dashes, an example and a source for every claim, a fix for every problem found, no file changes while planning until the plan is approved, a pointer to where changes landed, and a copyable conventional commit message with scope after repo work."
