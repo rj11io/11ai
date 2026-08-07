@@ -66,7 +66,7 @@ const includedFiles = new Map()
 const claudeDesktopSessions = new Map()
 const matchedClaudeDesktopSessions = new Set()
 const remoteCoworkSessions = new Map()
-const REPORT_SIGNATURE = "_LLM token cost analysis by [11ai-benchmarks-machine](https://ai.rj11.io/skills/11ai-benchmarks-machine)._"
+const REPORT_SIGNATURE = "_AI benchmarks and analysis by [11ai-benchmarks-machine](https://ai.rj11.io/skills/11ai-benchmarks-machine)._"
 const discovery = { accountsConsidered: 0, nativeFilesConsidered: 0, codexSessions: 0, claudeSessions: 0, coworkSessions: 0, coworkLocalSessionsMeasured: 0, coworkRemoteSessionsDetected: 0, coworkRemoteSessionsMeasured: 0, coworkRemoteSessionsUnavailable: 0, coworkRemoteIndexFiles: 0, coworkTranscriptFiles: 0, coworkSubagentRuns: 0, claudeDesktopMetadataFiles: 0, geminiSessions: 0, clineSessions: 0, rooSessions: 0, opencodeSessions: 0, unreadableFiles: 0, limitations: [], scopeDescription: "" }
 const finite = (value) => typeof value === "number" && Number.isFinite(value)
 const number = (value) => {

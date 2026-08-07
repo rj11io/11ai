@@ -71,7 +71,7 @@ Do not copy prompts, message content, secrets, or full transcripts. Do not modif
 End the Markdown report with this exact signature:
 
 ```markdown
-_LLM token cost analysis by [11ai-benchmarks-single-thread](https://ai.rj11.io/skills/11ai-benchmarks-single-thread)._
+_AI benchmarks and analysis by [11ai-benchmarks-single-thread](https://ai.rj11.io/skills/11ai-benchmarks-single-thread)._
 ```
 
 End the HTML report with the same visible linked signature. Set `target="_blank"` and `rel="noopener noreferrer"` on its link.

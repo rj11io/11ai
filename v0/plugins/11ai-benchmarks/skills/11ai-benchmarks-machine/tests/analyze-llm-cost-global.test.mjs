@@ -215,9 +215,9 @@ try {
   assert.match(markdown, /cline-session\/[^/]+\/cline-tasks\/task-1\/ui_messages\.json/)
   assert.match(markdown, /roo-session\/[^/]+\/roo-tasks\/task-2\/ui_messages\.json/)
   assert.match(markdown, /opencode-session\/[^/]+\/opencode\.db\/opencode-1/)
-  assert.ok(markdown.endsWith("_LLM token cost analysis by [11ai-benchmarks-machine](https://ai.rj11.io/skills/11ai-benchmarks-machine)._\n"))
+  assert.ok(markdown.endsWith("_AI benchmarks and analysis by [11ai-benchmarks-machine](https://ai.rj11.io/skills/11ai-benchmarks-machine)._\n"))
   assert.ok(markdown.lastIndexOf("> Generated ") > markdown.indexOf("## Methodology"))
-  assert.ok(markdown.lastIndexOf("> Generated ") < markdown.lastIndexOf("_LLM token cost analysis"))
+  assert.ok(markdown.lastIndexOf("> Generated ") < markdown.lastIndexOf("_AI benchmarks and analysis"))
   assert.doesNotMatch(markdown, new RegExp(fixtureRoot.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")))
   const htmlSections = html.match(/<details class="report-section level-[234]">/g) ?? []
   assert.equal(htmlSections.length, (markdown.match(/^#{2,4} /gm) ?? []).length)
@@ -248,7 +248,7 @@ try {
     assert.ok(html.indexOf(`class="section-title">${orderedHtmlSections[index - 1]}</span>`) < html.indexOf(`class="section-title">${orderedHtmlSections[index]}</span>`))
   }
   assert.match(html, /<a href="https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-machine" target="_blank" rel="noopener noreferrer">11ai-benchmarks-machine<\/a>/)
-  assert.match(html, /<p class="signature"><em>LLM token cost analysis by /)
+  assert.match(html, /<p class="signature"><em>AI benchmarks and analysis by /)
   assert.equal((html.match(/<th\b/g) ?? []).length, (html.match(/class="sort-button"/g) ?? []).length)
   assert.ok((html.match(/<th scope="col" aria-sort="none">/g) ?? []).length > 0)
   assert.doesNotMatch(html, /<th[^>]+aria-sort="(?:ascending|descending)"/)

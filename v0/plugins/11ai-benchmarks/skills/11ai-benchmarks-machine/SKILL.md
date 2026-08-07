@@ -124,7 +124,7 @@ Immediately below the Markdown H1, place `_powered by [11ai-benchmarks-machine](
 End the Markdown report with this exact linked signature:
 
 ```markdown
-_LLM token cost analysis by [11ai-benchmarks-machine](https://ai.rj11.io/skills/11ai-benchmarks-machine)._
+_AI benchmarks and analysis by [11ai-benchmarks-machine](https://ai.rj11.io/skills/11ai-benchmarks-machine)._
 ```
 
 End the HTML report with the same visible signature and a clickable link whose `href` is exactly `https://ai.rj11.io/skills/11ai-benchmarks-machine`. Set `target="_blank"` and `rel="noopener noreferrer"` on that signature link so it opens safely in a new tab.
