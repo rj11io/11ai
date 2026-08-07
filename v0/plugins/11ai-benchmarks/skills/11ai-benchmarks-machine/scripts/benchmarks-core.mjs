@@ -1196,7 +1196,7 @@ export function reportHtmlShell({ title, body }) {
       --primary: oklch(0.508 0.118 165.612);
       --primary-foreground: oklch(0.979 0.021 166.113);
       --border: oklch(0.922 0 0);
-      --accent-surface: color-mix(in oklab, var(--primary) 12%, var(--background));
+      --accent-surface: color-mix(in oklab, var(--primary) 18%, var(--background));
       --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     }
