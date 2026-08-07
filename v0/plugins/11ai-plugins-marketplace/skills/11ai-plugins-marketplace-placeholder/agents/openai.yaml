@@ -1,4 +1,0 @@
-interface:
-  display_name: "11ai Plugins Marketplace Placeholder"
-  short_description: "Reserved spot for future marketplace-publishing skills"
-  default_prompt: "Use $11ai-plugins-marketplace-placeholder to see what this plugin is for and what already covers plugin creation and marketplace validation today."
