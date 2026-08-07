@@ -39,7 +39,7 @@ export default async function SkillPage({
   const skill = getSkill(slug)
   if (!skill) notFound()
 
-  const html = renderMarkdown(getSkillContent(skill.slug))
+  const html = renderMarkdown(getSkillContent(skill.slug), skill.repoPath)
   const tryPrompt = `Use ${skill.name} for this task.`
 
   return (
