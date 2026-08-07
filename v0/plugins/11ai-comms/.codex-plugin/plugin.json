@@ -1,6 +1,6 @@
 {
   "name": "11ai-comms",
-  "version": "1.33.0",
+  "version": "1.33.1",
   "description": "Communication registers that set how an agent speaks: the length, density, and shape of its replies.",
   "author": {
     "name": "rj11io"

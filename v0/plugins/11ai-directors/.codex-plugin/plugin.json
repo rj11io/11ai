@@ -1,6 +1,6 @@
 {
   "name": "11ai-directors",
-  "version": "1.33.0",
+  "version": "1.33.1",
   "description": "Director skills that wrap a task in a full workflow: setup, execution, quality checks, and reporting.",
   "author": {
     "name": "rj11io"

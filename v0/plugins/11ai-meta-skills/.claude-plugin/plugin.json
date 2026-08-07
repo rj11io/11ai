@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-meta-skills",
-  "version": "1.33.0",
+  "version": "1.33.1",
   "description": "Skills for building, auditing, and maintaining other skills and the plugins that package them.",
   "author": {
     "name": "rj11io"

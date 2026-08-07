@@ -1,3 +1,12 @@
+## [1.33.1](https://github.com/rj11io/11ai/compare/v1.33.0...v1.33.1) (2026-08-07)
+
+
+### Bug Fixes
+
+* benchmarks analyzer counting, pricing catalog, contracts, and ([ce52216](https://github.com/rj11io/11ai/commit/ce52216c1d6791e320b249de071a28a739cf7ef6))
+* benchmarks counting, pricing catalog, contracts, drift guard, and ([7468d0c](https://github.com/rj11io/11ai/commit/7468d0c8979a5cde98438ba835edad839dc8c684))
+* typos ([a16452d](https://github.com/rj11io/11ai/commit/a16452d6bea5fc1b5e4505a77a22d9b6b111b0f3))
+
 # [1.33.0](https://github.com/rj11io/11ai/compare/v1.32.0...v1.33.0) (2026-08-07)
 
 

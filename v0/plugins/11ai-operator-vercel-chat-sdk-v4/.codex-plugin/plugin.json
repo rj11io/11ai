@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-vercel-chat-sdk-v4",
-  "version": "1.33.0",
+  "version": "1.33.1",
   "description": "Modular, safety-first skills for Vercel Chat SDK 4 operations.",
   "author": {
     "name": "rj11io"

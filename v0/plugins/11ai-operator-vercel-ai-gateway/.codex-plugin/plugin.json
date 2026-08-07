@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-vercel-ai-gateway",
-  "version": "1.33.0",
+  "version": "1.33.1",
   "description": "Modular, safety-first skills for common Vercel AI Gateway operations.",
   "author": {
     "name": "rj11io"
