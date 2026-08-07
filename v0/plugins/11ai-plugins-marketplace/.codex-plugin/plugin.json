@@ -1,0 +1,32 @@
+{
+  "name": "11ai-plugins-marketplace",
+  "version": "1.33.1",
+  "description": "A reserved plugin for skills that manage how 11ai plugins are listed, versioned, and published across the Claude Code and Codex marketplaces. It currently has one placeholder skill; plugin creation and marketplace-config auditing already live in the 11ai-meta-skills plugin.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/plugins-marketplace",
+  "license": "Apache-2.0",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Plugins Marketplace",
+    "shortDescription": "Reserved for future marketplace-publishing skills.",
+    "longDescription": "A reserved plugin for skills that manage how 11ai plugins are listed, versioned, and published across the Claude Code and Codex marketplaces, once real skills are built. Plugin creation and marketplace-config auditing already live in the 11ai-meta-skills plugin.",
+    "developerName": "rj11io",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Developer Tools"
+    ],
+    "websiteURL": "https://ai.rj11.io/plugins/plugins-marketplace",
+    "defaultPrompt": "Help me with this task using the matching 11ai-plugins-marketplace skill."
+  },
+  "keywords": [
+    "marketplace",
+    "plugins",
+    "publishing",
+    "versioning",
+    "placeholder"
+  ]
+}

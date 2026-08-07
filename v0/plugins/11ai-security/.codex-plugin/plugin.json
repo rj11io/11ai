@@ -1,0 +1,32 @@
+{
+  "name": "11ai-security",
+  "version": "1.33.1",
+  "description": "A reserved plugin for security skills beyond dependency scanning: threat modeling, secure-coding review, and secrets handling. It currently has one placeholder skill; dependency and marketplace-config audits already live in the 11ai-audit plugin.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "homepage": "https://ai.rj11.io/plugins/security",
+  "license": "Apache-2.0",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "11ai Security",
+    "shortDescription": "Reserved for upcoming security skills beyond dependency audits.",
+    "longDescription": "A reserved plugin for security skills beyond dependency scanning: threat modeling, secure-coding review, and secrets handling. It currently has one placeholder skill; dependency and marketplace-config audits already live in the 11ai-audit plugin.",
+    "developerName": "rj11io",
+    "category": "Security",
+    "capabilities": [
+      "Read",
+      "Security"
+    ],
+    "websiteURL": "https://ai.rj11.io/plugins/security",
+    "defaultPrompt": "Help me with this task using the matching 11ai-security skill."
+  },
+  "keywords": [
+    "security",
+    "threat-modeling",
+    "secure-coding",
+    "secrets",
+    "placeholder"
+  ]
+}

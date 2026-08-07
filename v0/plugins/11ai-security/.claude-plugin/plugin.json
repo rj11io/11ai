@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "11ai-security",
+  "version": "1.33.1",
+  "description": "A reserved plugin for security skills beyond dependency scanning: threat modeling, secure-coding review, and secrets handling. It currently has one placeholder skill; dependency and marketplace-config audits already live in the 11ai-audit plugin.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "skills": "./skills/",
+  "keywords": [
+    "security",
+    "threat-modeling",
+    "secure-coding",
+    "secrets",
+    "placeholder"
+  ]
+}

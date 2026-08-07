@@ -1,0 +1,4 @@
+interface:
+  display_name: "11ai Security Placeholder"
+  short_description: "Reserved spot for future security skills"
+  default_prompt: "Use $11ai-security-placeholder to see what this plugin is for and where to find a security check that works today."

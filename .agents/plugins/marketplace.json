@@ -520,6 +520,28 @@
         "installation": "AVAILABLE"
       },
       "category": "Developer Tools"
+    },
+    {
+      "name": "11ai-security",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-security"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Security"
+    },
+    {
+      "name": "11ai-plugins-marketplace",
+      "source": {
+        "source": "local",
+        "path": "./v0/plugins/11ai-plugins-marketplace"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Developer Tools"
     }
   ]
 }

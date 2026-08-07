@@ -62,7 +62,7 @@ The files are installed at `node_modules/@rj11io/11ai/v0/plugins/`. You can also
 
 ## Skill catalog
 
-The repository currently contains 461 skills in 47 plugins.
+The repository currently contains 463 skills in 49 plugins.
 
 | Plugin | Skills | Use them for |
 | --- | ---: | --- |
@@ -91,8 +91,10 @@ The repository currently contains 461 skills in 47 plugins.
 | [MongoDB v8 operator](./v0/plugins/11ai-operator-mongodb-v8/README.md) | 17 | MongoDB 8 Shell and Database Tools work with transactions, profiling, roles, Atlas, backups, integrations, and safety checks |
 | [Next.js v16 operator](./v0/plugins/11ai-operator-nextjs-v16/README.md) | 10 | Next.js 16 App Router, Server and Client Components, Cache Components, mutations, handlers, metadata, deployment, integrations, reference, and troubleshooting |
 | [Node.js API v24 operator](./v0/plugins/11ai-operator-nodejs-api-v24/README.md) | 20 | Scaffolding, routing, validation, auth, data, jobs, GraphQL, OpenAPI, testing, and troubleshooting Node.js 24 LTS APIs |
+| [Plugins marketplace](./v0/plugins/11ai-plugins-marketplace/README.md) | 1 | A reserved plugin for future skills that list, version, and publish 11ai plugins across the Claude Code and Codex marketplaces |
 | [PokéAPI v2 operator](./v0/plugins/11ai-operator-pokeapi-v2/README.md) | 12 | Cache-first PokéAPI v2 setup, Pokémon, moves, items, locations, encounters, evolution, games, integrations, fair-use reference, and troubleshooting |
 | [React v19 operator](./v0/plugins/11ai-operator-reactjs-v19/README.md) | 10 | React 19.2 components, state, effects, Actions, Activity, forms, performance, testing, integrations, reference, and troubleshooting |
+| [Security](./v0/plugins/11ai-security/README.md) | 1 | A reserved plugin for future security skills beyond dependency scanning: threat modeling, secure-coding review, and secrets handling |
 | [Super](./v0/plugins/11ai-super/README.md) | 9 | Repeatedly completing general or specialist project tasks to a high evidence-based bar |
 | [shadcn v4 operator](./v0/plugins/11ai-operator-shadcn-v4/README.md) | 13 | shadcn CLI 4.14 components, charts, registries, presets, forms, blocks, updates, native skills, integrations, reference, and troubleshooting |
 | [SSH operator](./v0/plugins/11ai-operator-ssh/README.md) | 10 | OpenSSH client setup, keys, host configuration, sessions, tunnels, file transfer, and troubleshooting |
@@ -150,6 +152,7 @@ v0/
     11ai-operator-nodejs-api-v24/ 20 Node.js API operation skills under skills/
     11ai-operator-pokeapi-v2/ 12 cache-first PokéAPI v2 operation skills under skills/
     11ai-operator-reactjs-v19/    10 React v19 operation skills under skills/
+    11ai-plugins-marketplace/  1 reserved marketplace-publishing skill under skills/
     11ai-operator-shadcn-v4/      13 shadcn v4 operation skills under skills/
     11ai-operator-ssh/        10 OpenSSH client operation skills under skills/
     11ai-operator-stripe/     11 Stripe billing operation skills under skills/
@@ -166,6 +169,7 @@ v0/
     11ai-operator-vercel-sandbox-v2/ 10 Vercel Sandbox v2 operation skills under skills/
     11ai-operator-vercel-workflows-v4/ 10 Vercel Workflows v4 operation skills under skills/
     11ai-operator-workos/     11 WorkOS authentication operation skills under skills/
+    11ai-security/             1 reserved security skill under skills/
     11ai-super/                9 iterative task and improvement skills under skills/
     11ai-utils/                5 utility skills under skills/
     11ai-web-design/           3 web design skills under skills/

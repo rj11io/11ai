@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "11ai-plugins-marketplace",
+  "version": "1.33.1",
+  "description": "A reserved plugin for skills that manage how 11ai plugins are listed, versioned, and published across the Claude Code and Codex marketplaces. It currently has one placeholder skill; plugin creation and marketplace-config auditing already live in the 11ai-meta-skills plugin.",
+  "author": {
+    "name": "rj11io"
+  },
+  "repository": "https://github.com/rj11io/11ai",
+  "license": "Apache-2.0",
+  "skills": "./skills/",
+  "keywords": [
+    "marketplace",
+    "plugins",
+    "publishing",
+    "versioning",
+    "placeholder"
+  ]
+}
