@@ -67,7 +67,7 @@ environment blocks required checks, or the user narrows the scope mid-audit.
 ## Report template
 
 Write to the audited project root as
-`11ai-audit-marketplace-configs-report-YYYYMMDDTHHMMSSZ.md` (UTC timestamp):
+`11ai-plugins-marketplace-audit-configs-report-YYYYMMDDTHHMMSSZ.md` (UTC timestamp):
 
 ```markdown
 # Marketplace configs audit — <project> — <timestamp>
