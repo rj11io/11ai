@@ -4,20 +4,32 @@
 // that must stay identical diverges, so a fix applied to one copy cannot silently
 // miss the others. Intentionally divergent functions are allowlisted below.
 
-import { readFileSync } from "node:fs"
+import { readFileSync, writeFileSync } from "node:fs"
 import { join, resolve } from "node:path"
 
 const root = resolve(process.cwd())
 const benchmarks = join(root, "v0", "plugins", "11ai-benchmarks", "skills")
+const write = process.argv.includes("--write")
 const failures = []
 
 // 1. Files that must be byte-identical across their copies.
+// In every group the FIRST file is the canonical copy that --write propagates.
 const IDENTICAL_FILE_GROUPS = [
   {
-    label: "harness-support.mjs",
+    label: "benchmarks-core.mjs",
+    syncable: true,
     files: [
-      "11ai-benchmarks-single-thread/scripts/harness-support.mjs",
+      "11ai-benchmarks-project/scripts/benchmarks-core.mjs",
+      "11ai-benchmarks-single-thread/scripts/benchmarks-core.mjs",
+      "11ai-benchmarks-machine/scripts/benchmarks-core.mjs",
+    ],
+  },
+  {
+    label: "harness-support.mjs",
+    syncable: true,
+    files: [
       "11ai-benchmarks-project/scripts/harness-support.mjs",
+      "11ai-benchmarks-single-thread/scripts/harness-support.mjs",
       "11ai-benchmarks-machine/scripts/harness-support.mjs",
     ],
   },
@@ -49,8 +61,16 @@ for (const group of IDENTICAL_FILE_GROUPS) {
       failures.push(`${group.label}: ${file} could not be read (${error.message})`)
       continue
     }
-    if (reference === null) reference = { file, text }
-    else if (text !== reference.text) failures.push(`${group.label}: ${file} diverges from ${reference.file}`)
+    if (reference === null) {
+      reference = { file, text }
+    } else if (text !== reference.text) {
+      if (write && group.syncable) {
+        writeFileSync(join(benchmarks, file), reference.text)
+        console.log(`synced ${file} from ${reference.file}`)
+      } else {
+        failures.push(`${group.label}: ${file} diverges from ${reference.file}`)
+      }
+    }
   }
 }
 

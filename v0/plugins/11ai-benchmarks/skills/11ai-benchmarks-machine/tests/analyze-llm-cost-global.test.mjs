@@ -110,6 +110,10 @@ try {
   assert.equal(summary.periods.Today.threads, 5)
   assert.ok(summary.periods["Past 30 days"].threads >= summary.periods["Past 7 days"].threads)
 
+  const summaryDataset = JSON.parse(readFileSync(summary.dataReport, "utf8"))
+  assert.equal(summaryDataset.schemaVersion, 1)
+  assert.equal(summaryDataset.generator.skill, "11ai-benchmarks-machine")
+  assert.ok(summaryDataset.threads.length > 0)
   const markdown = readFileSync(summary.markdownReport, "utf8")
   const html = readFileSync(summary.htmlReport, "utf8")
   assert.match(markdown, /^# AI benchmarks and analysis: Machine Report\n\n_powered by \[11ai-benchmarks-machine\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-machine\)\._\n\n/)

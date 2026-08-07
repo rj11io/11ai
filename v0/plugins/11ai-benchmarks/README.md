@@ -22,6 +22,8 @@ The three reporting skills always use their synchronized bundled pricing catalog
 
 ## Cross-skill maintenance
 
+The three reporting skills share one analyzer core: each carries a byte-identical copy of `scripts/benchmarks-core.mjs` and `scripts/harness-support.mjs`, with only scope-specific code living in the per-skill analyzer scripts. Edit shared behavior in the `11ai-benchmarks-project` copy first, then run `node v0/scripts/check-benchmarks-drift.mjs --write` from the repository root to copy the shared files to the siblings; the same script without `--write` (also run by `validate-skills`) fails on any divergence, including divergence between same-named analyzer functions that are not allowlisted as intentionally scope-specific.
+
 When fixing or extending one skill, evaluate whether the behavior applies to every sibling skill in this plugin. Apply the equivalent change wherever it is applicable, document intentional exceptions, run the affected skill tests plus the complete plugin test set, and compare newly generated reports with prior reports to confirm existing features and output contracts remain intact. Confirm the `11ai-benchmarks-faq` routing rows and comparison table still hold for every section you touched; the validator checks its sources and anchors, but only you can tell when an unchanged heading now describes changed behavior.
 
 Treat report comparison as a required regression gate for every skill-behavior change:

@@ -21,16 +21,17 @@ Use `CODEX_THREAD_ID` automatically when the active harness exposes it. For anot
 node <skill>/scripts/analyze-llm-cost-single-thread.mjs <root-folder> --thread <id-or-source>
 ```
 
-Create this structure by default, where `{datetime}` is the UTC ISO timestamp with colons and the decimal point replaced by hyphens:
+Create this structure by default, where `{datetime}` is the UTC ISO timestamp with colons and the decimal point replaced by hyphens. The `.json` file is the machine-readable dataset (`schemaVersion` 1) the two reports are rendered from; it carries the generator identity, scope, scan coverage, pricing-catalog identity, and every selected thread's token classes, costs, pricing state, and timing, and never contains prompts, message content, or transcripts:
 
 ```text
 <thread-folder>/11ai-benchmarks-single-thread-reports/
 └── 11ai-benchmarks-single-thread-reports-{datetime}/
     ├── 11ai-benchmarks-single-thread-{datetime}.md
-    └── 11ai-benchmarks-single-thread-{datetime}.html
+    ├── 11ai-benchmarks-single-thread-{datetime}.html
+    └── 11ai-benchmarks-single-thread-{datetime}.json
 ```
 
-Accept `--output`, `--codex-home`, `--claude-home`, `--claude-desktop-home`, `--cowork-home`, `--gemini-home`, `--cline-tasks`, `--roo-tasks`, `--opencode-db`, and `--project-only`. Reject a missing selector, an unmatched selector, or a selector that directly spans multiple logical root threads instead of emitting a zero-cost report. After exact root selection, recursively include Codex sessions explicitly marked as sub-agents whose `parent_thread_id` points to the selected root or an included descendant. Do not infer relationships from shared folders, timestamps, or fork metadata alone. Retain explicitly linked sub-agent sessions with unavailable usage and display their token and cost fields as `n/a`.
+Accept `--output`, `--codex-home`, `--claude-home`, `--claude-desktop-home`, `--cowork-home`, `--gemini-home`, `--cline-tasks`, `--roo-tasks`, `--opencode-db`, `--project-only`, and `--from-data` (re-render the reports from a previously written dataset of this skill without rescanning; the selector requirement is waived in that mode). Reject a missing selector, an unmatched selector, or a selector that directly spans multiple logical root threads instead of emitting a zero-cost report. After exact root selection, recursively include Codex sessions explicitly marked as sub-agents whose `parent_thread_id` points to the selected root or an included descendant. Do not infer relationships from shared folders, timestamps, or fork metadata alone. Retain explicitly linked sub-agent sessions with unavailable usage and display their token and cost fields as `n/a`.
 
 Read [the bundled harness reference](references/harnesses.md) when native discovery, token semantics, or override paths need explanation. Use only the [bundled pricing catalog](references/pricing.json).
 
@@ -81,7 +82,7 @@ End the HTML report with the same visible linked signature. Set `target="_blank"
 Before reporting completion:
 
 - confirm the analyzer exits successfully, selects only the intended logical root, recursively includes its explicitly linked Codex sub-agents, and excludes unrelated siblings;
-- confirm the default timestamped package contains matching `.md` and `.html` files;
+- confirm the default timestamped package contains matching `.md`, `.html`, and `.json` files;
 - confirm the Markdown report places the linked `powered by 11ai-benchmarks-single-thread` attribution immediately below its H1;
 - confirm the HTML main title includes the smaller inline linked text `powered by 11ai-benchmarks-single-thread` and that its link safely opens in a new tab;
 - confirm both formats contain root/sub-agent counts and relationship detail, the standardized token breakdown and cost-adjacent metric order, aggregate cost per thread, plus `Cost by model by effort` as a level-two sibling immediately after `Cost by model`, totals, pricing coverage, historical pricing selection, applied rate periods, temporal fallbacks, limitations, and the exact linked signature;

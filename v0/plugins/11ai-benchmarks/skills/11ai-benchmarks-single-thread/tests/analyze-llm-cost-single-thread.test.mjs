@@ -86,6 +86,10 @@ try {
   assert.match(basename(summary.outputDirectory), /^11ai-benchmarks-single-thread-reports-\d{4}-\d{2}-\d{2}T/)
   assert.match(basename(summary.markdownReport), /^11ai-benchmarks-single-thread-\d{4}-\d{2}-\d{2}T.*\.md$/)
 
+  const summaryDataset = JSON.parse(readFileSync(summary.dataReport, "utf8"))
+  assert.equal(summaryDataset.schemaVersion, 1)
+  assert.equal(summaryDataset.generator.skill, "11ai-benchmarks-single-thread")
+  assert.equal(String(summaryDataset.scope.thread), "selected-thread")
   const markdown = readFileSync(summary.markdownReport, "utf8")
   const html = readFileSync(summary.htmlReport, "utf8")
   assert.match(markdown, /^# AI benchmarks and analysis: Single-Thread Report\n\n_powered by \[11ai-benchmarks-single-thread\]\(https:\/\/ai\.rj11\.io\/skills\/11ai-benchmarks-single-thread\)\._\n\n/)

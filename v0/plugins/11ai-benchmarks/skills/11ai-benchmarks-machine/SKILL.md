@@ -21,10 +21,11 @@ The command creates this structure if needed, where `{datetime}` is the UTC ISO 
 ~/Desktop/11ai-benchmarks-machine-reports/
 └── 11ai-benchmarks-machine-reports-{datetime}/
     ├── 11ai-benchmarks-machine-{datetime}.md
-    └── 11ai-benchmarks-machine-{datetime}.html
+    ├── 11ai-benchmarks-machine-{datetime}.html
+    └── 11ai-benchmarks-machine-{datetime}.json
 ```
 
-Generate both reports from the same analysis so their facts, tables, ordering, limitations, and signature agree. Make the HTML report self-contained with embedded styling and no network dependency. Render every level-two, level-three, and level-four HTML report section as a native disclosure that is collapsed by default. The timestamped default package uses exclusive file creation and never overwrites an existing report. The command accepts:
+Build one machine-readable dataset from the analysis, write it as the package's `.json` file (`schemaVersion` 1: generator identity, scope, scan coverage, pricing-catalog identity, and every recognized thread with its token classes, costs, pricing state, and timing; never prompts, message content, or transcripts), and render both reports from that dataset so their facts, tables, ordering, limitations, and signature agree. Make the HTML report self-contained with embedded styling and no network dependency. Render every level-two, level-three, and level-four HTML report section as a native disclosure that is collapsed by default. The timestamped default package uses exclusive file creation and never overwrites an existing report. The command accepts:
 
 - `--output <folder>` or `--output-dir <folder>` only when the user explicitly requests a different reports directory;
 - `--codex-home <dir>` or `CODEX_HOME` to replace automatic Codex home discovery;
@@ -35,6 +36,7 @@ Generate both reports from the same analysis so their facts, tables, ordering, l
 - `--cline-tasks <dir>` and `--roo-tasks <dir>` to replace their automatic task-root discovery;
 - repeatable `--opencode-db <file>` arguments to replace automatic OpenCode database discovery;
 - repeatable `--include <dir-or-file>` arguments to inspect exported JSON, JSONL, or NDJSON usage records from other harnesses.
+- `--from-data <data.json>` to re-render the Markdown and HTML reports from a previously written dataset of this skill without rescanning; scanning options are ignored in that mode.
 
 Without overrides, inspect conventional native stores under every readable local account in the current user's security context. Do not filter native sessions by project or recorded working directory. Unreadable accounts are outside coverage and must not be treated as zero usage.
 

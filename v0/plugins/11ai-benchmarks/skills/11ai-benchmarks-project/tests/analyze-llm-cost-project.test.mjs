@@ -389,6 +389,17 @@ try {
   const genericMarkdown = readFileSync(genericReport, "utf8")
   assert.match(genericMarkdown, /\| mistral \/ mistral-large-2411 \|[^\n]*\$0\.6500/)
   assert.doesNotMatch(genericMarkdown, /pricing is incomplete/)
+  const genericDataset = JSON.parse(readFileSync(genericSummary.dataReport, "utf8"))
+  assert.equal(genericDataset.schemaVersion, 1)
+  assert.equal(genericDataset.generator.skill, "11ai-benchmarks-project")
+  assert.equal(genericDataset.threads.length, 1)
+  assert.equal(genericDataset.pricingCatalog.version, 3)
+  assert.ok(Array.isArray(genericDataset.scan.limitations))
+  const rerenderReport = join(fixtureRoot, "generic-provider-rerender.md")
+  const rerenderSummary = run(["--from-data", genericSummary.dataReport, "--output", rerenderReport])
+  assert.equal(rerenderSummary.threads, 1)
+  const stripGenerated = (text) => text.replace(/^> Generated [^\n]*$/m, "> Generated <normalized>")
+  assert.equal(stripGenerated(readFileSync(rerenderReport, "utf8")), stripGenerated(genericMarkdown))
 
   const reusedIdProject = join(fixtureRoot, "reused-id-project")
   writeJsonl(join(reusedIdProject, "session-export.jsonl"), [

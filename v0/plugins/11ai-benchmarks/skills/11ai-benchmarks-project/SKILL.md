@@ -21,10 +21,11 @@ The command treats `process.cwd()` as the current thread folder and creates this
 <thread-folder>/11ai-benchmarks-project-reports/
 └── 11ai-benchmarks-project-reports-{datetime}/
     ├── 11ai-benchmarks-project-{datetime}.md
-    └── 11ai-benchmarks-project-{datetime}.html
+    ├── 11ai-benchmarks-project-{datetime}.html
+    └── 11ai-benchmarks-project-{datetime}.json
 ```
 
-Generate both files from the same analysis. The HTML must be self-contained with embedded styling and no network dependency. The timestamped default package uses exclusive file creation so it never overwrites existing reports. It accepts:
+Build one machine-readable dataset from the analysis, write it as the package's `.json` file, and render the Markdown and HTML reports from that dataset so all three artifacts agree. The dataset uses `schemaVersion` 1 and carries the generator identity, scope, scan coverage, pricing-catalog identity, and every recognized thread with its token classes, costs, pricing state, and timing; it never contains prompts, message content, or transcripts. The HTML must be self-contained with embedded styling and no network dependency. The timestamped default package uses exclusive file creation so it never overwrites existing reports. It accepts:
 
 - `--output <file>` only when the user explicitly requests a different Markdown report path; the analyzer writes the matching HTML sibling automatically;
 - `--codex-home <dir>` or `CODEX_HOME` to override the native Codex data directory;
@@ -36,6 +37,7 @@ Generate both files from the same analysis. The HTML must be self-contained with
 - `--opencode-db <file>` to override OpenCode database discovery;
 - `--thread <id-or-source>` to restrict the report to one exact logical thread, report thread ID, source label, source filename, or transcript path;
 - `--project-only` to disable native session discovery and inspect only the requested root.
+- `--from-data <data.json>` to re-render the Markdown and HTML reports from a previously written dataset of this skill without rescanning; scanning options are ignored in that mode.
 
 The analyzer reads JSON, JSONL, and NDJSON files recursively, while skipping dependency, VCS, cache, and build directories. It also discovers seven harnesses from their native stores. It includes a native record only when its working directory, Cowork selected folders, Gemini project hash/directory, task metadata, or OpenCode session directory associates it with the requested root. Supplemental records may declare attribution through selected-folder arrays, cwd/project/workspace path fields, or an explicit workspace label. It only reports files containing recognized usage.
 
@@ -116,7 +118,7 @@ Use only this skill's bundled `references/pricing.json`. Do not accept a pricing
 Before reporting completion:
 
 - confirm the analyzer exits successfully;
-- confirm `<thread-folder>/11ai-benchmarks-project-reports/11ai-benchmarks-project-reports-{datetime}` exists and contains matching `11ai-benchmarks-project-{datetime}.md` and `.html` files;
+- confirm `<thread-folder>/11ai-benchmarks-project-reports/11ai-benchmarks-project-reports-{datetime}` exists and contains matching `11ai-benchmarks-project-{datetime}.md`, `.html`, and `.json` files;
 - confirm the Markdown report places the linked `powered by 11ai-benchmarks-project` attribution immediately below its H1;
 - confirm the HTML main title includes the smaller inline linked text `powered by 11ai-benchmarks-project` and that its link safely opens in a new tab;
 - confirm both reports display the standardized token breakdown and cost-adjacent metric order, aggregate cost per thread, totals, provider/model/model-by-effort/harness/folder aggregates with grand-total rows, scanned files, recognized threads, known and unknown costs, pricing coverage, historical pricing selection, applied rate periods, temporal fallbacks, limitations, and the exact linked signature above;
