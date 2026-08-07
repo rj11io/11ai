@@ -1,4 +1,4 @@
 interface:
-  display_name: "11ai Meta Compression"
+  display_name: "11ai Core Compression"
   short_description: "Compress markdown guidance without external CLI"
   default_prompt: "Use $11ai-core-compression to compress a markdown guidance file locally while preserving headings, code, links, and paths."

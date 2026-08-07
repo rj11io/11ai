@@ -117,9 +117,9 @@ const PLUGIN_CONFIG = [
       "Directors wrap a task in a workflow: preconditions, handoff, quality gate, report, and a clean abort.",
   },
   {
-    slug: "meta-skills",
-    dir: "11ai-meta-skills",
-    title: "Meta skills",
+    slug: "core-skills",
+    dir: "11ai-core-skills",
+    title: "Core skills",
     tagline:
       "Skills for building, auditing, and maintaining other skills and the plugins that package them, plus guidance-compression and repository reverse-engineering utilities.",
   },

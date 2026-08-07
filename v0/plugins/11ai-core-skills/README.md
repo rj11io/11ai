@@ -1,4 +1,4 @@
-# 11ai Meta Skills
+# 11ai Core Skills
 
 Skills for building, auditing, and packaging other skills and plugins, plus
 two general-purpose utilities that don't fit anywhere else yet: compressing
@@ -29,11 +29,11 @@ Candidates for this plugin:
 ## The authority
 
 `v0/scripts/validate-skills.mjs` is the source of truth for every packaging rule.
-A meta skill enforces what the validator already checks and closes the gaps it
+A core skill enforces what the validator already checks and closes the gaps it
 does not. Read it first. Do not restate its rules from memory.
 
 ## Related
 
 `11ai-super-skill-qa` in `11ai-super` also falls in this scope: it audits and
-repairs skill packaging across harnesses. Read it before writing a new meta
+repairs skill packaging across harnesses. Read it before writing a new core
 skill here.

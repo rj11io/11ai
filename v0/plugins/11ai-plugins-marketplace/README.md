@@ -21,6 +21,6 @@ question; start with the audit when you already know which repository to check.
 
 ## Related
 
-[`11ai-meta-skills`](../11ai-meta-skills/README.md) scaffolds a brand-new
+[`11ai-core-skills`](../11ai-core-skills/README.md) scaffolds a brand-new
 plugin end to end. Read it before writing a new skill here, so plugin
 creation and plugin auditing don't drift apart.

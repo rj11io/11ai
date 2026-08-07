@@ -1,4 +1,4 @@
 interface:
-  display_name: "11ai Meta Reverse Engineering"
+  display_name: "11ai Core Reverse Engineering"
   short_description: "Create a sanitized repository blueprint"
   default_prompt: "Use $11ai-core-reverse-engineering to apply the Reverse Engineering workflow to this task."

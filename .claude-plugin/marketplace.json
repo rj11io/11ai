@@ -47,8 +47,8 @@
       "source": "./v0/plugins/11ai-directors"
     },
     {
-      "name": "11ai-meta-skills",
-      "source": "./v0/plugins/11ai-meta-skills"
+      "name": "11ai-core-skills",
+      "source": "./v0/plugins/11ai-core-skills"
     },
     {
       "name": "11ai-operator-docker",
@@ -200,6 +200,7 @@
     }
   ],
   "renames": {
-    "11ai-llm-costs": "11ai-benchmarks"
+    "11ai-llm-costs": "11ai-benchmarks",
+    "11ai-meta-skills": "11ai-core-skills"
   }
 }

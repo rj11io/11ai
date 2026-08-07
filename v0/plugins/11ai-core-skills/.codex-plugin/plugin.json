@@ -6,11 +6,11 @@
     "name": "rj11io"
   },
   "repository": "https://github.com/rj11io/11ai",
-  "homepage": "https://ai.rj11.io/plugins/meta-skills",
+  "homepage": "https://ai.rj11.io/plugins/core-skills",
   "license": "Apache-2.0",
   "skills": "./skills/",
   "keywords": [
-    "meta",
+    "core",
     "skill-authoring",
     "packaging",
     "validation",
@@ -19,7 +19,7 @@
     "reverse-engineering"
   ],
   "interface": {
-    "displayName": "11ai Meta Skills",
+    "displayName": "11ai Core Skills",
     "shortDescription": "Build, audit, and maintain other skills.",
     "longDescription": "Skills whose subject is skills: authoring a new one, auditing frontmatter and packaging across harnesses, wiring a plugin into the marketplace and catalogs, and keeping counts, manifests, and cross-skill copies in sync as the collection grows. Also includes two general-purpose utilities: compressing guidance text and reverse engineering an existing repository.",
     "developerName": "rj11io",
@@ -29,7 +29,7 @@
       "Write",
       "Developer Tools"
     ],
-    "websiteURL": "https://ai.rj11.io/plugins/meta-skills",
+    "websiteURL": "https://ai.rj11.io/plugins/core-skills",
     "defaultPrompt": "Help me use the 11ai-core-skills skills to author or audit a skill in this collection."
   }
 }

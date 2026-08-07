@@ -115,10 +115,10 @@
       "category": "Developer Tools"
     },
     {
-      "name": "11ai-meta-skills",
+      "name": "11ai-core-skills",
       "source": {
         "source": "local",
-        "path": "./v0/plugins/11ai-meta-skills"
+        "path": "./v0/plugins/11ai-core-skills"
       },
       "policy": {
         "installation": "AVAILABLE"
