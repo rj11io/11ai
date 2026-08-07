@@ -1,4 +1,4 @@
-import { marked, type Token } from "marked"
+import { Marked, type Token, type Tokens } from "marked"
 
 import { GITHUB_REPO_URL, getSkills } from "./skills"
 
@@ -30,6 +30,24 @@ function rewriteHref(repoPath: string, href: string): string {
 }
 
 /**
+ * External links (any absolute http/https href after rewriting) open in a
+ * new tab; internal /skills/<slug> links and same-page anchors stay in-tab.
+ */
+const md = new Marked({
+  gfm: true,
+  renderer: {
+    link(token: Tokens.Link) {
+      const text = this.parser.parseInline(token.tokens)
+      const title = token.title ? ` title="${token.title}"` : ""
+      const target = /^https?:\/\//i.test(token.href)
+        ? ` target="_blank" rel="noopener noreferrer"`
+        : ""
+      return `<a href="${token.href}"${title}${target}>${text}</a>`
+    },
+  },
+})
+
+/**
  * Render trusted repository markdown (SKILL.md files) to HTML at build time.
  * Content comes from this repo only, so no sanitization pass is needed.
  *
@@ -47,9 +65,5 @@ export function renderMarkdown(markdown: string, repoPath?: string): string {
         token.href = rewriteHref(repoPath, token.href)
       }
     : undefined
-  return marked.parse(markdown, {
-    gfm: true,
-    async: false,
-    walkTokens,
-  }) as string
+  return md.parse(markdown, { async: false, walkTokens }) as string
 }
