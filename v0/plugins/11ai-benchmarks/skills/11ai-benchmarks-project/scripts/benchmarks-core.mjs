@@ -14,7 +14,7 @@ export const SKIP_DIRS = new Set([
 export const JSON_EXTENSIONS = new Set([".json", ".jsonl", ".ndjson"])
 export const SESSION_EXTENSIONS = new Set([".json", ".jsonl", ".ndjson"])
 export const ACTIVE_GAP_MS = 5 * 60 * 1000
-export const COST_BY_HEADERS = ["Cost", "Input", "Cached", "Input cost", "Output", "Output cost", "Tokens", "Cost / 1M tokens", "Threads", "Cost / thread", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour"]
+export const COST_BY_HEADERS = ["Cost", "Input", "Cached", "Input cost", "Output", "Output cost", "Tokens", "Cost / 1M tokens", "Threads", "Cost / thread", "Active time", "Cost / active hour", "Wall time", "Cost / wall hour", "Output TPS", "Active time / response"]
 export const finite = (value) => typeof value === "number" && Number.isFinite(value)
 export const number = (value) => {
   if (finite(value)) return value
@@ -88,6 +88,8 @@ export function costByValues(items) {
     fmtUsdPerActiveHour(result.costUsd, result.activeTimeMs),
     fmtDurationMs(result.wallTimeMs),
     fmtUsdPerActiveHour(result.costUsd, result.wallTimeMs),
+    fmtTokensPerSecond(result.outputTokensPerSecond),
+    fmtSecondsMs(result.activeMsPerResponse),
   ]
 }
 
@@ -348,6 +350,7 @@ export function logicalThreadRows(items) {
       threadId: first.logicalThreadId ?? first.threadId,
       modelLabel: [...new Set(group.map((item) => `${item.provider} / ${item.model} / ${item.effort ?? "n/a"}`))].join("; "),
       tokens: addTokens(group.map((item) => item.tokens)),
+      usageRecordCount: sumKnown(group.map((item) => item.usageRecordCount)),
       cost: { totalUsd: sumNullable(group.map((item) => item.cost.totalUsd)) },
       reportedCostUsd: sumReported(group.map((item) => item.reportedCostUsd)),
       costMethod: methods.size === 1 ? [...methods][0] : group.every((item) => finite(item.cost.totalUsd)) ? "mixed" : "unavailable",
@@ -729,6 +732,26 @@ export function reportedCostFrom(record, usage) {
   )
 }
 
+export function fmtTokensPerSecond(value) {
+  return finite(value) ? value.toFixed(1) : "n/a"
+}
+
+export function fmtSecondsMs(value) {
+  return finite(value) ? `${(value / 1000).toFixed(1)}s` : "n/a"
+}
+
+export function threadOutputTps(thread) {
+  const output = thread.tokens?.outputTotal
+  const activeMs = thread.activeTimeMs
+  return finite(output) && finite(activeMs) && activeMs > 0 ? output / (activeMs / 1000) : null
+}
+
+export function threadActiveMsPerResponse(thread) {
+  const activeMs = thread.activeTimeMs
+  const responses = thread.usageRecordCount
+  return finite(activeMs) && finite(responses) && responses > 0 ? activeMs / responses : null
+}
+
 export function rollup(items) {
   const logical = [...groupBy(items, (item) => item.logicalThreadKey ?? item.threadId).values()]
   const tokenValues = items.map((item) => item.tokens.providerTotal)
@@ -738,9 +761,32 @@ export function rollup(items) {
     return values.some(finite) ? sumKnown(values) : null
   })
   const outputCostValues = items.map((item) => item.cost.outputUsd)
-  const wallValues = logical.map((group) => groupTiming(group).wallTimeMs)
-  const activeValues = logical.map((group) => groupTiming(group).activeTimeMs)
+  const timings = logical.map((group) => groupTiming(group))
+  const wallValues = timings.map((timing) => timing.wallTimeMs)
+  const activeValues = timings.map((timing) => timing.activeTimeMs)
+  // Blended pairs: only logical threads where both sides of a ratio are measured count,
+  // so a thread with tokens but no timing can never inflate a rate.
+  let pairedOutputTokens = 0
+  let pairedOutputActiveMs = 0
+  let pairedResponses = 0
+  let pairedResponseActiveMs = 0
+  logical.forEach((group, index) => {
+    const activeMs = activeValues[index]
+    if (!finite(activeMs) || activeMs <= 0) return
+    const outputs = group.map((item) => item.tokens.outputTotal)
+    if (outputs.some(finite)) {
+      pairedOutputTokens += sumKnown(outputs)
+      pairedOutputActiveMs += activeMs
+    }
+    const responses = sumKnown(group.map((item) => item.usageRecordCount))
+    if (responses > 0) {
+      pairedResponses += responses
+      pairedResponseActiveMs += activeMs
+    }
+  })
   return {
+    outputTokensPerSecond: pairedOutputActiveMs > 0 ? pairedOutputTokens / (pairedOutputActiveMs / 1000) : null,
+    activeMsPerResponse: pairedResponses > 0 ? pairedResponseActiveMs / pairedResponses : null,
     threadCount: logical.length,
     knownTokenThreads: logical.filter((group) => group.some((item) => finite(item.tokens.providerTotal))).length,
     knownCostThreads: logical.filter((group) => group.length > 0 && group.every((item) => finite(item.cost.totalUsd))).length,

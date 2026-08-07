@@ -137,6 +137,8 @@ Definitions only; the numbers, paths, and defaults live in the routed sources ab
 | Harness | A local coding agent whose usage stores the analyzers read, such as Codex or Claude Code |
 | Harness surface | The user-facing product a thread ran in, as opposed to the runtime underneath it |
 | Billing mode | Whether usage was billed per token through an API key or covered by a subscription |
+| Output TPS | Blended output tokens per second: output tokens divided by estimated active seconds, over threads with measured timing; includes tool time and excludes time-to-first-token |
+| Active time / response | Blended turnaround: estimated active time divided by counted usage responses; a work-rate proxy, not provider latency |
 | Thread | One conversation or session as the unit of attribution, cost, and timing |
 | Known cost | Cost computed from measured tokens matched to a bundled catalog rate |
 | Unpriced model | A measured model with no catalog match; its cost stays unavailable instead of zero |
