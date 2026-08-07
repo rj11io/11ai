@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-shadcn-v4",
-  "version": "1.33.1",
+  "version": "1.34.0",
   "description": "Modular, safety-first skills for common shadcn CLI v4 operations.",
   "author": {
     "name": "rj11io"

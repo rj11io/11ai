@@ -1,3 +1,25 @@
+# [1.34.0](https://github.com/rj11io/11ai/compare/v1.33.1...v1.34.0) (2026-08-07)
+
+
+### Bug Fixes
+
+* **11ai-comms:** correct "king of bug" typo in pragmatic skill directive ([9df949f](https://github.com/rj11io/11ai/commit/9df949fea8554dcec43470e10ec32bdde0c3a44d))
+* reconcile plugin docs and configs with recent skill renames/moves ([b7b39cd](https://github.com/rj11io/11ai/commit/b7b39cd853c990188a9a8ea4ce90add37bc2d080))
+* rename audit skill ([a80fb15](https://github.com/rj11io/11ai/commit/a80fb15d5fa02e5c8e261af96f683390cbaedb9b))
+* rename research skill ([e606230](https://github.com/rj11io/11ai/commit/e606230da71fa2ff110961b924c31baf01ae63cb))
+
+
+### Features
+
+* **11ai-comms:** restructure short register into six-block directive ([86f7b16](https://github.com/rj11io/11ai/commit/86f7b16860ce9243c8f2bf0024e7ac86ed329ed9))
+* blended output TPS and active-time-per-response columns on ([04861b5](https://github.com/rj11io/11ai/commit/04861b52b994ea78e3741f9622b5d6be62d76ec7))
+* harness decomposition into surface, runtime, store, and billing ([f760d26](https://github.com/rj11io/11ai/commit/f760d269714a23da7c9e1560fc2b6df174e154a2))
+* response latency extractors for codex, opencode, and cline with ([26d5b1f](https://github.com/rj11io/11ai/commit/26d5b1f80056eb231b3082fda3bda6bade688e29))
+* response latency section with per-response histograms and dataset ([962f369](https://github.com/rj11io/11ai/commit/962f369ec21c7ce67c9b4869b43dc386e65b5f37))
+* scaffold 11ai-security and 11ai-plugins-marketplace plugins with ([62b4975](https://github.com/rj11io/11ai/commit/62b4975eb742e83d0052a8375cda726069f57361))
+* shared benchmarks core, dataset emission, and from-data ([0697688](https://github.com/rj11io/11ai/commit/069768837e66af097f75c57c2ef8bf52609698ff))
+* **www:** showcase 11ai-pragmatic skill in how-it-works section ([1d39986](https://github.com/rj11io/11ai/commit/1d39986d0956d6f2b4c4159386c58c555e798fea))
+
 ## [1.33.1](https://github.com/rj11io/11ai/compare/v1.33.0...v1.33.1) (2026-08-07)
 
 
