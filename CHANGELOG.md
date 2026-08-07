@@ -1,3 +1,17 @@
+# [1.35.0](https://github.com/rj11io/11ai/compare/v1.34.0...v1.35.0) (2026-08-07)
+
+
+### Bug Fixes
+
+* absorb comms skills into core-skills docs and references ([8ae68e0](https://github.com/rj11io/11ai/commit/8ae68e03c058fba37d7015dbd0d433f1c0f88ddb))
+* finish -meta- to -core- rename across docs, manifests, and site ([404d42a](https://github.com/rj11io/11ai/commit/404d42ab8e9d69ed2554d023403ae391ee43edb6))
+* **www:** rewrite relative SKILL.md links to GitHub or internal skill ([9f12b7f](https://github.com/rj11io/11ai/commit/9f12b7fd6dd4c975ecb7c2791812beac9397625f))
+
+
+### Features
+
+* **www:** open external skill playbook links in a new tab ([1a2a539](https://github.com/rj11io/11ai/commit/1a2a539d1ac4fd5d2d178501e42884e4a3446901))
+
 # [1.34.0](https://github.com/rj11io/11ai/compare/v1.33.1...v1.34.0) (2026-08-07)
 
 

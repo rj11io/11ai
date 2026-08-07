@@ -1,6 +1,6 @@
 {
   "name": "11ai-xharness",
-  "version": "1.34.0",
+  "version": "1.35.0",
   "description": "Delegate and coordinate work across agents running in different CLI harnesses.",
   "author": {
     "name": "rj11io"

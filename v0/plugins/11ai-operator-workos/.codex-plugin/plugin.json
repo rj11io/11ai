@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-workos",
-  "version": "1.34.0",
+  "version": "1.35.0",
   "description": "Modular, safety-first skills for common WorkOS authentication and directory operations.",
   "author": {
     "name": "rj11io"
