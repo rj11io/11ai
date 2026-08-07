@@ -1,3 +1,10 @@
+# [1.37.0](https://github.com/rj11io/11ai/compare/v1.36.0...v1.37.0) (2026-08-07)
+
+
+### Features
+
+* **core-skills:** add www styleguides skill with token and font ([2f07036](https://github.com/rj11io/11ai/commit/2f0703610bbf66a53d4315be659a519acc84b677))
+
 # [1.36.0](https://github.com/rj11io/11ai/compare/v1.35.0...v1.36.0) (2026-08-07)
 
 

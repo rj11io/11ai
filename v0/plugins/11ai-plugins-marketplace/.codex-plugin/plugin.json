@@ -1,6 +1,6 @@
 {
   "name": "11ai-plugins-marketplace",
-  "version": "1.36.0",
+  "version": "1.37.0",
   "description": "Marketplace, plugin, and skill configuration auditing and research for the Claude Code, Claude Cowork, OpenAI Codex, ChatGPT, and Agent Skills ecosystems.",
   "author": {
     "name": "rj11io"

@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-pokeapi-v2",
-  "version": "1.36.0",
+  "version": "1.37.0",
   "description": "Modular, cache-first skills for fair-use PokéAPI v2 operations.",
   "author": {
     "name": "rj11io"
