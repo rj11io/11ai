@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-bash",
-  "version": "1.35.0",
+  "version": "1.36.0",
   "description": "Modular, safety-first skills for common Bash shell and scripting operations.",
   "author": {
     "name": "rj11io"

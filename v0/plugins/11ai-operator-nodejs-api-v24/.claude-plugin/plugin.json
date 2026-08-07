@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-operator-nodejs-api-v24",
-  "version": "1.35.0",
+  "version": "1.36.0",
   "description": "Modular, evidence-first skills for Node.js 24 LTS API development and operations.",
   "author": {
     "name": "rj11io"

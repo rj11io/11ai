@@ -1,6 +1,6 @@
 {
   "name": "11ai-security",
-  "version": "1.35.0",
+  "version": "1.36.0",
   "description": "A reserved plugin for security skills beyond dependency scanning: threat modeling, secure-coding review, and secrets handling. It currently has one placeholder skill; dependency and marketplace-config audits already live in the 11ai-audit plugin.",
   "author": {
     "name": "rj11io"

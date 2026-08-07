@@ -1,3 +1,17 @@
+# [1.36.0](https://github.com/rj11io/11ai/compare/v1.35.0...v1.36.0) (2026-08-07)
+
+
+### Bug Fixes
+
+* **benchmarks:** stronger light-mode row highlight in reports and ([335b7d6](https://github.com/rj11io/11ai/commit/335b7d6d9338647929c3ac31ee9b765fbdb7b0af))
+* **benchmarks:** visible dark-mode row highlight in reports and ([46dcce4](https://github.com/rj11io/11ai/commit/46dcce45d4b7406f20dff301d9f43f544b22e81e))
+
+
+### Features
+
+* **benchmarks:** blog-styled dark html reports with row highlight and ([931e8d1](https://github.com/rj11io/11ai/commit/931e8d14e8ebaba3bc1138d0fc9173b3bd378203))
+* **core-skills:** add self-contained reports styleguide skill ([80fbc04](https://github.com/rj11io/11ai/commit/80fbc04844d7bbaf1ad3935ced2b513e20c522f5))
+
 # [1.35.0](https://github.com/rj11io/11ai/compare/v1.34.0...v1.35.0) (2026-08-07)
 
 
