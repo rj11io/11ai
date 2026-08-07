@@ -1,3 +1,24 @@
+# [1.33.0](https://github.com/rj11io/11ai/compare/v1.32.0...v1.33.0) (2026-08-07)
+
+
+### Bug Fixes
+
+* codex marketplace config ([9fc123a](https://github.com/rj11io/11ai/commit/9fc123a52a995e36452588712a184fdde625e5d9))
+* fixed plugins structure ([13b184a](https://github.com/rj11io/11ai/commit/13b184a8bb7614d17b522a06b30a281d70cfda5f))
+* plugins configs ([9319cb4](https://github.com/rj11io/11ai/commit/9319cb4694d762b09fa0c691d3821afe14a8fbb9))
+* plugins website ([ab6512c](https://github.com/rj11io/11ai/commit/ab6512c3c0072e882b6e9ec86d85802b77a4f948))
+* trigger ci ([627b370](https://github.com/rj11io/11ai/commit/627b3707f0924fb42cb2dc3f5ae48d52b0a56c83))
+
+
+### Features
+
+* faq skills ([67fd593](https://github.com/rj11io/11ai/commit/67fd59362a8cb8145529330e8deeb7a7a67c3843))
+* git operator faq ([b5d5988](https://github.com/rj11io/11ai/commit/b5d598876081ac8aba089b5c24fd6a916c29d6ca))
+* llm costs skills are now benchmarks skills ([bb09e96](https://github.com/rj11io/11ai/commit/bb09e9690096c985f737053b4c79a02fc9f4c667))
+* marketplace config research and audit skills, codex conformance ([4f17d49](https://github.com/rj11io/11ai/commit/4f17d4985652ca5e419a03d10d3fce7bb3656e58))
+* plugin marketplace config skills ([fbfa509](https://github.com/rj11io/11ai/commit/fbfa5098cc9dcc0852b6d0410ac6e2258246eced))
+* **www:** add Claude and Codex marketplace install instructions to ([7ea7531](https://github.com/rj11io/11ai/commit/7ea753157e18b1f575dd7639ff42f61edc8153c0))
+
 # [1.32.0](https://github.com/rj11io/11ai/compare/v1.31.0...v1.32.0) (2026-08-05)
 
 

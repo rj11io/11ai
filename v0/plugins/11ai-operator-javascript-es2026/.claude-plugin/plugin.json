@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "11ai-operator-javascript-es2026",
-  "version": "1.32.0",
+  "version": "1.33.0",
   "description": "Modular, safety-first skills for ECMAScript 2026 operations.",
   "author": {
     "name": "rj11io"

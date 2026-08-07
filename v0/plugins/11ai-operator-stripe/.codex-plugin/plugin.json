@@ -1,6 +1,6 @@
 {
   "name": "11ai-operator-stripe",
-  "version": "1.32.0",
+  "version": "1.33.0",
   "description": "Modular, safety-first skills for common Stripe billing and payment operations.",
   "author": {
     "name": "rj11io"
