@@ -103,13 +103,6 @@ const PLUGIN_CONFIG = [
       "Playwright setup, npm publishing, fully automated releases, and web analytics for your repositories.",
   },
   {
-    slug: "comms",
-    dir: "11ai-comms",
-    title: "Comms",
-    tagline:
-      "Communication registers that set how an agent speaks, plus a blunt read-only critique deliverable.",
-  },
-  {
     slug: "directors",
     dir: "11ai-directors",
     title: "Directors",
@@ -121,7 +114,7 @@ const PLUGIN_CONFIG = [
     dir: "11ai-core-skills",
     title: "Core skills",
     tagline:
-      "Skills for building, auditing, and maintaining other skills and the plugins that package them, plus guidance-compression and repository reverse-engineering utilities.",
+      "Skills for building, auditing, and maintaining other skills and the plugins that package them, plus guidance compression, repository reverse-engineering, a pragmatic communication register, and a blunt read-only critique.",
   },
   {
     slug: "operator-convex",
@@ -365,7 +358,7 @@ export type Skill = {
   description: string
   pluginSlug: string
   pluginTitle: string
-  /** Path from the repo root, e.g. "v0/plugins/11ai-comms/skills/11ai-roast". */
+  /** Path from the repo root, e.g. "v0/plugins/11ai-core-skills/skills/11ai-roast". */
   repoPath: string
   githubUrl: string
 }

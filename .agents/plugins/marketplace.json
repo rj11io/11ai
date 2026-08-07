@@ -93,17 +93,6 @@
       "category": "Developer Tools"
     },
     {
-      "name": "11ai-comms",
-      "source": {
-        "source": "local",
-        "path": "./v0/plugins/11ai-comms"
-      },
-      "policy": {
-        "installation": "AVAILABLE"
-      },
-      "category": "Productivity"
-    },
-    {
       "name": "11ai-directors",
       "source": {
         "source": "local",
