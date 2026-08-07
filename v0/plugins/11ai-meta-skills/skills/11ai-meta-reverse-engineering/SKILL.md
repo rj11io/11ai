@@ -1,5 +1,5 @@
 ---
-name: 11ai-reverse-engineering
+name: 11ai-meta-reverse-engineering
 description: "Reverse engineer a locally cloned repo — extract core logic, data flows, and key implementation pieces (sanitized of all branded/personal/company information), then produce a single markdown blueprint with instructions to rebuild it better using modern technologies and best practices. Use when the user wants to study, reverse engineer, modernize, or rebuild an existing repo."
 ---
 
@@ -13,7 +13,7 @@ You are reverse engineering an existing repository to produce a **rebuild bluepr
 
 ## Output contract
 
-- Exactly **one** file: `11ai-reverse-engineering-{timestamp}.md`, written to the current working directory.
+- Exactly **one** file: `11ai-meta-reverse-engineering-{timestamp}.md`, written to the current working directory.
 - Get the timestamp by running `date +%Y%m%d-%H%M%S` — never invent it.
 - The file must be self-contained: someone with no access to the original repo can rebuild the improved version from it alone.
 
@@ -102,4 +102,4 @@ Design the better version. It must be **the same product, built right**:
 
 1. Re-run the sanitization grep against the finished file.
 2. Confirm every code snippet compiles conceptually (no placeholder-induced syntax breakage beyond the `{{...}}` tokens).
-3. Confirm the file exists at `11ai-reverse-engineering-{timestamp}.md` and report its path and section word counts to the user.
+3. Confirm the file exists at `11ai-meta-reverse-engineering-{timestamp}.md` and report its path and section word counts to the user.

@@ -2,7 +2,7 @@
 
 ```text
 Reverse engineer this repository and produce a single self-contained markdown file named
-`11ai-reverse-engineering-{timestamp}.md` in the current directory (get the timestamp by
+`11ai-meta-reverse-engineering-{timestamp}.md` in the current directory (get the timestamp by
 running `date +%Y%m%d-%H%M%S`). The file must let someone rebuild a BETTER version of this
 project without ever seeing the original.
 
