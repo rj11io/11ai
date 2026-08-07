@@ -2,7 +2,7 @@
 
 Reusable AI-agent skills for building chat products, editorial blogs, and repo-driven project sites; automating agent work; reporting LLM usage, cost, and timing; reverse engineering and maintaining codebases; integrating application services; running repository tasks through disciplined Git workflows; cleaning up local development environments; setting how an agent speaks; and running deep iterative project audits.
 
-Project site: https://ai.rj11.io/
+Project site: [https://ai.rj11.io/](https://ai.rj11.io/)
 
 Each skill is a self-contained directory led by a `SKILL.md` file. Keep the whole directory together so its references, scripts, assets, and agent metadata remain available.
 
